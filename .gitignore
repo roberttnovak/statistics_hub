@@ -1,0 +1,62 @@
+# Virtual Environments
+# Ignore directories related to virtual environments
+venv/
+venv_vs/
+env/
+.venv
+
+# IDEs and Editors
+# Ignore directories related to JetBrains IDEs and VS Code settings
+.idea/
+.vscode/settings.json
+
+# Python Cache and Compiled Files
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs and Databases
+# Ignore logs, databases, and other generated files
+nohup.out
+db.sqlite3
+**/logs/
+
+# Sensitive Information
+# Ignore directory containing sensitive information
+creds/
+
+# Local Data and Model Directories
+# Ignore directories for storing local data and trained models
+data/
+models/
+
+# Notebook Checkpoints and Generated Files
+# Ignore Jupyter Notebook checkpoints and generated files from exploratory analysis
+exploratory_notebooks/.ipynb_checkpoints/
+exploratory_notebooks/EDA/*.html
+.ipynb_checkpoints/
+exploratory_notebooks/all-predictions-test-3.html
+exploratory_notebooks/boxplot-all-models-1hby1h-test.html
+exploratory_notebooks/all-predictions.html
+exploratory_notebooks/all-predictions-test.html
+exploratory_notebooks/all-predictions-test-2.html
+exploratory_notebooks/time-serie-all-models-1hby1h-test.html
+
+# Specific Project Files
+# Ignore specific files related to exploratory analysis and project documentation
+exploratory_notebooks/EDA/Informe EDA parque bomberos 9.docx
+exploratory_notebooks/EDA/plano-pruebas-parque-bomberos-9.png
+exploratory_notebooks/EDA/informe-intervenciones-imagenes-analisis-relleno.docx
+exploratory_notebooks/EDA/informe-intervenciones-imagenes.docx
+exploratory_notebooks/EDA/informe-intervenciones.docx
+app_smartcampus/__pycache__/
+
+# Internal Testing Files
+# Ignore files beginning with 'testeo' in the src directory
+src/testeo*
+
+# Others
+# ToDo: Rearrage properly in another moment
+.vscode/launch.json

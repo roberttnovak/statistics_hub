@@ -1,0 +1,20 @@
+numpy
+pandas
+torch
+django
+requests
+pymysql
+sshtunnel
+sqlalchemy
+matplotlib
+seaborn
+plotly
+scipy
+openpyxl
+statsmodels
+python-docx
+pmdarima
+# ESRNN
+pytest
+pytest-mock
+dash

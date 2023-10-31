@@ -1,0 +1,6 @@
+{
+    "log_rotation": "size",
+    "max_bytes": 10485760,
+    "backup_count": 10,
+    "when": "midnight"
+}

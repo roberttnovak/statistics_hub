@@ -5,6 +5,8 @@ from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import time
 import functools
 
+# ESto es un test para git
+
 LOG_DIR = "logs/"
 
 class ExecutionTimeFilter(logging.Filter):

@@ -5,6 +5,7 @@ from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import time
 import functools
 
+# Test de git
 
 LOG_DIR = "logs/"
 

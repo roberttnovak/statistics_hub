@@ -8,7 +8,8 @@ class ConfigManager:
         Initializes the ConfigManager with the path to the folder containing configuration files.
 
         Parameters:
-        config_folder_path (str): The path to the folder containing configuration files.
+        config_folder_path (str): The path to the folder containing configuration files. It is expected
+        to be str because Path() from pathlib is used
 
         """
         self.config_folder_path = Path(config_folder_path)

@@ -7,9 +7,34 @@
 </head>
 <body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  <!-- Asegúrate de incluir jQuery -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#model_type').change(function(){
+            var selectedModel = $(this).val();
+            if (selectedModel) {
+                $.ajax({
+                    url: '/get_model_parameters/' + selectedModel + '/',
+                    method: 'GET',
+                    success: function(data) {
+                        var parametersTable = '<h3>Parámetros por defecto del modelo ' + selectedModel + ':</h3><table border="1" style="border-collapse: collapse;"><tr><th>Parámetro</th><th>Valor por defecto</th></tr>';
+                        for (var key in data) {
+                            parametersTable += '<tr><td>' + key + '</td><td>' + data[key] + '</td></tr>';
+                        }
+                        parametersTable += '</table>';
+                        $('#parameters').html(parametersTable);
+                    }
+                });
+            } else {
+                $('#parameters').html('');
+            }
+        });
+    });
+</script>
+
 <form method="post">
     {% csrf_token %}
-    <select name="model_type">
+    <select name="model_type" id="model_type">  <!-- Agrega el id="model_type" aquí -->
         <option value="" disabled selected>Selecciona un modelo</option>  <!-- Opción inicial deshabilitada y seleccionada -->
         {% for config in models_list %}
             <option value="{{ config }}">{{ config }}</option>
@@ -18,25 +43,9 @@
     <button type="submit">Train Model</button>
 </form>
 
-{% if message %}
-    <p>{{ message }}</p>
-{% endif %}
-
-{% if model_parameters_default %}
-    <h3>Parámetros por defecto del modelo:</h3>
-    <table border="1" style="border-collapse: collapse;">
-        <tr>
-            <th>Parámetro</th>
-            <th>Valor por defecto</th>
-        </tr>
-        {% for param, value in model_parameters_default.items %}
-            <tr>
-                <td>{{ param }}</td>
-                <td>{{ value }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-{% endif %}
+<div id="parameters">  <!-- Este div mostrará los parámetros del modelo seleccionado -->
+    <!-- Los parámetros se insertarán aquí por el script de JavaScript -->
+</div>
 
 </body>
 </html>

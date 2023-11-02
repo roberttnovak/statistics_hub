@@ -1,12 +1,16 @@
 from pathlib import Path
+from django.http import JsonResponse
 from django.shortcuts import render
 import sys
 sys.path.append(str(Path('../src')))
 from ConfigManager import ConfigManager
 from django.shortcuts import render
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn import ensemble, neighbors  # Import necessary ML libraries
+
+
+def get_model_parameters(request, model_type):
+    config_manager = ConfigManager("../config")
+    model_parameters_default = config_manager.load_config(model_type, subfolder="models_parameters")
+    return JsonResponse(model_parameters_default)
 
 def train_model(request):
     model_type = ""
@@ -17,7 +21,6 @@ def train_model(request):
 
     if request.method == 'POST':
         model_type = request.POST['model_type']
-        message = f"Has seleccionado el modelo: {model_type}"
         model_parameters_default = config_manager.load_config(model_type, subfolder="models_parameters")  # mueve esta línea aquí
 
     
@@ -30,7 +33,6 @@ def train_model(request):
         'model_manager/train_model.html', 
         {
             'models_list': models_list, 
-            'message': message,
             "model_parameters_default": model_parameters_default
         }
     )

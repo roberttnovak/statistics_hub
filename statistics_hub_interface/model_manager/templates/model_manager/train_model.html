@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Model</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
 </head>
 <body>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  <!-- Asegúrate de incluir jQuery -->
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function(){
         $('#model_type').change(function(){
@@ -17,25 +24,33 @@
                     url: '/get_model_parameters/' + selectedModel + '/',
                     method: 'GET',
                     success: function(data) {
-                        var parametersTable = '<h3>Parámetros por defecto del modelo ' + selectedModel + ':</h3><table border="1" style="border-collapse: collapse;"><tr><th>Parámetro</th><th>Valor por defecto</th></tr>';
-                        for (var key in data) {
-                            parametersTable += '<tr><td>' + key + '</td><td>' + data[key] + '</td></tr>';
+                        var tableBody = '';
+                        for (var key in data.model_parameters_default) {
+                            var legibleName = data.legible_names_of_parameters[key] || '';
+                            var description = data.descriptions_of_parameters[key] || '';
+                            var defaultValue = data.model_parameters_default[key];
+                            tableBody += '<tr><td>' + legibleName + '</td><td>' + description + '</td><td>' + defaultValue + '</td></tr>';
                         }
-                        parametersTable += '</table>';
-                        $('#parameters').html(parametersTable);
+                        $('#tableBody').html(tableBody);
+                        $('#parametersTable').DataTable();
                     }
                 });
             } else {
                 $('#parameters').html('');
             }
         });
+
+        $('#confirmButton').on('click', function() {
+            var tableData = $('#parametersTable').DataTable().data().toArray();
+            console.log(tableData);  // Imprime los datos de la tabla en la consola
+        });
     });
 </script>
 
 <form method="post">
     {% csrf_token %}
-    <select name="model_type" id="model_type">  <!-- Agrega el id="model_type" aquí -->
-        <option value="" disabled selected>Selecciona un modelo</option>  <!-- Opción inicial deshabilitada y seleccionada -->
+    <select name="model_type" id="model_type">
+        <option value="" disabled selected>Selecciona un modelo</option>
         {% for config in models_list %}
             <option value="{{ config }}">{{ config }}</option>
         {% endfor %}
@@ -43,9 +58,23 @@
     <button type="submit">Train Model</button>
 </form>
 
-<div id="parameters">  <!-- Este div mostrará los parámetros del modelo seleccionado -->
-    <!-- Los parámetros se insertarán aquí por el script de JavaScript -->
+<div id="parameters">
+    <h3>Default parameters of model:</h3>
+    <table id="parametersTable" class="display">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Default Value</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Las filas de la tabla se llenarán aquí con JavaScript -->
+        </tbody>
+    </table>
 </div>
+
+<button id="confirmButton">Confirm</button>
 
 </body>
 </html>

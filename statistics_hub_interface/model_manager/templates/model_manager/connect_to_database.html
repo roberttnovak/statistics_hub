@@ -1,0 +1,86 @@
+{% extends 'model_manager/base.html' %}
+
+{% block title %}Connect to Database{% endblock %}
+
+{% block extra_styles %}
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #d32f2f;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .field-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 400px;
+            margin-bottom: 10px;
+        }
+        .field-group label {
+            text-align: left;
+        }
+        .field-group input {
+            text-align: left;
+            width: 200px;
+        }
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="field-group">
+            <label for="ssh_host">SSH Host:</label>
+            <input type="text" id="ssh_host" name="ssh_host" placeholder="SSH Host" value="senialab.com" required>
+        </div>
+        <div class="field-group">
+            <label for="ssh_port">SSH Port:</label>
+            <input type="text" id="ssh_port" name="ssh_port" placeholder="SSH Port" value="22" required>
+        </div>
+        <div class="field-group">
+            <label for="ssh_user">SSH User:</label>
+            <input type="text" id="ssh_user" name="ssh_user" placeholder="SSH User" value="senialab" required>
+        </div>
+        <div class="field-group">
+            <label for="ssh_password">SSH Password:</label>
+            <input type="password" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="senialab" required>
+        </div>
+        <div class="field-group">
+            <label for="db_server">Database Server:</label>
+            <input type="text" id="db_server" name="db_server" placeholder="Database Server" value="localhost" required>
+        </div>
+        <div class="field-group">
+            <label for="db_user">Database User:</label>
+            <input type="text" id="db_user" name="db_user" placeholder="Database User" value="smartcampus" required>
+        </div>
+        <div class="field-group">
+            <label for="db_password">Database Password:</label>
+            <input type="password" id="db_password" name="db_password" placeholder="Database Password" value="RJ47PIANO!a" required>
+        </div>
+        <button type="submit">Connect</button>
+    </form>
+{% endblock %}
+
+{% block extra_scripts %}
+    <!-- Cualquier script extra que quieras añadir -->
+{% endblock %}

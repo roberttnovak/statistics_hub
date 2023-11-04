@@ -1,0 +1,65 @@
+{% extends 'model_manager/base.html' %}
+
+{% block title %}Data Source Selection{% endblock %}
+
+{% block extra_styles %}
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+        .container {
+            margin-top: -50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 20px;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            cursor: pointer;
+            text-align: center;
+            width: 250px;  /* Ancho fijo para las tarjetas */
+            height: 100px;  /* Altura fija para las tarjetas */
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;  
+            align-items: center;  
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; margin-top: 20px; color: white;">Choose Data Source</h1>
+
+<div class="container">
+    <div class="card" id="local-file-card">
+        <i class="fas fa-file-upload fa-3x"></i>
+        Import from Local File
+    </div>
+    <div class="card" id="sql-db-card">
+        <i class="fas fa-database fa-3x"></i>
+        Connect to SQL Database
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#local-file-card').on('click', function(){
+            window.location.href = '/upload_file/';
+        });
+        $('#sql-db-card').on('click', function(){
+            window.location.href = '/connect_to_database/';
+        });
+    });
+</script>
+{% endblock %}

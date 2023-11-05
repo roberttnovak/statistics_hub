@@ -9,6 +9,7 @@ import concurrent.futures
 import inspect
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import time
+from typing import Any, Dict
 
 
 # nos conectamos a la BD pasada como argumento
@@ -325,6 +326,41 @@ def load_json(folder_path: str, json_filename: str) -> dict:
         json_contents = json.load(file)
         
     return json_contents
+
+def modify_json_values(file_path: str, changes: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Load a JSON file from the given path, modify its content according to the provided changes, 
+    and return the modified JSON object.
+
+    Parameters:
+    - file_path (str): The path to the JSON file to be modified.
+    - changes (dict): A dictionary containing the changes to be made where keys represent the
+                      keys in the JSON file and values represent the new values to be set.
+
+    Returns:
+    - dict: The modified JSON object.
+
+    Examples:
+    >>> modify_json_values('data.json', {'key1': 'new_value', 'key2': 'another_value'})
+    {'key1': 'new_value', 'key2': 'another_value', ...remaining content of the JSON...}
+    """
+    # Load the existing content from the JSON file
+    file_path = Path(file_path)
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    # Apply the changes to the JSON data
+    for key, value in changes.items():
+        # Assuming the keys are at the root level of the JSON structure
+        # For nested updates, you would need a more complex approach
+        if key in data:
+            data[key] = value
+        else:
+            raise KeyError(f"The key {key} does not exist in the JSON data.")
+
+    # Write the modified JSON data back to the file
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 

@@ -10,6 +10,46 @@ import logging
 
 from OwnLog import log_exceptions, log_function_args
 
+def test_database_connection(
+        ssh_host, ssh_port, ssh_user, ssh_password,
+        db_server, db_user, db_password, database
+    ):
+    """
+    Tests the SSH and database connections using the provided credentials.
+    
+    Parameters:
+    - ssh_host (str): The hostname or IP address of the SSH server.
+    - ssh_port (int): The port number of the SSH server.
+    - ssh_user (str): The username to use for the SSH connection.
+    - ssh_password (str): The password to use for the SSH connection.
+    - db_server (str): The hostname or IP address of the database server.
+    - db_user (str): The username to use for the database connection.
+    - db_password (str): The password to use for the database connection.
+    - database (str): The name of the database to connect to.
+    
+    Returns:
+    - bool: True if both the SSH and database connections are successful, False otherwise.
+    """
+    try:
+        with sshtunnel.SSHTunnelForwarder(
+                (ssh_host, ssh_port),
+                ssh_username=ssh_user,
+                ssh_password=ssh_password,
+                remote_bind_address=(db_server, 3306)
+        ) as tunnel:
+            conn = pymysql.connect(
+                host='127.0.0.1', 
+                user=db_user, 
+                passwd=db_password, 
+                db=database, 
+                port=tunnel.local_bind_port
+            )
+            conn.close()
+            return True
+    except Exception as e:
+        print(f"Connection to database failed: {e}")
+        return False
+
 
 
 def get_data_ssh(

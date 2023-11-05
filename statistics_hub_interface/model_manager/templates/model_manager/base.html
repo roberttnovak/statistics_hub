@@ -6,14 +6,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>{% block title %}{% endblock %}</title>
     <style>
-        body {
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
+        }
+        body {
             background: linear-gradient(to bottom, #ff4d4d, #ff9999);
             font-family: Arial, sans-serif;
         }
         {% block extra_styles %}{% endblock %}
-    </style>
+    </style>    
 </head>
 <body>
     {% block content %}{% endblock %}

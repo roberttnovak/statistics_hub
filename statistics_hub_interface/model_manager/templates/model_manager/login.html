@@ -1,0 +1,94 @@
+{% extends 'model_manager/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 30%; /* Adjust width as necessary */
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .section-title {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #d32f2f;
+    }
+    .field-group {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin-bottom: 10px;
+    }
+    .field-group label {
+        text-align: left;
+    }
+    .field-group input {
+        flex: 1;
+        text-align: left;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #d32f2f;
+        color: white;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-top: 20px;
+        align-self: center;
+    }
+    button:hover {
+        background-color: #b71c1c;
+    }
+    .message {
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url 'login' %}" class="form-container"> <!-- Ensure you have defined the 'login' named URL in urls.py -->
+        {% csrf_token %}
+        <div class="section">
+            <div class="section-title">User Login</div>
+            <div class="field-group">
+                <label for="id_username">Username:</label>
+                <input type="text" id="id_username" name="username" placeholder="Username" required>
+            </div>
+            <div class="field-group">
+                <label for="id_password">Password:</label>
+                <input type="password" id="id_password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit">Login</button>
+            {% if form.errors %}
+                <div class="message fail">
+                    Your username and/or password were incorrect.
+                </div>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_scripts %}
+    <!-- Cualquier script extra que quieras añadir -->
+{% endblock %}

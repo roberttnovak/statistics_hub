@@ -10,8 +10,9 @@ sys.path.append(str(Path("../src")))
 from sql_utils import test_database_connection
 from own_utils import modify_json_values
 from ConfigManager import ConfigManager
+from django.contrib.auth import authenticate, login
 
-
+creds_path = '../global_creds/sql.json'
 
 def get_model_parameters(request, model_type):
     config_manager = ConfigManager("../config")
@@ -91,9 +92,9 @@ def connect_to_database(request):
             'db_password': db_password
         }
 
-        modify_json_values("../creds/sql.json", changes)
+        modify_json_values(creds_path, changes)
 
-        with open('../creds/sql.json', 'r') as file:
+        with open(creds_path, 'r') as file:
             default_values = json.load(file)
 
         connection_successful = test_database_connection(
@@ -104,7 +105,7 @@ def connect_to_database(request):
         
     else:
         # Read the default values for GET request
-        with open('../creds/sql.json', 'r') as file:
+        with open(creds_path, 'r') as file:
             default_values = json.load(file)        
     
     return render(request, 
@@ -115,3 +116,18 @@ def connect_to_database(request):
             'connection_successful': connection_successful
         }
     )
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirigir a la página de inicio después del login exitoso
+            return redirect('data_source_selection')  # Asegúrate de reemplazar 'home' con el nombre de tu vista de inicio
+        else:
+            # Devolver al formulario de login con un mensaje de error
+            return render(request, 'model_manager/login.html', {'form': { 'errors': True }})
+    else:
+        return render(request, 'model_manager/login.html')

@@ -26,6 +26,7 @@ db.sqlite3
 # Sensitive Information
 # Ignore directory containing sensitive information
 creds/
+global_creds/
 
 # Local Data and Model Directories
 # Ignore directories for storing local data and trained models

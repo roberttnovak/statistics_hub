@@ -1,16 +1,20 @@
 import json
 import os
 from pathlib import Path
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 import sys
 from django.shortcuts import render
+from django.urls import reverse
 
 sys.path.append(str(Path("../src")))
 from sql_utils import test_database_connection
 from own_utils import modify_json_values
 from ConfigManager import ConfigManager
 from django.contrib.auth import authenticate, login
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
 
 creds_path = '../global_creds/sql.json'
 
@@ -131,3 +135,76 @@ def user_login(request):
             return render(request, 'model_manager/login.html', {'form': { 'errors': True }})
     else:
         return render(request, 'model_manager/login.html')
+    
+@login_required  # Ensures that only authenticated users can access this view.
+def upload_file(request):
+    """
+    Handles file uploads by authenticated users, displaying an upload form for GET requests
+    and saving the file for POST requests. After a successful upload, the user is redirected
+    to prevent duplicate submissions if the page is refreshed.
+
+    Parameters:
+    - request: HttpRequest object containing metadata and the uploaded file.
+
+    Returns:
+    - HttpResponse: Redirect to the upload page to display the form and list of uploaded files,
+                    or a 405 response for methods not allowed.
+    """
+    if request.method == 'POST':
+        # Handle file upload on POST request.
+        user = request.user
+
+        # Define the path to the 'data' directory within the user's tenant directory.
+        tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', user.username, 'data')
+        
+        # Create the directory if it doesn't exist.
+        os.makedirs(tenant_data_dir, exist_ok=True)
+
+        # Use FileSystemStorage with the path to the tenant's 'data' directory.
+        fs = FileSystemStorage(location=tenant_data_dir)
+
+        # Get the uploaded file from the request.
+        myfile = request.FILES['local_file']
+
+        # Check for directory traversal in filename.
+        if '..' in myfile.name or '/' in myfile.name:
+            raise ValueError("Invalid filename.")
+
+        try:
+            # Save the file.
+            filename = fs.save(myfile.name, myfile)
+            
+            # Get the URL of the saved file.
+            uploaded_file_url = fs.url(filename)
+
+            # Redirect to the same view to show the form and file list.
+            return HttpResponseRedirect(reverse('upload_file'))
+        except Exception as e:
+            # Handle any unexpected exceptions during file save operation.
+            # Log the exception and return an appropriate HTTP response.
+            # (Logging not shown here, but should be implemented.)
+            return HttpResponse(str(e), status=500)
+
+    elif request.method == 'GET':
+        # Show the upload form on GET request.
+        user = request.user
+
+        # Define the path to the 'data' directory within the user's tenant directory.
+        tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', user.username, 'data')
+
+        # Use FileSystemStorage to list files in the directory.
+        fs = FileSystemStorage(location=tenant_data_dir)
+
+        # List files already uploaded.
+        user_files = [{'name': file, 'url': fs.url(file)} for file in fs.listdir('')[1]]
+
+        # Render the upload form and list of files.
+        return render(request, 'model_manager/upload_file.html', {
+            'user_files': user_files
+        })
+
+    else:
+        # Return a response indicating that the method is not allowed.
+        # Only POST and GET are supported.
+        return HttpResponseNotAllowed(['POST', 'GET'])
+

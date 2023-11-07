@@ -40,9 +40,10 @@ def create_user_directory(sender, instance, created, **kwargs):
     - kwargs: Additional keyword arguments.
     """
     if created:
-        # Use the username instead of the ID to name the tenant directory
+    
         tenant_dir = os.path.join(settings.BASE_DIR, 'tenants', instance.username)
-        os.makedirs(tenant_dir, exist_ok=True)
+        data_dir = os.path.join(tenant_dir, 'data')  # Subdirectorio para archivos subidos
+        os.makedirs(data_dir, exist_ok=True)
         
         # and copy the global configuration to the user's 'config' directory
         global_config_dir = os.path.abspath(os.path.join(settings.BASE_DIR,  '..', 'config'))

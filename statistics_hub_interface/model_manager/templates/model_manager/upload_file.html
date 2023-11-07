@@ -4,10 +4,6 @@
 
 {% block extra_styles %}
     body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         margin: 0;
     }
     form {
@@ -20,6 +16,8 @@
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: auto; /* Centra el formulario horizontalmente */
+        margin-top: 20px; /* Agrega un poco de margen en la parte superior */
     }
     input[type="file"] {
         border: 2px solid #d32f2f;
@@ -53,9 +51,20 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="icon-container">
-            <i class="fas fa-file-import"></i>  <!-- ícono de importar archivo -->
+            <i class="fas fa-file-import"></i>  
         </div>
-        <input type="file" name="csv_file" required>
+        <input type="file" name="local_file" required>
         <button type="submit">Upload</button>
     </form>
+
+    <div>
+        <h2>Your Uploaded Files</h2>
+        <ul>
+            {% for file in user_files %}
+                <li><a href="{{ file.url }}">{{ file.name }}</a></li>
+            {% empty %}
+                <li>No files uploaded yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

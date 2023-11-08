@@ -20,7 +20,7 @@ __pycache__/
 # Logs and Databases
 # Ignore logs, databases, and other generated files
 nohup.out
-db.sqlite3
+# db.sqlite3
 **/logs/
 
 # Sensitive Information

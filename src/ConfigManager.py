@@ -113,16 +113,21 @@ class ConfigManager:
     def _get_folder_path(self, subfolder: Union[str, List[str]] = None) -> Path:
         """
         Get the folder path, optionally to a specified subfolder or subfolder path.
+        Raises an error if the subfolder does not exist.
 
         Parameters:
         subfolder (Union[str, List[str]], optional): The subfolder or subfolder path to look for configuration files. Defaults to None.
 
         Returns:
         Path: The path to the folder or subfolder.
+
+        Raises:
+        FileNotFoundError: If the subfolder does not exist.
         """
-        if subfolder:
-            return self.config_folder_path.joinpath(Path(subfolder))
-        return self.config_folder_path
+        folder_path = self.config_folder_path.joinpath(Path(subfolder)) if subfolder else self.config_folder_path
+        if not folder_path.is_dir():  # Verify if the subfolder exists
+            raise FileNotFoundError(f"Subfolder does not exist: {folder_path}")
+        return folder_path
 
 # # Usage:
 # config_manager = ConfigManager("../config")

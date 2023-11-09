@@ -140,50 +140,70 @@ def user_login(request):
 def upload_file(request):
     """
     Handles file uploads by authenticated users, displaying an upload form for GET requests
-    and saving the file for POST requests. After a successful upload, the user is redirected
-    to prevent duplicate submissions if the page is refreshed.
+    and processing the file for POST requests. After a successful file upload, the user is
+    redirected to avoid duplicate submissions if the page is refreshed. If a file is selected
+    for training, 'data_source.json' is created or updated with the selected file's name,
+    and the user is redirected to the 'train_model' view.
 
     Parameters:
-    - request: HttpRequest object containing metadata and the uploaded file.
+    - request: HttpRequest object containing metadata, the uploaded file, or the selected file name.
 
     Returns:
     - HttpResponse: Redirect to the upload page to display the form and list of uploaded files,
-                    or a 405 response for methods not allowed.
+                    redirect to the train model page after selecting a file, or a 405 response for methods not allowed.
     """
     if request.method == 'POST':
-        # Handle file upload on POST request.
-        user = request.user
+        if 'local_file' in request.FILES:
+            # Handle file upload on POST request.
+            user = request.user
 
-        # Define the path to the 'data' directory within the user's tenant directory.
-        tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', user.username, 'data')
-        
-        # Create the directory if it doesn't exist.
-        os.makedirs(tenant_data_dir, exist_ok=True)
-
-        # Use FileSystemStorage with the path to the tenant's 'data' directory.
-        fs = FileSystemStorage(location=tenant_data_dir)
-
-        # Get the uploaded file from the request.
-        myfile = request.FILES['local_file']
-
-        # Check for directory traversal in filename.
-        if '..' in myfile.name or '/' in myfile.name:
-            raise ValueError("Invalid filename.")
-
-        try:
-            # Save the file.
-            filename = fs.save(myfile.name, myfile)
+            # Define the path to the 'data' directory within the user's tenant directory.
+            tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', user.username, 'data')
             
-            # Get the URL of the saved file.
-            uploaded_file_url = fs.url(filename)
+            # Create the directory if it doesn't exist.
+            os.makedirs(tenant_data_dir, exist_ok=True)
 
-            # Redirect to the same view to show the form and file list.
-            return HttpResponseRedirect(reverse('upload_file'))
-        except Exception as e:
-            # Handle any unexpected exceptions during file save operation.
-            # Log the exception and return an appropriate HTTP response.
-            # (Logging not shown here, but should be implemented.)
-            return HttpResponse(str(e), status=500)
+            # Use FileSystemStorage with the path to the tenant's 'data' directory.
+            fs = FileSystemStorage(location=tenant_data_dir)
+
+            # Get the uploaded file from the request.
+            myfile = request.FILES['local_file']
+
+            # Check for directory traversal in filename.
+            if '..' in myfile.name or '/' in myfile.name:
+                raise ValueError("Invalid filename.")
+
+            try:
+                # Save the file.
+                filename = fs.save(myfile.name, myfile)
+                
+                # Get the URL of the saved file.
+                uploaded_file_url = fs.url(filename)
+
+                # Redirect to the same view to show the form and file list.
+                return HttpResponseRedirect(reverse('upload_file'))
+            except Exception as e:
+                # Handle any unexpected exceptions during file save operation.
+                # Log the exception and return an appropriate HTTP response.
+                # (Logging not shown here, but should be implemented.)
+                return HttpResponse(str(e), status=500)
+        
+        elif 'selected_file' in request.POST:
+            # File selection logic for training
+            selected_file = request.POST['selected_file']
+            if '..' in selected_file or '/' in selected_file:
+                # Additional security check
+                raise ValueError("Invalid filename.")
+            tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', request.user.username)
+            data_source_path = os.path.join(tenant_data_dir, 'data_source.json')
+            os.makedirs(tenant_data_dir, exist_ok=True)  # Ensure the directory exists
+            with open(data_source_path, 'w') as file:
+                # Write the selected file name to 'data_source.json'
+                json.dump({'selected_file': selected_file}, file)
+            return redirect('train_model')  # Redirect to the training view
+        else:
+            # Invalid POST request
+            return HttpResponse("Invalid POST request.", status=400)
 
     elif request.method == 'GET':
         # Show the upload form on GET request.

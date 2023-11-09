@@ -48,6 +48,7 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Form for file upload -->
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="icon-container">
@@ -57,14 +58,24 @@
         <button type="submit">Upload</button>
     </form>
 
-    <div>
-        <h2>Your Uploaded Files</h2>
-        <ul>
-            {% for file in user_files %}
-                <li><a href="{{ file.url }}">{{ file.name }}</a></li>
-            {% empty %}
-                <li>No files uploaded yet.</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <!-- Selection of a file for training -->
+    {% if user_files %}
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <h2>Select one of a file you have uploaded to train model</h2>
+                <select name="selected_file">
+                    {% for file in user_files %}
+                        <option value="{{ file.name }}">{{ file.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Select for Training</button>
+            </div>
+        </form>
+    {% else %}
+        <div>
+            <h2>No files uploaded yet.</h2>
+        </div>
+    {% endif %}
 {% endblock %}
+

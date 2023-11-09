@@ -15,11 +15,25 @@ from ConfigManager import ConfigManager
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 creds_path = '../global_creds/sql.json'
 
+# ToDo: remove train_model
+# ToDo: Use ConfigManager in all functions when necessary (for example upload_file instead manual modification)
+# ToDo: Document better and apply good practice
+
+@login_required
+def get_models_list(request):
+    user = request.user
+    config_manager = ConfigManager(f"tenants/{user}/config")
+    models_list = config_manager.list_configs(subfolder="models_parameters")
+    return models_list
+
+@login_required
 def get_model_parameters(request, model_type):
-    config_manager = ConfigManager("../config")
+    user = request.user
+    config_manager = ConfigManager(f"tenants/{user}/config")
     model_parameters_default = config_manager.load_config(model_type, subfolder="models_parameters")
     legible_names_of_parameters = config_manager.load_config("legible_names_of_parameters", subfolder="models_parameters/metadata")
     descriptions_of_parameters = config_manager.load_config("description_of_parameters", subfolder="models_parameters/metadata")
@@ -28,7 +42,7 @@ def get_model_parameters(request, model_type):
         "legible_names_of_parameters": legible_names_of_parameters,
         "descriptions_of_parameters": descriptions_of_parameters
     }
-    return JsonResponse(response_data)
+    return response_data
 
 
 def train_model(request):
@@ -63,12 +77,68 @@ def train_model(request):
         }
     )
 
+@login_required
+def model_selection(request):
+    if request.method == 'POST':
+        selected_model = request.POST.get('model_type')
+        return redirect('model_parameters', model_name=selected_model)
+    else:
+        models_list = get_models_list(request)
+        return render(request, 'model_manager/model_selection.html', {'models_list': models_list})
+
+@login_required
+def model_parameters(request, model_name):
+    """
+    View for handling the display and update of model parameters.
+
+    Parameters:
+    - request: HttpRequest object containing metadata and form data for POST requests.
+    - model_name: str, the name of the model whose parameters are being edited.
+
+    Returns:
+    - HttpResponse: Rendered HTML page for GET requests or a redirect for POST requests.
+    """
+    user = request.user
+
+    # Instantiate the ConfigManager with the path to the user's tenant configuration.
+    config_manager = ConfigManager(f"tenants/{user}/config")
+
+    if request.method == 'POST':
+        # Capture the form data as a dictionary.
+        updated_parameters = {param: request.POST.get(param) for param in request.POST if param != 'csrfmiddlewaretoken'}
+
+        try:
+            # Update the model's configuration using the captured form data.
+            config_manager.update_config(model_name, updated_parameters, subfolder="models_parameters")
+
+            # Send a success message back to the template.
+            messages.success(request, "Model parameters updated successfully.")
+
+            # Redirect to avoid post data resubmission if the user refreshes the page.
+            return redirect('model_parameters', model_name=model_name)
+
+        except FileNotFoundError as e:
+            # Log the error and handle it as appropriate.
+            # (Not shown: You should include logging here for the error e)
+            messages.error(request, "An error occurred while updating the parameters. Please try again.")
+
+    # For a GET request, load the existing parameters to display in the form.
+    try:
+        # Load the model's current parameters from the configuration.
+        model_parameters = config_manager.load_config(model_name, subfolder="models_parameters")
+
+    except FileNotFoundError:
+        # If the config file is not found, handle the error appropriately (e.g., log it, send an error message to the template, etc.)
+        model_parameters = {}
+
+    # Render the page with the current model parameters.
+    return render(request, 'model_manager/model_parameters.html', {
+        'model_name': model_name,
+        'model_parameters': model_parameters
+    })
+
 def data_source_selection(request):
     return render(request, 'model_manager/data_source_selection.html')
-
-def upload_file(request):
-    # Lógica para manejar la carga del CSV
-    return render(request, 'model_manager/upload_file.html')
 
 def connect_to_database(request):
 
@@ -143,7 +213,7 @@ def upload_file(request):
     and processing the file for POST requests. After a successful file upload, the user is
     redirected to avoid duplicate submissions if the page is refreshed. If a file is selected
     for training, 'data_source.json' is created or updated with the selected file's name,
-    and the user is redirected to the 'train_model' view.
+    and the user is redirected to the '' view.
 
     Parameters:
     - request: HttpRequest object containing metadata, the uploaded file, or the selected file name.
@@ -200,7 +270,7 @@ def upload_file(request):
             with open(data_source_path, 'w') as file:
                 # Write the selected file name to 'data_source.json'
                 json.dump({'selected_file': selected_file}, file)
-            return redirect('train_model')  # Redirect to the training view
+            return redirect('model_selection')  # Redirect to the training view
         else:
             # Invalid POST request
             return HttpResponse("Invalid POST request.", status=400)

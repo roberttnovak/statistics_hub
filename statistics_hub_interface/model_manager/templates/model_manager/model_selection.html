@@ -1,0 +1,12 @@
+<!-- model_selection.html -->
+<form method="post">
+    {% csrf_token %}
+    <label for="model_type">Selecciona un modelo:</label>
+    <select name="model_type" id="model_type">
+        <option value="" disabled selected>Seleccione un modelo</option>
+        {% for model in models_list %}
+            <option value="{{ model }}">{{ model }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Ver Parámetros</button>
+</form>

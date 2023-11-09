@@ -1,0 +1,11 @@
+<h2>Edit parameters for: {{ model_name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for param, value in model_parameters.items %}
+        <div>
+            <label for="param_{{ param }}">{{ param }}:</label>
+            <input type="text" name="{{ param }}" id="param_{{ param }}" value="{{ value }}">
+        </div>
+    {% endfor %}
+    <button type="submit">Guardar Cambios</button>
+</form>

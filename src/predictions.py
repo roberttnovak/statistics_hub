@@ -1,7 +1,8 @@
 import datetime
 import json
 import logging
-import os 
+import os
+from pathlib import Path 
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.discriminant_analysis import StandardScaler
@@ -12,8 +13,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import all_estimators 
 from typing import Union, Tuple, List, Dict, Optional
 import numpy as np
+from OwnLog import OwnLogger
 from PersistanceManager import PersistenceManager, persist_model_to_disk_structure
-from own_utils import get_all_args
+from cleaning import prepare_dataframe_from_db, process_time_series_data
+from own_utils import get_all_args, load_json
+from sql_utils import data_importer
 
 #ToDo: Acordarse de meter las funciones de que cada vez que se llaman a las funciones que tienen flags
 # training-done.txt etc, al entrar, si ve este archivo, se borre mientras hace el proceso 
@@ -1566,3 +1570,99 @@ def evaluate_model(
     
     # Return the summary data
     return predictions_train_test_summarise
+
+def run_time_series_prediction_pipeline(config_path: str, model_name: str, config_log_filename: str):
+    """
+    Execute the time series prediction pipeline from loading configurations, preprocessing data,
+    to running the machine learning model and saving the outputs.
+
+    Parameters:
+    - config_path (str): Path to the configuration directory.
+    - model_name (str): Name of the machine learning model to be used.
+    - config_log_filename (str): Name of the log configuration file.
+
+    Returns:
+    - None: This function is designed to process the pipeline and does not return a value.
+
+    Examples:
+    >>> run_time_series_prediction_pipeline("../config", "KNeighborsRegressor", "config_logs")
+    """
+    # Load configuration parameters from JSON files
+    config_model_parameters = load_json(os.path.join(config_path, "models_parameters"), model_name)
+    config_logs_parameters = load_json(config_path, config_log_filename)
+
+    # Set up logging configuration
+    own_logger = OwnLogger(
+        log_rotation=config_logs_parameters["log_rotation"],
+        max_bytes=config_logs_parameters["max_bytes"],
+        backup_count=config_logs_parameters["backup_count"],
+        when=config_logs_parameters["when"]
+    )
+    logger = own_logger.get_logger()
+
+    # Import data from the database
+    df = data_importer(
+        automatic_importation=config_model_parameters["data_importer_automatic_importation"],
+        creds_path=Path(config_model_parameters["data_importer_creds_path"]),
+        path_instants_data_saved=Path(config_model_parameters["data_importer_path_instants_data_saved"]),
+        database=config_model_parameters["data_importer_database"],
+        query=config_model_parameters["data_importer_query"],
+        save_importation=config_model_parameters["data_importer_save_importation"],
+        file_name=config_model_parameters["data_importer_file_name"],
+        logger=logger  
+    )
+
+    # Prepare DataFrame from database
+    df = prepare_dataframe_from_db(
+        df=df,
+        cols_for_query=config_model_parameters["prepare_dataframe_from_db_cols_for_query"],
+        logger=logger
+    )
+
+    # Process time series data: resample and interpolate
+    df_resampled_interpolated = process_time_series_data(
+        df=df,
+        resample_freq=config_model_parameters["df_resampled_interpolated_resample_freq"],
+        aggregation_func=config_model_parameters["df_resampled_interpolated_aggregation_func"],
+        method=config_model_parameters["df_resampled_interpolated_method"],
+        outlier_cols=config_model_parameters["df_resampled_interpolated_outlier_cols"],
+        logger=logger
+    )
+
+    # Pivot and rename columns for uniformity
+    df_preprocessed = pd.pivot_table(
+        df_resampled_interpolated.reset_index()[["timestamp", "id_device", "id_variable", "value"]],
+        index=["timestamp", "id_device"],
+        columns=["id_variable"]
+    ).reset_index()
+
+    # Flatten the MultiIndex for columns
+    df_preprocessed.columns = [f"{lvl0}_{lvl1}" if lvl1 else lvl0 for lvl0, lvl1 in df_preprocessed.columns]
+
+    # Execute the machine learning model
+    model_machine_learning = create_model_machine_learning_algorithm(
+        tidy_data=df_preprocessed,
+        ini_train=config_model_parameters["ini_train"],
+        fin_train=config_model_parameters["fin_train"],
+        fin_test=config_model_parameters["fin_test"],
+        id_device=config_model_parameters["id_device"],
+        model_sklearn_name=config_model_parameters["predictor"],
+        X_name_features=config_model_parameters["X_name_features"],
+        Y_name_features=config_model_parameters["Y_name_features"],
+        n_lags=config_model_parameters["n_lags"],
+        n_leads=config_model_parameters["n_predictions"],
+        lag_columns=config_model_parameters["lag_columns"],
+        lead_columns=config_model_parameters["Y_name_features"],
+        scale_in_preprocessing=config_model_parameters["scale_in_preprocessing"],
+        name_time_column=config_model_parameters["name_time_column"],
+        name_id_sensor=config_model_parameters["name_id_sensor_column"],
+        save_preprocessing=config_model_parameters["save_preprocessing"],
+        path_to_save_model=Path(config_model_parameters["path_to_save_model"]),
+        folder_name_model=config_model_parameters["folder_name_model"],
+        folder_name_time_execution=config_model_parameters.get("folder_name_time_execution", 
+                                    f"execution-time-{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"),
+        folder_name_preprocessed_data = config_model_parameters["folder_name_preprocessed_data"],
+        machine_learning_model_args = config_model_parameters["machine_learning_model_args"]
+    )
+
+    return model_machine_learning

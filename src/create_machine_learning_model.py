@@ -92,18 +92,17 @@ df = prepare_dataframe_from_db(
 )
 
 # Processing time serie data: uniform frequency and interpolating missing values
-# ToDo: pasar esto como al json y mirar lo del np.mean
-df_resampled_interpolated_resample_freq =  config_model_parameters["df_resampled_interpolated_resample_freq"]
-df_resampled_interpolated_aggregation_func =  config_model_parameters["df_resampled_interpolated_aggregation_func"]
-df_resampled_interpolated_method =  config_model_parameters["df_resampled_interpolated_method"]
-df_resampled_interpolated_outlier_cols = config_model_parameters["df_resampled_interpolated_outlier_cols"]
+preprocess_time_series_data_resample_freq =  config_model_parameters["preprocess_time_series_data_resample_freq"]
+preprocess_time_series_data_aggregation_func =  config_model_parameters["preprocess_time_series_data_aggregation_func"]
+preprocess_time_series_data_method =  config_model_parameters["preprocess_time_series_data_method"]
+preprocess_time_series_data_outlier_cols = config_model_parameters["preprocess_time_series_data_outlier_cols"]
 
 df_resampled_interpolated = process_time_series_data(
     df = df ,
-    resample_freq = df_resampled_interpolated_resample_freq,
-    aggregation_func = df_resampled_interpolated_aggregation_func,
-    method = df_resampled_interpolated_method,
-    outlier_cols = df_resampled_interpolated_outlier_cols,
+    resample_freq = preprocess_time_series_data_resample_freq,
+    aggregation_func = preprocess_time_series_data_aggregation_func,
+    method = preprocess_time_series_data_method,
+    outlier_cols = preprocess_time_series_data_outlier_cols,
     logger = logger
 )
 

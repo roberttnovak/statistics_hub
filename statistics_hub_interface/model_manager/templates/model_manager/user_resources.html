@@ -1,0 +1,43 @@
+{% extends 'model_manager/base.html' %} <!-- Extiende de tu plantilla base si tienes una -->
+{% load static %} <!-- Carga archivos estáticos si es necesario -->
+
+{% block content %}
+<div class="container">
+    <h2>Resources</h2>
+    
+    <!-- Navegación por pestañas -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#models" data-toggle="tab">Models</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#data" data-toggle="tab">Data uploaded</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#graphs" data-toggle="tab">...</a>
+        </li>
+    </ul>
+
+    <!-- Contenido de las pestañas -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="models">
+            <!-- Lista de modelos aquí -->
+        </div>
+        <div class="tab-pane fade" id="data">
+            <!-- Lista de conjuntos de datos aquí -->
+        </div>
+        <div class="tab-pane fade" id="graphs">
+            <!-- Lista de gráficas aquí -->
+        </div>
+    </div>
+
+    <!-- Mensajes de retroalimentación -->
+    {% if messages %}
+    <div class="alert-messages">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

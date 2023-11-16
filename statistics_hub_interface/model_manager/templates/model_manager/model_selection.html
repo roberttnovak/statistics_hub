@@ -1,12 +1,26 @@
 <!-- model_selection.html -->
 <form method="post">
     {% csrf_token %}
-    <label for="model_type">Selecciona un modelo:</label>
+    <label for="model_type">Select a model:</label>
     <select name="model_type" id="model_type">
-        <option value="" disabled selected>Seleccione un modelo</option>
+        <option value="" disabled {% if not selected_model %}selected{% endif %}>Select a model</option>
         {% for model in models_list %}
-            <option value="{{ model }}">{{ model }}</option>
+            <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
         {% endfor %}
     </select>
-    <button type="submit">Ver Parámetros</button>
+    <input type="hidden" name="action" id="formAction" value="show_parameters">
+    <button type="button" id="showParametersButton">Show Parameters</button>
+    <button type="button" id="trainModelButton">Train Model</button>
 </form>
+
+<script>
+    document.getElementById('showParametersButton').addEventListener('click', function() {
+        document.getElementById('formAction').value = 'show_parameters';
+        document.querySelector('form').submit();
+    });
+
+    document.getElementById('trainModelButton').addEventListener('click', function() {
+        document.getElementById('formAction').value = 'train_model';
+        document.querySelector('form').submit();
+    });
+</script>

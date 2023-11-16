@@ -1571,7 +1571,7 @@ def evaluate_model(
     # Return the summary data
     return predictions_train_test_summarise
 
-def run_time_series_prediction_pipeline(config_path: str, model_name: str, config_log_filename: str):
+def run_time_series_prediction_pipeline(config_path: str, model_name: str, config_log_filename: str = None):
     """
     Execute the time series prediction pipeline from loading configurations, preprocessing data,
     to running the machine learning model and saving the outputs.
@@ -1579,7 +1579,7 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     Parameters:
     - config_path (str): Path to the configuration directory.
     - model_name (str): Name of the machine learning model to be used.
-    - config_log_filename (str): Name of the log configuration file.
+    - config_log_filename (str): Name of the log configuration file. Default None
 
     Returns:
     - None: This function is designed to process the pipeline and does not return a value.
@@ -1588,17 +1588,21 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     >>> run_time_series_prediction_pipeline("../config", "KNeighborsRegressor", "config_logs")
     """
     # Load configuration parameters from JSON files
+
     config_model_parameters = load_json(os.path.join(config_path, "models_parameters"), model_name)
-    config_logs_parameters = load_json(config_path, config_log_filename)
 
     # Set up logging configuration
-    own_logger = OwnLogger(
-        log_rotation=config_logs_parameters["log_rotation"],
-        max_bytes=config_logs_parameters["max_bytes"],
-        backup_count=config_logs_parameters["backup_count"],
-        when=config_logs_parameters["when"]
-    )
-    logger = own_logger.get_logger()
+    if config_log_filename: 
+        config_logs_parameters = load_json(config_path, config_log_filename) 
+        own_logger = OwnLogger(
+            log_rotation=config_logs_parameters["log_rotation"],
+            max_bytes=config_logs_parameters["max_bytes"],
+            backup_count=config_logs_parameters["backup_count"],
+            when=config_logs_parameters["when"]
+        )
+        logger = own_logger.get_logger()
+    else:
+        logger = None
 
     # Import data from the database
     df = data_importer(
@@ -1622,10 +1626,10 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     # Process time series data: resample and interpolate
     df_resampled_interpolated = process_time_series_data(
         df=df,
-        resample_freq=config_model_parameters["df_resampled_interpolated_resample_freq"],
-        aggregation_func=config_model_parameters["df_resampled_interpolated_aggregation_func"],
-        method=config_model_parameters["df_resampled_interpolated_method"],
-        outlier_cols=config_model_parameters["df_resampled_interpolated_outlier_cols"],
+        resample_freq=config_model_parameters["preprocess_time_series_data_resample_freq"],
+        aggregation_func=config_model_parameters["preprocess_time_series_data_aggregation_func"],
+        method=config_model_parameters["preprocess_time_series_data_method"],
+        outlier_cols=config_model_parameters["preprocess_time_series_data_outlier_cols"],
         logger=logger
     )
 
@@ -1637,32 +1641,55 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     ).reset_index()
 
     # Flatten the MultiIndex for columns
-    df_preprocessed.columns = [f"{lvl0}_{lvl1}" if lvl1 else lvl0 for lvl0, lvl1 in df_preprocessed.columns]
+    df_preprocessed.columns = ["timestamp", "id_device", "y", "temperatura", "humedad", "tvoc", "presion", "siaq", "diaq"]
 
-    # Execute the machine learning model
+
+    # Model parameters 
+    ini_train = config_model_parameters["ini_train"]
+    fin_train = config_model_parameters["fin_train"]
+    fin_test = config_model_parameters["fin_test"]
+    name_time_column = config_model_parameters["name_time_column"]
+    name_id_sensor_column = config_model_parameters["name_id_sensor_column"]
+    id_device = config_model_parameters["id_device"]
+    names_objective_variable = config_model_parameters["names_objective_variable"]
+    predictor = config_model_parameters["predictor"]
+    X_name_features = config_model_parameters["X_name_features"] if config_model_parameters["X_name_features"] is not None else list(set(df_preprocessed.columns)-set(['y','timestamp','id_device']))
+    Y_name_features = config_model_parameters["Y_name_features"]
+    n_lags = config_model_parameters["n_lags"]
+    n_predictions = config_model_parameters["n_predictions"]
+    lag_columns = config_model_parameters["lag_columns"] if config_model_parameters["lag_columns"] is not None else list(set(df_preprocessed.columns)-set(['y','timestamp','id_device'])) + ["y"]
+    scale_in_preprocessing = config_model_parameters["scale_in_preprocessing"]
+    path_to_save_model = config_model_parameters["path_to_save_model"]
+    path_to_save_model = Path(config_model_parameters["path_to_save_model"])
+    save_preprocessing = config_model_parameters["save_preprocessing"]
+    folder_name_model = config_model_parameters["folder_name_model"]
+    folder_name_preprocessed_data = config_model_parameters["folder_name_preprocessed_data"]
+    now_str = f"execution-time-{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+    folder_name_time_execution = config_model_parameters["folder_name_time_execution"] if config_model_parameters["folder_name_time_execution"] is not None else now_str
+    machine_learning_model_args = config_model_parameters["machine_learning_model_args"]
+
     model_machine_learning = create_model_machine_learning_algorithm(
-        tidy_data=df_preprocessed,
-        ini_train=config_model_parameters["ini_train"],
-        fin_train=config_model_parameters["fin_train"],
-        fin_test=config_model_parameters["fin_test"],
-        id_device=config_model_parameters["id_device"],
-        model_sklearn_name=config_model_parameters["predictor"],
-        X_name_features=config_model_parameters["X_name_features"],
-        Y_name_features=config_model_parameters["Y_name_features"],
-        n_lags=config_model_parameters["n_lags"],
-        n_leads=config_model_parameters["n_predictions"],
-        lag_columns=config_model_parameters["lag_columns"],
-        lead_columns=config_model_parameters["Y_name_features"],
-        scale_in_preprocessing=config_model_parameters["scale_in_preprocessing"],
-        name_time_column=config_model_parameters["name_time_column"],
-        name_id_sensor=config_model_parameters["name_id_sensor_column"],
-        save_preprocessing=config_model_parameters["save_preprocessing"],
-        path_to_save_model=Path(config_model_parameters["path_to_save_model"]),
-        folder_name_model=config_model_parameters["folder_name_model"],
-        folder_name_time_execution=config_model_parameters.get("folder_name_time_execution", 
-                                    f"execution-time-{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"),
-        folder_name_preprocessed_data = config_model_parameters["folder_name_preprocessed_data"],
-        machine_learning_model_args = config_model_parameters["machine_learning_model_args"]
+        tidy_data = df_preprocessed,
+        ini_train = ini_train,
+        fin_train = fin_train,
+        fin_test = fin_test,
+        id_device = id_device,
+        model_sklearn_name = predictor,
+        X_name_features = X_name_features,
+        Y_name_features = Y_name_features,
+        n_lags = n_lags,
+        n_leads = n_predictions,
+        lag_columns = lag_columns,
+        lead_columns = Y_name_features,
+        scale_in_preprocessing = scale_in_preprocessing,
+        name_time_column = name_time_column,
+        name_id_sensor = name_id_sensor_column,
+        save_preprocessing = save_preprocessing,
+        path_to_save_model= path_to_save_model,
+        folder_name_model= folder_name_model,
+        folder_name_time_execution = folder_name_time_execution,
+        folder_name_preprocessed_data = folder_name_preprocessed_data,
+        machine_learning_model_args = machine_learning_model_args
     )
 
     return model_machine_learning

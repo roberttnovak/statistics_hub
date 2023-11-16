@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
@@ -7,6 +8,17 @@ import os
 import shutil
 from django.conf import settings
 
+from pathlib import Path
+import sys
+
+sys.path.append(str(Path("../src")))
+from ConfigManager import ConfigManager
+from predictions import get_all_regressors_with_its_parameters
+
+# ToDo: Investigar lo de si el instance.username puede dar problemas con respecto a .user que se usa en las otras funciones
+# en las views de model_manager
+# ToDo: No funciona crear usuarios desde la interfaz (ip/admin). Pero sí desde la consola con 
+# python manage.py createsuperuser. Solucionar esto en algún momento. De momento, tiro así
 
 class CustomUser(AbstractUser):
     groups = models.ManyToManyField(
@@ -55,6 +67,16 @@ def create_user_directory(sender, instance, created, **kwargs):
         user_creds_dir = os.path.join(tenant_dir, 'creds')
         shutil.copytree(global_creds_dir, user_creds_dir, dirs_exist_ok=True)
 
+        # Change correct path to save models 
+        config_manager = ConfigManager("../statistics_hub_interface/tenants/admin/config")
+        
+        all_regressors_with_its_parameters = get_all_regressors_with_its_parameters()
+        all_regressors = list(all_regressors_with_its_parameters.keys())
+
+        # Update path to save model
+        [config_manager.update_config(regressor, {"path_to_save_model": f"tenants/{instance.username}/models"}, subfolder = "models_parameters") 
+        for regressor in all_regressors]
+
 @receiver(pre_delete, sender=CustomUser)  # Use pre_delete if you want to delete before the user is actually removed from the database
 def delete_user_directory(sender, instance, **kwargs):
     """
@@ -69,3 +91,16 @@ def delete_user_directory(sender, instance, **kwargs):
     tenant_dir = os.path.join(settings.BASE_DIR, 'tenants', instance.username)
     if os.path.exists(tenant_dir):
         shutil.rmtree(tenant_dir)  # Use rmtree to delete the directory tree
+
+# ToDo: Crear una forma más automática para borrar usuarios. De momento:
+# python manage.py shell
+# ----------
+# from users.models import CustomUser
+# user_to_delete = CustomUser.objects.get(username='nombre')
+# user_to_delete.delete()
+# try:
+#     user = CustomUser.objects.get(username='nombre')
+#     print("El usuario aún existe.")
+# except CustomUser.DoesNotExist:
+#     print("El usuario ha sido eliminado.")
+# ----------

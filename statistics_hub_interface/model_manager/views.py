@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from pathlib import Path
 from django.conf import settings
@@ -7,21 +8,29 @@ from django.shortcuts import redirect, render
 import sys
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 sys.path.append(str(Path("../src")))
 from sql_utils import test_database_connection
 from own_utils import modify_json_values
 from ConfigManager import ConfigManager
-from django.contrib.auth import authenticate, login
-from django.core.files.storage import FileSystemStorage
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from predictions import run_time_series_prediction_pipeline
+
 
 creds_path = '../global_creds/sql.json'
 
 # ToDo: remove train_model
 # ToDo: Use ConfigManager in all functions when necessary (for example upload_file instead manual modification)
 # ToDo: Document better and apply good practice
+
+@login_required
+def user_resources(request):
+    """
+    """
+    return render(request, 'model_manager/user_resources.html')
 
 @login_required
 def get_models_list(request):
@@ -45,46 +54,45 @@ def get_model_parameters(request, model_type):
     return response_data
 
 
-def train_model(request):
-    model_type = ""
-    model_parameters_default = None 
-    legible_names_of_parameters = None    
-    descriptions_of_parameters = None
-    all_regresors_with_its_parameters = None    
+@login_required
+def model_train(request, model_name):
+    if request.method == 'POST':
+        config_path = f"tenants/{request.user.username}/config"
+        config_log_filename = "config_logs"
 
-    config_manager = ConfigManager("../config")
+        try:
+            run_time_series_prediction_pipeline(config_path, model_name, config_log_filename)
+            messages.success(request, "Model trained succesfully")
+        except Exception as e:
+            messages.error(request, f"Error during training: {e}")
 
-    if request.method == "POST":
-        model_type = request.POST["model_type"]
-        model_parameters_default = config_manager.load_config(model_type, subfolder="models_parameters") 
-        legible_names_of_parameters = config_manager.load_config("legible_names_of_parameters", subfolder="models_parameters/metadata")
-        descriptions_of_parameters = config_manager.load_config("description_of_parameters", subfolder="models_parameters/metadata")
-        all_regresors_with_its_parameters = config_manager.load_config("all_regresors_with_its_parameters", subfolder="models_parameters/metadata")
+        return redirect('model_selection') 
 
-    
-    models_list = config_manager.list_configs(subfolder="models_parameters")
-
-    sklearn_parameters = all_regresors_with_its_parameters.get(model_type,{}) if model_type else {}  # verifica si model_type está definido antes de intentar acceder a all_regresors_with_its_parameters
-
-    return render(
-        request, 
-        "model_manager/train_model.html", 
-        {
-            "models_list": models_list, 
-            "model_parameters_default": model_parameters_default,
-            "legible_names_of_parameters" : legible_names_of_parameters,
-            "descriptions_of_parameters" : descriptions_of_parameters
-        }
-    )
+    else:
+        return redirect('model_selection')
 
 @login_required
 def model_selection(request):
     if request.method == 'POST':
         selected_model = request.POST.get('model_type')
-        return redirect('model_parameters', model_name=selected_model)
-    else:
-        models_list = get_models_list(request)
-        return render(request, 'model_manager/model_selection.html', {'models_list': models_list})
+        action = request.POST.get('action')
+        if action == 'show_parameters':
+            return redirect('model_parameters', model_name=selected_model)
+        elif action == 'train_model':
+            config_path = f"tenants/{request.user.username}/config"
+            #ToDo: Tratar en algún momento los logs 
+            config_log_filename = None
+            try:
+                run_time_series_prediction_pipeline(config_path, selected_model, config_log_filename)
+                messages.success(request, "Model trained succesfully")
+            except Exception as e:
+                messages.error(request, f"Error during training: {e}")
+
+            return redirect('model_train', model_name=selected_model)
+
+    models_list = get_models_list(request)
+    return render(request, 'model_manager/model_selection.html', {'models_list': models_list})
+
 
 @login_required
 def model_parameters(request, model_name):
@@ -104,6 +112,8 @@ def model_parameters(request, model_name):
     config_manager = ConfigManager(f"tenants/{user}/config")
 
     if request.method == 'POST':
+        if not model_name:
+            model_name = request.POST.get('model_type')  
         # Capture the form data as a dictionary.
         updated_parameters = {param: request.POST.get(param) for param in request.POST if param != 'csrfmiddlewaretoken'}
 
@@ -115,7 +125,7 @@ def model_parameters(request, model_name):
             messages.success(request, "Model parameters updated successfully.")
 
             # Redirect to avoid post data resubmission if the user refreshes the page.
-            return redirect('model_parameters', model_name=model_name)
+            return redirect('..', model_name=model_name)
 
         except FileNotFoundError as e:
             # Log the error and handle it as appropriate.

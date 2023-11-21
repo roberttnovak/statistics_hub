@@ -118,6 +118,8 @@ def model_train(request, model_name):
 
 @login_required
 def model_selection(request):
+    selected_model = request.GET.get('selected_model')
+
     if request.method == 'POST':
         selected_model = request.POST.get('model_type')
         action = request.POST.get('action')
@@ -136,7 +138,10 @@ def model_selection(request):
             return redirect('model_train', model_name=selected_model)
 
     models_list = get_models_list(request)
-    return render(request, 'model_manager/model_selection.html', {'models_list': models_list})
+    return render(request, 'model_manager/model_selection.html', {
+        'models_list': models_list,
+        'selected_model': selected_model  
+    })
 
 
 @login_required
@@ -166,11 +171,9 @@ def model_parameters(request, model_name):
             # Update the model's configuration using the captured form data.
             config_manager.update_config(model_name, updated_parameters, subfolder="models_parameters")
 
-            # Send a success message back to the template.
-            messages.success(request, "Model parameters updated successfully.")
-
             # Redirect to avoid post data resubmission if the user refreshes the page.
-            return redirect('..', model_name=model_name)
+            # return redirect('../../model_selection', model_name=model_name)
+            return HttpResponseRedirect(f"{reverse('model_selection')}?selected_model={model_name}")
 
         except FileNotFoundError as e:
             # Log the error and handle it as appropriate.

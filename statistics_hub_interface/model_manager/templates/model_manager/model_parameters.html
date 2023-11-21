@@ -1,5 +1,15 @@
 <!-- model_parameters.html -->
 <h2>Edit parameters for: {{ model_name }}</h2>
+<div>
+Cambios pendientes:
+<ul>
+    <li> #ToDO: Dejar los nombres de los parámetros legibles  </li>
+    <li> #ToDo: Dejar las descripciones de los parámetros  </li>
+    <li> #ToDo: Hacer un filtro de los parámetros: Cuáles dejar visibles y cuáles no  </li>
+    <li> #ToDo: Agrupar parámetros de naturaleza parecida </li>
+    <li> #ToDo: Pensar en una estética mejor</li>
+</ul>
+<div>
 <form method="post">
     {% csrf_token %}
     {% for param, value in model_parameters.items %}

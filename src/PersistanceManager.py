@@ -5,6 +5,8 @@ import pandas as pd
 import joblib 
 import pickle
 
+from own_utils import list_directories_by_depth
+
 # ToDo: Create more functions for validating inputs like validate_string_input
 # ToDo: Cuadrar save_predictions con save_preprocessed_data
 # ToDo: Meter remove_object y también la funiconalidad en la clase de las flags crear/borrar flags
@@ -19,7 +21,7 @@ class PersistenceManager:
     scalers, preprocessed data, metadata, predictions and others
     """
 
-    def __init__(self, base_path: str,folder_name_model: str, folder_name_range_train: str, folder_name_time_execution: str):
+    def __init__(self, base_path: str = None ,folder_name_model : str = None, folder_name_range_train: str= None, folder_name_time_execution: str= None):
         """
         Initializes the PersistenceManager with the provided base path, model name, training range, 
         and execution time, which are used to construct a path for saving and loading objects.
@@ -46,14 +48,139 @@ class PersistenceManager:
         ...     folder_name_time_execution='execution-time-2023_09_27_13_24_30'
         ... )
         """
+        #ToDo: Hacer que puedan ponerse vacío. 
         # Validation of inputs
-        self.validate_string_input(folder_name_model, folder_name_range_train, folder_name_time_execution)
+        # self.validate_string_input(folder_name_model, folder_name_range_train, folder_name_time_execution)
         # Attributes initialization
         self.base_path = base_path
         self.folder_name_model = folder_name_model
         self.folder_name_range_train = folder_name_range_train
         self.folder_name_time_execution = folder_name_time_execution
-        self.path = os.path.join(base_path, folder_name_model, folder_name_range_train, folder_name_time_execution)
+        
+        # Construct the path excluding None values
+        path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
+        filtered_path_components = [component for component in path_components if component is not None]
+        self.path = os.path.join(*filtered_path_components)
+
+    def get_available_models(self):
+        """
+        Scans the base directory and returns a list of available model names.
+
+        Returns:
+        --------
+        list
+            A list of model names available in the base directory.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(...)
+        >>> pm.get_available_models()
+        ['model1', 'model2', ...]
+        """
+        try:
+            return [name for name in os.listdir(self.base_path) if os.path.isdir(os.path.join(self.base_path, name))]
+        except FileNotFoundError:
+            return []
+
+    def get_training_ranges_for_model(self, model_name):
+        """
+        Given a model name, scans the corresponding directory and returns a list of training ranges available for the model.
+
+        Parameters:
+        -----------
+        model_name : str
+            The name of the model to scan for training ranges.
+
+        Returns:
+        --------
+        list
+            A list of training ranges available for the specified model.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(...)
+        >>> pm.get_training_ranges_for_model('model1')
+        ['range1', 'range2', ...]
+        """
+        model_path = os.path.join(self.base_path, model_name)
+        try:
+            return [name for name in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, name))]
+        except FileNotFoundError:
+            return []
+
+    def get_execution_times_for_model_and_range(self, model_name, training_range):
+        """
+        Given a model name and a training range, scans the corresponding directory and returns a list of execution times available.
+
+        Parameters:
+        -----------
+        model_name : str
+            The name of the model.
+        training_range : str
+            The training range of the model.
+
+        Returns:
+        --------
+        list
+            A list of execution times available for the specified model and training range.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(...)
+        >>> pm.get_execution_times_for_model_and_range('model1', 'range1')
+        ['execution1', 'execution2', ...]
+        """
+        range_path = os.path.join(self.base_path, model_name, training_range)
+        try:
+            return [name for name in os.listdir(range_path) if os.path.isdir(os.path.join(range_path, name))]
+        except FileNotFoundError:
+            return []
+        
+    def list_all_models(self):
+        """
+        Lists all available models by scanning the base directory.
+
+        Returns:
+        --------
+        list
+            A list of all available models.
+        """
+        return list_directories_by_depth(self.base_path, max_depth=1, list_only_last_level=True)
+
+    def list_all_training_ranges(self):
+        """
+        Lists all training ranges for each model.
+
+        Returns:
+        --------
+        dict
+            A dictionary with model names as keys and a list of training ranges as values.
+        """
+        models = self.list_all_models()
+        training_ranges = {}
+        for model in models:
+            model_path = os.path.join(self.base_path, model)
+            training_ranges[model] = list_directories_by_depth(model_path, max_depth=1, list_only_last_level=True)
+        return training_ranges
+
+    def list_all_execution_times(self):
+        """
+        Lists all execution times for each model and training range.
+
+        Returns:
+        --------
+        dict
+            A nested dictionary with model names as keys, training ranges as sub-keys, 
+            and a list of execution times as values.
+        """
+        training_ranges = self.list_all_training_ranges()
+        execution_times = {}
+        for model, ranges in training_ranges.items():
+            execution_times[model] = {}
+            for range_ in ranges:
+                range_path = os.path.join(self.base_path, model, range_)
+                execution_times[model][range_] = list_directories_by_depth(range_path, max_depth=1, list_only_last_level=True)
+        return execution_times
 
     def validate_string_input(self,*args):
         """

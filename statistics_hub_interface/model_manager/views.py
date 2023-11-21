@@ -12,8 +12,9 @@ from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+ 
 sys.path.append(str(Path("../src")))
+from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import modify_json_values
 from ConfigManager import ConfigManager
@@ -26,11 +27,55 @@ creds_path = '../global_creds/sql.json'
 # ToDo: Use ConfigManager in all functions when necessary (for example upload_file instead manual modification)
 # ToDo: Document better and apply good practice
 
+
 @login_required
 def user_resources(request):
-    """
-    """
+    # Aquí puedes añadir lógica para obtener cualquier dato necesario para la plantilla
+    # Por ejemplo, listas de modelos, conjuntos de datos, etc.
     return render(request, 'model_manager/user_resources.html')
+
+@login_required
+def user_resources_models(request):
+    user = request.user
+    pm = PersistenceManager(base_path=f"tenants/{user}/models")
+
+    # Lista de modelos y sus rangos de entrenamiento.
+    models_list = pm.get_available_models()
+    
+    # Diccionario para almacenar modelos, rangos y tiempos de ejecución.
+    models_with_details = {}
+
+    for model in models_list:
+        ranges = pm.get_training_ranges_for_model(model)
+        models_with_details[model] = {}
+
+        for range_ in ranges:
+            execution_times = pm.get_execution_times_for_model_and_range(model, range_)
+            models_with_details[model][range_] = execution_times
+
+    return render(request, 'model_manager/user_resources_models.html', {
+        'models_with_details': models_with_details
+    })
+
+@login_required
+def model_evaluation_time_execution(request, execution_time):
+    # Lógica para manejar la vista de tiempo de ejecución
+    return render(request, 'model_manager/model_evaluation_time_execution.html')
+
+@login_required
+def model_evaluation_train_range(request, training_range):
+    # Lógica para manejar la vista del rango de entrenamiento
+    return render(request, 'model_manager/model_evaluation_train_range.html')
+
+@login_required
+def model_evaluation_model(request, model):
+    # Lógica para manejar la vista del modelo
+    return render(request, 'model_manager/model_evaluation_model.html')
+
+@login_required
+def model_evaluation_all_models(request):
+    # Lógica para manejar la vista del modelo
+    return render(request, 'model_manager/model_evaluation_all_models.html')
 
 @login_required
 def get_models_list(request):

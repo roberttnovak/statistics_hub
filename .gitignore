@@ -58,6 +58,7 @@ app_smartcampus/__pycache__/
 # Internal Testing Files
 # Ignore files beginning with 'testeo' in the src directory
 src/testeo*
+statistics_hub_interface/testeo*
 
 # Others
 # ToDo: Rearrage properly in another moment

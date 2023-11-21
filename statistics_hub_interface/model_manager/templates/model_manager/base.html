@@ -13,6 +13,53 @@
             background: linear-gradient(to bottom, #ff4d4d, #ff9999);
             font-family: Arial, sans-serif;
         }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            padding: 20px; /* Añade algo de relleno alrededor del contenedor, ajusta según sea necesario */
+        }
+
+        .nested-list {
+            width: calc(100% - 20px); /* Ajusta el ancho al 100% menos el padding del contenedor */
+            max-width: 800px; /* Puedes aumentar esto si quieres que las tarjetas sean más anchas */
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+
+        .nested-list li {
+            background-color: #fff; /* Fondo blanco para la tarjeta */
+            border: 1px solid #ddd; /* Borde ligero */
+            border-radius: 4px; /* Bordes redondeados */
+            padding: 10px 15px; /* Espaciado interno */
+            margin-bottom: 10px; /* Margen entre tarjetas */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            transition: box-shadow 0.3s ease-in-out; /* Transición suave para la sombra */
+        }
+
+        .nested-list li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más prominente al pasar el ratón */
+        }
+
+        /* Estilo para sublistas */
+        .nested-list li ul {
+            padding-left: 20px; /* Sangría para sublistas */
+        }
+
+        /* Estilo genérico para títulos en las listas */
+        .list-title {
+            font-weight: bold; /* Texto en negrita */
+            color: #333; /* Color oscuro para el texto */
+            display: block; /* Hace que el texto ocupe toda la anchura */
+        }
+
+        /* Estilo genérico para subtextos en las listas */
+        .list-subtext {
+            font-style: italic; /* Texto en cursiva */
+            color: #555; /* Color más claro para el texto */
+        }
+
         {% block extra_styles %}{% endblock %}
     </style>    
 </head>

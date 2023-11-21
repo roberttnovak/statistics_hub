@@ -1,43 +1,19 @@
-{% extends 'model_manager/base.html' %} <!-- Extiende de tu plantilla base si tienes una -->
-{% load static %} <!-- Carga archivos estáticos si es necesario -->
+{% extends 'model_manager/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container">
-    <h2>Resources</h2>
-    
-    <!-- Navegación por pestañas -->
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="#models" data-toggle="tab">Models</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#data" data-toggle="tab">Data uploaded</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#graphs" data-toggle="tab">...</a>
-        </li>
-    </ul>
+    <h2>User resources saved</h2>
 
-    <!-- Contenido de las pestañas -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="models">
-            <!-- Lista de modelos aquí -->
-        </div>
-        <div class="tab-pane fade" id="data">
-            <!-- Lista de conjuntos de datos aquí -->
-        </div>
-        <div class="tab-pane fade" id="graphs">
-            <!-- Lista de gráficas aquí -->
-        </div>
+    <!-- Lista de Categorías de Recursos -->
+    <div class="nested-list">
+        <ul>
+            <li class="list-title">
+                <a href="{% url 'user_resources_models' %}">Models</a> <!-- Enlace a la vista user_resources_models -->
+            </li>
+            <li class="list-title">Figures</li>
+            <li class="list-title">Datasets</li>
+        </ul>
     </div>
-
-    <!-- Mensajes de retroalimentación -->
-    {% if messages %}
-    <div class="alert-messages">
-        {% for message in messages %}
-        <div class="alert {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

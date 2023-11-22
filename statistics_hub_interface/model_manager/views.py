@@ -18,7 +18,7 @@ from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import modify_json_values
 from ConfigManager import ConfigManager
-from predictions import run_time_series_prediction_pipeline
+from predictions import run_time_series_prediction_pipeline, evaluate_model
 
 
 creds_path = '../global_creds/sql.json'
@@ -58,9 +58,45 @@ def user_resources_models(request):
     })
 
 @login_required
-def model_evaluation_time_execution(request, execution_time):
-    # Lógica para manejar la vista de tiempo de ejecución
-    return render(request, 'model_manager/model_evaluation_time_execution.html')
+def model_evaluation_time_execution(request, model, training_range, execution_time):
+    context = {
+        'model': model,
+        'training_range': training_range,
+        'execution_time': execution_time,
+    }
+
+    if request.method == 'POST':
+        user = request.user
+        path_to_save_model = os.path.join("tenants",user.username,"models")
+        folder_name_model = model
+        folder_name_range_train = training_range
+        folder_name_time_execution = execution_time
+        #ToDo: Mirar esto para hacerlo más general 
+        folder_name_predictions = "predictions"
+        save = True
+        flag_name = "evaluations-done"
+        flag_content = ""
+        flag_subfolder = None
+        # summarise_mae functions arguments
+        freq = None 
+        group_by_timestamp = True
+
+        df_evaluation = evaluate_model(
+            path_to_save_model= path_to_save_model,
+            folder_name_model=folder_name_model,
+            folder_name_range_train=folder_name_range_train,
+            folder_name_time_execution=folder_name_time_execution,
+            folder_name_predictions = folder_name_predictions,
+            save=save,
+            flag_name=flag_name,
+            flag_content=flag_content,
+            flag_subfolder=flag_subfolder,
+            freq = freq,
+            group_by_timestamp = group_by_timestamp
+        )
+        context['df_html'] = df_evaluation.to_html()
+
+    return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
 @login_required
 def model_evaluation_train_range(request, training_range):
@@ -131,7 +167,6 @@ def model_selection(request):
             config_log_filename = None
             try:
                 run_time_series_prediction_pipeline(config_path, selected_model, config_log_filename)
-                messages.success(request, "Model trained succesfully")
             except Exception as e:
                 messages.error(request, f"Error during training: {e}")
 

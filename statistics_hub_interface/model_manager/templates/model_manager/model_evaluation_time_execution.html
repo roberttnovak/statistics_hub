@@ -3,7 +3,16 @@
 
 {% block content %}
 <div class="container">
-    <h2>Evaluation Execution Time</h2>
-    <p>Pending to implement evaluation execution time</p>
+    <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Evaluate Model">
+    </form>
+
+    <!-- Mostrar la tabla aquí -->
+    {% if df_html %}
+        <div class="dataframe-container">
+            {{ df_html|safe }}  <!-- Mostrar el DataFrame como HTML -->
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

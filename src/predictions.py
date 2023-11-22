@@ -1588,9 +1588,10 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     >>> run_time_series_prediction_pipeline("../config", "KNeighborsRegressor", "config_logs")
     """
     # Load configuration parameters from JSON files
-
     config_model_parameters = load_json(os.path.join(config_path, "models_parameters"), model_name)
-
+    config_model_common_parameters = load_json(os.path.join(config_path, "models_parameters","common_parameters"), "common_parameters")
+    # Get in a single dictionary all configs
+    config_model_parameters = {**config_model_parameters, **config_model_common_parameters}
     # Set up logging configuration
     if config_log_filename: 
         config_logs_parameters = load_json(config_path, config_log_filename) 

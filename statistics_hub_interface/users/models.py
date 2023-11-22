@@ -73,9 +73,17 @@ def create_user_directory(sender, instance, created, **kwargs):
         all_regressors_with_its_parameters = get_all_regressors_with_its_parameters()
         all_regressors = list(all_regressors_with_its_parameters.keys())
 
-        # Update path to save model
-        [config_manager.update_config(regressor, {"path_to_save_model": f"tenants/{instance.username}/models"}, subfolder = "models_parameters") 
-        for regressor in all_regressors]
+        # Update paths to save model
+        # [config_manager.update_config(regressor, {"path_to_save_model": f"tenants/{instance.username}/models"}, subfolder = "models_parameters") 
+        # for regressor in all_regressors]
+        config_manager.update_config("common_parameters", 
+                                     {
+                                        "path_to_save_model": f"tenants/{instance.username}/models",
+                                        "data_importer_creds_path": f"tenants/{instance.username}/creds",
+                                        "data_importer_path_instants_data_saved": f"tenants/{instance.username}/data"
+                                      }, 
+                                     subfolder = "models_parameters/common_parameters")
+
 
 @receiver(pre_delete, sender=CustomUser)  # Use pre_delete if you want to delete before the user is actually removed from the database
 def delete_user_directory(sender, instance, **kwargs):
@@ -96,10 +104,11 @@ def delete_user_directory(sender, instance, **kwargs):
 # python manage.py shell
 # ----------
 # from users.models import CustomUser
-# user_to_delete = CustomUser.objects.get(username='nombre')
+# name = 'name'
+# user_to_delete = CustomUser.objects.get(username=name)
 # user_to_delete.delete()
 # try:
-#     user = CustomUser.objects.get(username='nombre')
+#     user = CustomUser.objects.get(username=name)
 #     print("El usuario aún existe.")
 # except CustomUser.DoesNotExist:
 #     print("El usuario ha sido eliminado.")

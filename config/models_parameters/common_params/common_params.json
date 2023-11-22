@@ -1,0 +1,7 @@
+{
+    "data_importer_creds_path": "../creds/sql.json",
+    "data_importer_path_instants_data_saved": "../data/instants_data_saved",
+    "path_to_save_model": "../models",
+    "folder_name" : "predictions",
+    "folder_name_preprocessed_data": "preprocessed-data-to-use-in-model"
+}

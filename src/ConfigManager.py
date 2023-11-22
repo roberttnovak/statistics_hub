@@ -72,18 +72,52 @@ class ConfigManager:
         folder_path = self._get_folder_path(subfolder)
         return [f.stem for f in folder_path.glob("*.json")]
 
-    def update_config(self, config_filename: str, new_values: Dict[str, Any], subfolder: Union[str, List[str]] = None):
+    def update_config(self, config_filename: str, new_values: Dict[str, str], subfolder: Union[str, List[str]] = None):
         """
-        Update specific keys in a configuration file in a specified subfolder.
+        Update specific keys in a configuration file in a specified subfolder. Converts the value types
+        to match the original config types if necessary.
 
         Parameters:
-        config_filename (str): The name of the configuration file (without extension).
-        new_values (Dict[str, Any]): A dictionary of keys and values to update.
-        subfolder (Union[str, List[str]], optional): The subfolder or subfolder path where the configuration file is located. Defaults to None.
+        - config_filename (str): The name of the configuration file (without extension).
+        - new_values (Dict[str, str]): A dictionary of keys and string values to update.
+        - subfolder (Union[str, List[str]], optional): The subfolder or subfolder path where the configuration file is located. Defaults to None.
         """
         config = self.load_config(config_filename, subfolder)  # Load the existing config
-        config.update(new_values)  # Update the config with new values
+
+        # Update the config with new values, converting types as necessary
+        for key, value in new_values.items():
+            if key in config:
+                config[key] = self._safe_convert_type(value, type(config[key]))
+            else:
+                config[key] = value
+
         self.save_config(config_filename, config, subfolder)  # Save the updated config back to file
+
+    def _safe_convert_type(self, value: str, original_type: type) -> Any:
+        """
+        Safely convert the string value to the specified type if possible, avoiding the use of eval.
+
+        Parameters:
+        - value (str): The string value to convert.
+        - original_type (type): The type to convert the value to.
+
+        Returns:
+        - Any: The converted value.
+        """
+        if value.lower() in ('none', 'null', ''):
+            return None
+        try:
+            if original_type == bool:
+                return value.lower() in ('true', '1', 't', 'y', 'yes')
+            elif original_type == list:
+                return json.loads(value.replace("'", '"'))  # Converts string to list, ensuring double quotes for JSON compatibility
+            elif original_type in [int, float]:
+                return original_type(value)
+            else:  # fallback to string
+                return value
+        except (ValueError, json.JSONDecodeError):
+            # Return the original value if conversion fails
+            return value
 
     def update_all_configs(self, new_values: Dict[str, Any], subfolder: Union[str, List[str]] = None):
         """

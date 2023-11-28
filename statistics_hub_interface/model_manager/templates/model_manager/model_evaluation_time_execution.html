@@ -1,18 +1,115 @@
-{% extends 'model_manager/base.html' %}
 {% load static %}
+
+{% block head %}
+<style>
+    .evaluation-content {
+        display: flex;
+        justify-content: space-between;
+    }
+    .evaluation-tables, .evaluation-figures {
+        width: 48%; 
+        padding: 10px;
+    }
+    a {
+        color: blue;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .evaluation-tables h2, .evaluation-figures h2 {
+        color: white;
+        background-color: navy;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .evaluation-tables, .evaluation-figures {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    /* Clase para ocultar elementos */
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
-    <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Evaluate Model">
-    </form>
+    {% if not flags_exist %}
+        <!-- Formulario para iniciar la evaluación del modelo -->
+        <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Evaluate Model">
+        </form>
+    {% else %}
+        <!-- Contenido de evaluación organizado en dos columnas -->
+        <div class="evaluation-content">
+            <!-- Columna para las tablas de evaluación -->
+            <div class="evaluation-tables">
+                <h2>Evaluation tables</h2>
+                <select id="table-selector" onchange="showSelectedTable()">
+                    <option value="">Seleccione una tabla</option>
+                    {% for file in evaluation_files %}
+                        <option value="table-{{ forloop.counter }}">{{ file }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Divs para cada tabla, inicialmente ocultos -->
+                {% for file in evaluation_files %}
+                    <div id="table-{{ forloop.counter }}" class="hidden">
+                        <!-- Contenido de la tabla -->
+                        <p>Tabla: {{ file }}</p>
+                    </div>
+                {% endfor %}
+            </div>
 
-    <!-- Mostrar la tabla aquí -->
-    {% if df_html %}
-        <div class="dataframe-container">
-            {{ df_html|safe }}  <!-- Mostrar el DataFrame como HTML -->
+            <!-- Columna para las figuras de evaluación -->
+            <div class="evaluation-figures">
+                <h2>Figuras de Evaluación</h2>
+                <select id="figure-selector" onchange="showSelectedFigure()">
+                    <option value="">Seleccione una figura</option>
+                    {% for figure in evaluation_figures %}
+                        <option value="figure-{{ forloop.counter }}">{{ figure }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Divs para cada figura, inicialmente ocultos -->
+                {% for figure in evaluation_figures %}
+                    <div id="figure-{{ forloop.counter }}" class="hidden">
+                        <!-- Contenido de la figura -->
+                        <p>Figura: {{ figure }}</p>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function showSelectedTable() {
+        var selector = document.getElementById('table-selector');
+        var tables = document.querySelectorAll('.evaluation-tables .hidden');
+        tables.forEach(function(table) {
+            table.style.display = 'none';
+        });
+        var selectedValue = selector.value;
+        if (selectedValue) {
+            document.getElementById(selectedValue).style.display = 'block';
+        }
+    }
+
+    function showSelectedFigure() {
+        var selector = document.getElementById('figure-selector');
+        var figures = document.querySelectorAll('.evaluation-figures .hidden');
+        figures.forEach(function(figure) {
+            figure.style.display = 'none';
+        });
+        var selectedValue = selector.value;
+        if (selectedValue) {
+            document.getElementById(selectedValue).style.display = 'block';
+        }
+    }
+</script>
 {% endblock %}

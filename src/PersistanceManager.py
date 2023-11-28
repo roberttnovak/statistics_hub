@@ -181,6 +181,48 @@ class PersistenceManager:
                 range_path = os.path.join(self.base_path, model, range_)
                 execution_times[model][range_] = list_directories_by_depth(range_path, max_depth=1, list_only_last_level=True)
         return execution_times
+    
+    def list_evaluations(self, sub_folder="evaluations"):
+        """
+        Lists all evaluation files in a specified sub-folder within the 
+        model directory structure.
+
+        Parameters:
+        -----------
+        sub_folder : str, optional (default: "evaluations")
+            The sub-folder within the model directory structure where 
+            evaluation files are stored.
+
+        Returns:
+        --------
+        list
+            A list of file names found in the specified evaluation sub-folder.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> evaluation_files = pm.list_evaluations()
+        ['evaluation1.csv', 'evaluation2.csv', ...]
+
+        Notes:
+        ------
+        This method assumes that evaluation files are stored in a specific 
+        sub-folder within the model's directory structure.
+        """
+
+        # Build the full path to the evaluations sub-folder
+        evaluations_path = self.build_path(sub_folder=sub_folder)
+        
+        # Check if the evaluations path exists
+        if not os.path.exists(evaluations_path):
+            warnings.warn(f"Evaluations path '{evaluations_path}' does not exist.")
+            return []
+
+        # List all files in the evaluations sub-folder
+        evaluation_files = [f for f in os.listdir(evaluations_path) if os.path.isfile(os.path.join(evaluations_path, f))]
+
+        return evaluation_files
+
 
     def validate_string_input(self,*args):
         """
@@ -498,6 +540,37 @@ class PersistenceManager:
         else:
             # Remove the flag file
             os.remove(flag_file_path)
+
+    def flag_exists(self, flag_name, sub_folder=None):
+        """
+        Checks if a flag file with the specified name exists in a specified sub-folder
+        or at the root level of the model directory structure.
+
+        Parameters:
+        -----------
+        flag_name : str
+            The name of the flag file. This name will be used to create the file name along with the '.txt' extension.
+        sub_folder : str or list of str, optional (default: None)
+            The name(s) of the sub-folder(s) to append to the base path. If a list is
+            provided, it represents nested sub-folders. If None, the flag file will be
+            checked at the root level of the model directory structure.
+
+        Returns:
+        --------
+        bool
+            True if the flag file exists, False otherwise.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> pm.flag_exists('training_completed', sub_folder='flags')
+        True
+        """
+        # Construct the path for the flag file
+        flag_file_path = self.build_path(sub_folder=sub_folder, file_name=flag_name, extension='txt')
+
+        # Check if the flag file exists and return the result
+        return os.path.exists(flag_file_path)
 
 
     def save_model(self, model, name="model", overwrite=False, extension="joblib"):

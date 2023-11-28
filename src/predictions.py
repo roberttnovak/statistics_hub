@@ -1239,6 +1239,7 @@ def process_model_machine_learning(
     folder_name_predictions: str = "predictions",
     name_column_objective_variable_of_scaler: str = "y",
     flag_predictions_done: str = "predictions-done.txt",
+    flag_content: str = "",
     overwrite_predictions: bool = False
 ) -> dict:
     """
@@ -1257,8 +1258,8 @@ def process_model_machine_learning(
     folder_name_predictions (str, optional): The name of the folder to save predictions in.
     name_column_objective_variable_of_scaler (str, optional): The name of the column used for scaling.
     flag_predictions_done (str, optional): The name of the file to create upon successful prediction.
+    flag_content (str, optional): Content inside .txt flag
     overwrite_predictions (bool, optional): Whether to overwrite existing predictions files.
-    
     Returns:
     --------
     Tuple
@@ -1375,15 +1376,17 @@ def process_model_machine_learning(
             name = "predictions-test",
             overwrite = overwrite_predictions
         )
+        #ToDo: Borrar los comentarios de abajo después de testar que todo funciona correctamente
         # Create a file to indicate that the predictions have been completed successfully
-        path_flag_predictions = os.path.join(
-            path_to_save_model,
-            folder_name_model,
-            folder_name_range_train,
-            folder_name_time_execution
-        )
-        with open(os.path.join(path_flag_predictions, flag_predictions_done), 'w') as f:
-            f.write('Predictions completed successfully.\n')
+        # path_flag_predictions = os.path.join(
+        #     path_to_save_model,
+        #     folder_name_model,
+        #     folder_name_range_train,
+        #     folder_name_time_execution
+        # )
+        # with open(os.path.join(path_flag_predictions, flag_predictions_done), 'w') as f:
+        #     f.write('Predictions completed successfully.\n')
+        pm.create_flag(flag_name=flag_predictions_done, content = flag_content, sub_folder=None)
     
     return {"df_predictions_train":df_predictions_train, "df_predictions_test": df_predictions_test}
 
@@ -1487,7 +1490,8 @@ def evaluate_model(
     flag_content =  "",
     flag_subfolder = None,
     folder_name_evaluation = "evaluations",
-    show_args_in_save = False,
+    show_args_in_save = False, 
+    save_name = None,
     **kwargs_summarise_mae
 ):
     """
@@ -1505,6 +1509,7 @@ def evaluate_model(
     flag_content (str, optional): content of the flag file. Default is empty string
     flag_subfolder (str, optional): Subfolder to save  flag file. Default is None 
     show_args_in_save (bool, optional): A flag indicating whether to include the arguments passed to summarise_mae function in the saved file name. Default is False.
+    save_name (str, optional): Custom name for the saved summary data file. If None, a default name is generated. Default is None.
     **kwargs_summarise_mae: 
         Additional keyword arguments to be passed to the summarise_mae function. This can include:
         - freq (str, optional): A string representing the frequency for grouping timestamps.
@@ -1560,10 +1565,11 @@ def evaluate_model(
     
     # Optionally save the summary data to disk
     if save:
-        save_name = "evaluations"
-        if show_args_in_save:
-            arg_name = "___".join([f"{arg}-{value}" for arg, value in kwargs_summarise_mae.items()])
-            save_name = f"{save_name}___{arg_name}"
+        if save_name is None:  # Use default naming convention if save_name is not provided
+            save_name = "evaluations"
+            if show_args_in_save:
+                arg_name = "___".join([f"{arg}-{value}" for arg, value in kwargs_summarise_mae.items()])
+                save_name = f"{save_name}___{arg_name}"
         # The logic for saving the summary data can be added here
         pm.save_evaluation_data(predictions_train_test_summarise, name = save_name , folder_name_evaluation=folder_name_evaluation)
         pm.create_flag(flag_name=flag_name, content = flag_content,sub_folder=flag_subfolder)

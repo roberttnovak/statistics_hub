@@ -12,13 +12,14 @@ from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import pandas as pd
  
 sys.path.append(str(Path("../src")))
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
-from own_utils import modify_json_values
+from own_utils import load_json, modify_json_values
 from ConfigManager import ConfigManager
-from predictions import run_time_series_prediction_pipeline, evaluate_model
+from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 
 
 creds_path = '../global_creds/sql.json'
@@ -59,42 +60,112 @@ def user_resources_models(request):
 
 @login_required
 def model_evaluation_time_execution(request, model, training_range, execution_time):
+
+    user = request.user
+    path_config = f"tenants/{user}/config/models_parameters/common_parameters"
+    config = load_json(path_config, "common_parameters")
+
+
+    path_to_save_model = config["path_to_save_model"]
+    folder_name_model = model
+    folder_name_range_train = training_range
+    folder_name_time_execution = execution_time
+    pm = PersistenceManager(
+        base_path=path_to_save_model,
+        folder_name_model=folder_name_model,
+        folder_name_range_train=folder_name_range_train, 
+        folder_name_time_execution=folder_name_time_execution
+    )
+
+    # flags_exist = (path_to_predictions / flag_predictions_done).exists() and (path_to_predictions / flag_evaluations_done).exists()
+    flag_predictions_done = config["flag_predictions_done"]
+    flag_evaluations_done = config["flag_evaluations_done"]
+    flag_predictions_done_exists = pm.flag_exists(flag_predictions_done)
+    flag_evaluations_done_exists = pm.flag_exists(flag_evaluations_done)
+    flags_exist = flag_predictions_done_exists and flag_evaluations_done_exists
+
+    evaluation_files = pm.list_evaluations()
+
     context = {
         'model': model,
         'training_range': training_range,
         'execution_time': execution_time,
+        'flags_exist': flags_exist,
+        'evaluation_files': evaluation_files
     }
 
-    if request.method == 'POST':
+    if request.method == 'POST' and not flags_exist:
         user = request.user
-        path_to_save_model = os.path.join("tenants",user.username,"models")
-        folder_name_model = model
-        folder_name_range_train = training_range
-        folder_name_time_execution = execution_time
-        #ToDo: Mirar esto para hacerlo más general 
-        folder_name_predictions = "predictions"
+
+        #ToDo: Generalizar mejor esto:
+        #ToDo: Homogenizar lógica de los .txt en predictions y evaluations 
+
+        folder_name_preprocessed_data = config["folder_name_preprocessed_data"]
         save = True
-        flag_name = "evaluations-done"
+        folder_name_predictions = config["folder_name_predictions"]
+        name_column_objective_variable_of_scaler = "y"
+        overwrite_predictions = False
+
+
+        if not flag_predictions_done_exists:
+
+            process_model_machine_learning(
+                path_to_save_model = path_to_save_model,
+                folder_name_model = folder_name_model,
+                folder_name_range_train = folder_name_range_train,
+                folder_name_time_execution = folder_name_time_execution,
+                folder_name_preprocessed_data = folder_name_preprocessed_data,
+                save = save,
+                folder_name_predictions = folder_name_predictions,
+                name_column_objective_variable_of_scaler = name_column_objective_variable_of_scaler,
+                flag_predictions_done = flag_predictions_done,
+                overwrite_predictions = overwrite_predictions
+            )
+
+        folder_name_predictions = config["folder_name_predictions"]
         flag_content = ""
         flag_subfolder = None
-        # summarise_mae functions arguments
         freq = None 
-        group_by_timestamp = True
+        # show_args_in_save = True
 
-        df_evaluation = evaluate_model(
-            path_to_save_model= path_to_save_model,
-            folder_name_model=folder_name_model,
-            folder_name_range_train=folder_name_range_train,
-            folder_name_time_execution=folder_name_time_execution,
-            folder_name_predictions = folder_name_predictions,
-            save=save,
-            flag_name=flag_name,
-            flag_content=flag_content,
-            flag_subfolder=flag_subfolder,
-            freq = freq,
-            group_by_timestamp = group_by_timestamp
-        )
-        context['df_html'] = df_evaluation.to_html()
+        if not flag_evaluations_done_exists:
+
+            df_evaluation_extended = evaluate_model(
+                path_to_save_model= path_to_save_model,
+                folder_name_model=folder_name_model,
+                folder_name_range_train=folder_name_range_train,
+                folder_name_time_execution=folder_name_time_execution,
+                folder_name_predictions = folder_name_predictions,
+                save=save,
+                flag_name=flag_evaluations_done,
+                flag_content=flag_content,
+                flag_subfolder=flag_subfolder,
+                freq = freq,
+                save_name = "evaluations-extended",
+                group_by_timestamp = True
+            )
+
+            df_evaluation_extended = evaluate_model(
+                path_to_save_model= path_to_save_model,
+                folder_name_model=folder_name_model,
+                folder_name_range_train=folder_name_range_train,
+                folder_name_time_execution=folder_name_time_execution,
+                folder_name_predictions = folder_name_predictions,
+                save=save,
+                flag_name=flag_evaluations_done,
+                flag_content=flag_content,
+                flag_subfolder=flag_subfolder,
+                freq = freq,
+                save_name = "evaluations-summarised",
+                group_by_timestamp = False
+            )
+
+
+        return redirect('model_evaluation_time_execution', model=model, training_range=training_range, execution_time=execution_time)
+
+    if flags_exist:
+        context['evaluation_table_link'] = f"/ruta/a/la/tabla/para/{model}/{training_range}/{execution_time}"
+        context['figure_link'] = f"/ruta/a/la/figura/para/{model}/{training_range}/{execution_time}"
 
     return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 

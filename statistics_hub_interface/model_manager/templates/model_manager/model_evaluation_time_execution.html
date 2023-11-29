@@ -2,114 +2,204 @@
 
 {% block head %}
 <style>
-    .evaluation-content {
-        display: flex;
-        justify-content: space-between;
+    .form-section {
+        margin-top: 20px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 10px;
     }
-    .evaluation-tables, .evaluation-figures {
-        width: 48%; 
-        padding: 10px;
+
+    .form-group {
+        margin-bottom: 10px;
     }
-    a {
-        color: blue;
-        text-decoration: none;
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
     }
-    a:hover {
-        text-decoration: underline;
+
+    .form-group input, 
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
     }
-    .evaluation-tables h2, .evaluation-figures h2 {
+
+    .form-group button, .view-selector button {
+        background-color: #4CAF50; /* Green */
         color: white;
-        background-color: navy;
-        padding: 5px;
-        border-radius: 5px;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
-    .evaluation-tables, .evaluation-figures {
-        background-color: #f8f9fa;
-        border-radius: 5px;
+
+    .form-group button:hover, .view-selector button:hover {
+        background-color: #45a049;
+    }
+
+    .view-selector {
+        text-align: center;
         margin-bottom: 20px;
     }
-    /* Clase para ocultar elementos */
-    .hidden {
+
+    #figure-view {
         display: none;
     }
+
+    #figure-description {
+        margin-top: 20px;
+        background-color: #fff; /* Fondo blanco para resaltar */
+        border-left: 5px solid #4CAF50; /* Borde izquierdo para resaltar */
+        padding: 15px;
+        font-style: normal; /* Eliminar estilo itálico */
+        color: #333; /* Color de texto más oscuro para mejorar la legibilidad */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave para dar profundidad */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+    .plotly-figure {
+        margin-top: 20px;
+    }
 </style>
+<!-- Añadir jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- Añadir DataTables CSS y JS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    {% if not flags_exist %}
-        <!-- Formulario para iniciar la evaluación del modelo -->
+    <div class="view-selector">
+        <button id="show-table-view">View Evaluation tables</button>
+        <button id="show-figure-view">View Figures tables</button>
+    </div>
+
+    <div class="form-section" id="table-view">
         <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Evaluate Model">
+            <input type="hidden" name="active_view" value="table-view">
+
+            <div class="form-group">
+                <label for="group_by_timestamp">Summarise by timestamp:</label>
+                <select id="group_by_timestamp" name="group_by_timestamp">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="freq">Frequency for grouping timestamps (Default: 1T, i.e, 1 min):</label>
+                <input type="text" id="freq" name="freq" placeholder="Ej: 5T, 1H">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="action" value="generate_evaluation">Generate Evaluation</button>
+            </div>
         </form>
-    {% else %}
-        <!-- Contenido de evaluación organizado en dos columnas -->
-        <div class="evaluation-content">
-            <!-- Columna para las tablas de evaluación -->
-            <div class="evaluation-tables">
-                <h2>Evaluation tables</h2>
-                <select id="table-selector" onchange="showSelectedTable()">
-                    <option value="">Seleccione una tabla</option>
+
+        {% if flag_evaluations_done_exists %}
+        <div class="evaluation-files">
+            <h2>Evaluaciones Guardadas</h2>
+            <form method="post" action="{% url 'model_evaluation_time_execution' model training_range execution_time %}">
+                {% csrf_token %}
+                <select name="selected_file" id="evaluation-selector">
+                    <option value="">Seleccione una evaluación</option>
                     {% for file in evaluation_files %}
-                        <option value="table-{{ forloop.counter }}">{{ file }}</option>
+                        <option value="{{ file }}">{{ file }}</option>
                     {% endfor %}
                 </select>
-                <!-- Divs para cada tabla, inicialmente ocultos -->
-                {% for file in evaluation_files %}
-                    <div id="table-{{ forloop.counter }}" class="hidden">
-                        <!-- Contenido de la tabla -->
-                        <p>Tabla: {{ file }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <!-- Columna para las figuras de evaluación -->
-            <div class="evaluation-figures">
-                <h2>Figuras de Evaluación</h2>
-                <select id="figure-selector" onchange="showSelectedFigure()">
-                    <option value="">Seleccione una figura</option>
-                    {% for figure in evaluation_figures %}
-                        <option value="figure-{{ forloop.counter }}">{{ figure }}</option>
-                    {% endfor %}
-                </select>
-                <!-- Divs para cada figura, inicialmente ocultos -->
-                {% for figure in evaluation_figures %}
-                    <div id="figure-{{ forloop.counter }}" class="hidden">
-                        <!-- Contenido de la figura -->
-                        <p>Figura: {{ figure }}</p>
-                    </div>
-                {% endfor %}
-            </div>
+                <button type="submit">Ver Evaluación</button>
+            </form>
         </div>
-    {% endif %}
+        {% endif %}
+
+        {% if table_html %}
+        <div class="data-table">
+            {{ table_html|safe }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="figure-view" style="display:none;">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="active_view" value="figure-view">
+            <div class="form-group">
+                <label for="selected_figure">Select figure:</label>
+                <select id="selected_figure" name="selected_figure">
+                    <option value="figure1">Time serie with boxplots of MAE predictions</option>
+                    <option value="figure2">figure 1 (in development)</option>
+                    <option value="figure3">figure 2 (in development)</option>
+                    <option value="figure4">...</option>
+                    <!-- Añade más opciones según sea necesario -->
+                </select>
+            </div>
+            <!-- Espacio para la descripción de la figura -->
+            
+            <div class="form-group">
+                <button type="submit" name="action" value="generate_figure">Generate Figure</button>
+            </div>
+            <div id="figure-description"></div>
+        </form>
+        {% if plot_html %}
+        <div class="plotly-figure">
+            {{ plot_html|safe }}
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endblock %}
 
-{% block javascript %}
 <script>
-    function showSelectedTable() {
-        var selector = document.getElementById('table-selector');
-        var tables = document.querySelectorAll('.evaluation-tables .hidden');
-        tables.forEach(function(table) {
-            table.style.display = 'none';
-        });
-        var selectedValue = selector.value;
-        if (selectedValue) {
-            document.getElementById(selectedValue).style.display = 'block';
-        }
-    }
+    $(document).ready(function() {
+        var activeView = "{{ active_view }}";
 
-    function showSelectedFigure() {
-        var selector = document.getElementById('figure-selector');
-        var figures = document.querySelectorAll('.evaluation-figures .hidden');
-        figures.forEach(function(figure) {
-            figure.style.display = 'none';
+        $('#show-table-view').click(function() {
+            $('#table-view').show();
+            $('#figure-view').hide();
         });
-        var selectedValue = selector.value;
-        if (selectedValue) {
-            document.getElementById(selectedValue).style.display = 'block';
+
+        $('#show-figure-view').click(function() {
+            $('#figure-view').show();
+            $('#table-view').hide();
+        });
+
+        // Establecer la vista activa en la carga de la página
+        if (activeView === 'figure-view') {
+            $('#figure-view').show();
+            $('#table-view').hide();
+        } else {
+            $('#table-view').show();
+            $('#figure-view').hide();
         }
-    }
+
+        $('.data-table table').DataTable();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var figureSelector = document.getElementById('selected_figure');
+        var figureDescription = document.getElementById('figure-description');
+
+        var descriptions = {
+            'figure1': "This visualization combines a boxplot and a time series plot to offer a clear and concise view of your model's performance. The boxplot showcases the distribution of Mean Absolute Error (MAE) across training and testing datasets, revealing key insights into the model's accuracy. Accompanying this, the time series plot provides a real-time view of the actual values in your dataset. This dual-view approach allows for an intuitive understanding of both the model's error trends and the inherent data patterns, making it a valuable tool for quick yet thorough model evaluation.",
+            'figure2': 'Descripción para la Figura 2.',
+            'figure3': 'Descripción para la Figura 3.',
+            'figure4': 'Descripción para la Figura 4.',
+        };
+
+        function updateDescription() {
+            var selectedValue = figureSelector.value;
+            figureDescription.textContent = descriptions[selectedValue] || 'Seleccione una figura para ver su descripción.';
+        }
+
+        figureSelector.addEventListener('change', updateDescription);
+        updateDescription();
+    });
 </script>
 {% endblock %}

@@ -13,8 +13,11 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import pandas as pd
+import plotly.offline as py
+import plotly.graph_objs as go
  
 sys.path.append(str(Path("../src")))
+from visualisations import plot_box_time_series
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import load_json, modify_json_values
@@ -37,6 +40,12 @@ def user_resources(request):
 
 @login_required
 def user_resources_models(request):
+    # Aquí puedes añadir lógica para obtener cualquier dato necesario para la plantilla
+    # Por ejemplo, listas de modelos, conjuntos de datos, etc.
+    return render(request, 'model_manager/user_resources_models.html')
+
+@login_required
+def user_resources_models_saved(request):
     user = request.user
     pm = PersistenceManager(base_path=f"tenants/{user}/models")
 
@@ -54,7 +63,7 @@ def user_resources_models(request):
             execution_times = pm.get_execution_times_for_model_and_range(model, range_)
             models_with_details[model][range_] = execution_times
 
-    return render(request, 'model_manager/user_resources_models.html', {
+    return render(request, 'model_manager/user_resources_models_saved.html', {
         'models_with_details': models_with_details
     })
 
@@ -86,26 +95,34 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
 
     evaluation_files = pm.list_evaluations()
 
+    active_view = request.POST.get('active_view', 'table-view')
+
     context = {
         'model': model,
         'training_range': training_range,
         'execution_time': execution_time,
-        'flags_exist': flags_exist,
-        'evaluation_files': evaluation_files
+        'flag_predictions_done_exists': flag_predictions_done_exists,
+        'flag_evaluations_done_exists' : flag_evaluations_done_exists,
+        'evaluation_files': evaluation_files,
+        'active_view': active_view
     }
 
-    if request.method == 'POST' and not flags_exist:
-        user = request.user
+
+    if request.method == 'POST':
+        # Parameters from user
+        action = request.POST.get('action')
+        freq = request.POST.get('freq', None)
+        group_by_timestamp = request.POST.get('group_by_timestamp', 'true') == 'true'
+        selected_file = request.POST.get('selected_file')
+        selected_figure = request.POST.get('selected_figure')
 
         #ToDo: Generalizar mejor esto:
         #ToDo: Homogenizar lógica de los .txt en predictions y evaluations 
-
-        folder_name_preprocessed_data = config["folder_name_preprocessed_data"]
         save = True
+        folder_name_preprocessed_data = config["folder_name_preprocessed_data"]
         folder_name_predictions = config["folder_name_predictions"]
         name_column_objective_variable_of_scaler = "y"
         overwrite_predictions = False
-
 
         if not flag_predictions_done_exists:
 
@@ -123,14 +140,14 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
             )
 
         folder_name_predictions = config["folder_name_predictions"]
+        folder_name_evaluation= config["folder_name_evaluation_data"]
         flag_content = ""
         flag_subfolder = None
         freq = None 
-        # show_args_in_save = True
+        show_args_in_save = True
 
-        if not flag_evaluations_done_exists:
-
-            df_evaluation_extended = evaluate_model(
+        if action == 'generate_evaluation':
+            evaluate_model(
                 path_to_save_model= path_to_save_model,
                 folder_name_model=folder_name_model,
                 folder_name_range_train=folder_name_range_train,
@@ -141,31 +158,57 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
                 flag_content=flag_content,
                 flag_subfolder=flag_subfolder,
                 freq = freq,
-                save_name = "evaluations-extended",
-                group_by_timestamp = True
+                folder_name_evaluation= folder_name_evaluation,
+                show_args_in_save = show_args_in_save,
+                # save_name = "evaluations-extended",
+                group_by_timestamp = group_by_timestamp
             )
 
-            df_evaluation_extended = evaluate_model(
-                path_to_save_model= path_to_save_model,
-                folder_name_model=folder_name_model,
-                folder_name_range_train=folder_name_range_train,
-                folder_name_time_execution=folder_name_time_execution,
-                folder_name_predictions = folder_name_predictions,
-                save=save,
-                flag_name=flag_evaluations_done,
-                flag_content=flag_content,
-                flag_subfolder=flag_subfolder,
-                freq = freq,
-                save_name = "evaluations-summarised",
-                group_by_timestamp = False
-            )
+        if selected_file:
+            try:
+                # Suponiendo que 'load_evaluation_data' carga los datos del archivo
+                table = pm.load_evaluation_data(selected_file.split(".")[0], folder_name_evaluation_data=folder_name_evaluation)
+                table_html = table.to_html(classes='table table-striped')
+            except Exception as e:
+                table_html = f"Error: {e}"
+            
+            context['table_html'] = table_html
+            return render(request, 'model_manager/model_evaluation_time_execution.html', context)
+        
+        if selected_figure:
+            predictions_train = pm.load_predictions("predictions-train")
+            predictions_train["dataset_type"] = "train"
+            predictions_test = pm.load_predictions("predictions-test")
+            predictions_test["dataset_type"] = "test" 
+            predictions_train_test = pd.concat([predictions_train,predictions_test]).reset_index(drop=True)
+            df_train = pm.load_preprocessed_data("df_train")
+            df_test = pm.load_preprocessed_data("df_test")
+            df_train_test = pd.concat([df_train,df_test]).reset_index(drop=True)
+            if selected_figure == 'figure1':
+                fig = plot_box_time_series(predictions_train_test, df_train_test)
+            else:
+                fig = go.Figure()
+                # fig.update_layout(
+                #     xaxis={'visible': False},
+                #     yaxis={'visible': False},
+                #     annotations=[
+                #         {
+                #             "text": "No hay datos para mostrar",
+                #             "xref": "paper",
+                #             "yref": "paper",
+                #             "showarrow": False,
+                #             "font": {
+                #                 "size": 20
+                #             }
+                #         }
+                #     ]
+                # )
+            plot_html = py.plot(fig, output_type='div')
+            context['plot_html'] = plot_html
+            return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
+        # return redirect('model_evaluation_time_execution', model=model, training_range=training_range, execution_time=execution_time)
 
-        return redirect('model_evaluation_time_execution', model=model, training_range=training_range, execution_time=execution_time)
-
-    if flags_exist:
-        context['evaluation_table_link'] = f"/ruta/a/la/tabla/para/{model}/{training_range}/{execution_time}"
-        context['figure_link'] = f"/ruta/a/la/figura/para/{model}/{training_range}/{execution_time}"
 
     return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
@@ -363,7 +406,7 @@ def user_login(request):
         if user is not None:
             login(request, user)
             # Redirigir a la página de inicio después del login exitoso
-            return redirect('data_source_selection')  # Asegúrate de reemplazar 'home' con el nombre de tu vista de inicio
+            return redirect('user_resources')  # Asegúrate de reemplazar 'home' con el nombre de tu vista de inicio
         else:
             # Devolver al formulario de login con un mensaje de error
             return render(request, 'model_manager/login.html', {'form': { 'errors': True }})

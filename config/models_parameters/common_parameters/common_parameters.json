@@ -5,5 +5,6 @@
     "folder_name_predictions" : "predictions",
     "folder_name_preprocessed_data": "preprocessed-data-to-use-in-model",
     "flag_predictions_done": "predictions-done",
-    "flag_evaluations_done" : "evaluations-done"
+    "flag_evaluations_done" : "evaluations-done",
+    "folder_name_evaluation_data" : "evaluations"
 }

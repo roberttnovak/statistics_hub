@@ -3,56 +3,35 @@
 {% block title %}Data Source Selection{% endblock %}
 
 {% block extra_styles %}
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-            color: white;
-        }
-        .container {
-            margin-top: -50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            gap: 20px;
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            cursor: pointer;
-            text-align: center;
-            width: 250px;  /* Ancho fijo para las tarjetas */
-            height: 100px;  /* Altura fija para las tarjetas */
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;  
-            align-items: center;  
-        }
-        .card:hover {
-            transform: translateY(-10px);
-        }
+<style>
+    .text-center {
+        width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+        text-align: center; /* Alinea el texto al centro */
+        margin: 0 auto; /* Centrado horizontal si es necesario */
+        padding: 20px; /* Espaciado alrededor del texto */
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<h1 style="text-align: center; margin-top: 20px; color: white;">Choose Data Source</h1>
 
-<div class="container">
-    <div class="card" id="local-file-card">
-        <i class="fas fa-file-upload fa-3x"></i>
-        Import from local file
+<h1 class="text-center">Choose Data Source</h1>
+
+<div class = "content-wrapper">
+    <div class="cards-container"> <!-- Contenedor de tarjetas -->
+        <div class="card" id="local-file-card">
+            <i class="fas fa-file-upload fa-3x"></i>
+            Import from local file
+        </div>
+        <div class="card" id="sql-db-card">
+            <i class="fas fa-database fa-3x"></i>
+            Connect to SQL Database
+        </div>
+        <div class="card" id="web-scraping-card" style="opacity: 0.5; cursor: default;">
+            <i class="fas fa-globe fa-3x"></i>
+            Web Scraping (In Development)
+        </div>
     </div>
-    <div class="card" id="sql-db-card">
-        <i class="fas fa-database fa-3x"></i>
-        Connect to SQL Database
-    </div>
-    <div class="card" id="web-scraping-card" style="opacity: 0.5; cursor: default;">
-        <i class="fas fa-globe fa-3x"></i>
-        Web Scraping (In Development)
-    </div>
-</div>
 </div>
 {% endblock %}
 

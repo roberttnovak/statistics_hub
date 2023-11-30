@@ -1,45 +1,49 @@
 {% extends 'model_manager/base.html' %}
-{% load static %}
+
+{% block title %}Model Resources{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .text-center {
+        width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+        text-align: center; /* Alinea el texto al centro */
+        margin: 0 auto; /* Centrado horizontal si es necesario */
+        padding: 20px; /* Espaciado alrededor del texto */
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<h2>Resources</h2>
+<h1 class="text-center">Models</h1>
 
-<div class="container">
-    <!-- Lista anidada genérica con estilo de tarjeta -->
-    <div class="nested-list">
-        <ul>
-            <!-- Nivel más externo 'Models' -->
-            <li class="list-title">
-                <!-- Enlace para la evaluación de todos los modelos -->
-                <a href="{% url 'model_evaluation_all_models' %}">Models</a>
-                <ul>
-                    {% for model, ranges in models_with_details.items %}
-                        <li>
-                            <!-- Enlace para la evaluación de un modelo específico -->
-                            <a href="{% url 'model_evaluation_model' model %}" class="list-title">{{ model }}</a>
-                            <ul>
-                                {% for range, execution_times in ranges.items %}
-                                    <li>
-                                        <!-- Enlace para la evaluación de un rango de entrenamiento específico -->
-                                        <a href="{% url 'model_evaluation_train_range' range %}" class="list-subtext">{{ range }}</a>
-                                        <ul>
-                                            {% for execution_time in execution_times %}
-                                                <!-- Enlace para la evaluación de un tiempo de ejecución específico -->
-                                                <li>
-                                                    <a href="{% url 'model_evaluation_time_execution' model range execution_time %}">{{ execution_time }}</a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
+<div class = "content-wrapper">
+    <div class="cards-container"> <!-- Contenedor de tarjetas -->
+        <div class="card" id="create-new-model">
+            <i class="fas fa-plus-circle fa-3x"></i>
+            Create new model
+        </div>
+        <div class="card" id="models-saved">
+            <i class="fas fa-save fa-3x"></i>
+            Models saved
+        </div>
+        <div class="card" id="Learn-more">
+            <i class="fas fa-book fa-3x"></i>
+            Learn more about models!
+        </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#create-new-model').on('click', function(){
+            window.location.href = '/data_source_selection/';
+        });
+        $('#models-saved').on('click', function(){
+            window.location.href = '/user_resources_models_saved/';
+        });
+    });
+</script>
 {% endblock %}

@@ -1,10 +1,16 @@
+{% comment %} {% extends 'model_manager/base.html' %} {% endcomment %}
 {% load static %}
 
 {% block head %}
 <style>
+
+    body {
+        background-color: #f4f4f4; 
+    }
+
     .form-section {
         margin-top: 20px;
-        background-color: #f2f2f2;
+        background-color: #ffffff;
         padding: 20px;
         border-radius: 10px;
     }
@@ -78,7 +84,7 @@
         <button id="show-table-view">View Evaluation tables</button>
         <button id="show-figure-view">View Figures tables</button>
     </div>
-
+    {% comment %} #ToDo: Revisar consistencia de datos tabla-figuras: {% endcomment %}
     <div class="form-section" id="table-view">
         <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
             {% csrf_token %}

@@ -1,77 +1,56 @@
 {% extends 'model_manager/base.html' %}
 
-{% block title %}Login{% endblock %}
-
 {% block extra_styles %}
 <style>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 50%;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: auto; /* Centra el formulario horizontalmente */
-            margin-top: 20px; /* Agrega un poco de margen en la parte superior */
-        }
-        .section {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 10px;
-            color: #d32f2f;
-        }
-        .field-group {
-            display: flex;
-            align-items: center;
-            width: 80%;
-            margin-bottom: 10px;
-        }
-        .field-group label {
-            text-align: left;
-        }
-        .field-group input {
-            flex: 1;
-            text-align: left;
-        }
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #d32f2f;
-            color: white;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-            align-self: center; /* Asegura que el botón se mantenga centrado */
-        }
-        button:hover {
-            background-color: #b71c1c;
-        }
-        .message {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 300px; /* Ancho fijo para el formulario */
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+        width: 100%;
+    }
+    .section-title {
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #45a049;
+    }
+    .field-group {
+        display: flex;
+        flex-direction: column; /* Cambio a columna para mejor disposición en móviles */
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .field-group input {
+        width: 100%; /* Ajuste para ocupar todo el ancho */
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .message {
+        text-align: center;
+        margin-top: 20px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="{% url 'login' %}" class="form-container"> <!-- Ensure you have defined the 'login' named URL in urls.py -->
+<div class="content-wrapper">
+    <form method="post" action="{% url 'login' %}" class="form-container"> 
         {% csrf_token %}
         <div class="section">
             <div class="section-title">User Login</div>
@@ -91,6 +70,7 @@
             {% endif %}
         </div>
     </form>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}

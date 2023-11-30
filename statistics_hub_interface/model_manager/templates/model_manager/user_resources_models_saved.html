@@ -1,0 +1,45 @@
+{% extends 'model_manager/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h2>Resources</h2>
+
+<div class="container">
+    <!-- Lista anidada genérica con estilo de tarjeta -->
+    <div class="nested-list">
+        <ul>
+            <!-- Nivel más externo 'Models' -->
+            <li class="list-title">
+                <!-- Enlace para la evaluación de todos los modelos -->
+                <a href="{% url 'model_evaluation_all_models' %}">Models</a>
+                <ul>
+                    {% for model, ranges in models_with_details.items %}
+                        <li>
+                            <!-- Enlace para la evaluación de un modelo específico -->
+                            <a href="{% url 'model_evaluation_model' model %}" class="list-title">{{ model }}</a>
+                            <ul>
+                                {% for range, execution_times in ranges.items %}
+                                    <li>
+                                        <!-- Enlace para la evaluación de un rango de entrenamiento específico -->
+                                        <a href="{% url 'model_evaluation_train_range' range %}" class="list-subtext">{{ range }}</a>
+                                        <ul>
+                                            {% for execution_time in execution_times %}
+                                                <!-- Enlace para la evaluación de un tiempo de ejecución específico -->
+                                                <li>
+                                                    <a href="{% url 'model_evaluation_time_execution' model range execution_time %}">{{ execution_time }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

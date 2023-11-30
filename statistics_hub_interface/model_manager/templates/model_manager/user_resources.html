@@ -1,19 +1,52 @@
 {% extends 'model_manager/base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="container">
-    <h2>User resources saved</h2>
+{% block extra_styles %}
+    <style>
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
+{% endblock %}
 
-    <!-- Lista de Categorías de Recursos -->
-    <div class="nested-list">
-        <ul>
-            <li class="list-title">
-                <a href="{% url 'user_resources_models' %}">Models</a> <!-- Enlace a la vista user_resources_models -->
-            </li>
-            <li class="list-title">Figures</li>
-            <li class="list-title">Datasets</li>
-        </ul>
+{% block content %}
+
+<h1 class="text-center">User Resources</h1>
+
+<div class="content-wrapper">
+    <div class="cards-container"> <!-- Contenedor de tarjetas -->
+        <!-- Tarjeta para Modelos -->
+        <div class="card" id ="models">
+            <i class="fas fa-cogs fa-3x"></i>
+            <p>Models</p>
+        </div>
+        <!-- Tarjeta para Figuras -->
+        <div class="card" >
+            <i class="fas fa-chart-pie fa-3x"></i>
+            <p>Figures</p>
+        </div>
+        <!-- Tarjeta para Datasets -->
+        <div class="card">
+            <i class="fas fa-database fa-3x"></i>
+            <p>Datasets</p>
+        </div>
+        <!-- Más tarjetas según sea necesario -->
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#models').on('click', function(){
+            window.location.href = '/user_resources_models/';
+        });
+        $('#sql-db-card').on('click', function(){
+            window.location.href = '/connect_to_database/';
+        });
+    });
+</script>
 {% endblock %}

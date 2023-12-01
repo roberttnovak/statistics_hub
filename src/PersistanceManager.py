@@ -6,6 +6,7 @@ import joblib
 import pickle
 
 from own_utils import list_directories_by_depth
+import plotly.io as pio
 
 # ToDo: Create more functions for validating inputs like validate_string_input
 # ToDo: Cuadrar save_predictions con save_preprocessed_data
@@ -222,6 +223,39 @@ class PersistenceManager:
         evaluation_files = [f for f in os.listdir(evaluations_path) if os.path.isfile(os.path.join(evaluations_path, f))]
 
         return evaluation_files
+    
+    def list_all_files(self):
+        """
+        Lists all files within the base_path directory, including files in subdirectories.
+
+        Returns:
+        --------
+        list
+            A list of file paths relative to the base_path.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(base_path='path/to/base')
+        >>> files = pm.list_all_files()
+        ['dir1/file1.ext', 'dir2/subdir/file2.ext', ...]
+
+        Notes:
+        ------
+        This method does not require the full specification of model-related attributes
+        and focuses only on the base_path provided during the initialization of the instance.
+        """
+        # Internal function to recursively walk through directory tree
+        def walk_directory(directory):
+            file_list = []
+            for root, dirs, files in os.walk(directory):
+                for file in files:
+                    # Construct file path relative to the base_path
+                    relative_path = os.path.relpath(os.path.join(root, file), self.base_path)
+                    file_list.append(relative_path)
+            return file_list
+
+        # Call internal function with base_path
+        return walk_directory(self.base_path)
 
 
     def validate_string_input(self,*args):
@@ -290,7 +324,8 @@ class PersistenceManager:
         Constructs a path string based on the provided sub-folder(s) and file name.
         This method uses the base path initialized in the PersistenceManager instance
         and appends the specified sub-folder(s) and file name to it, if provided.
-        
+        It normalizes the path to be system-independent.
+
         Parameters:
         -----------
         sub_folder : str or list of str, optional (default: None)
@@ -303,29 +338,27 @@ class PersistenceManager:
         extension : str, optional (default: None)
             The file extension to append to the file name. This parameter is ignored if
             file_name is None.
-        
+
         Returns:
         --------
         str
-            The constructed path string.
-            
+            The constructed and normalized path string.
+
         Examples:
         ---------
         >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
         >>> path = pm.build_path(sub_folder=['preprocessed_data', 'scalers'], file_name='scaler', extension='joblib')
-        # path will be: 'model_name/train_range/execution_time/preprocessed_data/scalers/scaler.joblib'
-        
+        # path will be normalized, e.g., 'model_name/train_range/execution_time/preprocessed_data/scalers/scaler.joblib'
+
         Notes:
         ------
         This method does not check if the constructed path exists or is valid. It merely
-        constructs a string based on the provided input and the base path.
-
+        constructs and normalizes a string based on the provided input and the base path.
         """
         # Start with the base path initialized in the PersistenceManager instance
         path = self.path
         
-        # If a sub_folder is provided, append it to the base path
-        # If sub_folder is a list of strings, join them to form a nested sub-folder path
+        # Append sub_folder(s) to the base path
         if sub_folder:
             if isinstance(sub_folder, list):
                 sub_folder_path = os.path.join(*sub_folder)
@@ -333,14 +366,13 @@ class PersistenceManager:
                 sub_folder_path = sub_folder
             path = os.path.join(path, sub_folder_path)
         
-        # If a file_name is provided, append it to the path
-        # If an extension is also provided, append it to the file_name
-        file_name = f"{file_name}.{extension}" if extension else file_name
+        # Append file_name and extension to the path
         if file_name:
+            file_name = f"{file_name}.{extension}" if extension else file_name
             path = os.path.join(path, file_name)
         
-        # Return the constructed path string
-        return path
+        # Normalize the path to be system-independent
+        return os.path.normpath(path)
 
     
     def save_object(self, obj, file_name, overwrite=False, extension='joblib', sub_folder=None):
@@ -409,48 +441,47 @@ class PersistenceManager:
 
     def load_object(self, folder_path, filename, extension):
         """
-        Loads an object from disk based on the provided folder path, filename, and extension. 
+        Loads an object from disk based on the provided folder path, filename, and extension.
         The method supports multiple file formats defined in the constant SUPPORTED_EXTENSIONS.
-        
+
         Parameters:
         -----------
         folder_path : str
             The folder path where the object file resides.
         filename : str
-            The name of the file from where the object will be loaded. 
+            The name of the file from where the object will be loaded.
         extension : str
             The file extension indicating the format of the object file.
-        
+
         Returns:
         --------
         object
             The deserialized object loaded from the disk.
-        
+
         Raises:
         -------
         ValueError:
             If an unsupported file extension is provided.
         FileNotFoundError:
             If the specified file does not exist.
-        
+
         Examples:
         ---------
         >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
         >>> obj = pm.load_object(folder_path='path/to', filename='file', extension='joblib')
-
         """
-        
+
         # Validate the file extension against the list of supported extensions
         if extension not in SUPPORTED_EXTENSIONS:
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
-        
-        # Combine folder path, filename, and extension to form the full path
-        full_path = os.path.join(folder_path, f"{filename}.{extension}")
-        
+
+        # Combine folder path, filename, and extension to form the full path and normalize it
+        full_path = os.path.normpath(os.path.join(folder_path, f"{filename}.{extension}"))
+
         # Check if the specified file exists
         if not os.path.exists(full_path):
             raise FileNotFoundError(f"The specified file {full_path} does not exist.")
-        
+
         # Load the object based on the given extension
         if extension == 'joblib':
             with open(full_path, 'rb') as f:
@@ -466,7 +497,7 @@ class PersistenceManager:
         else:
             # This else block is technically redundant due to the earlier check but kept for clarity.
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
-        
+
         return obj
 
     def create_flag(self, flag_name, content='', sub_folder=None):
@@ -1065,7 +1096,7 @@ class PersistenceManager:
         """
         self.save_object(obj = evaluation_data, sub_folder = folder_name_evaluation, file_name=name, overwrite=overwrite, extension=extension)
 
-    def load_evaluation_data(self, name, folder_name_evaluation_data="evaluation",
+    def load_evaluation_data(self, name, folder_name_evaluation_data="evaluations",
                                extension='csv', datetime_columns=[], utc=True):
         """
         Loads evaluated data from disk in CSV format. The data is loaded from a 
@@ -1077,7 +1108,7 @@ class PersistenceManager:
         -----------
         name : str
             The name of the file (without extension).
-        folder_name_evaluation_data : str, optional (default: "evaluation")
+        folder_name_evaluation_data : str, optional (default: "evaluations")
             The folder name where the preprocessed data is saved.
         extension : str, optional (default: 'csv')
             The file extension of the preprocessed data file.
@@ -1109,7 +1140,115 @@ class PersistenceManager:
                 evaluation_data[col] = pd.to_datetime(evaluation_data[col]).dt.tz_convert('UTC')
 
         return evaluation_data
+    
+    def save_plotly_visualization(self, visualization, name, folder_name_visualizations="visualizations", 
+                                overwrite=False, format='html'):
+        """
+        Saves a Plotly visualization to disk in the specified format. The visualization is saved 
+        in a directory structure based on the attributes initialized in the PersistenceManager instance. 
+        The directory structure is as follows:
+        <folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>/<folder_name_visualizations>.
 
+        Parameters:
+        -----------
+        visualization : plotly.graph_objs._figure.Figure
+            The Plotly visualization object to save.
+        name : str
+            The name of the file (without extension).
+        folder_name_visualizations : str, optional (default: "visualizations")
+            The folder name where the visualization will be saved.
+        overwrite : bool, optional (default: False)
+            Whether to overwrite the file if it already exists.
+        format : str, optional (default: 'html')
+            The format in which to save the visualization ('html' or 'json').
+
+        Returns:
+        --------
+        None
+
+        Raises:
+        -------
+        ValueError:
+            If the specified format is not supported.
+        NotADirectoryError:
+            If the directory does not exist and the 'create' option in `ensure_path` 
+            is set to False.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> pm.save_plotly_visualization(visualization_figure, 'visualization_name')
+        """
+
+        supported_formats = ['html', 'json']
+        if format not in supported_formats:
+            raise ValueError(f"Unsupported format '{format}'. Supported formats are {', '.join(supported_formats)}.")
+
+        # Build the path where the visualization will be saved
+        visualization_path = self.build_path(sub_folder=folder_name_visualizations, file_name=name, extension=format)
+        
+        # Ensure the directory exists, create it if it doesn't
+        self.ensure_path(os.path.dirname(visualization_path), create=True)
+
+        # Save the visualization based on the chosen format
+        if format == 'html':
+            visualization.write_html(visualization_path)
+        elif format == 'json':
+            with open(visualization_path, 'w') as f:
+                json.dump(visualization.to_plotly_json(), f)
+
+def load_plotly_visualization(self, name, folder_name_visualizations="visualizations", format='html'):
+    """
+    Loads a Plotly visualization from disk in the specified format. The visualization is expected 
+    to be saved in a directory structure based on the attributes initialized in the PersistenceManager instance. 
+    The directory structure is as follows:
+    <folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>/<folder_name_visualizations>.
+
+    Parameters:
+    -----------
+    name : str
+        The name of the file (without extension).
+    folder_name_visualizations : str, optional (default: "visualizations")
+        The folder name where the visualization is saved.
+    format : str, optional (default: 'html')
+        The format in which the visualization was saved ('html' or 'json').
+
+    Returns:
+    --------
+    plotly.graph_objs._figure.Figure
+        The loaded Plotly visualization object.
+
+    Raises:
+    -------
+    ValueError:
+        If the specified format is not supported.
+    FileNotFoundError:
+        If the specified visualization file does not exist.
+
+    Examples:
+    ---------
+    >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+    >>> visualization_figure = pm.load_plotly_visualization('visualization_name', format='html')
+    """
+
+    supported_formats = ['html', 'json']
+    if format not in supported_formats:
+        raise ValueError(f"Unsupported format '{format}'. Supported formats are {', '.join(supported_formats)}.")
+
+    # Build the path where the visualization is saved
+    visualization_path = self.build_path(sub_folder=folder_name_visualizations, file_name=name, extension=format)
+
+    # Check if the specified file exists
+    if not os.path.exists(visualization_path):
+        raise FileNotFoundError(f"The specified visualization file {visualization_path} does not exist.")
+
+    # Load the visualization based on the chosen format
+    if format == 'html':
+        return pio.read_html(visualization_path)
+    elif format == 'json':
+        with open(visualization_path, 'r') as f:
+            visualization_json = json.load(f)
+            return pio.from_json(visualization_json)
 
 
     # def persist_model_to_disk_structure(

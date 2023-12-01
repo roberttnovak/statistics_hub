@@ -34,15 +34,32 @@ creds_path = '../global_creds/sql.json'
 
 @login_required
 def user_resources(request):
-    # Aquí puedes añadir lógica para obtener cualquier dato necesario para la plantilla
-    # Por ejemplo, listas de modelos, conjuntos de datos, etc.
     return render(request, 'model_manager/user_resources.html')
 
 @login_required
 def user_resources_models(request):
-    # Aquí puedes añadir lógica para obtener cualquier dato necesario para la plantilla
-    # Por ejemplo, listas de modelos, conjuntos de datos, etc.
     return render(request, 'model_manager/user_resources_models.html')
+
+@login_required
+def datasets(request):
+    user = request.user
+    pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
+    datasets = pm.list_datasets()
+
+    selected_dataset = None
+    table_html = ""
+    if request.method == 'POST':
+        selected_dataset = request.POST.get('dataset')
+        separator = request.POST.get('separator', ',')  # Se obtiene el separador o se usa ',' por defecto
+        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)  # Asumiendo que load_dataset acepta un parámetro de separador
+        table_html = df.to_html(classes='table table-striped')
+
+    context = {
+        "datasets": datasets,
+        "selected_dataset": selected_dataset,
+        "table_html": table_html
+    }
+    return render(request, 'model_manager/datasets.html', context)
 
 @login_required
 def user_resources_models_saved(request):

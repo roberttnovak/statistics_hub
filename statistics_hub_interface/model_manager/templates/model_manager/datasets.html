@@ -1,9 +1,10 @@
 {% comment %} {% extends 'model_manager/base.html' %} {% endcomment %}
+
 {% load static %}
 
 {% block head %}
 <style>
-
+    /* Añade aquí tus estilos personalizados si es necesario */
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -18,42 +19,66 @@
 {% block content %}
 <div class="container">
     <h1>Mis Datasets</h1>
-    <form method="post">
+    <form method="post" id="dataset-form">
         {% csrf_token %}
         <label for="dataset-select">Elige un dataset:</label>
         <select id="dataset-select" name="dataset">
             {% for dataset in datasets %}
-                <option value="{{ dataset }}">{{ dataset }}</option>
+                <option value="{{ dataset }}" {% if dataset == selected_dataset %} selected {% endif %}>{{ dataset }}</option>
             {% empty %}
                 <option value="">No hay datasets disponibles</option>
             {% endfor %}
         </select>
         <label for="separator">Separador CSV:</label>
         <input type="text" id="separator" name="separator" placeholder="Ej: ,">
+        <input type="hidden" id="page" name="page" value="1">
+        <input type="hidden" id="page_size" name="page_size" value="10">
         <button type="submit">Seleccionar</button>
     </form>
 
     {% if table_html %}
-        <div class="data-table">
-            {{ table_html|safe }}
-        </div>
-    {% endif %}
+    <div class="data-table">
+        {{ table_html|safe }}
+    </div>
+    <div class="pagination-buttons">
+        <button id="prev-page">Anterior</button>
+        <button id="next-page">Siguiente</button>
+    </div>
+{% endif %}
 </div>
 
 <script>
     $(document).ready(function() {
-        // Inicialización de DataTables sin procesamiento del lado del servidor
-        $('.data-table table').DataTable({
-            "pagingType": "full_numbers",
-            "pageLength": 10, // Ajusta esto para mostrar el número de filas que desees por página
-            "lengthChange": true, // Permite a los usuarios cambiar el número de filas por página
-            "searching": true, // Permite la funcionalidad de búsqueda
-            "ordering": true, // Permite la funcionalidad de ordenación
-            "info": true,
-            "autoWidth": false,
-            "order": [[0, "asc"]], // O ajusta según la columna que prefieras
-            "lengthMenu": [ 10, 25, 50, 75, 100 ] // Puedes ajustar las opciones de 'Show entries'
+        // Inicializa DataTables
+        var table = $('#myDataTable').DataTable({
+            "paging": false,
+            "info": false,
+            "searching": false,
+            "ordering": false,
+            "lengthChange": false,
+        });
+
+        function updateAndSubmit(page, pageSize) {
+            $('#page').val(page);
+            $('#page_size').val(pageSize);
+            $('#dataset-form').submit();
+        }
+
+        // Manejar clic en 'Siguiente'
+        $('#next-page').on('click', function() {
+            var currentPage = parseInt($('#page').val());
+            updateAndSubmit(currentPage + 1, $('#page_size').val());
+        });
+
+        // Manejar clic en 'Anterior'
+        $('#prev-page').on('click', function() {
+            var currentPage = parseInt($('#page').val());
+            updateAndSubmit(Math.max(1, currentPage - 1), $('#page_size').val());
         });
     });
 </script>
+
+
+
+
 {% endblock %}

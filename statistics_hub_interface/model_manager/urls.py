@@ -11,6 +11,7 @@ urlpatterns = [
     path('user_resources_models_saved/', views.user_resources_models_saved, name='user_resources_models_saved'),
     path('data_source_selection/', views.data_source_selection, name='data_source_selection'),
     path('upload_file/', views.upload_file, name='upload_file'),
+    path('datasets/',  views.datasets, name = 'datasets'),
     path('connect_to_database/', views.connect_to_database, name='connect_to_database'),
     path('user_resources/', views.user_resources, name='user_resources'),
     path('model_evaluation_time_execution/<str:model>/<str:training_range>/<str:execution_time>/', views.model_evaluation_time_execution, name='model_evaluation_time_execution'),

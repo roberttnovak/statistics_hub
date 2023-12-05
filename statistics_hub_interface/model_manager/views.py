@@ -17,7 +17,7 @@ import plotly.offline as py
 import plotly.graph_objs as go
  
 sys.path.append(str(Path("../src")))
-from visualisations import plot_box_time_series
+from visualisations import plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import load_json, modify_json_values
@@ -50,9 +50,19 @@ def datasets(request):
     table_html = ""
     if request.method == 'POST':
         selected_dataset = request.POST.get('dataset')
-        separator = request.POST.get('separator', ',')  # Se obtiene el separador o se usa ',' por defecto
-        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)  # Asumiendo que load_dataset acepta un parámetro de separador
-        table_html = df.to_html(classes='table table-striped')
+        separator = request.POST.get('separator', ',')
+        # Implementa la paginación aquí
+        page = request.POST.get('page', 1)
+        page_size = request.POST.get('page_size', 10)
+
+        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
+
+        # Calcula el inicio y fin para la paginación
+        start = (int(page) - 1) * int(page_size)
+        end = start + int(page_size)
+        df_paginated = df.iloc[start:end]
+
+        table_html = df_paginated.to_html(classes='table table-striped', table_id='myDataTable')
 
     context = {
         "datasets": datasets,
@@ -60,6 +70,7 @@ def datasets(request):
         "table_html": table_html
     }
     return render(request, 'model_manager/datasets.html', context)
+
 
 @login_required
 def user_resources_models_saved(request):
@@ -241,8 +252,130 @@ def model_evaluation_model(request, model):
 
 @login_required
 def model_evaluation_all_models(request):
-    # Lógica para manejar la vista del modelo
-    return render(request, 'model_manager/model_evaluation_all_models.html')
+    user = request.user
+    path_config = f"tenants/{user}/config/models_parameters/common_parameters"
+    config = load_json(path_config, "common_parameters")
+
+    user_path = f"tenants/{user}/models"
+    pm = PersistenceManager(base_path=user_path)
+
+    models_list = pm.get_available_models(include_predictions_only=True)
+    predictions_all_models_html = pd.DataFrame().to_html(classes='table table-striped', index=False)
+    weights_html = pd.DataFrame().to_html(classes='table table-striped', index=False)
+    selected_figure = request.POST.get('selected_figure')
+    plot_html = None
+
+    selected_figure = request.POST.get('selected_figure')
+    active_view = 'figure-view' if selected_figure else request.POST.get('active_view', 'table-view')
+
+    # Define el contexto aquí, antes de cualquier condicional
+    context = {
+        'models_list': models_list,
+        'active_view': 'table-view',
+        'predictions_all_models_html': predictions_all_models_html,
+        'weights_html': weights_html,
+        'plot_html': plot_html,
+        'selected_figure': selected_figure,
+        'active_view': active_view
+    }
+
+    if request.method == 'POST':
+        selected_models = request.POST.getlist('selected_models')
+        # Lista de modelos y sus rangos de entrenamiento.
+        model_arguments_for_constructor = pm.get_models_info_as_dict(include_predictions_only = True)
+
+        # models = [pd.read_csv(os.path.normpath( os.path.join(model_path, "predictions", "predictions-train.csv") ) ) for model_path in models_path]
+        predictions_train_lst = [PersistenceManager(**args).load_predictions("predictions-train") for args in model_arguments_for_constructor ]
+        predictions_test_lst = [PersistenceManager(**args).load_predictions("predictions-test") for args in model_arguments_for_constructor ]
+
+        predictions = pd.concat(predictions_train_lst + predictions_test_lst)
+
+        predictions_all_models = predictions.copy()
+
+        predictions_all_models = predictions_all_models.query("model.isin(@selected_models)")
+
+
+        def compute_inverse_weighted_averages(mae_contributions):
+            """
+            Calculate the inverse weighted averages for a given set of MAE contributions.
+
+            Parameters:
+            mae_contributions (list of float): A list containing the MAE contributions of each model.
+
+            Returns:
+            list of float: A list of normalized weights inversely proportional to the MAE contributions.
+
+            Examples:
+            >>> calculate_inverse_weighted_averages([60, 15, 5, 20])
+            [0.04, 0.16, 0.48, 0.32]
+            """
+            
+            # Calculating inverse weights
+            inverse_weights = [1.0 / mae for mae in mae_contributions if mae != 0]
+
+            # Normalizing weights to sum to 1
+            total_inverse_weight = sum(inverse_weights)
+            normalized_weights = [iw / total_inverse_weight for iw in inverse_weights]
+
+            return normalized_weights
+
+        weights_by_n_predictions = predictions_all_models\
+            .groupby(['n_prediction', 'dataset_type'])\
+            .agg({'mae': [('sum_mae', 'sum')]}).reset_index()
+        weights_by_n_predictions.columns = ['n_prediction', 'dataset_type', 'sum_mae']
+        weights_by_n_predictions_and_model = predictions_all_models\
+            .groupby(['n_prediction', 'dataset_type', 'model'])\
+            .agg({'mae': [('sum_mae_model', 'sum')]}).reset_index()
+        weights_by_n_predictions_and_model.columns = ['n_prediction', 'dataset_type' ,'model', 'sum_mae_model']
+        weights = weights_by_n_predictions_and_model.merge(weights_by_n_predictions, on =['n_prediction','dataset_type'])
+        weights['weight_mae'] = weights['sum_mae_model'] / weights['sum_mae']
+        weights['weight_model'] = weights.groupby(["n_prediction","dataset_type"])["weight_mae"]\
+            .apply(lambda x: compute_inverse_weighted_averages(x.tolist())).explode()\
+            .reset_index(drop=True)
+        weights_train = weights.query("dataset_type == 'train'")
+
+        predictions_all_models = predictions_all_models\
+            .merge(weights_train[["n_prediction","model","weight_mae","weight_model"]], how='left' , on = ["n_prediction","model"])\
+            .sort_values(['timestamp_real','n_prediction',"dataset_type"])
+        
+        predictions_all_models = predictions_all_models.head(100)
+        
+        predictions_all_models_html = predictions_all_models.to_html(classes='table table-striped', index=False)
+        weights_html = weights.to_html(classes='table table-striped', index=False)
+        context['predictions_all_models_html'] = predictions_all_models_html
+        context['weights_html'] = weights_html
+
+        if selected_figure:
+            if selected_figure == 'figure1':
+                print(weights_train)
+                fig = plot_weight_evolution(weights_train, 'weight_mae')  
+                context['figure_description'] = "Descripción de la Figura 1."
+            elif selected_figure == 'figure2':
+                print(weights_train)
+                fig = plot_weight_evolution(weights_train, 'weight_model')  
+                context['figure_description'] = "Descripción de la Figura 2."
+            else:
+                fig = None
+
+            if fig:
+                plot_html = py.plot(fig, output_type='div')
+                context['plot_html'] = plot_html
+        
+
+        context['selected_figure'] = selected_figure
+
+    
+
+
+    # context = {
+    #     'models_list': models_list,
+    #     'active_view': active_view,
+    #     'predictions_all_models_html': predictions_all_models_html,
+    #     'weights_html': weights_html,
+    # }
+
+
+    return render(request, 'model_manager/model_evaluation_all_models.html', context)
 
 @login_required
 def get_models_list(request):
@@ -301,7 +434,7 @@ def model_selection(request):
             except Exception as e:
                 messages.error(request, f"Error during training: {e}")
 
-            return redirect('model_train', model_name=selected_model)
+            return redirect('../user_resources_models_saved', model_name=selected_model)
 
     models_list = get_models_list(request)
     return render(request, 'model_manager/model_selection.html', {

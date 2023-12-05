@@ -23,15 +23,15 @@
             <i class="fas fa-cogs fa-3x"></i>
             <p>Models</p>
         </div>
-        <!-- Tarjeta para Figuras -->
-        <div class="card" >
-            <i class="fas fa-chart-pie fa-3x"></i>
-            <p>Figures</p>
-        </div>
         <!-- Tarjeta para Datasets -->
-        <div class="card">
-            <i class="fas fa-database fa-3x"></i>
+        <div class="card" id = "datasets">
+            <i class="fas fa-table fa-3x"></i>
             <p>Datasets</p>
+        </div>
+        <!-- Tarjeta para Figuras -->
+        <div class="card" id = "figures">
+            <i class="fas fa-chart-bar fa-3x"></i>
+            <p>Figures</p>
         </div>
         <!-- Más tarjetas según sea necesario -->
     </div>
@@ -44,8 +44,11 @@
         $('#models').on('click', function(){
             window.location.href = '/user_resources_models/';
         });
+        $('#datasets').on('click', function(){
+            window.location.href = '/datasets/';
+        });
         $('#sql-db-card').on('click', function(){
-            window.location.href = '/connect_to_database/';
+            window.location.href = '//';
         });
     });
 </script>

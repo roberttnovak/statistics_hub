@@ -122,8 +122,11 @@
                 <button type="submit">Ver Evaluación</button>
             </form>
         </div>
+        {% else %}
         {% endif %}
-
+        <div class="no-evaluations-message">
+            <p>The model is trained but no predictions are produced. Press "Generate Evaluation" to do that</p>
+        </div>
         {% if table_html %}
         <div class="data-table">
             {{ table_html|safe }}
@@ -145,13 +148,13 @@
                     <!-- Añade más opciones según sea necesario -->
                 </select>
             </div>
-            <!-- Espacio para la descripción de la figura -->
-            
+    
             <div class="form-group">
                 <button type="submit" name="action" value="generate_figure">Generate Figure</button>
             </div>
             <div id="figure-description"></div>
         </form>
+    
         {% if plot_html %}
         <div class="plotly-figure">
             {{ plot_html|safe }}
@@ -208,4 +211,6 @@
         updateDescription();
     });
 </script>
+
+
 {% endblock %}

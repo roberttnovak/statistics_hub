@@ -1,9 +1,202 @@
-{% extends 'model_manager/base.html' %}
 {% load static %}
+
+{% block head %}
+<style>
+    body {
+        background-color: #f4f4f4;
+    }
+
+    .form-section {
+        margin-top: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .form-group button, .view-selector button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group button:hover, .view-selector button:hover {
+        background-color: #45a049;
+    }
+
+    .view-selector {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #figure-view {
+        display: none;
+    }
+
+    #figure-description {
+        margin-top: 20px;
+        background-color: #fff;
+        border-left: 5px solid #4CAF50;
+        padding: 15px;
+        font-style: normal;
+        color: #333;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+    }
+    .plotly-figure {
+        margin-top: 20px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2>Evaluation all models</h2>
-    <p>Pending to implement evaluation all models</p>
+    <div class="view-selector">
+        <button id="show-table-view">View Evaluation Tables</button>
+        <button id="show-figure-view">View Figures</button>
+    </div>
+
+    <div class="form-section" id="table-view">
+        <form method="post">
+            {% csrf_token %}
+            {% for model in models_list %}
+                <div class="form-check">
+                    <input type="checkbox" id="model_{{ forloop.counter }}" name="selected_models" value="{{ model }}" checked>
+                    <label for="model_{{ forloop.counter }}">{{ model }}</label>
+                </div>
+            {% endfor %}
+            <button type="submit" name="action" value="generate_evaluation">Mix Models evaluations</button>
+        </form>
+
+        {% if predictions_all_models_html or weights_html %}
+            <div id="post-evaluation-section">
+                <div class="form-group">
+                    <button id="prev-table" type="button">⟵ Previous Table</button>
+                    <button id="next-table" type="button">Next Table ⟶</button>
+                </div>
+
+                <div id="table-description" class="form-group">
+                    <p>Descripción de las tablas de evaluación de modelos.</p>
+                </div>
+
+                <div id="predictions_all_models_table" class="data-table" style="display:none;">
+                    {{ predictions_all_models_html|safe }}
+                </div>
+                <div id="weights_table" class="data-table" style="display:none;">
+                    {{ weights_html|safe }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div id="figure-view" style="display:none;">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="selected_figure">Select figure:</label>
+                <select id="selected_figure" name="selected_figure">
+                    <option value="figure1">figure1</option>
+                    <option value="figure2">figure2</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="action" value="generate_figure">Generate Figure</button>
+            </div>
+            <div id="figure-description"></div>
+        </form>
+
+        {% if plot_html %}
+            <div class="plotly-figure">
+                {{ plot_html|safe }}
+            </div>
+        {% endif %}
+    </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        var currentTable = 0;
+        var tables = ['#predictions_all_models_table', '#weights_table'];
+        var descriptions = {
+            '#predictions_all_models_table': 'Descripción de la tabla All Models Predictions.',
+            '#weights_table': 'Descripción de la tabla Weights.'
+        };
+
+        function showTable(index) {
+            $('.data-table').hide();
+            $(tables[index]).show();
+            updateDescription(index);
+        }
+
+        function updateDescription(index) {
+            var descriptionText = descriptions[tables[index]];
+            $('#table-description p').text(descriptionText);
+        }
+
+        $('#show-table-view').click(function() {
+            $('#table-view').show();
+            $('#figure-view').hide();
+        });
+
+        $('#show-figure-view').click(function() {
+            $('#figure-view').show();
+            $('#table-view').hide();
+        });
+
+        $('#prev-table').click(function() {
+            if (currentTable > 0) {
+                currentTable--;
+                showTable(currentTable);
+            }
+        });
+
+        $('#next-table').click(function() {
+            if (currentTable < tables.length - 1) {
+                currentTable++;
+                showTable(currentTable);
+            }
+        });
+
+        $('.data-table table').each(function() {
+            $(this).DataTable();
+        });
+
+        // Obtener el valor de active_view del contexto de Django
+        var activeView = "{{ active_view }}";
+
+        // Mostrar la vista de figuras si active_view es 'figure-view'
+        if (activeView === 'figure-view') {
+            $('#figure-view').show();
+            $('#table-view').hide();
+        } else {
+            $('#table-view').show();
+            $('#figure-view').hide();
+        }
+    });
+</script>
 {% endblock %}

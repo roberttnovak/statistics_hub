@@ -143,8 +143,8 @@
         var currentTable = 0;
         var tables = ['#predictions_all_models_table', '#weights_table'];
         var descriptions = {
-            '#predictions_all_models_table': 'Descripción de la tabla All Models Predictions.',
-            '#weights_table': 'Descripción de la tabla Weights.'
+            '#predictions_all_models_table': "This table provides an exhaustive view of predictions from various models. Columns include 'timestamp_real', marking the actual time of data; 'n_prediction', indicating the prediction interval; 'prediction', showing the predicted value; 'timestamp_prediction', the time when prediction is made; 'timestamp_init_train' and 'timestamp_end_updated_train', outlining the training period; 'value_real', the actual observed value; 'mae' for the Mean Absolute Error indicating prediction accuracy; 'model', denoting the model used; and 'dataset_type', specifying the dataset category (e.g., train or test). This table helps in analyzing the performance and accuracy of different models in predicting outcomes over various intervals.",
+            '#weights_table': "This table illustrates the weight distribution among models based on their performance. It includes columns like 'n_prediction' and 'dataset_type' for categorizing predictions, 'sum_mae' showing the total Mean Absolute Error across models, and individual 'sum_mae_model' for each model. Further, it calculates 'weight_mae', the proportional weight of each model's MAE, and 'weight_model', the normalized weight indicating the relative influence of each model in the overall prediction scenario. This table is crucial for understanding which models are more reliable and have a greater impact on the combined predictive analysis."
         };
 
         function showTable(index) {

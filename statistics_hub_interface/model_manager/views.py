@@ -347,19 +347,75 @@ def load_dataset(request):
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
     return render(request, 'model_manager/load_dataset.html', {'datasets': datasets})
 
+# preprocess_dataset backend logic
 @login_required
 def preprocess_dataset(request, selected_dataset, separator):
     user = request.user
+    action = request.POST.get('action') or request.GET.get('action') 
     context = {}
-    
-    if selected_dataset and separator:
+
+    # Funciones auxiliares definidas dentro de preprocess_dataset
+    def load_data(user, selected_dataset, separator):
         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
-        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator).head(1000)
-        df_html = df.to_html(classes='table table-striped my-data-table')
-        context["df_html"] = df_html
-    else:
-        # Manejar la situación en que los datos no están disponibles
-        context["error"] = "No dataset selected or separator specified."
+        try:
+            df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
+            return df, None
+        except Exception as e:
+            return None, str(e)
+
+    def generate_html(df):
+        return df.head(100).to_html(classes='table table-striped my-data-table')
+
+    def get_min_max_dates(df, timestamp_column):
+        if timestamp_column in df.columns:
+            min_date = df[timestamp_column].min().strftime("%Y-%m-%d")
+            max_date = df[timestamp_column].max().strftime("%Y-%m-%d")
+            return min_date, max_date
+        else:
+            return None, None
+
+    def handle_load_data():
+        df, error = load_data(user, selected_dataset, separator)
+        if not error:
+            return {"df_html": generate_html(df)}
+        else:
+            return {"error": error}
+
+    def handle_eda(post_data):
+        # Cargar el dataset
+        df, error = load_data(user, selected_dataset, separator)
+        # Si hay un error al cargar los datos, devolverlo
+        if error:
+            return {"error": error}
+
+        # Obtener la columna de timestamp seleccionada por el usuario
+        timestamp_column = post_data.get('timestamp_column')
+        
+        # Si la columna de timestamp es válida, calcular las fechas mínima y máxima
+        if timestamp_column in df.columns:
+            min_date = df[timestamp_column].min().strftime("%Y-%m-%d")
+            max_date = df[timestamp_column].max().strftime("%Y-%m-%d")
+            return {'columns': df.columns.tolist(), 'min_date': min_date, 'max_date': max_date}
+        else:
+            # Si la columna no es válida o no se encuentra, devolver un error
+            return {'error': "Columna de timestamp no encontrada o inválida."}
+
+    def handle_preprocessing(post_data):
+        # Lógica específica para el preprocesamiento
+        return {}
+    print(action)
+    # Lógica principal de la función
+    if action == 'show-table-preview':
+        context = handle_load_data()
+    elif action == 'show-eda-view':
+        print(request.GET)
+        context = handle_eda(request.POST)
+    elif action == 'show-preprocessing-view':
+        context = handle_preprocessing(request.POST)
+
+    # Si la solicitud es AJAX, devolver solo los datos necesarios
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse(context)
 
     return render(request, 'model_manager/preprocess_dataset.html', context)
 

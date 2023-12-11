@@ -64,6 +64,19 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         border-radius: 5px;
     }
+
+    .description-box {
+        margin-top: 20px;
+        background-color: #fff; /* Fondo blanco */
+        border-left: 5px solid #4CAF50; /* Borde izquierdo verde */
+        padding: 15px;
+        font-style: normal;
+        color: #333; /* Texto oscuro */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+
+
     .plotly-figure {
         margin-top: 20px;
     }
@@ -99,8 +112,8 @@
                     <button id="next-table" type="button">Next Table ⟶</button>
                 </div>
 
-                <div id="table-description" class="form-group">
-                    <p>Descripción de las tablas de evaluación de modelos.</p>
+                <div id="table-description" class="description-box">
+                    <p>Press next table</p>
                 </div>
 
                 <div id="predictions_all_models_table" class="data-table" style="display:none;">
@@ -119,15 +132,15 @@
             <div class="form-group">
                 <label for="selected_figure">Select figure:</label>
                 <select id="selected_figure" name="selected_figure">
-                    <option value="figure1">figure1</option>
-                    <option value="figure2">figure2</option>
+                    <option value="figure1">Contribution of MAE in each model</option>
+                    <option value="figure2">Weight of each model based on combination function</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <button type="submit" name="action" value="generate_figure">Generate Figure</button>
             </div>
-            <div id="figure-description"></div>
+            <div id="figure-description" class="description-box"></div>
         </form>
 
         {% if plot_html %}
@@ -186,10 +199,8 @@
             $(this).DataTable();
         });
 
-        // Obtener el valor de active_view del contexto de Django
         var activeView = "{{ active_view }}";
 
-        // Mostrar la vista de figuras si active_view es 'figure-view'
         if (activeView === 'figure-view') {
             $('#figure-view').show();
             $('#table-view').hide();
@@ -197,6 +208,23 @@
             $('#table-view').show();
             $('#figure-view').hide();
         }
+        // Descripciones para las figuras
+        var figureDescriptions = {
+            'figure1': 'This dynamic visualization represents the evolution of model weights based on the Mean Absolute Error (MAE). Each bar in the stacked bar chart corresponds to a specific prediction interval, with different colors indicating various models. The height of each colored segment reflects the weight of that model at a particular prediction interval, based on its MAE. This figure provides a clear and comparative understanding of how different models contribute to the overall predictions over time, highlighting the shifts in their relative importance based on accuracy.',
+            'figure2': '"This figure showcases a stacked bar chart that illustrates the change in model weights over different prediction intervals, based on a customized weighting function. Each bar represents a prediction interval, segmented into parts that indicate the contribution of each model. The size of these segments reflects the weight of the model, revealing how the influence of each model varies over time. This visualization is instrumental in understanding the dynamics of model performance and their combined impact in a predictive system, offering insights into the effectiveness of the weighting strategy.',
+            // Añade más descripciones según sea necesario
+        };
+
+        // Actualizar la descripción cuando se selecciona una figura diferente
+        $('#selected_figure').change(function() {
+            var selectedValue = $(this).val();
+            $('#figure-description').text(figureDescriptions[selectedValue] || 'Seleccione una figura para ver su descripción.');
+        });
+
+        // Actualiza la descripción inicialmente en caso de que haya una figura seleccionada por defecto
+        $('#figure-description').text(figureDescriptions[$('#selected_figure').val()] || 'Seleccione una figura para ver su descripción.');
     });
+
+
 </script>
 {% endblock %}

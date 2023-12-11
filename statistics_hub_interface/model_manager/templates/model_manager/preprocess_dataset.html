@@ -1,0 +1,130 @@
+{% load static %}
+
+{% block head %}
+<style>
+    body {
+        background-color: #f4f4f4; 
+    }
+
+    .form-section, #eda-view, #preprocessing-view {
+        margin-top: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, 
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .form-group button, .view-selector button {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group button:hover, .view-selector button:hover {
+        background-color: #45a049;
+    }
+
+    .view-selector {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #table-preview-view, #eda-view, #preprocessing-view {
+        display: none;
+    }
+</style>
+<!-- Añadir jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!-- Añadir DataTables CSS y JS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="view-selector">
+        <button id="show-table-preview">Table Preview</button>
+        <button id="show-eda-view">EDA</button>
+        <button id="show-preprocessing-view">Preprocessing</button>
+    </div>
+
+    <!-- Sección de Vista Previa de la Tabla -->
+    <div class="form-section" id="table-preview-view" style="display:none;">
+        <!-- Mostrar el DataFrame aquí -->
+        {{ df_html|safe }}
+    </div>
+
+    <!-- Sección de EDA (Exploratory Data Analysis) -->
+    <div id="eda-view" style="display:none;">
+        <!-- Contenido para EDA -->
+    </div>
+
+    <!-- Sección de Preprocesamiento -->
+    <div id="preprocessing-view" style="display:none;">
+        <!-- Contenido para Preprocesamiento -->
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var tableInitialized = false;
+
+        function initializeDataTable() {
+            console.log("Inicializando DataTables");
+            $('#table-preview-view .my-data-table').DataTable({
+                // Opciones de configuración de DataTables
+                // Ejemplo: paginación, búsqueda, ordenación, etc.
+            });
+            tableInitialized = true;
+        }
+
+        // Inicializar DataTables al cargar la página si la tabla está visible
+        if ($('#table-preview-view').is(':visible')) {
+            initializeDataTable();
+        }
+
+        $('#show-table-preview').click(function() {
+            $('#table-preview-view').show();
+            $('#eda-view').hide();
+            $('#preprocessing-view').hide();
+            if (!tableInitialized) {
+                initializeDataTable();
+            }
+        });
+
+        $('#show-eda-view').click(function() {
+            $('#eda-view').show();
+            $('#table-preview-view').hide();
+            $('#preprocessing-view').hide();
+        });
+
+        $('#show-preprocessing-view').click(function() {
+            $('#preprocessing-view').show();
+            $('#table-preview-view').hide();
+            $('#eda-view').hide();
+        });
+    });
+</script>
+
+{% endblock %}

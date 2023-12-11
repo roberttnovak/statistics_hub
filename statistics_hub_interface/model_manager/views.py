@@ -41,6 +41,7 @@ def user_resources_models(request):
     return render(request, 'model_manager/user_resources_models.html')
 
 @login_required
+@login_required
 def datasets(request):
     user = request.user
     pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
@@ -50,19 +51,9 @@ def datasets(request):
     table_html = ""
     if request.method == 'POST':
         selected_dataset = request.POST.get('dataset')
-        separator = request.POST.get('separator', ',')
-        # Implementa la paginación aquí
-        page = request.POST.get('page', 1)
-        page_size = request.POST.get('page_size', 10)
-
-        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
-
-        # Calcula el inicio y fin para la paginación
-        start = (int(page) - 1) * int(page_size)
-        end = start + int(page_size)
-        df_paginated = df.iloc[start:end]
-
-        table_html = df_paginated.to_html(classes='table table-striped', table_id='myDataTable')
+        separator = request.POST.get('separator', ',')  # Se obtiene el separador o se usa ',' por defecto
+        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)  # Asumiendo que load_dataset acepta un parámetro de separador
+        table_html = df.head(1000).to_html(classes='table table-striped')
 
     context = {
         "datasets": datasets,
@@ -329,16 +320,48 @@ def model_evaluation_all_models(request):
     return render(request, 'model_manager/model_evaluation_all_models.html', context)
     
 
+@login_required
+def load_dataset(request):
+    user = request.user
+    pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
+    datasets = pm.list_datasets()
 
-    # context = {
-    #     'models_list': models_list,
-    #     'active_view': active_view,
-    #     'predictions_all_models_html': predictions_all_models_html,
-    #     'weights_html': weights_html,
-    # }
+    if request.method == 'POST':
+        selected_dataset = request.POST.get('dataset')
+        
+        # Verificar si la solicitud es para la vista previa en bruto del CSV
+        is_raw_preview = request.POST.get('raw_preview_request', False)
+        if is_raw_preview:
+            try:
+                raw_preview = pm.load_csv_as_raw_string('data', selected_dataset, num_rows=10)
+                return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
+            except FileNotFoundError as e:
+                return JsonResponse({'error': str(e)}, status=500)
 
+        # Si no es vista previa, procesa para redireccionar
+        separator = request.POST.get('separator', ',')
+        if selected_dataset:
+            # Redirige a la vista preprocess_dataset con los parámetros incluidos en la URL
+            return redirect('preprocess_dataset', selected_dataset=selected_dataset, separator=separator)
 
-    return render(request, 'model_manager/model_evaluation_all_models.html', context)
+    # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
+    return render(request, 'model_manager/load_dataset.html', {'datasets': datasets})
+
+@login_required
+def preprocess_dataset(request, selected_dataset, separator):
+    user = request.user
+    context = {}
+    
+    if selected_dataset and separator:
+        pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
+        df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator).head(1000)
+        df_html = df.to_html(classes='table table-striped my-data-table')
+        context["df_html"] = df_html
+    else:
+        # Manejar la situación en que los datos no están disponibles
+        context["error"] = "No dataset selected or separator specified."
+
+    return render(request, 'model_manager/preprocess_dataset.html', context)
 
 @login_required
 def get_models_list(request):

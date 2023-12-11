@@ -22,66 +22,96 @@ class PersistenceManager:
     scalers, preprocessed data, metadata, predictions and others
     """
 
-    def __init__(self, base_path: str = None ,folder_name_model : str = None, folder_name_range_train: str= None, folder_name_time_execution: str= None):
+    def __init__(self, base_path: str = None, folder_name_model: str = None, folder_name_range_train: str = None, folder_name_time_execution: str = None, folder_datasets: str = None):
         """
         Initializes the PersistenceManager with the provided base path, model name, training range, 
-        and execution time, which are used to construct a path for saving and loading objects.
-        The constructed path will have the structure: 
-        <base_path>/<folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>.
+        execution time, and an optional datasets folder. The path for saving and loading objects 
+        is constructed based on these parameters.
 
         Parameters:
         -----------
         base_path : str
-            The base directory path where the model and associated data will be saved.
+            The base directory path where the model, associated data, and datasets will be saved.
         folder_name_model : str
             The name or identifier of the machine learning model to be managed.
         folder_name_range_train : str
             The range of data used for training the model, represented as a string.
         folder_name_time_execution : str
             The time taken for executing some process, possibly training the model, represented as a string.
+        folder_datasets : str, optional (default: None)
+            The folder where datasets are stored. If specified, self.path is set to base_path/folder_datasets.
 
         Examples:
         ---------
         >>> pm = PersistenceManager(
-        ...     base_path=os.path.join("..","models"),
+        ...     base_path=os.path.join("..", "models"),
         ...     folder_name_model='SVR',
         ...     folder_name_range_train='initrain-2023_4_18_0_0_0-UTC0___fintrain-2023_4_25_0_0_0-UTC0',
-        ...     folder_name_time_execution='execution-time-2023_09_27_13_24_30'
+        ...     folder_name_time_execution='execution-time-2023_09_27_13_24_30',
+        ... )
+
+        >>> pm = PersistenceManager(
+        ...     base_path=os.path.join("..", "models"),
+        ...     folder_datasets='data'
         ... )
         """
-        #ToDo: Hacer que puedan ponerse vacío. 
-        # Validation of inputs
-        # self.validate_string_input(folder_name_model, folder_name_range_train, folder_name_time_execution)
-        # Attributes initialization
-        self.base_path = base_path
+        self.base_path = os.path.normpath(base_path)
         self.folder_name_model = folder_name_model
         self.folder_name_range_train = folder_name_range_train
         self.folder_name_time_execution = folder_name_time_execution
+        self.folder_datasets = folder_datasets
         
-        # Construct the path excluding None values
-        path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
-        filtered_path_components = [component for component in path_components if component is not None]
-        self.path = os.path.join(*filtered_path_components)
+        # Use folder_datasets if it's not None, else construct the path with other components
+        if folder_datasets is not None:
+            self.path = os.path.normpath(os.path.join(base_path, folder_datasets)) if base_path is not None else folder_datasets
+        else:
+            # Construct the path excluding None values from other components
+            path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
+            filtered_path_components = [component for component in path_components if component is not None]
+            self.path = os.path.join(*filtered_path_components)
 
-    def get_available_models(self):
+    def get_available_models(self, folder_name_predictions="predictions", include_predictions_only=False):
         """
-        Scans the base directory and returns a list of available model names.
+        Scans the base directory and returns a list of available model names. If 'include_predictions_only' is True,
+        it only returns the models which have a 'predictions' directory at any sublevel within their directory structure.
+
+        Parameters:
+        -----------
+        folder_name_predictions : str, optional (default: "predictions")
+            The name of the folder where predictions are stored.
+        include_predictions_only : bool, optional (default: False)
+            If True, only returns model names that have a 'predictions' directory at any sublevel.
 
         Returns:
         --------
         list
-            A list of model names available in the base directory.
+            A list of model names available in the base directory, optionally filtered to include only those 
+            with a specified predictions directory at any sublevel.
 
         Examples:
         ---------
         >>> pm = PersistenceManager(...)
         >>> pm.get_available_models()
         ['model1', 'model2', ...]
+
+        >>> pm.get_available_models(include_predictions_only=True)
+        ['model1', ...] # Only models with predictions directory at any sublevel
         """
         try:
-            return [name for name in os.listdir(self.base_path) if os.path.isdir(os.path.join(self.base_path, name))]
+            models = set()
+            for root, dirs, files in os.walk(self.base_path):
+                for dir in dirs:
+                    if include_predictions_only and dir == folder_name_predictions:
+                        model = root.replace(self.base_path, "").split(os.sep)[1]
+                        models.add(model)
+                    elif not include_predictions_only:
+                        model_path = os.path.normpath(os.path.join(self.base_path, dir))
+                        if os.path.isdir(model_path):
+                            models.add(dir)
+            return list(models)
         except FileNotFoundError:
             return []
+
 
     def get_training_ranges_for_model(self, model_name):
         """
@@ -103,7 +133,7 @@ class PersistenceManager:
         >>> pm.get_training_ranges_for_model('model1')
         ['range1', 'range2', ...]
         """
-        model_path = os.path.join(self.base_path, model_name)
+        model_path = os.path.normpath(os.path.join(self.base_path, model_name))
         try:
             return [name for name in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, name))]
         except FileNotFoundError:
@@ -131,11 +161,96 @@ class PersistenceManager:
         >>> pm.get_execution_times_for_model_and_range('model1', 'range1')
         ['execution1', 'execution2', ...]
         """
-        range_path = os.path.join(self.base_path, model_name, training_range)
+        range_path = os.path.normpath(os.path.join(self.base_path, model_name, training_range))
         try:
             return [name for name in os.listdir(range_path) if os.path.isdir(os.path.join(range_path, name))]
         except FileNotFoundError:
             return []
+
+    def get_models_hierarchy_dict(self):
+        """
+        Lists all available models along with their training ranges and execution times. 
+        This method organizes the information in a nested dictionary structure.
+
+        Returns:
+        --------
+        dict
+            A nested dictionary where each key is a model name, each value is a dictionary 
+            where keys are training ranges, and each value is a list of execution times.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(base_path='path/to/models')
+        >>> model_details = pm.list_model_details()
+        {
+            'model1': {
+                'range1': ['execution1', 'execution2', ...],
+                'range2': ['execution1', 'execution2', ...],
+                ...
+            },
+            'model2': {
+                'range1': ['execution1', 'execution2', ...],
+                ...
+            },
+            ...
+        }
+        """
+        models_list = self.get_available_models()
+        models_with_details = {}
+
+        for model in models_list:
+            ranges = self.get_training_ranges_for_model(model)
+            models_with_details[model] = {}
+
+            for range_ in ranges:
+                execution_times = self.get_execution_times_for_model_and_range(model, range_)
+                models_with_details[model][range_] = execution_times
+
+        return models_with_details
+    
+    def get_models_info_as_dict(self, folder_name_predictions="predictions", include_predictions_only=False):
+        """
+        Recursively explores the directory structure from the base path to the model,
+        training range, and execution times, compiling a list of dictionaries with information
+        about each model, training range, and execution time. If 'include_predictions_only' is True,
+        only returns information for paths within the 'folder_name_predictions' directory for each execution, if it exists.
+
+        Parameters:
+        -----------
+        folder_name_predictions : str, optional (default: "predictions")
+            The name of the folder where predictions are stored.
+        include_predictions_only : bool, optional (default: False)
+            If True, only return information for paths within the 'folder_name_predictions' directory for each execution.
+
+        Returns:
+        --------
+        list
+            A list of dictionaries for each model, training range, and execution time combination,
+            optionally filtered to include only those within the 'folder_name_predictions' directory.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(...)
+        >>> models_info = pm.get_models_info_as_dict()
+        [{'folder_name_model': 'model1', 'folder_name_range_train': 'range1', 'folder_name_time_execution': 'execution1'}, ...]
+
+        >>> prediction_info = pm.get_models_info_as_dict(include_predictions_only=True)
+        [{'folder_name_model': 'model1', 'folder_name_range_train': 'range1', 'folder_name_time_execution': 'predictions'}, ...]
+        """
+        model_path = self.base_path if self.folder_name_model is None else os.path.normpath(os.path.join(self.base_path, self.folder_name_model))
+
+        return [
+            {   
+                "base_path": self.base_path, 
+                "folder_name_model": model,
+                "folder_name_range_train": range,
+                "folder_name_time_execution": execution 
+            }
+            for model in self.get_available_models()
+            for range in self.get_training_ranges_for_model(model)
+            for execution in self.get_execution_times_for_model_and_range(model, range) if not include_predictions_only or os.path.exists(os.path.normpath(os.path.join(model_path, model, range, execution, folder_name_predictions)))
+        ]
+    
         
     def list_all_models(self):
         """
@@ -223,6 +338,39 @@ class PersistenceManager:
         evaluation_files = [f for f in os.listdir(evaluations_path) if os.path.isfile(os.path.join(evaluations_path, f))]
 
         return evaluation_files
+    
+    def list_datasets(self):
+        """
+        Lists all dataset files within the folder_datasets directory.
+
+        Returns:
+        --------
+        list
+            A list of dataset file names available in the folder_datasets directory.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(base_path='path/to/base', folder_datasets='datasets')
+        >>> dataset_files = pm.list_datasets()
+        ['dataset1.csv', 'dataset2.csv', ...]
+
+        Notes:
+        ------
+        This method assumes that dataset files are stored in the folder_datasets directory.
+        """
+        # Ensure the folder_datasets attribute is set
+        if self.folder_datasets is None:
+            raise ValueError("The folder_datasets attribute is not set.")
+
+        # Build the path to the datasets directory
+        datasets_path = os.path.join(self.base_path, self.folder_datasets)
+
+        # Check if the datasets path exists
+        if not os.path.exists(datasets_path):
+            raise FileNotFoundError(f"The specified datasets directory '{datasets_path}' does not exist.")
+
+        # List all files in the datasets directory
+        return [f for f in os.listdir(datasets_path) if os.path.isfile(os.path.join(datasets_path, f))]
     
     def list_all_files(self):
         """
@@ -437,9 +585,64 @@ class PersistenceManager:
             obj.to_csv(file_path, sep=";", index = False)            
         else:
             raise ValueError(f"Unsupported extension '{extension}'.")
+        
+    def load_csv_as_raw_string(self, folder_path, filename, num_rows=None):
+        """
+        Loads a CSV file as a raw string from the specified directory, with an option to limit
+        the number of rows read.
+
+        This function is useful when the raw contents of a CSV file are needed,
+        rather than parsing it into a DataFrame. It allows reading a limited number
+        of rows from the CSV file.
+
+        Parameters:
+        -----------
+        folder_path : str
+            The folder path where the CSV file resides.
+        filename : str
+            The name of the CSV file. The '.csv' extension is optional and will be added if not present.
+        num_rows : int, optional
+            The number of rows to read from the CSV file. If None (default), all rows are read.
+
+        Returns:
+        --------
+        str
+            The raw contents of the specified number of rows from the CSV file as a string.
+
+        Raises:
+        -------
+        FileNotFoundError:
+            If the specified CSV file does not exist.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(...)
+        >>> raw_csv_string = pm.load_csv_as_raw_string('path/to/directory', 'data.csv', num_rows=10)
+        """
+
+        # Append '.csv' if not present in the filename
+        if not filename.endswith('.csv'):
+            filename += '.csv'
+
+        # Construct the full path for the CSV file
+        csv_file_path = os.path.normpath(os.path.join(self.base_path, folder_path, filename))
+
+        # Check if the CSV file exists
+        if not os.path.exists(csv_file_path):
+            raise FileNotFoundError(f"The specified CSV file {csv_file_path} does not exist.")
+
+        # Read the CSV file as a raw string
+        with open(csv_file_path, 'r') as file:
+            if num_rows is not None:
+                raw_string = ''.join([next(file) for _ in range(num_rows)])
+            else:
+                raw_string = file.read()
+
+        return raw_string
 
 
-    def load_object(self, folder_path, filename, extension):
+
+    def load_object(self, folder_path, filename, extension, csv_sep=";"):
         """
         Loads an object from disk based on the provided folder path, filename, and extension.
         The method supports multiple file formats defined in the constant SUPPORTED_EXTENSIONS.
@@ -493,7 +696,7 @@ class PersistenceManager:
             with open(full_path, 'r') as f:
                 obj = json.load(f)
         elif extension == 'csv':
-            obj = pd.read_csv(full_path, sep = ";")
+            obj = pd.read_csv(full_path, sep = csv_sep)
         else:
             # This else block is technically redundant due to the earlier check but kept for clarity.
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
@@ -1141,6 +1344,70 @@ class PersistenceManager:
 
         return evaluation_data
     
+    def save_dataset(self, df, file_name, overwrite=False, extension='csv'):
+        """
+        Saves a dataset (pandas DataFrame) using the save_object method.
+
+        Parameters:
+        -----------
+        df : pandas.DataFrame
+            The DataFrame to save.
+        file_name : str
+            The name of the file (without extension) where the dataset will be saved.
+        overwrite : bool, optional (default: False)
+            Whether to overwrite the file if it already exists.
+        extension : str, optional (default: 'csv')
+            The file extension/format to use for saving the dataset.
+
+        Returns:
+        --------
+        None
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> pm.save_dataset(df=dataframe, file_name='dataset_name')
+        """
+        if extension not in ['csv', 'json']:  # Add more supported formats if needed
+            raise ValueError(f"Unsupported extension '{extension}' for datasets.")
+
+        # Use the save_object method to save the dataset
+        self.save_object(df, file_name, overwrite=overwrite, extension=extension, sub_folder=self.folder_datasets)
+
+    def load_dataset(self, file_name, extension='csv', csv_sep = ";"):
+        """
+        Loads a dataset into a pandas DataFrame using the load_object method.
+
+        Parameters:
+        -----------
+        file_name : str
+            The name of the file (without extension) to load the dataset from.
+        extension : str, optional (default: 'csv')
+            The file extension/format of the dataset.
+        csv_sep : str
+            Separator for csv
+
+        Returns:
+        --------
+        pandas.DataFrame
+            The loaded dataset as a pandas DataFrame.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> df = pm.load_dataset(file_name='dataset_name')
+        """
+        if extension not in ['csv', 'json']:  # Add more supported formats if needed
+            raise ValueError(f"Unsupported extension '{extension}' for datasets.")
+
+        # Build the folder path for datasets
+        folder_path = os.path.join(self.base_path, self.folder_datasets) if self.folder_datasets else self.base_path
+
+        # Use the load_object method to load the dataset
+        return self.load_object(folder_path, file_name, extension, csv_sep = csv_sep)
+
+
+    
     def save_plotly_visualization(self, visualization, name, folder_name_visualizations="visualizations", 
                                 overwrite=False, format='html'):
         """
@@ -1197,58 +1464,58 @@ class PersistenceManager:
             with open(visualization_path, 'w') as f:
                 json.dump(visualization.to_plotly_json(), f)
 
-def load_plotly_visualization(self, name, folder_name_visualizations="visualizations", format='html'):
-    """
-    Loads a Plotly visualization from disk in the specified format. The visualization is expected 
-    to be saved in a directory structure based on the attributes initialized in the PersistenceManager instance. 
-    The directory structure is as follows:
-    <folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>/<folder_name_visualizations>.
+    def load_plotly_visualization(self, name, folder_name_visualizations="visualizations", format='html'):
+        """
+        Loads a Plotly visualization from disk in the specified format. The visualization is expected 
+        to be saved in a directory structure based on the attributes initialized in the PersistenceManager instance. 
+        The directory structure is as follows:
+        <folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>/<folder_name_visualizations>.
 
-    Parameters:
-    -----------
-    name : str
-        The name of the file (without extension).
-    folder_name_visualizations : str, optional (default: "visualizations")
-        The folder name where the visualization is saved.
-    format : str, optional (default: 'html')
-        The format in which the visualization was saved ('html' or 'json').
+        Parameters:
+        -----------
+        name : str
+            The name of the file (without extension).
+        folder_name_visualizations : str, optional (default: "visualizations")
+            The folder name where the visualization is saved.
+        format : str, optional (default: 'html')
+            The format in which the visualization was saved ('html' or 'json').
 
-    Returns:
-    --------
-    plotly.graph_objs._figure.Figure
-        The loaded Plotly visualization object.
+        Returns:
+        --------
+        plotly.graph_objs._figure.Figure
+            The loaded Plotly visualization object.
 
-    Raises:
-    -------
-    ValueError:
-        If the specified format is not supported.
-    FileNotFoundError:
-        If the specified visualization file does not exist.
+        Raises:
+        -------
+        ValueError:
+            If the specified format is not supported.
+        FileNotFoundError:
+            If the specified visualization file does not exist.
 
-    Examples:
-    ---------
-    >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
-    >>> visualization_figure = pm.load_plotly_visualization('visualization_name', format='html')
-    """
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> visualization_figure = pm.load_plotly_visualization('visualization_name', format='html')
+        """
 
-    supported_formats = ['html', 'json']
-    if format not in supported_formats:
-        raise ValueError(f"Unsupported format '{format}'. Supported formats are {', '.join(supported_formats)}.")
+        supported_formats = ['html', 'json']
+        if format not in supported_formats:
+            raise ValueError(f"Unsupported format '{format}'. Supported formats are {', '.join(supported_formats)}.")
 
-    # Build the path where the visualization is saved
-    visualization_path = self.build_path(sub_folder=folder_name_visualizations, file_name=name, extension=format)
+        # Build the path where the visualization is saved
+        visualization_path = self.build_path(sub_folder=folder_name_visualizations, file_name=name, extension=format)
 
-    # Check if the specified file exists
-    if not os.path.exists(visualization_path):
-        raise FileNotFoundError(f"The specified visualization file {visualization_path} does not exist.")
+        # Check if the specified file exists
+        if not os.path.exists(visualization_path):
+            raise FileNotFoundError(f"The specified visualization file {visualization_path} does not exist.")
 
-    # Load the visualization based on the chosen format
-    if format == 'html':
-        return pio.read_html(visualization_path)
-    elif format == 'json':
-        with open(visualization_path, 'r') as f:
-            visualization_json = json.load(f)
-            return pio.from_json(visualization_json)
+        # Load the visualization based on the chosen format
+        if format == 'html':
+            return pio.read_html(visualization_path)
+        elif format == 'json':
+            with open(visualization_path, 'r') as f:
+                visualization_json = json.load(f)
+                return pio.from_json(visualization_json)
 
 
     # def persist_model_to_disk_structure(

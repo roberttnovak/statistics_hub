@@ -1569,7 +1569,7 @@ def evaluate_model(
             save_name = "evaluations"
             if show_args_in_save:
                 arg_name = "___".join([f"{arg}-{value}" for arg, value in kwargs_summarise_mae.items()])
-                save_name = f"{save_name}___{arg_name}"
+                save_name = f"{arg_name}"
         # The logic for saving the summary data can be added here
         pm.save_evaluation_data(predictions_train_test_summarise, name = save_name , folder_name_evaluation=folder_name_evaluation)
         pm.create_flag(flag_name=flag_name, content = flag_content,sub_folder=flag_subfolder)

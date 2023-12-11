@@ -169,14 +169,14 @@ def get_data_api_time(_objectid,_channelid,_init,_end):
     except Exception as e:
         print(f"exception get_data_api_time: {e}")
 
-@log_exceptions
-@log_function_args
+# @log_exceptions
+# @log_function_args
 def data_importer(automatic_importation: bool, 
                   creds_path: str, 
-                  path_instants_data_saved: str, 
+                  path_instants_data_saved: str = None, 
                   database: str = None, 
                   query: str = None, 
-                  save_importation=True,
+                  save_importation: bool = True,
                   file_name: str = None,
                   logger: bool = False) -> pd.DataFrame:
     """
@@ -185,7 +185,8 @@ def data_importer(automatic_importation: bool,
     This function provides a flexible way to import data either from a SQL database 
     or from a local directory containing CSV files. If importing from a database, 
     a credentials file and a SQL query are required. If importing from a local directory, 
-    the function will look for the most recent CSV file in the specified directory.
+    the function will look for the most recent CSV file in the specified directory 
+    if no specific file name is provided.
     
     Parameters:
     ------------
@@ -196,8 +197,9 @@ def data_importer(automatic_importation: bool,
     creds_path : str
         Path to the credentials file (JSON format) needed for accessing the SQL database.
 
-    path_instants_save_data : str
+    path_instants_data_saved : str, optional
         Path to the local directory from where data will be imported if automatic_importation is False.
+        If provided and save_importation is True, the imported data will be saved to this directory.
 
     database : str, optional
         Name of the SQL database from where data will be imported. Not needed if automatic_importation is False.
@@ -206,15 +208,17 @@ def data_importer(automatic_importation: bool,
         SQL query to select data from the SQL database. Not needed if automatic_importation is False.
 
     save_importation : bool, optional
-        If True, and if data is imported from a database, the imported data will be saved 
-        to a CSV file in the specified local directory. Default is True.
+        If True, and if data is imported from a database and path_instants_data_saved is provided,
+        the imported data will be saved to a CSV file in the specified local directory. Default is True.
 
     file_name : str, optional
         Name of a specific file to import from the local directory. If None (default),
         the function will import the most recent file in the directory.
         Not needed if automatic_importation is True.
+
     logger : logging.Logger, optional
         The logger to use for logging messages. If None (default), no logging will be performed.
+    
     Raises:
     --------
     ValueError:
@@ -231,7 +235,6 @@ def data_importer(automatic_importation: bool,
     >>> data_importer(
             automatic_importation=True,
             creds_path='credentials.json',
-            path_instants_save_data='data/',
             database='my_database',
             query='SELECT * FROM my_table'
         )
@@ -240,7 +243,7 @@ def data_importer(automatic_importation: bool,
     >>> data_importer(
             automatic_importation=False,
             creds_path='credentials.json',
-            path_instants_save_data='data/'
+            path_instants_data_saved='data/'
         )  
     """
 
@@ -265,7 +268,10 @@ def data_importer(automatic_importation: bool,
         df_imported = get_data_ssh(query, database=database, **creds_sql)
 
     else:
-        
+        # Check if path_instants_data_saved is provided for local import
+        if path_instants_data_saved is None:
+            raise ValueError("path_instants_data_saved must be provided for local file importation")
+
         # Determine the file to import based on the provided file_name
         if file_name:
             if logger:
@@ -282,8 +288,8 @@ def data_importer(automatic_importation: bool,
         # Read data from the specified or most recent CSV file in the directory
         df_imported = pd.read_csv(file_path)
         
-    # Automatically save the imported data from the database, if requested
-    if save_importation and automatic_importation:
+    # Automatically save the imported data from the database, if requested and path is provided
+    if save_importation and automatic_importation and path_instants_data_saved:
         if logger:
             logger.info(f'Data imported from database saved to {save_path}')
         name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

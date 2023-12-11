@@ -66,26 +66,24 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
-
     <div class="view-selector">
         <button id="show-table-preview">Table Preview</button>
         <button id="show-eda-view">EDA</button>
         <button id="show-preprocessing-view">Preprocessing</button>
     </div>
-    <ul>
-        <li> #ToDo: Continuar con la carga "perezosa" de los datos y manetener la estética de los Datatables. 
-             Actualmente se muestran solo las primeras 1000 filas. </li>
-    </ul>
+
     <!-- Sección de Vista Previa de la Tabla -->
-    <div class="form-section" id="table-preview-view" style="display:none;">
-        <!-- Mostrar el DataFrame aquí -->
+    <div class="form-section" id="table-preview-view">
+        <ul>
+            <li> #ToDo: Continuar con la carga "perezosa" de los datos y manetener la estética de los Datatables. 
+                 Actualmente se muestran solo las primeras 1000 filas. </li>
+        </ul>
         {{ df_html|safe }}
     </div>
 
     <!-- Sección de EDA (Exploratory Data Analysis) -->
-    <div id="eda-view" style="display:none;">
+    <div class="form-section" id="eda-view" style="display:none;">
         <!-- Selección de Columna Timestamp -->
         <div class="form-group">
             <label for="timestamp-column">Timestamp Column:</label>
@@ -101,7 +99,7 @@
             <label for="date-range">Select Date Range:</label>
             <input type="text" id="date-range" name="date_range" class="date-range-selector">
         </div>
-        
+
         <!-- Área de Filtros Dinámicos -->
         <div class="form-group">
             <label for="dynamic-filters">Filters:</label>
@@ -110,159 +108,54 @@
             </div>
             <button type="button" id="add-filter">Add Filter</button>
         </div>
-        
         <!-- Botón de Envío -->
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Analyze</button>
         </div>
-    </form>
     </div>
 
     <!-- Sección de Preprocesamiento -->
-    <div id="preprocessing-view" style="display:none;">
-        <!-- Contenido para Preprocesamiento -->
+    <div class="form-section" id="preprocessing-view" style="display:none;">
+        <!-- Contenido de Preprocesamiento aquí -->
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
-        var tableInitialized = false;
-        var currentAction = 'show-table-preview';
-
         function initializeDataTable() {
-            console.log("Inicializando DataTables");
-            $('#table-preview-view .my-data-table').DataTable({
-                // Configuración de DataTables...
-            });
-            tableInitialized = true;
-        }
-
-        // Inicializar DataTables si la tabla está visible al cargar la página
-        if ($('#table-preview-view').is(':visible')) {
-            initializeDataTable();
-        }
-
-        // Actualizar la sección visible en base a la acción
-        function updateSection(action) {
-            var currentUrl = window.location.href;
-        
-            if (action === 'show-table-preview' && !tableInitialized) {
-                $.ajax({
-                    url: currentUrl,
-                    type: 'GET',
-                    data: { 'action': action },
-                    success: function(response) {
-                        $('#table-preview-view').html(response.df_html);
-                        initializeDataTable();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error en AJAX:', status, error);
-                    }
-                });
-            } else if (action === 'show-eda-view') {
-                var selectedTimestampColumn = $('#timestamp-column').val(); // Asume que tienes un selector para elegir la columna de timestamp
-                $.ajax({
-                    url: currentUrl,
-                    type: 'GET',
-                    data: {
-                        'action': action,
-                        'selected_dataset': '{{ selected_dataset }}',
-                        'separator': '{{ separator }}',
-                        'timestamp_column': selectedTimestampColumn
-                    },
-                    success: function(response) {
-                        // Asumiendo que tu backend devuelve las fechas mínima y máxima
-                        if (response.min_date && response.max_date) {
-                            $(".date-range-selector").flatpickr({
-                                mode: "range",
-                                minDate: response.min_date,
-                                maxDate: response.max_date,
-                                dateFormat: "Y-m-d",
-                            });
-                        } else {
-                            // Manejar el caso en que no se encuentren fechas mínima y máxima
-                            console.log('Fechas mínima y máxima no encontradas');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error en AJAX:', status, error);
-                    }
-                });
+            // Verificar si la tabla ya está inicializada como DataTable
+            if ($.fn.DataTable.isDataTable('#table-preview-view .my-data-table')) {
+                // Destruir la instancia existente si ya está inicializada
+                $('#table-preview-view .my-data-table').DataTable().destroy();
             }
-            // Puedes continuar con otras acciones aquí...
+            // Inicializar DataTable
+            $('#table-preview-view .my-data-table').DataTable({
+                // Opciones de configuración de DataTables, si es necesario
+            });
         }
 
+        // Eventos de clic para manejar la vista activa
         $('#show-table-preview').click(function() {
-            console.log('show-table-preview clicked');
-            event.preventDefault();
-            currentAction = 'show-table-preview';
-            updateSection(currentAction);
             $('#table-preview-view').show();
-            $('#eda-view').hide();
-            $('#preprocessing-view').hide();
+            $('#eda-view, #preprocessing-view').hide();
+            initializeDataTable(); // Asegúrese de que DataTable se inicializa correctamente
         });
 
         $('#show-eda-view').click(function() {
-            console.log('show-eda-view clicked');
-            currentAction = 'show-eda-view';
-            updateSection(currentAction);
             $('#eda-view').show();
-            $('#table-preview-view').hide();
-            $('#preprocessing-view').hide();
-            $("#eda-view .form-group").not(':first').hide();
+            $('#table-preview-view, #preprocessing-view').hide();
         });
 
         $('#show-preprocessing-view').click(function() {
-            console.log('show-preprocessing-view clicked');
-            currentAction = 'show-preprocessing-view';
-            updateSection(currentAction);
             $('#preprocessing-view').show();
-            $('#table-preview-view').hide();
-            $('#eda-view').hide();
+            $('#table-preview-view, #eda-view').hide();
         });
 
-        $('#timestamp-column').change(function() {
-            if ($(this).val() != "") {
-                $("#eda-view .form-group").not(':first').show();
-                updateDateRange();
-            } else {
-                $("#eda-view .form-group").not(':first').hide();
-            }
-        });
-
-        function updateDateRange() {
-            var selectedColumn = $('#timestamp-column').val();
-            var currentPath = window.location.pathname;
-
-            $.ajax({
-                url: currentPath,
-                type: 'GET',
-                data: {
-                    'selected_dataset': '{{ selected_dataset }}',
-                    'separator': '{{ separator }}',
-                    'timestamp_column': selectedColumn,
-                    'action': getCurrentAction() 
-                },
-                success: function(response) {
-                    console.log(response);
-                    $(".date-range-selector").flatpickr({
-                        mode: "range",
-                        minDate: response.min_date,
-                        maxDate: response.max_date,
-                        dateFormat: "Y-m-d",
-                    });
-                }
-            });
+        // Inicializar DataTables en la tabla de vista previa si está visible
+        if ("{{ active_view }}" === "table-preview-view") {
+            initializeDataTable();
         }
-
-        // Función para obtener la acción actual
-        function getCurrentAction() {
-            return currentAction;
-        }
-
-        // Más lógica basada en la acción actual puede ser agregada aquí
     });
 </script>
-
 
 {% endblock %}

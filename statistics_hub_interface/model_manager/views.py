@@ -364,8 +364,8 @@ def preprocess_dataset(request, selected_dataset, separator):
         except Exception as e:
             return None, str(e)
 
-    def generate_html(df):
-        return df.head(100).to_html(classes='table table-striped my-data-table')
+    def generate_html(df, n_first_rows_to_show = 100):
+        return df.head(n_first_rows_to_show).to_html(classes='table table-striped my-data-table')
 
     def get_min_max_dates(df, timestamp_column):
         if timestamp_column in df.columns and not df[timestamp_column].empty:
@@ -414,6 +414,8 @@ def preprocess_dataset(request, selected_dataset, separator):
 
 
     df, error = load_data()
+
+    
 
     if not error:
         columns = df.columns.tolist()

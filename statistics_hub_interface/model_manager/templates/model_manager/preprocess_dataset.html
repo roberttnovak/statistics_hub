@@ -126,6 +126,13 @@
 
 <script>
     $(document).ready(function() {
+        // Inicialización inicial de flatpickr: Calendario para el rango de fechas
+        var flatpickrInstance = $(".date-range-selector").flatpickr({
+            mode: "range",
+            dateFormat: "Y-m-d",
+            defaultDate: ["{{ min_date }}", "{{ max_date }}"]
+        });
+
         // Función para inicializar DataTable
         function initializeDataTable() {
             // Verificar si la tabla ya está inicializada como DataTable
@@ -148,12 +155,6 @@
                 $('#eda-view .form-group:not(:first)').hide();
             }
         }
-
-        flatpickr(".date-range-selector", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            defaultDate: ["{{ min_date }}", "{{ max_date }}"]
-        });
 
         // Eventos de clic para manejar la vista activa
         $('#show-table-preview').click(function() {
@@ -219,8 +220,10 @@
                     $('#date-range-label').text(`Select Date Range (In dataset: ${updatedMinDate} to ${updatedMaxDate}):`);
 
                     // Actualizar el Flatpickr con las nuevas fechas
-                    {% comment %} var flatpickrInstance = $("#date-range").flatpickr();
-                    flatpickrInstance.set("defaultDate", [updatedMinDate, updatedMaxDate]); {% endcomment %}
+                    flatpickrInstance.set("defaultDate", [updatedMinDate, updatedMaxDate]);
+                    flatpickrInstance.set("minDate", updatedMinDate);
+                    flatpickrInstance.set("maxDate", updatedMaxDate);
+
                 },
                 error: function(xhr, status, error) {
                     // Manejar posibles errores aquí

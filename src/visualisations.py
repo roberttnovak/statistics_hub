@@ -110,3 +110,50 @@ def plot_weight_evolution(df, weight_column):
                  barmode='stack')
 
     return fig
+
+
+def create_interactive_plot(time_var, y_vars, df):
+    """
+    Create an interactive Plotly plot with buttons to switch between different Y variables.
+
+    Parameters:
+    - time_var (str): The name of the column to be used as the X axis (time variable).
+    - y_vars (list of str): A list of column names to be used as Y variables.
+    - df (pandas.DataFrame): The dataframe containing the data.
+
+    Returns:
+    - A Plotly figure with interactive buttons to switch between Y variables.
+
+    Example:
+    >>> create_interactive_plot('Time', ['Temperature', 'Humidity'], df)
+    """
+
+    # Initial trace
+    trace = [go.Scatter(x=df[time_var], y=df[y_vars[0]], mode='lines', name=y_vars[0])]
+
+    # Create figure with initial trace
+    fig = go.FigureWidget(data=trace)
+
+    # Create buttons for each Y variable
+    buttons = []
+
+    for var in y_vars:
+        buttons.append(dict(method='restyle',
+                            label=var,
+                            visible=True,
+                            args=[{'y': [df[var]],
+                                   'name': var},
+                                  [0]]))
+
+    # Update layout with buttons
+    fig.update_layout(
+        updatemenus=[dict(active=0,
+                          buttons=buttons,
+                          direction="down",
+                          pad={"r": 10, "t": 10},
+                          showactive=True,
+                          x=0.1,
+                          xanchor="left",
+                          y=1.1,
+                          yanchor="top")]
+    )

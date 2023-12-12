@@ -53,6 +53,7 @@
     #table-preview-view, #eda-view, #preprocessing-view {
         display: none;
     }
+
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -100,7 +101,7 @@
         </div>
         <!-- Rango de Fechas -->
         <div class="form-group">
-            <label for="date-range" id="date-range-label">Select Date Range (In dataset: loading...):</label>
+            <label for="date-range" id="date-range-label">Select Date Range (In dataset: computing range of dataset...):</label>
             <input type="text" id="date-range" name="date_range" class="date-range-selector">
         </div>
 
@@ -130,7 +131,11 @@
         var flatpickrInstance = $(".date-range-selector").flatpickr({
             mode: "range",
             dateFormat: "Y-m-d",
-            defaultDate: ["{{ min_date }}", "{{ max_date }}"]
+            defaultDate: ["{{ min_date_dataset }}", "{{ max_date_dataset }}"],
+            onChange: function(selectedDates, dateStr, instance) {
+                // Enviar solicitud AJAX cuando el usuario cambia el rango de fechas
+                sendAjaxRequestWithDates(dateStr);
+            }
         });
 
         // Función para inicializar DataTable
@@ -155,6 +160,116 @@
                 $('#eda-view .form-group:not(:first)').hide();
             }
         }
+
+        function addFilter() {
+            // Crear el contenedor para el nuevo filtro
+            var filterContainer = $('<div class="filter-container" style="margin-bottom: 10px;"></div>');
+            
+            // Crear y añadir el desplegable para seleccionar la columna
+            var selectColumn = $('<select class="form-control filter-column-select"><option value="">--Select categorical column--</option></select>');
+            {% for column in columns %}
+            selectColumn.append($('<option>').attr('value', '{{ column }}').text('{{ column }}'));
+            {% endfor %}
+            filterContainer.append(selectColumn);
+            
+            // Añadir un contenedor para los checkboxes de categorías (se llenará dinámicamente)
+            var categoryCheckboxes = $('<div class="category-checkboxes" style="display: flex; flex-wrap: wrap; margin-top: 10px;"></div>');
+            filterContainer.append(categoryCheckboxes);
+        
+            // Añadir un botón de eliminar al filtro
+            var deleteButton = $('<button type="button" class="delete-filter-btn">Delete</button>')
+            .css({
+                "background-color": "#ff4d4d", // Rojo
+                "color": "white",
+                "border": "none",
+                "padding": "5px 10px",
+                "margin-left": "10px",
+                "border-radius": "4px",
+                "cursor": "pointer"
+            });
+        
+            // Agregar efecto hover al botón de eliminar
+            deleteButton.hover(
+                function() {
+                    $(this).css("background-color", "#ff3333"); // Rojo más oscuro al pasar el mouse
+                }, 
+                function() {
+                    $(this).css("background-color", "#ff4d4d"); // Color original al quitar el mouse
+                }
+            );
+            filterContainer.append(deleteButton);
+            
+            // Añadir el filtro al DOM
+            $('#dynamic-filters').append(filterContainer);
+        }
+
+        $('#add-filter').click(addFilter);
+
+        function collectSelectedCategories() {
+            var filters = {};
+        
+            $('.filter-container').each(function() {
+                var columnName = $(this).find('.filter-column-select').val();
+                if (columnName) {
+                    var selectedCategories = [];
+                    $(this).find('.category-checkboxes input:checked').each(function() {
+                        selectedCategories.push($(this).val());
+                    });
+                    if (selectedCategories.length > 0) {
+                        filters[columnName] = selectedCategories;
+                    }
+                }
+            });
+        
+            return filters;
+        }
+
+        $(document).on('click', '.delete-filter-btn', function() {
+            $(this).parent('.filter-container').remove();
+        });
+
+        $(document).on('change', '.filter-column-select', function() {
+            var selectedColumn = $(this).val();
+            var categoryCheckboxesContainer = $(this).next('.category-checkboxes');
+            categoryCheckboxesContainer.empty();
+        
+            // Utilizar la función existente para construir la URL de la solicitud AJAX
+            var ajaxUrl = buildAjaxUrl();
+        
+            // Enviar la solicitud AJAX para obtener las categorías únicas de la columna seleccionada
+            $.ajax({
+                url: ajaxUrl,
+                type: 'GET',
+                data: {
+                    'get_categories': 'true',
+                    'column_name': selectedColumn
+                },
+                success: function(response) {
+                    console.log("Respuesta AJAX 2:", response);
+                    if (response.categories) {
+                        // Si la respuesta contiene categorías, crear checkboxes para ellas
+                        response.categories.forEach(function(category) {
+                            var checkbox = $('<div><label><input type="checkbox" value="' + category + '"> ' + category + '</label></div>');
+                            categoryCheckboxesContainer.append(checkbox);
+                        });
+                    } else if (response.error) {
+                        // Manejar el caso en que se devuelva un error
+                        console.error("Error al obtener categorías:", response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", error);
+                }
+            });
+
+            // Agregar 'name' a los checkboxes basado en el nombre de la columna
+            var checkboxName = 'filter_' + selectedColumn;
+            response.categories.forEach(function(category) {
+                var checkbox = $('<div><label><input type="checkbox" name="' + checkboxName + '" value="' + category + '"> ' + category + '</label></div>');
+                categoryCheckboxesContainer.append(checkbox);
+            });
+
+        });
 
         // Eventos de clic para manejar la vista activa
         $('#show-table-preview').click(function() {
@@ -182,20 +297,56 @@
         // Ocultar inicialmente los elementos de EDA
         $('#eda-view .form-group:not(:first)').hide();
 
+        // Función para enviar la solicitud AJAX con las fechas seleccionadas
+        function sendAjaxRequestWithDates(dateRange) {
+            var selectedTimestampColumn = $('#timestamp-column').val();
+            var ajaxUrl = buildAjaxUrl(); // Construir la URL para la solicitud AJAX
+            var csrftoken = $('#csrf-form [name=csrfmiddlewaretoken]').val(); // Obtener el token CSRF
+
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    'timestamp_column': selectedTimestampColumn,
+                    'date_range': dateRange,
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken); // Establecer el token CSRF
+                },
+                success: function(response) {
+                    // Procesar la respuesta del servidor
+                    handleAjaxResponse(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", error); // Manejar errores
+                }
+            });
+        }
+
+        // Función para construir la URL de la solicitud AJAX
+        function buildAjaxUrl() {
+            var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
+            var ajaxUrlBase = '/preprocess_dataset/';
+            return ajaxUrlBase + pathArray.slice(1).join('/') + '/';
+        }
+
+        // Función para manejar la respuesta del servidor
+        function handleAjaxResponse(response) {
+            // Actualizar la interfaz con las fechas recibidas del servidor
+            $('#date-range-label').text(`Select Date Range (In dataset: ${response.min_date_dataset} to ${response.max_date_dataset}):`);
+            flatpickrInstance.set("defaultDate", [response.min_date_dataset, response.max_date_dataset]);
+            flatpickrInstance.set("minDate", response.min_date_dataset);
+            flatpickrInstance.set("maxDate", response.max_date_dataset);
+        }
+
         $('#timestamp-column').change(function() {
             toggleEdaElements(); // Maneja los cambios visuales en la interfaz de usuario
     
             var selectedTimestampColumn = $(this).val();
             var dateRange = $('#date-range').val(); // Asume que el rango de fechas está en este input
     
-            // Obtener los segmentos de la URL actual
-            var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
-    
             // Construir la base de la URL para la solicitud AJAX
-            var ajaxUrlBase = '/preprocess_dataset/';
-    
-            // Agregar parámetros dinámicamente a la URL
-            var ajaxUrl = ajaxUrlBase + pathArray.slice(1).join('/') + '/';
+            var ajaxUrl = buildAjaxUrl();
     
             // Obtener el token CSRF del formulario oculto
             var csrftoken = $('#csrf-form [name=csrfmiddlewaretoken]').val();
@@ -213,17 +364,7 @@
                 },
                 success: function(response) {
                     console.log("Respuesta AJAX:", response);
-                    var updatedMinDate = response.min_date;
-                    var updatedMaxDate = response.max_date;
-            
-                    // Actualizar el label del rango de fechas
-                    $('#date-range-label').text(`Select Date Range (In dataset: ${updatedMinDate} to ${updatedMaxDate}):`);
-
-                    // Actualizar el Flatpickr con las nuevas fechas
-                    flatpickrInstance.set("defaultDate", [updatedMinDate, updatedMaxDate]);
-                    flatpickrInstance.set("minDate", updatedMinDate);
-                    flatpickrInstance.set("maxDate", updatedMaxDate);
-
+                    handleAjaxResponse(response);
                 },
                 error: function(xhr, status, error) {
                     // Manejar posibles errores aquí
@@ -233,5 +374,7 @@
         });
     });
 </script>
+
+
 
 {% endblock %}

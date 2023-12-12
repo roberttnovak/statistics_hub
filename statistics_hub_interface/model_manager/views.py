@@ -414,26 +414,44 @@ def preprocess_dataset(request, selected_dataset, separator):
 
 
     df, error = load_data()
+    df_filtered = df.copy()
 
     
 
     if not error:
         columns = df.columns.tolist()
         timestamp_column = request.POST.get('timestamp_column')
-        min_date, max_date = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
-        context.update({"df_html": generate_html(df), "columns": columns, "min_date":min_date, "max_date":max_date})
+        date_range_user = request.POST.get('date_range')
+        if date_range_user:
+            min_date_user, max_date_user = date_range_user.split(" to ")
+            df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+        else:
+            min_date_user, max_date_user = None, None
+        min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
+        context.update({"df_html": generate_html(df_filtered), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
         # context = handle_eda(df,context)
-        print(context)
+        print(min_date_user, max_date_user)
     else:
         context.update({"error": error})
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-
-        if not error:
+        # Verificar si la solicitud AJAX es para obtener fechas mínimas y máximas
+        if 'timestamp_column' in request.POST:
             timestamp_column = request.POST.get('timestamp_column')
-            min_date, max_date = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
-            # Devolver solo los datos necesarios en la respuesta AJAX
-            return JsonResponse({'min_date': min_date, 'max_date': max_date})
+            if not error and timestamp_column:
+                min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column)
+                return JsonResponse({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
+            else:
+                return JsonResponse({'error': error or 'Columna de timestamp no especificada'}, status=400)
+        
+        # Verificar si la solicitud AJAX es para obtener categorías únicas
+        elif 'get_categories' in request.GET:
+            column_name = request.GET.get('column_name')
+            if column_name and column_name in df.columns:
+                unique_categories = df[column_name].dropna().unique().tolist()
+                return JsonResponse({'categories': unique_categories})
+            else:
+                return JsonResponse({'error': 'Columna no especificada o no encontrada'}, status=400)
 
     return render(request, 'model_manager/preprocess_dataset.html', context)
 

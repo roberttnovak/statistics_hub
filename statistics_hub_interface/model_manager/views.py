@@ -15,6 +15,7 @@ from django.contrib import messages
 import pandas as pd
 import plotly.offline as py
 import plotly.graph_objs as go
+import datetime
  
 sys.path.append(str(Path("../src")))
 from visualisations import plot_box_time_series, plot_weight_evolution
@@ -367,32 +368,43 @@ def preprocess_dataset(request, selected_dataset, separator):
         return df.head(100).to_html(classes='table table-striped my-data-table')
 
     def get_min_max_dates(df, timestamp_column):
-        if timestamp_column in df.columns:
-            min_date = df[timestamp_column].min().strftime("%Y-%m-%d")
-            max_date = df[timestamp_column].max().strftime("%Y-%m-%d")
-            return min_date, max_date
+        if timestamp_column in df.columns and not df[timestamp_column].empty:
+            # Convertir la columna a datetime, si no está ya en ese formato
+            df[timestamp_column] = pd.to_datetime(df[timestamp_column], errors='coerce')
+
+            # Calcula la fecha mínima y máxima, omitiendo valores NaT generados por 'coerce'
+            min_date = df[timestamp_column].min()
+            max_date = df[timestamp_column].max()
+
+            # Formatear las fechas mínima y máxima, si no son NaT (not a time)
+            if pd.notnull(min_date) and pd.notnull(max_date):
+                min_date = min_date.strftime("%Y-%m-%d")
+                max_date = max_date.strftime("%Y-%m-%d")
+                return min_date, max_date
+            else:
+                return None, None
         else:
             return None, None
 
-    def handle_load_data():
-        df, error = load_data()
-        if not error:
-            return {"df_html": generate_html(df)}
-        else:
-            return {"error": error}
-
-    def handle_eda():
-        df, error = load_data()
-        if error:
-            return {"error": error}
+    def handle_eda(df, context):
 
         timestamp_column = request.POST.get('timestamp_column')
-        min_date, max_date = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
+        user_min_date = request.POST.get('min_date')
+        user_max_date = request.POST.get('max_date')
+
+        # Convertir las fechas de cadena a objetos datetime
+        if user_min_date and user_max_date:
+            user_min_date = datetime.datetime.strptime(user_min_date, "%Y-%m-%d")
+            user_max_date = datetime.datetime.strptime(user_max_date, "%Y-%m-%d")
+
+        min_date, max_date = get_min_max_dates(df, timestamp_column, user_min_date, user_max_date) if timestamp_column else (None, None)
         
         if min_date and max_date:
-            return {'columns': df.columns.tolist(), 'min_date': min_date, 'max_date': max_date}
+            context.update({'columns': df.columns.tolist(), 'min_date': min_date, 'max_date': max_date})
+            return context
         else:
-            return {'error': "Columna de timestamp no encontrada o inválida."}
+            context.update({'error': "Columna de timestamp no encontrada, inválida o fuera del rango de fechas seleccionado."})
+            return context
 
     def handle_preprocessing():
         # Lógica específica para el preprocesamiento
@@ -401,26 +413,25 @@ def preprocess_dataset(request, selected_dataset, separator):
     context = {'active_view': active_view}
 
 
-    if active_view == 'table-preview-view':
-        df, error = load_data()
-        if not error:
-            context.update({"df_html": generate_html(df)})
-        else:
-            context.update({"error": error})
+    df, error = load_data()
 
-    elif active_view == 'eda-view':
-        # Lógica para EDA
-        df, error = load_data()
+    if not error:
+        columns = df.columns.tolist()
+        timestamp_column = request.POST.get('timestamp_column')
+        min_date, max_date = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
+        context.update({"df_html": generate_html(df), "columns": columns, "min_date":min_date, "max_date":max_date})
+        # context = handle_eda(df,context)
+        print(context)
+    else:
+        context.update({"error": error})
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+
         if not error:
             timestamp_column = request.POST.get('timestamp_column')
-            min_date, max_date = get_min_max_dates(df, timestamp_column)
-            context.update({'columns': df.columns.tolist(), 'min_date': min_date, 'max_date': max_date})
-        else:
-            context.update({"error": error})
-
-    elif active_view == 'preprocessing-view':
-        # Lógica para Preprocesamiento
-        context.update(handle_preprocessing())
+            min_date, max_date = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
+            # Devolver solo los datos necesarios en la respuesta AJAX
+            return JsonResponse({'min_date': min_date, 'max_date': max_date})
 
     return render(request, 'model_manager/preprocess_dataset.html', context)
 

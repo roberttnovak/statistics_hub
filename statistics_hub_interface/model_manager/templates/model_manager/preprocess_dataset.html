@@ -66,6 +66,10 @@
 {% endblock %}
 
 {% block content %}
+<!-- Formulario oculto para el token CSRF -->
+<form id="csrf-form" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
 <div class="container">
     <div class="view-selector">
         <button id="show-table-preview">Table Preview</button>
@@ -86,9 +90,9 @@
     <div class="form-section" id="eda-view" style="display:none;">
         <!-- Selección de Columna Timestamp -->
         <div class="form-group">
-            <label for="timestamp-column">Timestamp Column:</label>
-            <select id="timestamp-column" name="timestamp_column" class="form-control" onchange="updateDateRange();">
-                <option value="">Seleccione una columna</option>
+            <label for="timestamp-column">Select temporal column:</label>
+            <select id="timestamp-column" name="timestamp_column" class="form-control">
+                <option value="">--Select temporal column--</option>
                 {% for column in columns %}
                 <option value="{{ column }}">{{ column }}</option>
                 {% endfor %}
@@ -96,7 +100,7 @@
         </div>
         <!-- Rango de Fechas -->
         <div class="form-group">
-            <label for="date-range">Select Date Range:</label>
+            <label for="date-range" id="date-range-label">Select Date Range (In dataset: loading...):</label>
             <input type="text" id="date-range" name="date_range" class="date-range-selector">
         </div>
 
@@ -122,6 +126,7 @@
 
 <script>
     $(document).ready(function() {
+        // Función para inicializar DataTable
         function initializeDataTable() {
             // Verificar si la tabla ya está inicializada como DataTable
             if ($.fn.DataTable.isDataTable('#table-preview-view .my-data-table')) {
@@ -134,16 +139,33 @@
             });
         }
 
+        // Función para mostrar u ocultar elementos de EDA
+        function toggleEdaElements() {
+            var selectedColumn = $('#timestamp-column').val();
+            if (selectedColumn) {
+                $('#eda-view .form-group:not(:first)').show(); 
+            } else {
+                $('#eda-view .form-group:not(:first)').hide();
+            }
+        }
+
+        flatpickr(".date-range-selector", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            defaultDate: ["{{ min_date }}", "{{ max_date }}"]
+        });
+
         // Eventos de clic para manejar la vista activa
         $('#show-table-preview').click(function() {
             $('#table-preview-view').show();
             $('#eda-view, #preprocessing-view').hide();
-            initializeDataTable(); // Asegúrese de que DataTable se inicializa correctamente
+            initializeDataTable(); // Asegurarse de que DataTable se inicializa correctamente
         });
 
         $('#show-eda-view').click(function() {
             $('#eda-view').show();
             $('#table-preview-view, #preprocessing-view').hide();
+            toggleEdaElements(); // Ajustar la visibilidad de los elementos de EDA
         });
 
         $('#show-preprocessing-view').click(function() {
@@ -155,6 +177,57 @@
         if ("{{ active_view }}" === "table-preview-view") {
             initializeDataTable();
         }
+
+        // Ocultar inicialmente los elementos de EDA
+        $('#eda-view .form-group:not(:first)').hide();
+
+        $('#timestamp-column').change(function() {
+            toggleEdaElements(); // Maneja los cambios visuales en la interfaz de usuario
+    
+            var selectedTimestampColumn = $(this).val();
+            var dateRange = $('#date-range').val(); // Asume que el rango de fechas está en este input
+    
+            // Obtener los segmentos de la URL actual
+            var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
+    
+            // Construir la base de la URL para la solicitud AJAX
+            var ajaxUrlBase = '/preprocess_dataset/';
+    
+            // Agregar parámetros dinámicamente a la URL
+            var ajaxUrl = ajaxUrlBase + pathArray.slice(1).join('/') + '/';
+    
+            // Obtener el token CSRF del formulario oculto
+            var csrftoken = $('#csrf-form [name=csrfmiddlewaretoken]').val();
+    
+            // Enviar una solicitud AJAX al backend
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    'timestamp_column': selectedTimestampColumn,
+                    'date_range': dateRange,
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function(response) {
+                    console.log("Respuesta AJAX:", response);
+                    var updatedMinDate = response.min_date;
+                    var updatedMaxDate = response.max_date;
+            
+                    // Actualizar el label del rango de fechas
+                    $('#date-range-label').text(`Select Date Range (In dataset: ${updatedMinDate} to ${updatedMaxDate}):`);
+
+                    // Actualizar el Flatpickr con las nuevas fechas
+                    {% comment %} var flatpickrInstance = $("#date-range").flatpickr();
+                    flatpickrInstance.set("defaultDate", [updatedMinDate, updatedMaxDate]); {% endcomment %}
+                },
+                error: function(xhr, status, error) {
+                    // Manejar posibles errores aquí
+                    console.error("Error en la solicitud AJAX:", error);
+                }
+            });
+        });
     });
 </script>
 

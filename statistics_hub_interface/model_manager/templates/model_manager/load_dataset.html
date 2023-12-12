@@ -15,6 +15,7 @@
                 border-radius: 5px;
                 text-align: left;
                 margin: 10px 0;
+                text-align: center;
             }
             #csv-raw-preview-header {
                 text-align: center;
@@ -25,8 +26,11 @@
 
     <body>
         <div class="container mt-5">
-            <h2>Load a Dataset previously uploaded</h2>
+            <h2>Load a Dataset</h2>
     
+            <div> Upload your dataset and tailor the loading process. Begin by selecting your file and then configure 
+                  the settings as per your dataset's format.</div>
+            <br>
             <!-- Selección de Dataset -->
             <div class="mb-3">
                 <label for="dataset-selector">Select a Dataset:</label>
@@ -39,6 +43,7 @@
             </div>
     
             <!-- Vista previa en bruto del CSV -->
+            <h5 id="csv-raw-preview-header" style="display: none; text-align: center; margin-bottom: 10px;">Preview of First Rows</h5>
             <div id="csv-raw-preview" class="mb-3" style="display: none;">
                 <!-- Aquí se mostrará la vista previa en bruto del CSV -->
             </div>
@@ -47,7 +52,9 @@
             <div id="load-dataset-options" class="mb-3" style="display: none;">
                 <div class="form-group">
                     <label for="separator-input">Indicate the separator of csv:</label>
-                    <input type="text" class="form-control" id="separator-input" placeholder="Ej: ,">
+                    <input type="text" class="form-control" id="separator-input" placeholder="Ej: ," >
+                    <label for="separator-input">Other parameters to load csc (It will increase with use cases and feedback users):</label>
+                    <input type="text" class="form-control" id="separator-input" placeholder="...">
                 </div>
                 <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
             </div>
@@ -76,6 +83,7 @@
                         raw_preview_request: true
                     },
                     success: function(response) {
+                        $('#csv-raw-preview-header').show();
                         $('#csv-raw-preview').html(response.raw_preview_html).show();
                         $('#load-dataset-options').show();
                     },

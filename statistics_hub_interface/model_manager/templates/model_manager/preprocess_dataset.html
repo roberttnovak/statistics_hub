@@ -54,6 +54,54 @@
         display: none;
     }
 
+    .explanation {
+        margin-top: 20px;
+        background-color: #fff; /* Fondo blanco para resaltar */
+        border-left: 5px solid #4CAF50; /* Borde izquierdo para resaltar */
+        padding: 15px;
+        font-style: normal; /* Eliminar estilo itálico */
+        color: #333; /* Color de texto más oscuro para mejorar la legibilidad */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave para dar profundidad */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+
+    .btn-help {
+        background-color: #4CAF50; /* Verde */
+        color: white;
+        padding: 8px 16px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    
+    .btn-help:hover {
+        background-color: #45a049;
+    }
+
+    .btn-help {
+        background-color: #FFD700; /* Color dorado para el botón de ayuda */
+        color: black;
+        padding: 8px 16px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-help:hover {
+        background-color: #FFC107; /* Un dorado más claro al pasar el ratón por encima */
+    }
+    
+    .btn-help i {
+        margin-right: 5px; /* Espacio entre el ícono y el texto */
+    }
+
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -63,6 +111,10 @@
 
 <!-- Añadir Flatpickr CSS y JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Añadir Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 {% endblock %}
 
@@ -89,6 +141,8 @@
 
     <!-- Sección de EDA (Exploratory Data Analysis) -->
     <div class="form-section" id="eda-view" style="display:none;">
+        <form id="analyze-form" method="post" action="{% url 'preprocess_dataset' selected_dataset separator %}">
+            {% csrf_token %}
         <!-- Selección de Columna Timestamp -->
         <div class="form-group">
             <label for="timestamp-column">Select temporal column:</label>
@@ -100,33 +154,185 @@
             </select>
         </div>
         <!-- Rango de Fechas -->
-        <div class="form-group">
-            <label for="date-range" id="date-range-label">Select Date Range (In dataset: computing range of dataset...):</label>
-            <input type="text" id="date-range" name="date_range" class="date-range-selector">
-        </div>
-
-        <!-- Área de Filtros Dinámicos -->
-        <div class="form-group">
-            <label for="dynamic-filters">Filters:</label>
-            <div id="dynamic-filters">
-                <!-- Los filtros se añadirán aquí dinámicamente -->
+            <div class="form-group">
+                <label for="date-range" id="date-range-label">Select Date Range (In dataset: computing range of dataset...):</label>
+                <input type="text" id="date-range" name="date_range" class="date-range-selector">
             </div>
-            <button type="button" id="add-filter">Add Filter</button>
-        </div>
-        <!-- Botón de Envío -->
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Analyze</button>
-        </div>
+
+            <!-- Área de Filtros Dinámicos -->
+            <div class="form-group">
+                <label for="dynamic-filters">Filters:</label>
+                <div id="dynamic-filters">
+                    <!-- Los filtros se añadirán aquí dinámicamente -->
+                </div>
+                <button type="button" id="add-filter">Add Filter</button>
+            </div>
+            <input type="hidden" id="filters-data" name="filters_data">
+            <!-- Botón de Envío -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Analyze</button>
+            </div>
+
+            <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <div id="datatable-container" style="width: 50%;">
+                    <!-- Aquí irá la tabla DataTable -->
+                </div>
+                <div id="plotly-container" style="width: 50%;">
+                    <!-- Aquí irá el gráfico de Plotly -->
+                </div>
+            </div>
+        </form>
     </div>
 
     <!-- Sección de Preprocesamiento -->
     <div class="form-section" id="preprocessing-view" style="display:none;">
-        <!-- Contenido de Preprocesamiento aquí -->
+
+        <div class="form-group">
+            <button type="button" id="help-button" class="btn-help">
+                <i class="fas fa-lightbulb"></i> Help
+            </button>
+        </div>
+
+        <div class="explanation" id="explanation-preprocessing-section" style="display:none;">
+            <h2>Time Series Data Cleaning Process</h2>
+            <p>This form facilitates the cleaning and preprocessing of time series data. The process involves the following steps:</p>
+            <ul>
+                <li><strong>Resampling:</strong> Adjusts the frequency of data points in your time series (e.g., from 30-second intervals to 1-minute intervals). This step helps in normalizing the data frequency for further analysis.</li>
+                <li><strong>Aggregation:</strong> After resampling, data points are aggregated over the new time intervals using functions like mean, sum, max, or min. This step is essential for summarizing the data in a meaningful way.</li>
+                <li><strong>Interpolation:</strong> This step fills in missing values in your time series. Different methods like linear, quadratic, or cubic interpolation can be used depending on how you wish to estimate these gaps.</li>
+            </ul>
+            <p>By selecting the appropriate options below, you can customize how your time series data is processed to best suit your analysis needs.</p>
+        
+            <!-- Example Section -->
+            <div class="example-section">
+                <h3>Example Scenario</h3>
+                <p>Imagine you have temperature data recorded every 30 seconds. However, you need to analyze the data at a 1-minute frequency. Additionally, some data points are missing.</p>
+                <p><strong>Step 1 - Resampling:</strong> You choose to resample the data to a 1-minute frequency. This means if you originally had readings at 10:00:00, 10:00:30, and 10:01:00, they will now be grouped into intervals like 10:00:00 - 10:00:59, 10:01:00 - 10:01:59, etc.</p>
+                <p><strong>Step 2 - Aggregation:</strong> For each 1-minute interval, you decide to use the mean (average) of the data points. If the readings were 22°C and 23°C in the 10:00:00 - 10:00:59 interval, the aggregated value for this minute will be 22.5°C.</p>
+                <p><strong>Step 3 - Interpolation:</strong> For any minute where data is missing, you choose a linear interpolation method. If there's no reading at 10:02:00, but the readings at 10:01:00 and 10:03:00 are 22.5°C and 23°C respectively, the interpolated value for 10:02:00 would be estimated as 22.75°C.</p>
+            </div>
+
+            <div>
+                <h3>Time Series Data Cleaning Process - Step by Step</h3>
+                <p><strong>Original Data:</strong></p>
+                <table border="1">
+                    <tr>
+                        <th>timestamp</th>
+                        <th>temperature</th>
+                    </tr>
+                    <tr><td>2023-01-01 10:00:00</td><td>22.0</td></tr>
+                    <tr><td>2023-01-01 10:00:30</td><td>NaN</td></tr>
+                    <tr><td>2023-01-01 10:01:00</td><td>23.0</td></tr>
+                    <tr><td>2023-01-01 10:01:30</td><td>NaN</td></tr>
+                    <tr><td>2023-01-01 10:02:00</td><td>NaN</td></tr>
+                    <tr><td>2023-01-01 10:02:30</td><td>NaN</td></tr>
+                    <tr><td>2023-01-01 10:03:00</td><td>22.5</td></tr>
+                    <tr><td>2023-01-01 10:03:30</td><td>23.0</td></tr>
+                </table>
+            
+                <p>↓ <strong>Resampling (Frequency: 1 Minute)</strong></p>
+                <p><strong>Resampled Data:</strong></p>
+                <table border="1">
+                    <tr>
+                        <th>timestamp</th>
+                        <th>temperature</th>
+                    </tr>
+                    <tr><td>2023-01-01 10:00:00</td><td>22.00</td></tr>
+                    <tr><td>2023-01-01 10:01:00</td><td>23.00</td></tr>
+                    <tr><td>2023-01-01 10:02:00</td><td>NaN</td></tr>
+                    <tr><td>2023-01-01 10:03:00</td><td>22.75</td></tr>
+                </table>
+            
+                <p>↓ <strong>Interpolation (Method: Linear)</strong></p>
+                <p><strong>Interpolated Data:</strong></p>
+                <table border="1">
+                    <tr>
+                        <th>timestamp</th>
+                        <th>temperature</th>
+                    </tr>
+                    <tr><td>2023-01-01 10:00:00</td><td>22.000</td></tr>
+                    <tr><td>2023-01-01 10:01:00</td><td>23.000</td></tr>
+                    <tr><td>2023-01-01 10:02:00</td><td>22.875</td></tr>
+                    <tr><td>2023-01-01 10:03:00</td><td>22.750</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <br><br>
+
+        <form id="preprocessing-form" method="post">
+            {% csrf_token %}
+    
+            <!-- Campo para la frecuencia de remuestreo -->
+            <div class="form-group">
+                <label for="resample-freq">Resample Frequency:</label>
+                <input type="text" id="resample-freq" name="resample_freq" class="form-control" placeholder="e.g., 60S">
+            </div>
+    
+            <!-- Opción para la función de agregación -->
+            <div class="form-group">
+                <label for="aggregation-func">Aggregation Function:</label>
+                <select id="aggregation-func" name="aggregation_func" class="form-control">
+                    <option value="mean">Mean</option>
+                    <option value="sum">Sum</option>
+                    <option value="max">Max</option>
+                    <option value="min">Min</option>
+                    <!-- Puedes añadir más opciones según sea necesario -->
+                </select>
+            </div>
+    
+            <!-- Opción para el método de interpolación -->
+            <div class="form-group">
+                <label for="interpolation-method">Interpolation Method:</label>
+                <select id="interpolation-method" name="interpolation_method" class="form-control">
+                    <option value="local median" title=" fills missing data points by calculating the median of surrounding values within a specified range, ensuring a locally representative and robust substitution for each missing value.">local median</option>
+                    <option value="linear" title="Linear interpolation.">Linear</option>
+                    <option value="time" title="Linear interpolation on the time axis.">Time</option>
+                    <option value="index" title="Linear interpolation using the index as an axis.">Index</option>
+                    <option value="pad" title="Forward fill values.">Pad / ffill</option>
+                    <option value="nearest" title="Use the nearest value.">Nearest</option>
+                    <option value="zero" title="Fill with zeros.">Zero</option>
+                    <option value="slinear" title="Stair-step linear interpolation.">Slinear</option>
+                    <option value="quadratic" title="Quadratic interpolation.">Quadratic</option>
+                    <option value="cubic" title="Cubic interpolation.">Cubic</option>
+                    <option value="spline" title="Spline interpolation of a specified order.">Spline</option>
+                    <option value="barycentric" title="Barycentric interpolation.">Barycentric</option>
+                    <option value="polynomial" title="Polynomial interpolation of a specified degree.">Polynomial</option>
+                    <option value="krogh" title="Krogh interpolation.">Krogh</option>
+                    <option value="piecewise_polynomial" title="Piecewise polynomial interpolation.">Piecewise Polynomial</option>
+                    <option value="pchip" title="PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation.">PCHIP</option>
+                    <option value="akima" title="Akima interpolation.">Akima</option>
+                    <option value="from_derivatives" title="Interpolation based on derivatives.">From Derivatives</option>
+                </select>
+            </div>
+    
+            <!-- Opciones para agrupar columnas -->
+            <div class="form-group">
+                <label>Group By Columns:</label>
+                {% for column in columns %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="groupby_columns" value="{{ column }}"> {{ column }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Botón de Envío -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Process Data</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
+        $("#help-button").click(function() {
+            $("#explanation-preprocessing-section").toggle();
+        });
+
+
         // Inicialización inicial de flatpickr: Calendario para el rango de fechas
         var flatpickrInstance = $(".date-range-selector").flatpickr({
             mode: "range",
@@ -223,6 +429,51 @@
         
             return filters;
         }
+
+        function collectFilterData() {
+            var filters = [];
+            // Aquí recopilas los datos de tus filtros
+            // Por ejemplo, iterar sobre todos los filtros y guardar sus valores
+            $('.filter-container').each(function() {
+                var filterData = {
+                    column: $(this).find('.filter-column-select').val(),
+                    values: $(this).find('input[type="checkbox"]:checked').map(function() {
+                        return $(this).val();
+                    }).get()
+                };
+                filters.push(filterData);
+            });
+            return filters;
+        }
+
+        $('#analyze-form').on('submit', function(event) {
+            event.preventDefault();
+        
+            var timestampColumn = $('#timestamp-column').val();
+            var dateRange = $('#date-range').val();
+            var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
+        
+            var ajaxUrl = buildAjaxUrl();
+        
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    'timestamp_column': timestampColumn,
+                    'date_range': dateRange,
+                    'filters_data': filtersData
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
+                },
+                success: function(response) {
+                    console.log("Respuesta del servidor:", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", error);
+                }
+            });
+        });
 
         $(document).on('click', '.delete-filter-btn', function() {
             $(this).parent('.filter-container').remove();

@@ -164,6 +164,15 @@ def resample_data(df: pd.DataFrame,
     -------
     pd.DataFrame
         The resampled DataFrame.
+
+    Explanation
+    -----------
+    Consider a DataFrame with timestamps every 30 seconds. Resampling with a frequency of '60S' 
+    (60 seconds) will aggregate these entries into 1-minute intervals. For instance, if the original 
+    data has timestamps at 10:00:00, 10:00:30, and 10:01:00 with values 10, 15, and 20 respectively, 
+    the resampling process will create two new rows: one for the interval 10:00:00 - 10:00:59, 
+    and another for 10:01:00 - 10:01:59. Using the mean aggregation, the value for the first interval 
+    will be the average of 10 and 15, and the value for the second interval will be 20.
     """
 
     if logger:
@@ -218,6 +227,15 @@ def interpolate_data(df: pd.DataFrame,
     -------
     pd.DataFrame
         The interpolated DataFrame.
+
+    Explanation
+    -----------
+    Suppose the DataFrame has missing values at certain timestamps. The interpolation method fills 
+    these gaps based on the specified method. For instance, if the DataFrame has values at 10:00:00 (10),
+    10:01:00 (NaN), and 10:02:00 (20), a 'linear' interpolation will estimate the value at 10:01:00 as 
+    the midpoint (15) between the two known values. Different interpolation methods use different techniques
+    to estimate the missing values. For example, 'cubic' interpolation considers the curvature of the data 
+    points, creating a smoother estimate than 'linear'.
     
     Examples
     --------

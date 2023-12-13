@@ -410,13 +410,16 @@ def preprocess_dataset(request, selected_dataset, separator):
         # Lógica específica para el preprocesamiento
         return {}
 
-    context = {'active_view': active_view}
+    context = {
+        'active_view': active_view,
+        'selected_dataset': selected_dataset,
+        'separator': separator,
+    }
 
 
     df, error = load_data()
     df_filtered = df.copy()
 
-    
 
     if not error:
         columns = df.columns.tolist()
@@ -430,9 +433,26 @@ def preprocess_dataset(request, selected_dataset, separator):
         min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
         context.update({"df_html": generate_html(df_filtered), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
         # context = handle_eda(df,context)
-        print(min_date_user, max_date_user)
+
     else:
         context.update({"error": error})
+
+    if request.method == 'POST':
+        # Procesar datos del formulario
+        timestamp_column = request.POST.get('timestamp_column')
+        date_range_user = request.POST.get('date_range')
+        filters_data_json = request.POST.get('filters_data')
+        if filters_data_json:
+            try:
+                filters_data = json.loads(filters_data_json)
+                
+                # Aquí puedes procesar los datos de los filtros como necesites
+                print(timestamp_column)
+                print(date_range_user)
+                print(filters_data)
+            except json.JSONDecodeError:
+                # Manejar el caso en que los datos de los filtros no sean un JSON válido
+                print("Error al decodificar los datos de los filtros")
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         # Verificar si la solicitud AJAX es para obtener fechas mínimas y máximas
@@ -452,6 +472,28 @@ def preprocess_dataset(request, selected_dataset, separator):
                 return JsonResponse({'categories': unique_categories})
             else:
                 return JsonResponse({'error': 'Columna no especificada o no encontrada'}, status=400)
+            
+        # if 'analyze' in request.POST:
+        #     # print(request.POST)
+        #     filters_data_json = request.POST.get('filters_data')
+        #     timestamp_column = request.POST.get('timestamp_column')
+        #     date_range_user = request.POST.get('date_range')
+
+        #     if filters_data_json:
+        #         try:
+        #             filters_data = json.loads(filters_data_json)  # Analizar el JSON
+        #             # print(filters_data)
+        #         except json.JSONDecodeError:
+        #             return JsonResponse({'error': 'Datos de filtros inválidos'}, status=400)
+
+        #     # print(timestamp_column)  
+        #     # print(date_range_user)   
+
+        #     response_data = {
+        #         # ... datos de tu respuesta
+        #     }
+        #     return JsonResponse(response_data)
+        
 
     return render(request, 'model_manager/preprocess_dataset.html', context)
 

@@ -49,15 +49,81 @@
             </div>
 
             <!-- Opciones para cargar el Dataset -->
+            <button id="toggle-options-btn" class="btn btn-info">Show/Hide CSV Options</button>
+            <br><br>
             <div id="load-dataset-options" class="mb-3" style="display: none;">
                 <div class="form-group">
-                    <label for="separator-input">Indicate the separator of csv:</label>
-                    <input type="text" class="form-control" id="separator-input" placeholder="Ej: ," >
-                    <label for="separator-input">Other parameters to load csc (It will increase with use cases and feedback users):</label>
-                    <input type="text" class="form-control" id="separator-input" placeholder="...">
+                    <label for="separator-input">Delimiter (sep):</label>
+                    <small class="form-text text-muted">Delimiter to use. If `None`, will try to automatically detect.</small>
+                    <input type="text" class="form-control" id="separator-input" placeholder="E.g ,">
+                    <br>
+                    <label for="header-input">Header Row (header):</label>
+                    <small class="form-text text-muted">Row to use as header. Use `None` if there is no header row.</small>
+                    <input type="text" class="form-control" id="header-input" placeholder="E.g., 0, None">
+                    <br>
+                    <label for="usecols-input">Use Columns (usecols):</label>
+                    <small class="form-text text-muted">Subset of columns to read.</small>
+                    <input type="text" class="form-control" id="usecols-input" placeholder="E.g., '0,1,2'">
+                    <br>
+                    <label for="dtype-input">Data Type (dtype):</label>
+                    <small class="form-text text-muted">Data type(s) for the data or columns. E.g., {'a': np.float64, 'b': np.int32}</small>
+                    <input type="text" class="form-control" id="dtype-input" placeholder="E.g., {'a': 'float64', 'b': 'int32'}">
+                    <br>
+                    <label for="parse-dates-input">Parse Dates (parse_dates):</label>
+                    <small class="form-text text-muted">Columns to parse as dates.</small>
+                    <input type="text" class="form-control" id="parse-dates-input" placeholder="E.g., [1, 2], ['date']">
+                    <br>
+                    <label for="index-col-input">Index Column (index_col):</label>
+                    <small class="form-text text-muted">Column(s) to use as the row labels of the DataFrame.</small>
+                    <input type="text" class="form-control" id="index-col-input" placeholder="E.g., 0, None">
+                    <br>
+                    <label for="skiprows-input">Skip Rows (skiprows):</label>
+                    <small class="form-text text-muted">Line numbers to skip (0-indexed) or number of lines to skip at the start of the file.</small>
+                    <input type="text" class="form-control" id="skiprows-input" placeholder="E.g., 0, [1, 3]">
+                    <br>
+                    <label for="na-values-input">NA Values (na_values):</label>
+                    <small class="form-text text-muted">Additional strings to consider as NA/NaN.</small>
+                    <input type="text" class="form-control" id="na-values-input" placeholder="E.g., 'NULL', 'N/A'">
+                    <br>
+                    <label for="na-filter-input">NA Filter (na_filter):</label>
+                    <small class="form-text text-muted">Detect missing values (default is True).</small>
+                    <select class="form-control" id="na-filter-input">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                    <br>
+                    <label for="chunksize-input">Chunk Size (chunksize):</label>
+                    <small class="form-text text-muted">Number of rows per chunk. Useful for large files.</small>
+                    <input type="text" class="form-control" id="chunksize-input" placeholder="E.g., 1000">
+                    <br>
+                    <label for="compression-input">Compression (compression):</label>
+                    <small class="form-text text-muted">For on-the-fly decompression of on-disk data.</small>
+                    <input type="text" class="form-control" id="compression-input" placeholder="E.g., 'infer', 'gzip'">
+                    <br>
+                    <label for="thousands-input">Thousands Separator (thousands):</label>
+                    <small class="form-text text-muted">Character to recognize as thousand separator.</small>
+                    <input type="text" class="form-control" id="thousands-input" placeholder="E.g., ','">
+                    <br>
+                    <label for="decimal-input">Decimal Separator (decimal):</label>
+                    <small class="form-text text-muted">Character to recognize as decimal point.</small>
+                    <input type="text" class="form-control" id="decimal-input" placeholder="E.g., '.'">
+                    <br>
+                    <label for="lineterminator-input">Line Terminator (lineterminator):</label>
+                    <small class="form-text text-muted">Character to break lines on.</small>
+                    <input type="text" class="form-control" id="lineterminator-input" placeholder="E.g., '\\n'">
+                    <br>
+                    <label for="quotechar-input">Quote Character (quotechar):</label>
+                    <small class="form-text text-muted">Character used to denote start and end of a quoted item.</small>
+                    <input type="text" class="form-control" id="quotechar-input" placeholder="E.g.," >
+                    <br>
+                    <label for="quoting-input">Quoting (quoting):</label>
+                    <small class="form-text text-muted">Control field quoting behavior.</small>
+                    <input type="text" class="form-control" id="quoting-input" placeholder="E.g., 0 (csv.QUOTE_MINIMAL)">
+                    <br>
                 </div>
-                <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
             </div>
+
+            <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
     
             <!-- Vista previa del Dataset -->
             <div id="dataset-preview" class="mb-3" style="display: none;">
@@ -85,7 +151,7 @@
                     success: function(response) {
                         $('#csv-raw-preview-header').show();
                         $('#csv-raw-preview').html(response.raw_preview_html).show();
-                        $('#load-dataset-options').show();
+                        // $('#load-dataset-options').show();
                     },
                     error: function(error) {
                         console.error("Error al cargar la vista previa en bruto del CSV: ", error);
@@ -107,5 +173,10 @@
                 alert("Please select a dataset.");
             }
         });
+        // button to show and hide aditional option to read csv
+        $('#toggle-options-btn').click(function() {
+            $('#load-dataset-options').toggle();
+        });
     });
+
 </script>

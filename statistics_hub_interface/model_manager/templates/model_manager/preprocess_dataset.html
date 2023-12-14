@@ -173,12 +173,20 @@
                 <button type="submit" class="btn btn-primary">Analyze</button>
             </div>
 
+            <div class="view-toggle">
+                <button id="show-eda-table-view">Table View</button>
+                <button id="show-eda-figures-view">Figures View</button>
+            </div>
+
             <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
-                <div id="datatable-container" style="width: 50%;">
-                    <!-- Aquí irá la tabla DataTable -->
+                <!-- Contenedor para DataTable -->
+                <div id="datatable-container" class="eda-view-section" style="width: 100%; display: none;">
+                    {{eda_results_html|safe}}
                 </div>
-                <div id="plotly-container" style="width: 50%;">
-                    <!-- Aquí irá el gráfico de Plotly -->
+
+                <!-- Contenedor para figuras de Plotly -->
+                <div id="plotly-container" class="eda-view-section" style="width: 100%; display: none;">
+                    {{ eda_plot_html|safe }}
                 </div>
             </div>
         </form>
@@ -347,12 +355,12 @@
         // Función para inicializar DataTable
         function initializeDataTable() {
             // Verificar si la tabla ya está inicializada como DataTable
-            if ($.fn.DataTable.isDataTable('#table-preview-view .my-data-table')) {
+            if ($.fn.DataTable.isDataTable('#table-preview-view .data-table-preview')) {
                 // Destruir la instancia existente si ya está inicializada
-                $('#table-preview-view .my-data-table').DataTable().destroy();
+                $('#table-preview-view .data-table-preview').DataTable().destroy();
             }
             // Inicializar DataTable
-            $('#table-preview-view .my-data-table').DataTable({
+            $('#table-preview-view .data-table-preview').DataTable({
                 // Opciones de configuración de DataTables, si es necesario
             });
         }
@@ -461,13 +469,15 @@
                 data: {
                     'timestamp_column': timestampColumn,
                     'date_range': dateRange,
-                    'filters_data': filtersData
+                    'filters_data': filtersData,
+                    'analyze': true
                 },
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
                 },
                 success: function(response) {
-                    console.log("Respuesta del servidor:", response);
+                    console.log("Respuesta tras pinchar analyze:", response);
+                    $('#eda-results').html(response.eda_results_html);
                 },
                 error: function(xhr, status, error) {
                     console.error("Error en la solicitud AJAX:", error);
@@ -623,6 +633,31 @@
                 }
             });
         });
+
+        // Función para mostrar la vista de tabla en EDA
+        function showEdaTableView() {
+            $('.eda-view-section').hide(); // Oculta todas las secciones
+            $('#datatable-container').show(); // Muestra solo la sección de la tabla
+        }
+
+        // Función para mostrar la vista de figuras en EDA
+        function showEdaFiguresView() {
+            $('.eda-view-section').hide(); // Oculta todas las secciones
+            $('#plotly-container').show(); // Muestra solo la sección de figuras
+        }
+
+        // Evento clic para el botón de vista de tabla en EDA
+        $('#show-eda-table-view').click(function() {
+            showEdaTableView();
+        });
+
+        // Evento clic para el botón de vista de figuras en EDA
+        $('#show-eda-figures-view').click(function() {
+            showEdaFiguresView();
+        });
+
+        // Inicialización predeterminada
+        showEdaTableView(); // Muestra la vista de tabla por defecto al cargar
     });
 </script>
 

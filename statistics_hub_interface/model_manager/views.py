@@ -24,6 +24,7 @@ from sql_utils import test_database_connection
 from own_utils import load_json, modify_json_values
 from ConfigManager import ConfigManager
 from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
+from eda import summary_statistics
 
 
 creds_path = '../global_creds/sql.json'
@@ -353,7 +354,7 @@ def load_dataset(request):
 def preprocess_dataset(request, selected_dataset, separator):
 
     user = request.user
-    active_view = request.POST.get('active_view', 'table-preview-view')
+    # active_view = request.POST.get('active_view', 'table-preview-view')
 
     # Funciones auxiliares definidas dentro de preprocess_dataset
     def load_data():
@@ -364,8 +365,8 @@ def preprocess_dataset(request, selected_dataset, separator):
         except Exception as e:
             return None, str(e)
 
-    def generate_html(df, n_first_rows_to_show = 100):
-        return df.head(n_first_rows_to_show).to_html(classes='table table-striped my-data-table')
+    def generate_html(df, id_table, n_first_rows_to_show = 100):
+        return df.head(n_first_rows_to_show).to_html(classes=f'table table-striped {id_table}')
 
     def get_min_max_dates(df, timestamp_column):
         if timestamp_column in df.columns and not df[timestamp_column].empty:
@@ -409,16 +410,23 @@ def preprocess_dataset(request, selected_dataset, separator):
     def handle_preprocessing():
         # Lógica específica para el preprocesamiento
         return {}
-
-    context = {
-        'active_view': active_view,
-        'selected_dataset': selected_dataset,
-        'separator': separator,
-    }
-
-
+    
     df, error = load_data()
     df_filtered = df.copy()
+
+    fig = go.Figure()
+    eda_plot_html = py.plot(fig, output_type='div')
+
+    eda_results = summary_statistics(df,["id_device"])
+
+    context = {
+        # 'active_view': active_view,
+        'selected_dataset': selected_dataset,
+        'separator': separator,
+        'eda_results_html' : generate_html(eda_results, id_table = 'eda-results'),
+        'eda_plot_html' : eda_plot_html 
+    }
+
 
 
     if not error:
@@ -431,7 +439,7 @@ def preprocess_dataset(request, selected_dataset, separator):
         else:
             min_date_user, max_date_user = None, None
         min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
-        context.update({"df_html": generate_html(df_filtered), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
+        context.update({"df_html": generate_html(df_filtered, id_table = 'data-table-preview'), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
         # context = handle_eda(df,context)
 
     else:
@@ -446,15 +454,20 @@ def preprocess_dataset(request, selected_dataset, separator):
             try:
                 filters_data = json.loads(filters_data_json)
                 
-                # Aquí puedes procesar los datos de los filtros como necesites
-                print(timestamp_column)
-                print(date_range_user)
-                print(filters_data)
             except json.JSONDecodeError:
                 # Manejar el caso en que los datos de los filtros no sean un JSON válido
                 print("Error al decodificar los datos de los filtros")
+        print(context['eda_results_html'])
+        context.update({"eda_results_html":pd.DataFrame({"col1":[0,0,0],"col2":[0,0,0]}).to_html(classes='table table-striped eda-results', index=False)})
+        print(context['eda_results_html'])
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        
+        if 'analyze' in request.POST:
+            context.update({"eda_results_html":pd.DataFrame({"col1":[0,0,0],"col2":[0,0,0]}).to_html(classes='table table-striped eda-results', index=False)})
+            response_data = context
+            return JsonResponse(response_data)
+        
         # Verificar si la solicitud AJAX es para obtener fechas mínimas y máximas
         if 'timestamp_column' in request.POST:
             timestamp_column = request.POST.get('timestamp_column')
@@ -465,34 +478,14 @@ def preprocess_dataset(request, selected_dataset, separator):
                 return JsonResponse({'error': error or 'Columna de timestamp no especificada'}, status=400)
         
         # Verificar si la solicitud AJAX es para obtener categorías únicas
-        elif 'get_categories' in request.GET:
+        if 'get_categories' in request.GET:
             column_name = request.GET.get('column_name')
             if column_name and column_name in df.columns:
                 unique_categories = df[column_name].dropna().unique().tolist()
                 return JsonResponse({'categories': unique_categories})
             else:
                 return JsonResponse({'error': 'Columna no especificada o no encontrada'}, status=400)
-            
-        # if 'analyze' in request.POST:
-        #     # print(request.POST)
-        #     filters_data_json = request.POST.get('filters_data')
-        #     timestamp_column = request.POST.get('timestamp_column')
-        #     date_range_user = request.POST.get('date_range')
 
-        #     if filters_data_json:
-        #         try:
-        #             filters_data = json.loads(filters_data_json)  # Analizar el JSON
-        #             # print(filters_data)
-        #         except json.JSONDecodeError:
-        #             return JsonResponse({'error': 'Datos de filtros inválidos'}, status=400)
-
-        #     # print(timestamp_column)  
-        #     # print(date_range_user)   
-
-        #     response_data = {
-        #         # ... datos de tu respuesta
-        #     }
-        #     return JsonResponse(response_data)
         
 
     return render(request, 'model_manager/preprocess_dataset.html', context)

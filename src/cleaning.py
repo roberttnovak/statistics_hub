@@ -310,3 +310,107 @@ def process_time_series_data(df: pd.DataFrame,
     
     return df_processed
 
+def interpolate_mv_local_median(XData, BandwithD, BandwithH):
+    """
+    Interpolate missing values in a dataset using local median.
+
+    This function uses a local median-based approach for interpolating missing
+    values in a 2D array. It iteratively increases the search window until
+    a non-NaN median is found for each missing value.
+
+    Parameters
+    ----------
+    XData : np.array
+        array with missing values (NaNs) to be interpolated.
+    BandwithD : int
+        Bandwidth in the vertical (row) direction for the local median calculation.
+    BandwithH : int
+        Bandwidth in the horizontal (column) direction for the local median calculation.
+
+    Returns
+    -------
+    np.array
+        2D array with missing values interpolated.
+
+   Explanation
+    -----------
+    Consider the following example to understand how this function works:
+
+    Example XData:
+        Xdata = np.array([
+            [1, 2, np.nan],
+            [4, np.nan, 6],
+            [7, 8, 9]
+        ])
+    
+    Here, the function is called with:
+        interpola_mv_local_median(XData, 1, 1)
+
+    Step-by-Step Process:
+        1. Identify Missing Values:
+           - The function locates two NaN values at positions [0, 2] and [1, 1].
+
+        2. Interpolate Each Missing Value:
+           a. For NaN at [0, 2]:
+              - The function looks in the 1x1 bandwidth around it.
+              - It finds the values [2, NaN, 6] in this window.
+              - The median of these values is 4 (since NaN is ignored).
+              - Thus, NaN at [0, 2] is replaced with 4.
+
+           b. For NaN at [1, 1]:
+              - The function looks in the 1x1 bandwidth around it.
+              - The window contains NaNs or no values in the first iteration.
+              - The window is expanded, and the search continues until a valid median is found.
+              - Once found, the NaN at [1, 1] is replaced with this median.
+
+        3. Result:
+           - The returned array has no NaN values, with each NaN replaced by an appropriate local median.
+
+    Examples
+    --------
+    >>> data = np.array([[1, 2, np.nan], [4, np.nan, 6], [7, 8, 9]])
+    >>> print(interpola_mv_local_median(data, 1, 1))
+    array([[1., 2., 3.],
+           [4., 5., 6.],
+           [7., 8., 9.]])
+
+
+    """
+    # Copy the original array to avoid modifying the original data.
+    X = np.copy(XData)
+    # Get the dimensions of the array (n rows and p columns).
+    n, p = X.shape
+
+    # Identify indices of missing values (NaNs) in the array.
+    missing_indices = np.argwhere(np.isnan(X))
+
+    # Iterate over each missing value's indices.
+    for i, h in missing_indices:
+        k = 1  # Initialize the bandwidth multiplier.
+        
+        # Continue the loop as long as the current element is NaN and the search window
+        # is within the bounds of the array.
+        while np.isnan(X[i, h]) and k * BandwithD < n and k * BandwithH < p:
+            # Calculate the minimum and maximum row indices for the local window.
+            row_min = max(i - k * BandwithD, 0)
+            row_max = min(i + k * BandwithD + 1, n)
+
+            # Calculate the minimum and maximum column indices for the local window.
+            col_min = max(h - k * BandwithH, 0)
+            col_max = min(h + k * BandwithH + 1, p)
+
+            # Flatten the data within the local window to a 1D array.
+            IData = X[row_min:row_max, col_min:col_max].flatten()
+
+            # Calculate the median of the local window, ignoring NaNs.
+            local_median = np.nanmedian(IData)
+            
+            # If a non-NaN median is found, replace the NaN value with this median.
+            if not np.isnan(local_median):
+                X[i, h] = local_median
+
+            # Increase the bandwidth multiplier to expand the search window in the next iteration.
+            k += 1
+
+    return X
+

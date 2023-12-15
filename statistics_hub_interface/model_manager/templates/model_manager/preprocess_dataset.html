@@ -102,6 +102,43 @@
         margin-right: 5px; /* Espacio entre el ícono y el texto */
     }
 
+    button.add-filter-btn {
+        background-color: #007BFF; /* Color de fondo, cambia según prefieras */
+        color: white; /* Color del texto */
+        padding: 5px 10px; /* Reduciendo el espaciado interno para un botón más pequeño */
+        font-size: 12px; /* Reduciendo el tamaño de la fuente */
+        border: none; /* Sin borde */
+        border-radius: 5px; /* Bordes redondeados */
+        cursor: pointer; /* Cambiar cursor a mano */
+        transition: background-color 0.3s; /* Animación al cambiar de color */
+    }
+    
+    button.add-filter-btn:hover {
+        background-color: #0056b3; /* Color al pasar el cursor, más oscuro que el color de fondo */
+    }
+
+    button.analyze-btn {
+        background-color: #228B22; /* Color de fondo: un tono de azul oscuro/morado */
+        color: white; /* Color del texto */
+        padding: 10px 20px; /* Espaciado interno */
+        font-size: 14px; /* Tamaño de la fuente */
+        border: none; /* Sin borde */
+        border-radius: 5px; /* Bordes redondeados */
+        cursor: pointer; /* Cambiar cursor a mano */
+        transition: background-color 0.3s; /* Animación al cambiar de color */
+    }
+    
+    button.analyze-btn:hover {
+        background-color: #32CD32; /* Color más claro para el hover */
+    }
+
+    .view-toggle {
+        display: flex;
+        justify-content: center; /* Centra los elementos horizontalmente */
+        align-items: center; /* Centra los elementos verticalmente */
+        gap: 10px; /* Espacio entre los botones */
+    }
+    
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -165,12 +202,14 @@
                 <div id="dynamic-filters">
                     <!-- Los filtros se añadirán aquí dinámicamente -->
                 </div>
-                <button type="button" id="add-filter">Add Filter</button>
+                <button type="button" class="add-filter-btn">
+                    <i class="fas fa-plus"></i> Add Filter
+                </button>
             </div>
             <input type="hidden" id="filters-data" name="filters_data">
             <!-- Botón de Envío -->
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Analyze</button>
+                <button type="submit" class="btn analyze-btn">Analyze</button>
             </div>
 
             <div class="view-toggle">
@@ -268,8 +307,8 @@
 
         <br><br>
 
-        <form id="preprocessing-form" method="post">
-            {% csrf_token %}
+        {% comment %} <form id="preprocessing-form" method="post"> {% endcomment %}
+            {% comment %} {% csrf_token %} {% endcomment %}
     
             <!-- Campo para la frecuencia de remuestreo -->
             <div class="form-group">
@@ -330,7 +369,7 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Process Data</button>
             </div>
-        </form>
+        {% comment %} </form> {% endcomment %}
     </div>
 </div>
 

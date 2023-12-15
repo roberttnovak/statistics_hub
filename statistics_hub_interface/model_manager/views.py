@@ -42,7 +42,7 @@ def user_resources(request):
 def user_resources_models(request):
     return render(request, 'model_manager/user_resources_models.html')
 
-@login_required
+# ToDo: Deprecated, update
 @login_required
 def datasets(request):
     user = request.user
@@ -423,41 +423,34 @@ def preprocess_dataset(request, selected_dataset, separator):
     else:
         context.update({"error": error})
 
-    if request.method == 'POST':
-        # Procesar datos del formulario
-        timestamp_column = request.POST.get('timestamp_column')
-        date_range_user = request.POST.get('date_range')
-        filters_data_json = request.POST.get('filters_data')
+    # if request.method == 'POST':
+    #     # Procesar datos del formulario
+    #     timestamp_column = request.POST.get('timestamp_column')
+    #     date_range_user = request.POST.get('date_range')
+    #     filters_data_json = request.POST.get('filters_data')
 
-        if date_range_user:
-            min_date_user, max_date_user = date_range_user.split(" to ")
-            df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+    #     if date_range_user:
+    #         min_date_user, max_date_user = date_range_user.split(" to ")
+    #         df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
 
-        if filters_data_json:
-            try:
-                filters_data = json.loads(filters_data_json)
+    #     if filters_data_json:
+    #         try:
+    #             filters_data = json.loads(filters_data_json)
                 
-            except json.JSONDecodeError:
-                # Manejar el caso en que los datos de los filtros no sean un JSON válido
-                print("Error al decodificar los datos de los filtros")
+    #         except json.JSONDecodeError:
+    #             # Manejar el caso en que los datos de los filtros no sean un JSON válido
+    #             print("Error al decodificar los datos de los filtros")
 
-        eda_results = summary_statistics(df_filtered,["id_device"])
+    #     eda_results = summary_statistics(df_filtered,["id_device"])
 
-        context.update({"eda_results_html": generate_html(eda_results, id_table = 'eda-results')})
+    #     context.update({"eda_results_html": generate_html(eda_results, id_table = 'eda-results')})
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-
         if 'analyze' in request.POST:
 
             timestamp_column = request.POST.get('timestamp_column')
             date_range_user = request.POST.get('date_range')
             filters_data_json = request.POST.get('filters_data')
-
-            print(timestamp_column)
-            print(date_range_user)
-            print(filters_data_json)
-
-            print()
 
             if date_range_user:
                 min_date_user, max_date_user = date_range_user.split(" to ")
@@ -482,7 +475,8 @@ def preprocess_dataset(request, selected_dataset, separator):
             timestamp_column = request.POST.get('timestamp_column')
             if not error and timestamp_column:
                 min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column)
-                return JsonResponse({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
+                context.update({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
+                return JsonResponse(context)
             else:
                 return JsonResponse({'error': error or 'Columna de timestamp no especificada'}, status=400)
         

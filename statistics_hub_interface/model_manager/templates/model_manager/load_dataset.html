@@ -22,7 +22,7 @@
                 margin-bottom: 10px;
             }
         </style>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
@@ -53,6 +53,10 @@
                                         <li> Arreglar de manera flexible la lógica de los urls según añada cada uno de los elementos del html 
                                              sin tener que hacer el encodeURIComponent 
                                      </ul> 
+                                <li> 
+                                    Mejora pendiente: En vez de que se vea como un desplegable se vea con una vista como de
+                                    explorador de archivos-
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -168,31 +172,38 @@
     $(document).ready(function() {
         var csrftoken = $('meta[name="csrf-token"]').attr('content');
 
+        function loadCsvPreview(dataset) {
+            $.ajax({
+                url: '/load_dataset/', // URL para cargar la vista previa del CSV
+                type: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: { 'dataset': dataset },
+                success: function(response) {
+                    // Muestra la vista previa del CSV
+                    $('#csv-raw-preview').html(response.raw_preview_html);
+                    $('#csv-raw-preview-header').show();
+                    $('#csv-raw-preview').show();
+                },
+                error: function(error) {
+                    console.error("Error al cargar la vista previa: ", error);
+                }
+            });
+        }
+
         $('#dataset-selector').change(function() {
             var selectedDataset = $(this).val();
             if (selectedDataset) {
+                loadCsvPreview(selectedDataset); 
+    
+                // Resto del código para manejar el botón de carga del dataset
                 $('#load-dataset-btn').click(function() {
-                    var formData = {};
-                    $("#load-dataset-options :input").each(function() {
-                        formData[$(this).attr('id')] = $(this).val();
-                    });
-                
-                    // Envía formData como JSON
-                    $.ajax({
-                        url: '/process_dataset/',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(formData),
-                        dataType: 'json',
-                        success: function(response) {
-                            // Manejo de la respuesta
-                        },
-                        error: function(error) {
-                            console.error("Error en el procesamiento: ", error);
-                        }
-                    });
+                    // Aquí puedes manejar la carga del dataset
                 });
             } else {
+                $('#csv-raw-preview-header').hide();
                 $('#csv-raw-preview').hide();
                 $('#load-dataset-options').hide();
                 $('#dataset-preview').hide();

@@ -330,21 +330,23 @@ def load_dataset(request):
 
     if request.method == 'POST':
         selected_dataset = request.POST.get('dataset')
-        
-        # Verificar si la solicitud es para la vista previa en bruto del CSV
-        is_raw_preview = request.POST.get('raw_preview_request', False)
-        if is_raw_preview:
-            try:
-                raw_preview = pm.load_csv_as_raw_string('data', selected_dataset, num_rows=10)
-                return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
-            except FileNotFoundError as e:
-                return JsonResponse({'error': str(e)}, status=500)
 
         # Si no es vista previa, procesa para redireccionar
         separator = request.POST.get('separator', ',')
         if selected_dataset:
             # Redirige a la vista preprocess_dataset con los parámetros incluidos en la URL
             return redirect('preprocess_dataset', selected_dataset=selected_dataset, separator=separator)
+        
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        try:
+            selected_dataset = request.GET.get('dataset')
+            print(selected_dataset)
+            raw_preview = pm.load_csv_as_raw_string('data', selected_dataset, num_rows=10)
+            print(raw_preview)
+            return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
+        except FileNotFoundError as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
     return render(request, 'model_manager/load_dataset.html', {'datasets': datasets})
@@ -386,30 +388,6 @@ def preprocess_dataset(request, selected_dataset, separator):
                 return None, None
         else:
             return None, None
-
-    def handle_eda(df, context):
-
-        timestamp_column = request.POST.get('timestamp_column')
-        user_min_date = request.POST.get('min_date')
-        user_max_date = request.POST.get('max_date')
-
-        # Convertir las fechas de cadena a objetos datetime
-        if user_min_date and user_max_date:
-            user_min_date = datetime.datetime.strptime(user_min_date, "%Y-%m-%d")
-            user_max_date = datetime.datetime.strptime(user_max_date, "%Y-%m-%d")
-
-        min_date, max_date = get_min_max_dates(df, timestamp_column, user_min_date, user_max_date) if timestamp_column else (None, None)
-        
-        if min_date and max_date:
-            context.update({'columns': df.columns.tolist(), 'min_date': min_date, 'max_date': max_date})
-            return context
-        else:
-            context.update({'error': "Columna de timestamp no encontrada, inválida o fuera del rango de fechas seleccionado."})
-            return context
-
-    def handle_preprocessing():
-        # Lógica específica para el preprocesamiento
-        return {}
     
     df, error = load_data()
     df_filtered = df.copy()
@@ -417,7 +395,7 @@ def preprocess_dataset(request, selected_dataset, separator):
     fig = go.Figure()
     eda_plot_html = py.plot(fig, output_type='div')
 
-    eda_results = summary_statistics(df,["id_device"])
+    eda_results = pd.DataFrame({}) #summary_statistics(df,["id_device"])
 
     context = {
         # 'active_view': active_view,
@@ -450,6 +428,11 @@ def preprocess_dataset(request, selected_dataset, separator):
         timestamp_column = request.POST.get('timestamp_column')
         date_range_user = request.POST.get('date_range')
         filters_data_json = request.POST.get('filters_data')
+
+        if date_range_user:
+            min_date_user, max_date_user = date_range_user.split(" to ")
+            df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+
         if filters_data_json:
             try:
                 filters_data = json.loads(filters_data_json)
@@ -457,14 +440,40 @@ def preprocess_dataset(request, selected_dataset, separator):
             except json.JSONDecodeError:
                 # Manejar el caso en que los datos de los filtros no sean un JSON válido
                 print("Error al decodificar los datos de los filtros")
-        print(context['eda_results_html'])
-        context.update({"eda_results_html":pd.DataFrame({"col1":[0,0,0],"col2":[0,0,0]}).to_html(classes='table table-striped eda-results', index=False)})
-        print(context['eda_results_html'])
+
+        eda_results = summary_statistics(df_filtered,["id_device"])
+
+        context.update({"eda_results_html": generate_html(eda_results, id_table = 'eda-results')})
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        
+
         if 'analyze' in request.POST:
-            context.update({"eda_results_html":pd.DataFrame({"col1":[0,0,0],"col2":[0,0,0]}).to_html(classes='table table-striped eda-results', index=False)})
+
+            timestamp_column = request.POST.get('timestamp_column')
+            date_range_user = request.POST.get('date_range')
+            filters_data_json = request.POST.get('filters_data')
+
+            print(timestamp_column)
+            print(date_range_user)
+            print(filters_data_json)
+
+            print()
+
+            if date_range_user:
+                min_date_user, max_date_user = date_range_user.split(" to ")
+                df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+
+            if filters_data_json:
+                try:
+                    filters_data = json.loads(filters_data_json)
+                    
+                except json.JSONDecodeError:
+                    # Manejar el caso en que los datos de los filtros no sean un JSON válido
+                    print("Error al decodificar los datos de los filtros")
+
+            eda_results = summary_statistics(df_filtered,["id_device"])
+
+            context.update({"eda_results_html": generate_html(eda_results, id_table = 'eda-results')})
             response_data = context
             return JsonResponse(response_data)
         

@@ -362,6 +362,31 @@ def modify_json_values(file_path: str, changes: Dict[str, Any]) -> Dict[str, Any
     with open(file_path, 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
+def filter_dataframe_by_column_values(df, filters):
+    """
+    Filter a pandas DataFrame based on a dictionary of filters.
+
+    Parameters:
+    df (pd.DataFrame): The DataFrame to be filtered.
+    filters (dict): A dictionary of filters, where keys are column names and values are lists of values to filter by.
+
+    Returns:
+    pd.DataFrame: The filtered DataFrame.
+
+    Example:
+    >>> df = pd.DataFrame({'id_device': ['DBEM001', 'DBEM003', 'DBEM004'],
+                           'id_variable': ['00-temp', '01-hum', '02-pres']})
+    >>> filters = {'id_device': ['DBEM003'], 'id_variable': ['00-temp', '01-hum']}
+    >>> filter_dataframe(df, filters)
+    """
+    for column, values in filters.items():
+        if column in df.columns:
+            df = df[df[column].isin(values)]
+        if df.empty:
+            break  # Break if the DataFrame becomes empty after filtering
+
+    return df
+
 
 
 

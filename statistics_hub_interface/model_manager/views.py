@@ -21,7 +21,7 @@ sys.path.append(str(Path("../src")))
 from visualisations import plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
-from own_utils import load_json, modify_json_values
+from own_utils import filter_dataframe_by_column_values, load_json, modify_json_values
 from ConfigManager import ConfigManager
 from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 from eda import summary_statistics
@@ -459,6 +459,7 @@ def preprocess_dataset(request, selected_dataset, separator):
             if filters_data_json:
                 try:
                     filters_data = json.loads(filters_data_json)
+                    df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
                     
                 except json.JSONDecodeError:
                     # Manejar el caso en que los datos de los filtros no sean un JSON válido

@@ -202,7 +202,7 @@
                 <div id="dynamic-filters">
                     <!-- Los filtros se añadirán aquí dinámicamente -->
                 </div>
-                <button type="button" class="add-filter-btn">
+                <button type="button" class="add-filter-btn" id = "add-filter">
                     <i class="fas fa-plus"></i> Add Filter
                 </button>
             </div>
@@ -478,19 +478,18 @@
         }
 
         function collectFilterData() {
-            var filters = [];
-            // Aquí recopilas los datos de tus filtros
-            // Por ejemplo, iterar sobre todos los filtros y guardar sus valores
+            var filters = {}; // Objeto vacío para almacenar los filtros
             $('.filter-container').each(function() {
-                var filterData = {
-                    column: $(this).find('.filter-column-select').val(),
-                    values: $(this).find('input[type="checkbox"]:checked').map(function() {
-                        return $(this).val();
-                    }).get()
-                };
-                filters.push(filterData);
+                var columnName = $(this).find('.filter-column-select').val(); // Extraer el nombre de la columna
+                var selectedValues = $(this).find('input[type="checkbox"]:checked').map(function() {
+                    return $(this).val();
+                }).get(); // Obtener los valores seleccionados
+        
+                if (columnName && selectedValues.length > 0) {
+                    filters[columnName] = selectedValues; // Agregar los valores al objeto de filtros
+                }
             });
-            return filters;
+            return filters; // Retornar el objeto de filtros
         }
 
         $('#analyze-form').on('submit', function(event) {

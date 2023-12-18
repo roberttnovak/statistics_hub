@@ -219,12 +219,12 @@
 
             <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
                 <!-- Contenedor para DataTable -->
-                <div id="datatable-container" class="eda-view-section" style="width: 100%; display: none;">
+                <div id="datatable-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
                     {{eda_results_html|safe}}
                 </div>
 
                 <!-- Contenedor para figuras de Plotly -->
-                <div id="plotly-container" class="eda-view-section" style="width: 100%; display: none;">
+                <div id="plotly-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
                     {{ eda_plot_html|safe }}
                 </div>
             </div>
@@ -515,7 +515,7 @@
                 },
                 success: function(response) {
                     console.log("Respuesta tras pinchar analyze:", response);
-                    $('#eda-results').html(response.eda_results_html);
+                    $('#datatable-eda-container').html(response.eda_results_html);
                 },
                 error: function(xhr, status, error) {
                     console.error("Error en la solicitud AJAX:", error);
@@ -674,14 +674,14 @@
 
         // Función para mostrar la vista de tabla en EDA
         function showEdaTableView() {
-            $('.eda-view-section').hide(); // Oculta todas las secciones
-            $('#datatable-container').show(); // Muestra solo la sección de la tabla
+            $('#plotly-eda-container').hide(); // Oculta todas las secciones
+            $('#datatable-eda-container').show(); // Muestra solo la sección de la tabla
         }
 
         // Función para mostrar la vista de figuras en EDA
         function showEdaFiguresView() {
-            $('.eda-view-section').hide(); // Oculta todas las secciones
-            $('#plotly-container').show(); // Muestra solo la sección de figuras
+            $('#datatable-eda-container').hide(); // Oculta todas las secciones
+            $('#plotly-eda-container').show(); // Muestra solo la sección de figuras
         }
 
         // Evento clic para el botón de vista de tabla en EDA

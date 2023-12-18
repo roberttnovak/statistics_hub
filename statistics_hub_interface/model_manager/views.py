@@ -18,7 +18,7 @@ import plotly.graph_objs as go
 import datetime
  
 sys.path.append(str(Path("../src")))
-from visualisations import create_interactive_plot, plot_box_time_series, plot_weight_evolution
+from visualisations import create_interactive_boxplot, create_interactive_plot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import filter_dataframe_by_column_values, load_json, modify_json_values
@@ -465,16 +465,17 @@ def preprocess_dataset(request, selected_dataset, separator):
                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
                     print("Error al decodificar los datos de los filtros")
 
-            eda_results = summary_statistics(df_filtered,["id_device"])
-            fig = create_interactive_plot(time_var = timestamp_column, y_vars = ["value"], df = df_filtered)
-            # fig = py.plot(fig, output_type='div')
+            eda_results = summary_statistics(df = df_filtered, variables = df_filtered.columns)
+            # fig = create_interactive_plot(time_var = timestamp_column, y_vars = ["value"], df = df_filtered)
+            fig = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
+            fig = py.plot(fig, output_type='div')
 
             context.update(
                 {
                     "eda_results_html": generate_html(eda_results, id_table = 'eda-results'),
-                    # "eda_plot_html":fig
+                    "eda_plot_html":fig
                 }
-                           )
+            )
             response_data = context
             return JsonResponse(response_data)
         

@@ -157,3 +157,89 @@ def create_interactive_plot(time_var, y_vars, df):
                           y=1.1,
                           yanchor="top")]
     )
+
+    return fig
+
+import plotly.graph_objs as go
+
+def create_interactive_boxplot(df, category_col, subcategory_col, value_col):
+    """
+    Create an interactive boxplot using Plotly.
+
+    This function generates a boxplot for each unique combination of a category
+    and subcategory in the provided dataframe. It includes interactive
+    buttons to toggle between different categories.
+
+    Parameters:
+    df (pd.DataFrame): The dataframe containing the data to plot.
+    category_col (str): The name of the column in df representing the main category.
+    subcategory_col (str): The name of the column in df representing the subcategory.
+    value_col (str): The name of the column in df representing the values to plot.
+
+    Returns:
+    go.Figure: The Plotly figure object with the interactive boxplot.
+
+    Example:
+    >>> import pandas as pd
+    >>> # Crear un DataFrame con más filas para mostrar distintas combinaciones de variables e id_beacons
+    >>> df = pd.DataFrame({
+    >>>     'variable': ['temp', 'temp', 'hum', 'hum', 'lux', 'lux'],
+    >>>     'id_beacon': [1, 2, 1, 2, 1, 2],
+    >>>     'value': [23, 24, 45, 50, 300, 350]
+    >>> })
+    >>> # Crear y mostrar el gráfico boxplot interactivo
+    >>> fig = create_interactive_boxplot(df, 'variable', 'id_beacon', 'value')
+    >>> fig.show()
+    """
+
+    # Create an empty figure
+    fig = go.Figure()
+
+    # Get the unique values of the category and subcategory columns
+    categories = df[category_col].unique()
+    subcategories = df[subcategory_col].unique()
+
+    # Add a boxplot for each category and subcategory
+    for category in categories:
+        for subcategory in subcategories:
+            # Filter the dataframe for the current category and subcategory
+            filtered_df = df[(df[category_col] == category) & (df[subcategory_col] == subcategory)]
+            fig.add_trace(go.Box(y=filtered_df[value_col],
+                                 name=f"{category} - {subcategory}",
+                                 visible=False))
+
+    # Make the first set of boxplots visible by default
+    for i in range(len(subcategories)):
+        fig.data[i].visible = True
+
+    # Create legend buttons for each category
+    legend_buttons = [dict(label=category,
+                           method='update',
+                           args=[{'visible': [c == category for c in categories for _ in subcategories]}])
+                      for category in categories]
+
+    # Update the layout with custom legend
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                type='buttons',
+                showactive=True,
+                buttons=legend_buttons,
+                x=1.1,
+                xanchor='left',
+                y=1,
+                yanchor='top'
+            )
+        ],
+        legend=dict(
+            x=0.0,
+            y=1.0,
+            xanchor='left',
+            yanchor='top',
+            bgcolor='rgba(255, 255, 255, 0.5)',
+            bordercolor='rgba(0, 0, 0, 0.2)',
+            borderwidth=1,
+        )
+    )
+
+    return fig

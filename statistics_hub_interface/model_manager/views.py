@@ -340,9 +340,7 @@ def load_dataset(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
             selected_dataset = request.GET.get('dataset')
-            print(selected_dataset)
             raw_preview = pm.load_csv_as_raw_string('data', selected_dataset, num_rows=10)
-            print(raw_preview)
             return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
         except FileNotFoundError as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -367,8 +365,11 @@ def preprocess_dataset(request, selected_dataset, separator):
         except Exception as e:
             return None, str(e)
 
-    def generate_html(df, id_table, n_first_rows_to_show = 100):
-        return df.head(n_first_rows_to_show).to_html(classes=f'table table-striped {id_table}')
+    def generate_html(df, id_table, n_first_rows_to_show=100):
+        html = df.head(n_first_rows_to_show).to_html(classes='table table-striped')
+        html_with_id = html.replace('<table', f'<table id="{id_table}"', 1)
+
+        return html_with_id
 
     def get_min_max_dates_from_dataset(df, timestamp_column):
         if timestamp_column in df.columns and not df[timestamp_column].empty:
@@ -404,7 +405,7 @@ def preprocess_dataset(request, selected_dataset, separator):
         # 'active_view': active_view,
         'selected_dataset': selected_dataset,
         'separator': separator,
-        'eda_results_html' : generate_html(eda_results, id_table = 'eda-results'),
+        'eda_results_html' : generate_html(eda_results, id_table = 'eda-results-table'),
         'eda_plot_html' : eda_plot_html 
     }
 
@@ -426,31 +427,36 @@ def preprocess_dataset(request, selected_dataset, separator):
     else:
         context.update({"error": error})
 
-    # if request.method == 'POST':
-    #     # Procesar datos del formulario
-    #     timestamp_column = request.POST.get('timestamp_column')
-    #     date_range_user = request.POST.get('date_range')
-    #     filters_data_json = request.POST.get('filters_data')
-
-    #     if date_range_user:
-    #         min_date_user, max_date_user = date_range_user.split(" to ")
-    #         df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
-
-    #     if filters_data_json:
-    #         try:
-    #             filters_data = json.loads(filters_data_json)
-                
-    #         except json.JSONDecodeError:
-    #             # Manejar el caso en que los datos de los filtros no sean un JSON válido
-    #             print("Error al decodificar los datos de los filtros")
-
-    #     eda_results = summary_statistics(df_filtered,["id_device"])
-
-    #     context.update({"eda_results_html": generate_html(eda_results, id_table = 'eda-results')})
-
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        if 'analyze' in request.POST:
 
+        if request.POST.get('action') == 'update_dataset':
+            timestamp_column = request.POST.get('timestamp_column')
+            date_range_user = request.POST.get('date_range')
+            filters_data_json = request.POST.get('filters_data')
+
+            if date_range_user:
+                min_date_user, max_date_user = date_range_user.split(" to ")
+                df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+
+            if filters_data_json:
+                try:
+                    filters_data = json.loads(filters_data_json)
+                    df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
+                    
+                except json.JSONDecodeError:
+                    # Manejar el caso en que los datos de los filtros no sean un JSON válido
+                    print("Error al decodificar los datos de los filtros")
+
+
+            context.update(
+                {
+                    "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
+                }
+            )
+            response_data = context
+            return JsonResponse(response_data)
+        
+        if request.POST.get('action') == 'update_table_eda':
             timestamp_column = request.POST.get('timestamp_column')
             date_range_user = request.POST.get('date_range')
             filters_data_json = request.POST.get('filters_data')
@@ -469,24 +475,24 @@ def preprocess_dataset(request, selected_dataset, separator):
                     print("Error al decodificar los datos de los filtros")
 
             eda_results = summary_statistics_numerical(df = df_filtered, variables = "value", groupby = ["id_device"])
+            print(eda_results)
             fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
             eda_plot_html = py.plot(fig_eda, output_type='div')
 
             context.update(
                 {
-                    "eda_results_html": generate_html(eda_results, id_table = 'eda-results'),
-                    "eda_plot_html":eda_plot_html
+                    "eda_results_html": generate_html(eda_results, id_table = 'eda-results-table'),
+                    "eda_plot_html": eda_plot_html,
+                    "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
                 }
             )
             response_data = context
             return JsonResponse(response_data)
-        
-        # Verificar si la solicitud AJAX es para obtener fechas mínimas y máximas
+
         if request.GET.get('action') == 'fetch_min_max_dates_from_dataset':
             timestamp_column = request.GET.get('timestamp_column')  
             if timestamp_column:
                 min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column)
-                print(min_date_dataset, max_date_dataset)
                 context.update({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
                 return JsonResponse(context)
             else:

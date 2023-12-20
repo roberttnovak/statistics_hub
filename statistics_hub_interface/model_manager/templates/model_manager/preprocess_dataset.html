@@ -149,6 +149,42 @@
         margin-bottom: 20px; /* Espacio debajo del contenedor */
     }
 
+    .center-button-container {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente */
+        align-items: center; /* Centra verticalmente si es necesario */
+    }
+
+
+    .green-button {
+        background-color: #4CAF50; /* Verde */
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .small-grey-button {
+        background-color: #808080; /* Azul */
+        color: white;
+        padding: 8px 12px; /* Padding más pequeño */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .small-blue-button {
+        background-color: #007bff; /* Azul */
+        color: white;
+        padding: 4px 6px; /* Padding más pequeño */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -207,6 +243,10 @@
                 <i class="fas fa-plus"></i> Add Filter
             </button>
         </div>
+
+        <div class="form-group">
+            <button type="submit" id="apply-button" class="btn apply-btn">Apply</button>
+        </div>
     </div>
 
     <div class="view-selector">
@@ -225,14 +265,46 @@
 
     <div class="form-section" id="eda-view" style="display:none;">
 
+         
         <div class="view-toggle">
-            <button id="show-eda-table-view">Table View</button>
-            <button id="show-eda-figures-view">Figures View</button>
+            <button id="show-eda-table-view" class="small-grey-button">Table View</button>
+            <button id="show-eda-figures-view" class="small-grey-button">Figures View</button>
         </div>
 
         <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
             <!-- Contenedor para DataTable -->
             <div id="datatable-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
+                <div style="display: flex; justify-content: center;">
+                    <!-- Contenedor para el botón y las opciones 'Variables to analyze' -->
+                    <div style="margin-right: 10px;">
+                        <button id="toggleColumnsEDAOptions" class="small-blue-button">Variables to analyze</button>
+                        <div id="ColumnsEDAOptions" class="form-group" style="display: none;">
+                            {% for column in columns %}
+                            <div class="checkbox" style="display: flex; justify-content: space-between; align-items: center;">
+                                <input type="checkbox" name="eda_columns" value="{{ column }}" style="">
+                                <label for="{{ column }}" style="flex-grow: 1; text-align: right;">{{ column }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Contenedor para el botón y las opciones 'Group By Columns' -->
+                    <div>
+                        <button id="toggleColumnsEDAGroupByOptions" class="small-blue-button">Group By Columns</button>
+                        <div id="ColumnsEDAGroupByOptions" class="form-group" style="display: none;">
+                            {% for column in columns %}
+                            <div class="checkbox" style="display: flex; justify-content: space-between; align-items: center;">
+                                <input type="checkbox" name="groupby_columns" value="{{ column }}" style="">
+                                <label for="{{ column }}" style="flex-grow: 1; text-align: right;">{{ column }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center-button-container">
+                    <button id="analyze-eda-button" class="green-button">Analyze</button>
+                </div>
+
                 {{eda_results_html|safe}}
             </div>
 
@@ -488,7 +560,6 @@
                 'column_name': selectedColumn
             },
             success: function(response) {
-                console.log("Respuesta AJAX 2:", response);
                 if (response.categories) {
                     // Si la respuesta contiene categorías, crear checkboxes para ellas
                     response.categories.forEach(function(category) {
@@ -512,6 +583,80 @@
             categoryCheckboxesContainer.append(checkbox);
         });
     });
+
+    $('#apply-button').click(function(event) {
+        event.preventDefault();
+    
+        var timestampColumn = $('#timestamp-column').val();
+        var dateRange = $('#date-range').val();
+        var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
+    
+        var ajaxUrl = buildAjaxUrl();
+    
+        $.ajax({
+            url: ajaxUrl,
+            type: 'POST',
+            data: {
+                'action': "update_dataset",
+                'timestamp_column': timestampColumn,
+                'date_range': dateRange,
+                'filters_data': filtersData,
+                'analyze': true
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
+            },
+            success: function(response) {
+                $('#table-preview-view').html(response.df_html);
+                initializeDataTable();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+            }
+        });
+    });
+
+    $('#analyze-eda-button').click(function(event) {
+        event.preventDefault();
+    
+        var timestampColumn = $('#timestamp-column').val();
+        var dateRange = $('#date-range').val();
+        var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
+    
+        var ajaxUrl = buildAjaxUrl();
+
+    
+        $.ajax({
+            url: ajaxUrl,
+            type: 'POST',
+            data: {
+                'action': "update_table_eda",
+                'timestamp_column': timestampColumn,
+                'date_range': dateRange,
+                'filters_data': filtersData,
+                'analyze': true
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
+            },
+            success: function(response) {
+                $('#eda-results-table').html(response.eda_results_html);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+            }
+        });
+    });
+
+    function getSelectedCheckboxValues(name) {
+        var checkboxes = $(`input[name="${name}"]:checked`);
+        var values = [];
+        checkboxes.each(function() {
+            values.push(this.value);
+        });
+        return values;
+    }
+
 
     function collectSelectedCategories() {
         var filters = {};
@@ -594,7 +739,7 @@
         $('#table-preview-view, #eda-view').hide();
     });
 
-    // Dataset Preview function
+    // Dataset Preview functions
     function initializeDataTable() {
         // Verificar si la tabla ya está inicializada como DataTable
         if ($.fn.DataTable.isDataTable('#table-preview-view .data-table-preview')) {
@@ -606,6 +751,49 @@
             // Opciones de configuración de DataTables, si es necesario
         });
     }
+
+    // EDA functions 
+    function toggleColumnsEDAOptions() {
+        var container = document.getElementById('ColumnsEDAOptions');
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+    document.getElementById('toggleColumnsEDAOptions').addEventListener('click', toggleColumnsEDAOptions);
+
+    function toggleColumnsEDAGroupByOptions() {
+        var container = document.getElementById('ColumnsEDAGroupByOptions');
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+    document.getElementById('toggleColumnsEDAGroupByOptions').addEventListener('click', toggleColumnsEDAGroupByOptions);
+
+    // Función para mostrar la vista de tabla en EDA
+    function showEdaTableView() {
+        $('#plotly-eda-container').hide(); // Oculta todas las secciones
+        $('#datatable-eda-container').show(); // Muestra solo la sección de la tabla
+    }
+
+    // Función para mostrar la vista de figuras en EDA
+    function showEdaFiguresView() {
+        $('#datatable-eda-container').hide(); // Oculta todas las secciones
+        $('#plotly-eda-container').show(); // Muestra solo la sección de figuras
+    }
+
+    // Evento clic para el botón de vista de tabla en EDA
+    $('#show-eda-table-view').click(function() {
+        showEdaTableView();
+    });
+
+    // Evento clic para el botón de vista de figuras en EDA
+    $('#show-eda-figures-view').click(function() {
+        showEdaFiguresView();
+    });
 
 
     // Preprocessing functions

@@ -353,9 +353,11 @@
                 </select>
             </div>
     
-            <!-- Opciones para agrupar columnas -->
-            <div class="form-group">
-                <label>Group By Columns:</label>
+            <!-- Botón para desplegar las opciones de 'Group By' -->
+            <button id="toggleGroupByOptions" style="background-color: #007bff; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 10px;">Group By Columns</button>
+
+            <!-- Div que contiene las opciones de 'Group By', inicialmente oculto -->
+            <div id="groupByOptionsContainer" class="form-group" style="display: none;">
                 {% for column in columns %}
                 <div class="checkbox">
                     <label>
@@ -364,11 +366,25 @@
                 </div>
                 {% endfor %}
             </div>
+
+            <div class="form-group">
+                <label for="visualisation-preprocessing">Select view:</label>
+                <select id="visualisation-preprocessing" name="visualisation_preprocessing" class="form-control">
+                    <option value="mean">Autodetect range</option>
+                    <!-- Puedes añadir más opciones según sea necesario -->
+                </select>
+            </div>
     
             <!-- Botón de Envío -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Process Data</button>
             </div>
+
+            <div id="plotly-preprocess-container" class="preprocess-view-section" style="width: 60%; margin: auto;">
+                {{ preprocess_plot_html|safe }}
+            </div>
+
+
         {% comment %} </form> {% endcomment %}
     </div>
 </div>
@@ -697,6 +713,17 @@
 
         // Inicialización predeterminada
         showEdaTableView(); // Muestra la vista de tabla por defecto al cargar
+
+        function toggleGroupByOptions() {
+            var container = document.getElementById('groupByOptionsContainer');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        document.getElementById('toggleGroupByOptions').addEventListener('click', toggleGroupByOptions);
     });
 </script>
 

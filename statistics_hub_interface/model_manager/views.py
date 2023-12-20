@@ -24,7 +24,7 @@ from sql_utils import test_database_connection
 from own_utils import filter_dataframe_by_column_values, load_json, modify_json_values
 from ConfigManager import ConfigManager
 from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
-from eda import summary_statistics
+from eda import summary_statistics, summary_statistics_numerical
 
 
 creds_path = '../global_creds/sql.json'
@@ -392,8 +392,11 @@ def preprocess_dataset(request, selected_dataset, separator):
     df, error = load_data()
     df_filtered = df.copy()
 
-    fig = go.Figure()
-    eda_plot_html = py.plot(fig, output_type='div')
+    fig_eda = go.Figure()
+    eda_plot_html = py.plot(fig_eda, output_type='div')
+
+    fig_preprocessing = go.Figure()
+    preprocessing_plot_html = py.plot(fig_preprocessing, output_type='div')
 
     eda_results = pd.DataFrame({}) #summary_statistics(df,["id_device"])
 
@@ -465,15 +468,14 @@ def preprocess_dataset(request, selected_dataset, separator):
                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
                     print("Error al decodificar los datos de los filtros")
 
-            eda_results = summary_statistics(df = df_filtered, variables = df_filtered.columns)
-            # fig = create_interactive_plot(time_var = timestamp_column, y_vars = ["value"], df = df_filtered)
-            fig = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
-            fig = py.plot(fig, output_type='div')
+            eda_results = summary_statistics_numerical(df = df_filtered, variables = "value", groupby = ["id_device"])
+            fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
+            eda_plot_html = py.plot(fig_eda, output_type='div')
 
             context.update(
                 {
                     "eda_results_html": generate_html(eda_results, id_table = 'eda-results'),
-                    "eda_plot_html":fig
+                    "eda_plot_html":eda_plot_html
                 }
             )
             response_data = context

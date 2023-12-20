@@ -370,7 +370,7 @@ def preprocess_dataset(request, selected_dataset, separator):
     def generate_html(df, id_table, n_first_rows_to_show = 100):
         return df.head(n_first_rows_to_show).to_html(classes=f'table table-striped {id_table}')
 
-    def get_min_max_dates(df, timestamp_column):
+    def get_min_max_dates_from_dataset(df, timestamp_column):
         if timestamp_column in df.columns and not df[timestamp_column].empty:
             # Convertir la columna a datetime, si no está ya en ese formato
             df[timestamp_column] = pd.to_datetime(df[timestamp_column], errors='coerce')
@@ -419,7 +419,7 @@ def preprocess_dataset(request, selected_dataset, separator):
             df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
         else:
             min_date_user, max_date_user = None, None
-        min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column) if timestamp_column else (None, None)
+        min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column) if timestamp_column else (None, None)
         context.update({"df_html": generate_html(df_filtered, id_table = 'data-table-preview'), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
         # context = handle_eda(df,context)
 
@@ -482,17 +482,18 @@ def preprocess_dataset(request, selected_dataset, separator):
             return JsonResponse(response_data)
         
         # Verificar si la solicitud AJAX es para obtener fechas mínimas y máximas
-        if 'timestamp_column' in request.POST:
-            timestamp_column = request.POST.get('timestamp_column')
-            if not error and timestamp_column:
-                min_date_dataset, max_date_dataset = get_min_max_dates(df, timestamp_column)
+        if request.GET.get('action') == 'fetch_min_max_dates_from_dataset':
+            timestamp_column = request.GET.get('timestamp_column')  
+            if timestamp_column:
+                min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column)
+                print(min_date_dataset, max_date_dataset)
                 context.update({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
                 return JsonResponse(context)
             else:
-                return JsonResponse({'error': error or 'Columna de timestamp no especificada'}, status=400)
+                return JsonResponse({'error': 'Columna de timestamp no especificada'}, status=400)
         
         # Verificar si la solicitud AJAX es para obtener categorías únicas
-        if 'get_categories' in request.GET:
+        if request.GET.get('action') == 'get_uniques_categories_from_filters':
             column_name = request.GET.get('column_name')
             if column_name and column_name in df.columns:
                 unique_categories = df[column_name].dropna().unique().tolist()

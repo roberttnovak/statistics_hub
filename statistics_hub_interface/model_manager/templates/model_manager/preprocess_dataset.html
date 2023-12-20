@@ -3,7 +3,7 @@
 {% block head %}
 <style>
     body {
-        background-color: #f4f4f4; 
+        background-color: #ffffff; 
     }
 
     .form-section, #eda-view, #preprocessing-view {
@@ -23,6 +23,7 @@
     }
 
     .form-group input, 
+
     .form-group select {
         width: 100%;
         padding: 8px;
@@ -139,6 +140,15 @@
         gap: 10px; /* Espacio entre los botones */
     }
     
+    .common-controls-box {
+        background-color: #f7f7f7; /* Color de fondo suave */
+        border: 1px solid #d3d3d3; /* Borde sutil */
+        border-radius: 10px; /* Esquinas redondeadas */
+        padding: 20px; /* Espaciado interno */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+        margin-bottom: 20px; /* Espacio debajo del contenedor */
+    }
+
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -156,31 +166,19 @@
 {% endblock %}
 
 {% block content %}
-<!-- Formulario oculto para el token CSRF -->
+
+<!-- The form below is used to provide a CSRF token for AJAX POST requests in Django, which prevents 
+    Cross-Site Request Forgery. The form itself is hidden as it's only needed for its CSRF token value, 
+    not for actual user input. -->
 <form id="csrf-form" method="post" style="display: none;">
     {% csrf_token %}
 </form>
+
 <div class="container">
-    <div class="view-selector">
-        <button id="show-table-preview">Table Preview</button>
-        <button id="show-eda-view">EDA</button>
-        <button id="show-preprocessing-view">Preprocessing</button>
-    </div>
-
-    <!-- Sección de Vista Previa de la Tabla -->
-    <div class="form-section" id="table-preview-view">
-        <ul>
-            <li> #ToDo: Continuar con la carga "perezosa" de los datos y manetener la estética de los Datatables. 
-                 Actualmente se muestran solo las primeras 1000 filas. </li>
-        </ul>
-        {{ df_html|safe }}
-    </div>
-
-    <!-- Sección de EDA (Exploratory Data Analysis) -->
-    <div class="form-section" id="eda-view" style="display:none;">
-        <form id="analyze-form" method="post" action="{% url 'preprocess_dataset' selected_dataset separator %}">
-            {% csrf_token %}
-        <!-- Selección de Columna Timestamp -->
+    <!-- common control parameters box about dataset-->
+    <div class="common-controls-box">
+        <!-- Selection of temporal column -->
+        <H1> Data parameters configuration </H1>
         <div class="form-group">
             <label for="timestamp-column">Select temporal column:</label>
             <select id="timestamp-column" name="timestamp_column" class="form-control">
@@ -190,50 +188,61 @@
                 {% endfor %}
             </select>
         </div>
-        <!-- Rango de Fechas -->
-            <div class="form-group">
-                <label for="date-range" id="date-range-label">Select Date Range (In dataset: computing range of dataset...):</label>
-                <input type="text" id="date-range" name="date_range" class="date-range-selector">
-            </div>
 
-            <!-- Área de Filtros Dinámicos -->
-            <div class="form-group">
-                <label for="dynamic-filters">Filters:</label>
-                <div id="dynamic-filters">
-                    <!-- Los filtros se añadirán aquí dinámicamente -->
-                </div>
-                <button type="button" class="add-filter-btn" id = "add-filter">
-                    <i class="fas fa-plus"></i> Add Filter
-                </button>
-            </div>
-            <input type="hidden" id="filters-data" name="filters_data">
-            <!-- Botón de Envío -->
-            <div class="form-group">
-                <button type="submit" class="btn analyze-btn">Analyze</button>
-            </div>
+        <!-- Data range filter -->
+        <div class="form-group" id="date-range-container" style="display: none;">
+            <label for="date-range" id="date-range-label">
+                Select Date Range:
+            </label>
+            <input type="text" id="date-range" name="date_range" class="date-range-selector">
+        </div>
 
-            <div class="view-toggle">
-                <button id="show-eda-table-view">Table View</button>
-                <button id="show-eda-figures-view">Figures View</button>
+        <!-- Add filters to dataset -->
+        <div class="form-group" id="filters-container" style="display: none;">
+            <label for="dynamic-filters">Filters:</label>
+            <div id="dynamic-filters">
+                <!-- Los filtros se añadirán aquí dinámicamente -->
             </div>
-
-            <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
-                <!-- Contenedor para DataTable -->
-                <div id="datatable-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
-                    {{eda_results_html|safe}}
-                </div>
-
-                <!-- Contenedor para figuras de Plotly -->
-                <div id="plotly-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
-                    {{ eda_plot_html|safe }}
-                </div>
-            </div>
-        </form>
+            <button type="button" class="add-filter-btn" id="add-filter">
+                <i class="fas fa-plus"></i> Add Filter
+            </button>
+        </div>
     </div>
 
-    <!-- Sección de Preprocesamiento -->
-    <div class="form-section" id="preprocessing-view" style="display:none;">
+    <div class="view-selector">
+        <button id="show-table-preview">Table Preview</button>
+        <button id="show-eda-view">EDA</button>
+        <button id="show-preprocessing-view">Preprocessing</button>
+    </div>
 
+    <div class="form-section" id="table-preview-view">
+        <ul>
+            <li> #ToDo: Continuar con la carga "perezosa" de los datos y manetener la estética de los Datatables. 
+                 Actualmente se muestran solo las primeras 1000 filas. </li>
+        </ul>
+        {{ df_html|safe }}
+    </div>
+
+    <div class="form-section" id="eda-view" style="display:none;">
+
+        <div class="view-toggle">
+            <button id="show-eda-table-view">Table View</button>
+            <button id="show-eda-figures-view">Figures View</button>
+        </div>
+
+        <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <!-- Contenedor para DataTable -->
+            <div id="datatable-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
+                {{eda_results_html|safe}}
+            </div>
+
+            <!-- Contenedor para figuras de Plotly -->
+            <div id="plotly-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
+                {{ eda_plot_html|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="form-section" id="preprocessing-view" style="display:none;">
         <div class="form-group">
             <button type="button" id="help-button" class="btn-help">
                 <i class="fas fa-lightbulb"></i> Help
@@ -306,427 +315,304 @@
         </div>
 
         <br><br>
+        <div class="form-group">
+            <label for="resample-freq">Resample Frequency:</label>
+            <input type="text" id="resample-freq" name="resample_freq" class="form-control" placeholder="e.g., 60S">
+        </div>
 
-        {% comment %} <form id="preprocessing-form" method="post"> {% endcomment %}
-            {% comment %} {% csrf_token %} {% endcomment %}
-    
-            <!-- Campo para la frecuencia de remuestreo -->
-            <div class="form-group">
-                <label for="resample-freq">Resample Frequency:</label>
-                <input type="text" id="resample-freq" name="resample_freq" class="form-control" placeholder="e.g., 60S">
-            </div>
-    
-            <!-- Opción para la función de agregación -->
-            <div class="form-group">
-                <label for="aggregation-func">Aggregation Function:</label>
-                <select id="aggregation-func" name="aggregation_func" class="form-control">
-                    <option value="mean">Mean</option>
-                    <option value="sum">Sum</option>
-                    <option value="max">Max</option>
-                    <option value="min">Min</option>
-                    <!-- Puedes añadir más opciones según sea necesario -->
-                </select>
-            </div>
-    
-            <!-- Opción para el método de interpolación -->
-            <div class="form-group">
-                <label for="interpolation-method">Interpolation Method:</label>
-                <select id="interpolation-method" name="interpolation_method" class="form-control">
-                    <option value="local median" title=" fills missing data points by calculating the median of surrounding values within a specified range, ensuring a locally representative and robust substitution for each missing value.">local median</option>
-                    <option value="linear" title="Linear interpolation.">Linear</option>
-                    <option value="time" title="Linear interpolation on the time axis.">Time</option>
-                    <option value="index" title="Linear interpolation using the index as an axis.">Index</option>
-                    <option value="pad" title="Forward fill values.">Pad / ffill</option>
-                    <option value="nearest" title="Use the nearest value.">Nearest</option>
-                    <option value="zero" title="Fill with zeros.">Zero</option>
-                    <option value="slinear" title="Stair-step linear interpolation.">Slinear</option>
-                    <option value="quadratic" title="Quadratic interpolation.">Quadratic</option>
-                    <option value="cubic" title="Cubic interpolation.">Cubic</option>
-                    <option value="spline" title="Spline interpolation of a specified order.">Spline</option>
-                    <option value="barycentric" title="Barycentric interpolation.">Barycentric</option>
-                    <option value="polynomial" title="Polynomial interpolation of a specified degree.">Polynomial</option>
-                    <option value="krogh" title="Krogh interpolation.">Krogh</option>
-                    <option value="piecewise_polynomial" title="Piecewise polynomial interpolation.">Piecewise Polynomial</option>
-                    <option value="pchip" title="PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation.">PCHIP</option>
-                    <option value="akima" title="Akima interpolation.">Akima</option>
-                    <option value="from_derivatives" title="Interpolation based on derivatives.">From Derivatives</option>
-                </select>
-            </div>
-    
-            <!-- Botón para desplegar las opciones de 'Group By' -->
-            <button id="toggleGroupByOptions" style="background-color: #007bff; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 10px;">Group By Columns</button>
+        <!-- Opción para la función de agregación -->
+        <div class="form-group">
+            <label for="aggregation-func">Aggregation Function:</label>
+            <select id="aggregation-func" name="aggregation_func" class="form-control">
+                <option value="mean">Mean</option>
+                <option value="sum">Sum</option>
+                <option value="max">Max</option>
+                <option value="min">Min</option>
+                <!-- Puedes añadir más opciones según sea necesario -->
+            </select>
+        </div>
 
-            <!-- Div que contiene las opciones de 'Group By', inicialmente oculto -->
-            <div id="groupByOptionsContainer" class="form-group" style="display: none;">
-                {% for column in columns %}
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="groupby_columns" value="{{ column }}"> {{ column }}
-                    </label>
-                </div>
-                {% endfor %}
-            </div>
+        <!-- Opción para el método de interpolación -->
+        <div class="form-group">
+            <label for="interpolation-method">Interpolation Method:</label>
+            <select id="interpolation-method" name="interpolation_method" class="form-control">
+                <option value="local median" title=" fills missing data points by calculating the median of surrounding values within a specified range, ensuring a locally representative and robust substitution for each missing value.">local median</option>
+                <option value="linear" title="Linear interpolation.">Linear</option>
+                <option value="time" title="Linear interpolation on the time axis.">Time</option>
+                <option value="index" title="Linear interpolation using the index as an axis.">Index</option>
+                <option value="pad" title="Forward fill values.">Pad / ffill</option>
+                <option value="nearest" title="Use the nearest value.">Nearest</option>
+                <option value="zero" title="Fill with zeros.">Zero</option>
+                <option value="slinear" title="Stair-step linear interpolation.">Slinear</option>
+                <option value="quadratic" title="Quadratic interpolation.">Quadratic</option>
+                <option value="cubic" title="Cubic interpolation.">Cubic</option>
+                <option value="spline" title="Spline interpolation of a specified order.">Spline</option>
+                <option value="barycentric" title="Barycentric interpolation.">Barycentric</option>
+                <option value="polynomial" title="Polynomial interpolation of a specified degree.">Polynomial</option>
+                <option value="krogh" title="Krogh interpolation.">Krogh</option>
+                <option value="piecewise_polynomial" title="Piecewise polynomial interpolation.">Piecewise Polynomial</option>
+                <option value="pchip" title="PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation.">PCHIP</option>
+                <option value="akima" title="Akima interpolation.">Akima</option>
+                <option value="from_derivatives" title="Interpolation based on derivatives.">From Derivatives</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="visualisation-preprocessing">Select view:</label>
-                <select id="visualisation-preprocessing" name="visualisation_preprocessing" class="form-control">
-                    <option value="mean">Autodetect range</option>
-                    <!-- Puedes añadir más opciones según sea necesario -->
-                </select>
+        <!-- Opciones para agrupar columnas -->
+        <div class="form-group">
+            <label>Group By Columns:</label>
+            {% for column in columns %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="groupby_columns" value="{{ column }}"> {{ column }}
+                </label>
             </div>
-    
-            <!-- Botón de Envío -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Process Data</button>
-            </div>
+            {% endfor %}
+        </div>
 
-            <div id="plotly-preprocess-container" class="preprocess-view-section" style="width: 60%; margin: auto;">
-                {{ preprocess_plot_html|safe }}
-            </div>
-
-
-        {% comment %} </form> {% endcomment %}
+        <!-- Botón de Envío -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Process Data</button>
+        </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function() {
-        $("#help-button").click(function() {
-            $("#explanation-preprocessing-section").toggle();
-        });
+    // Auxiliar funtions related with ajax
+
+    // Build AJAX url. This page is build with a lot of parameters related to importing dataset. This parameters
+    // are included in URL /preprcoess_dataset/param1/param2/.../paramn. This function is to build url 
+    function buildAjaxUrl() {
+        var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
+        var ajaxUrlBase = '/preprocess_dataset/';
+        return ajaxUrlBase + pathArray.slice(1).join('/') + '/';
+    }
+
+    // Updates the date range picker's label and boundaries based on the dataset's minimum and maximum dates from the response object.
+    function ComputeDataRangeDataSet(response) {
+        $('#date-range-label').text(`Select Date Range (In dataset: ${response.min_date_dataset} to ${response.max_date_dataset}):`);
+        flatpickrInstance.set("defaultDate", [response.min_date_dataset, response.max_date_dataset]);
+        flatpickrInstance.set("minDate", response.min_date_dataset);
+        flatpickrInstance.set("maxDate", response.max_date_dataset);
+    }
 
 
-        // Inicialización inicial de flatpickr: Calendario para el rango de fechas
-        var flatpickrInstance = $(".date-range-selector").flatpickr({
-            mode: "range",
-            dateFormat: "Y-m-d",
-            defaultDate: ["{{ min_date_dataset }}", "{{ max_date_dataset }}"],
-            onChange: function(selectedDates, dateStr, instance) {
-                // Enviar solicitud AJAX cuando el usuario cambia el rango de fechas
-                sendAjaxRequestWithDates(dateStr);
+    $('#timestamp-column').change(function() {
+        toggleFormElements(); 
+        var selectedTimestampColumn = $(this).val();
+        
+        // Show message of loading dataset
+        $('#date-range-label').text('Loading date range...');
+        
+        var ajaxUrl = buildAjaxUrl();
+        
+        $.ajax({
+            url: ajaxUrl,
+            type: 'GET',
+            data: {
+                'action': 'fetch_min_max_dates_from_dataset', // Asegúrate de tener una coma aquí
+                'timestamp_column': selectedTimestampColumn
+            },
+            success: function(response) {
+                console.log("Temporal column selected, response:", response);
+                ComputeDataRangeDataSet(response);
+            },
+            error: function(xhr, status, error) {
+                // Manejar posibles errores aquí
+                console.error("Error en la solicitud AJAX:", error);
+                // Restablecer el texto si hay un error
+                $('#date-range-label').text('Select Date Range: (Error computing range from dataset)');
             }
         });
-
-        // Función para inicializar DataTable
-        function initializeDataTable() {
-            // Verificar si la tabla ya está inicializada como DataTable
-            if ($.fn.DataTable.isDataTable('#table-preview-view .data-table-preview')) {
-                // Destruir la instancia existente si ya está inicializada
-                $('#table-preview-view .data-table-preview').DataTable().destroy();
-            }
-            // Inicializar DataTable
-            $('#table-preview-view .data-table-preview').DataTable({
-                // Opciones de configuración de DataTables, si es necesario
-            });
-        }
-
-        // Función para mostrar u ocultar elementos de EDA
-        function toggleEdaElements() {
-            var selectedColumn = $('#timestamp-column').val();
-            if (selectedColumn) {
-                $('#eda-view .form-group:not(:first)').show(); 
-            } else {
-                $('#eda-view .form-group:not(:first)').hide();
-            }
-        }
-
-        function addFilter() {
-            // Crear el contenedor para el nuevo filtro
-            var filterContainer = $('<div class="filter-container" style="margin-bottom: 10px;"></div>');
-            
-            // Crear y añadir el desplegable para seleccionar la columna
-            var selectColumn = $('<select class="form-control filter-column-select"><option value="">--Select categorical column--</option></select>');
-            {% for column in columns %}
-            selectColumn.append($('<option>').attr('value', '{{ column }}').text('{{ column }}'));
-            {% endfor %}
-            filterContainer.append(selectColumn);
-            
-            // Añadir un contenedor para los checkboxes de categorías (se llenará dinámicamente)
-            var categoryCheckboxes = $('<div class="category-checkboxes" style="display: flex; flex-wrap: wrap; margin-top: 10px;"></div>');
-            filterContainer.append(categoryCheckboxes);
-        
-            // Añadir un botón de eliminar al filtro
-            var deleteButton = $('<button type="button" class="delete-filter-btn">Delete</button>')
-            .css({
-                "background-color": "#ff4d4d", // Rojo
-                "color": "white",
-                "border": "none",
-                "padding": "5px 10px",
-                "margin-left": "10px",
-                "border-radius": "4px",
-                "cursor": "pointer"
-            });
-        
-            // Agregar efecto hover al botón de eliminar
-            deleteButton.hover(
-                function() {
-                    $(this).css("background-color", "#ff3333"); // Rojo más oscuro al pasar el mouse
-                }, 
-                function() {
-                    $(this).css("background-color", "#ff4d4d"); // Color original al quitar el mouse
-                }
-            );
-            filterContainer.append(deleteButton);
-            
-            // Añadir el filtro al DOM
-            $('#dynamic-filters').append(filterContainer);
-        }
-
-        $('#add-filter').click(addFilter);
-
-        function collectSelectedCategories() {
-            var filters = {};
-        
-            $('.filter-container').each(function() {
-                var columnName = $(this).find('.filter-column-select').val();
-                if (columnName) {
-                    var selectedCategories = [];
-                    $(this).find('.category-checkboxes input:checked').each(function() {
-                        selectedCategories.push($(this).val());
-                    });
-                    if (selectedCategories.length > 0) {
-                        filters[columnName] = selectedCategories;
-                    }
-                }
-            });
-        
-            return filters;
-        }
-
-        function collectFilterData() {
-            var filters = {}; // Objeto vacío para almacenar los filtros
-            $('.filter-container').each(function() {
-                var columnName = $(this).find('.filter-column-select').val(); // Extraer el nombre de la columna
-                var selectedValues = $(this).find('input[type="checkbox"]:checked').map(function() {
-                    return $(this).val();
-                }).get(); // Obtener los valores seleccionados
-        
-                if (columnName && selectedValues.length > 0) {
-                    filters[columnName] = selectedValues; // Agregar los valores al objeto de filtros
-                }
-            });
-            return filters; // Retornar el objeto de filtros
-        }
-
-        $('#analyze-form').on('submit', function(event) {
-            event.preventDefault();
-        
-            var timestampColumn = $('#timestamp-column').val();
-            var dateRange = $('#date-range').val();
-            var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
-        
-            var ajaxUrl = buildAjaxUrl();
-        
-            $.ajax({
-                url: ajaxUrl,
-                type: 'POST',
-                data: {
-                    'timestamp_column': timestampColumn,
-                    'date_range': dateRange,
-                    'filters_data': filtersData,
-                    'analyze': true
-                },
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
-                },
-                success: function(response) {
-                    console.log("Respuesta tras pinchar analyze:", response);
-                    $('#datatable-eda-container').html(response.eda_results_html);
-                    $('#plotly-eda-container').html(response.eda_plot_html);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-        });
-
-        $(document).on('click', '.delete-filter-btn', function() {
-            $(this).parent('.filter-container').remove();
-        });
-
-        $(document).on('change', '.filter-column-select', function() {
-            var selectedColumn = $(this).val();
-            var categoryCheckboxesContainer = $(this).next('.category-checkboxes');
-            categoryCheckboxesContainer.empty();
-        
-            // Utilizar la función existente para construir la URL de la solicitud AJAX
-            var ajaxUrl = buildAjaxUrl();
-        
-            // Enviar la solicitud AJAX para obtener las categorías únicas de la columna seleccionada
-            $.ajax({
-                url: ajaxUrl,
-                type: 'GET',
-                data: {
-                    'get_categories': 'true',
-                    'column_name': selectedColumn
-                },
-                success: function(response) {
-                    console.log("Respuesta AJAX 2:", response);
-                    if (response.categories) {
-                        // Si la respuesta contiene categorías, crear checkboxes para ellas
-                        response.categories.forEach(function(category) {
-                            var checkbox = $('<div><label><input type="checkbox" value="' + category + '"> ' + category + '</label></div>');
-                            categoryCheckboxesContainer.append(checkbox);
-                        });
-                    } else if (response.error) {
-                        // Manejar el caso en que se devuelva un error
-                        console.error("Error al obtener categorías:", response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-
-            // Agregar 'name' a los checkboxes basado en el nombre de la columna
-            var checkboxName = 'filter_' + selectedColumn;
-            response.categories.forEach(function(category) {
-                var checkbox = $('<div><label><input type="checkbox" name="' + checkboxName + '" value="' + category + '"> ' + category + '</label></div>');
-                categoryCheckboxesContainer.append(checkbox);
-            });
-
-        });
-
-        // Eventos de clic para manejar la vista activa
-        $('#show-table-preview').click(function() {
-            $('#table-preview-view').show();
-            $('#eda-view, #preprocessing-view').hide();
-            initializeDataTable(); // Asegurarse de que DataTable se inicializa correctamente
-        });
-
-        $('#show-eda-view').click(function() {
-            $('#eda-view').show();
-            $('#table-preview-view, #preprocessing-view').hide();
-            toggleEdaElements(); // Ajustar la visibilidad de los elementos de EDA
-        });
-
-        $('#show-preprocessing-view').click(function() {
-            $('#preprocessing-view').show();
-            $('#table-preview-view, #eda-view').hide();
-        });
-
-        // Inicializar DataTables en la tabla de vista previa si está visible
-        if ("{{ active_view }}" === "table-preview-view") {
-            initializeDataTable();
-        }
-
-        // Ocultar inicialmente los elementos de EDA
-        $('#eda-view .form-group:not(:first)').hide();
-
-        // Función para enviar la solicitud AJAX con las fechas seleccionadas
-        function sendAjaxRequestWithDates(dateRange) {
-            var selectedTimestampColumn = $('#timestamp-column').val();
-            var ajaxUrl = buildAjaxUrl(); // Construir la URL para la solicitud AJAX
-            var csrftoken = $('#csrf-form [name=csrfmiddlewaretoken]').val(); // Obtener el token CSRF
-
-            $.ajax({
-                url: ajaxUrl,
-                type: 'POST',
-                data: {
-                    'timestamp_column': selectedTimestampColumn,
-                    'date_range': dateRange,
-                },
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken); // Establecer el token CSRF
-                },
-                success: function(response) {
-                    // Procesar la respuesta del servidor
-                    handleAjaxResponse(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error); // Manejar errores
-                }
-            });
-        }
-
-        // Función para construir la URL de la solicitud AJAX
-        function buildAjaxUrl() {
-            var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
-            var ajaxUrlBase = '/preprocess_dataset/';
-            return ajaxUrlBase + pathArray.slice(1).join('/') + '/';
-        }
-
-        // Función para manejar la respuesta del servidor
-        function handleAjaxResponse(response) {
-            // Actualizar la interfaz con las fechas recibidas del servidor
-            $('#date-range-label').text(`Select Date Range (In dataset: ${response.min_date_dataset} to ${response.max_date_dataset}):`);
-            flatpickrInstance.set("defaultDate", [response.min_date_dataset, response.max_date_dataset]);
-            flatpickrInstance.set("minDate", response.min_date_dataset);
-            flatpickrInstance.set("maxDate", response.max_date_dataset);
-        }
-
-        $('#timestamp-column').change(function() {
-            toggleEdaElements(); // Maneja los cambios visuales en la interfaz de usuario
-    
-            var selectedTimestampColumn = $(this).val();
-            var dateRange = $('#date-range').val(); // Asume que el rango de fechas está en este input
-    
-            // Construir la base de la URL para la solicitud AJAX
-            var ajaxUrl = buildAjaxUrl();
-    
-            // Obtener el token CSRF del formulario oculto
-            var csrftoken = $('#csrf-form [name=csrfmiddlewaretoken]').val();
-    
-            // Enviar una solicitud AJAX al backend
-            $.ajax({
-                url: ajaxUrl,
-                type: 'POST',
-                data: {
-                    'timestamp_column': selectedTimestampColumn,
-                    'date_range': dateRange,
-                },
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                },
-                success: function(response) {
-                    console.log("Respuesta AJAX:", response);
-                    handleAjaxResponse(response);
-                },
-                error: function(xhr, status, error) {
-                    // Manejar posibles errores aquí
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-        });
-
-        // Función para mostrar la vista de tabla en EDA
-        function showEdaTableView() {
-            $('#plotly-eda-container').hide(); // Oculta todas las secciones
-            $('#datatable-eda-container').show(); // Muestra solo la sección de la tabla
-        }
-
-        // Función para mostrar la vista de figuras en EDA
-        function showEdaFiguresView() {
-            $('#datatable-eda-container').hide(); // Oculta todas las secciones
-            $('#plotly-eda-container').show(); // Muestra solo la sección de figuras
-        }
-
-        // Evento clic para el botón de vista de tabla en EDA
-        $('#show-eda-table-view').click(function() {
-            showEdaTableView();
-        });
-
-        // Evento clic para el botón de vista de figuras en EDA
-        $('#show-eda-figures-view').click(function() {
-            showEdaFiguresView();
-        });
-
-        // Inicialización predeterminada
-        showEdaTableView(); // Muestra la vista de tabla por defecto al cargar
-
-        function toggleGroupByOptions() {
-            var container = document.getElementById('groupByOptionsContainer');
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        }
-
-        document.getElementById('toggleGroupByOptions').addEventListener('click', toggleGroupByOptions);
     });
+
+    // Behaviour functions
+    function addFilter() {
+        // Container for new filter
+        var filterContainer = $('<div class="filter-container" style="margin-bottom: 10px;"></div>');
+        
+        // Create and add the drop-down to select column
+        var selectColumn = $('<select class="form-control filter-column-select"><option value="">--Select categorical column--</option></select>');
+        {% for column in columns %}
+        selectColumn.append($('<option>').attr('value', '{{ column }}').text('{{ column }}'));
+        {% endfor %}
+        filterContainer.append(selectColumn);
+        
+        // Add a container for category checkboxes (will be filled dynamically)
+        var categoryCheckboxes = $('<div class="category-checkboxes" style="display: flex; flex-wrap: wrap; margin-top: 10px;"></div>');
+        filterContainer.append(categoryCheckboxes);
+    
+        // Add a delete button to the filter
+        var deleteButton = $('<button type="button" class="delete-filter-btn">Delete</button>')
+        .css({
+            "background-color": "#ff4d4d", // Rojo
+            "color": "white",
+            "border": "none",
+            "padding": "5px 10px",
+            "margin-left": "10px",
+            "border-radius": "4px",
+            "cursor": "pointer"
+        });
+    
+        // Add hover effect to the delete button
+        deleteButton.hover(
+            function() {
+                $(this).css("background-color", "#ff3333"); 
+            }, 
+            function() {
+                $(this).css("background-color", "#ff4d4d"); 
+            }
+        );
+        filterContainer.append(deleteButton);
+        
+        // Add the filter to the DOM
+        $('#dynamic-filters').append(filterContainer);
+    }
+
+    $('#add-filter').click(addFilter);
+
+    // Add checkbox with to select for filters
+    $(document).on('change', '.filter-column-select', function() {
+        var selectedColumn = $(this).val();
+        var categoryCheckboxesContainer = $(this).next('.category-checkboxes');
+        categoryCheckboxesContainer.empty();
+    
+        // Utilizar la función existente para construir la URL de la solicitud AJAX
+        var ajaxUrl = buildAjaxUrl();
+    
+        // Enviar la solicitud AJAX para obtener las categorías únicas de la columna seleccionada
+        $.ajax({
+            url: ajaxUrl,
+            type: 'GET',
+            data: {
+                'action': 'get_uniques_categories_from_filters',
+                'column_name': selectedColumn
+            },
+            success: function(response) {
+                console.log("Respuesta AJAX 2:", response);
+                if (response.categories) {
+                    // Si la respuesta contiene categorías, crear checkboxes para ellas
+                    response.categories.forEach(function(category) {
+                        var checkbox = $('<div><label><input type="checkbox" value="' + category + '"> ' + category + '</label></div>');
+                        categoryCheckboxesContainer.append(checkbox);
+                    });
+                } else if (response.error) {
+                    // Manejar el caso en que se devuelva un error
+                    console.error("Error al obtener categorías:", response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+            }
+        });
+
+        // Agregar 'name' a los checkboxes basado en el nombre de la columna
+        var checkboxName = 'filter_' + selectedColumn;
+        response.categories.forEach(function(category) {
+            var checkbox = $('<div><label><input type="checkbox" name="' + checkboxName + '" value="' + category + '"> ' + category + '</label></div>');
+            categoryCheckboxesContainer.append(checkbox);
+        });
+    });
+
+    function collectSelectedCategories() {
+        var filters = {};
+    
+        $('.filter-container').each(function() {
+            var columnName = $(this).find('.filter-column-select').val();
+            if (columnName) {
+                var selectedCategories = [];
+                $(this).find('.category-checkboxes input:checked').each(function() {
+                    selectedCategories.push($(this).val());
+                });
+                if (selectedCategories.length > 0) {
+                    filters[columnName] = selectedCategories;
+                }
+            }
+        });
+    
+        return filters;
+    }
+
+    function collectFilterData() {
+        var filters = {}; 
+        $('.filter-container').each(function() {
+            var columnName = $(this).find('.filter-column-select').val(); 
+            var selectedValues = $(this).find('input[type="checkbox"]:checked').map(function() {
+                return $(this).val();
+            }).get(); 
+    
+            if (columnName && selectedValues.length > 0) {
+                filters[columnName] = selectedValues; 
+            }
+        });
+        return filters; 
+    }
+
+
+    // Visualisations functions
+
+    // Show hide elements depending of some conditions
+    function toggleFormElements() {
+        var selectedColumn = $('#timestamp-column').val();
+        if (selectedColumn) {
+            $('#date-range-container').show();
+            $('#filters-container').show();
+        } else {
+            $('#date-range-container').hide();
+            $('#filters-container').hide();
+        }
+    }
+
+    toggleFormElements();
+
+    // Calendar format to apply range dates filters
+    var flatpickrInstance = $(".date-range-selector").flatpickr({
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: ["{{ min_date_dataset }}", "{{ max_date_dataset }}"],
+        onChange: function(selectedDates, dateStr, instance) {
+            // Enviar solicitud AJAX cuando el usuario cambia el rango de fechas
+            sendAjaxRequestWithDates(dateStr);
+        }
+    });
+
+    // Functions to manage view of buttons
+
+    $('#show-table-preview').click(function() {
+        $('#table-preview-view').show();
+        $('#eda-view, #preprocessing-view').hide();
+        initializeDataTable(); // Asegurarse de que DataTable se inicializa correctamente
+    });
+
+    $('#show-eda-view').click(function() {
+        $('#eda-view').show();
+        $('#table-preview-view, #preprocessing-view').hide();
+        toggleEdaElements(); // Ajustar la visibilidad de los elementos de EDA
+    });
+
+    $('#show-preprocessing-view').click(function() {
+        $('#preprocessing-view').show();
+        $('#table-preview-view, #eda-view').hide();
+    });
+
+    // Dataset Preview function
+    function initializeDataTable() {
+        // Verificar si la tabla ya está inicializada como DataTable
+        if ($.fn.DataTable.isDataTable('#table-preview-view .data-table-preview')) {
+            // Destruir la instancia existente si ya está inicializada
+            $('#table-preview-view .data-table-preview').DataTable().destroy();
+        }
+        // Inicializar DataTable
+        $('#table-preview-view .data-table-preview').DataTable({
+            // Opciones de configuración de DataTables, si es necesario
+        });
+    }
+
+
+    // Preprocessing functions
+    $("#help-button").click(function() {
+        $("#explanation-preprocessing-section").toggle();
+    });
+
 </script>
-
-
 
 {% endblock %}

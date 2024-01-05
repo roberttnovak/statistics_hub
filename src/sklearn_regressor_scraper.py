@@ -29,24 +29,37 @@ from sklearn.utils import all_estimators
 
 def extract_regressor_info(soup, parameter_subset=None):
     """
-    Extracts regressor information from the BeautifulSoup object with an optional filter for specific parameters.
+    Extracts regressor information and parameter details from the BeautifulSoup object. 
+    It includes an optional filter for specific parameters.
 
     Parameters
     ----------
     soup : BeautifulSoup
-        BeautifulSoup object containing the parsed HTML.
+        BeautifulSoup object containing the parsed HTML of the regressor documentation page.
     parameter_subset : list of str, optional
-        A list of parameter names to filter the information. If None (default), information for all parameters is returned.
+        A list of parameter names to specifically include in the extraction. 
+        If None (default), information for all parameters is extracted.
 
     Returns
     -------
-    list of dict
-        A list of dictionaries, each containing the extracted information about a parameter and its description.
-        Each dictionary has keys: 'parameter', 'description', 'value_default'.
+    dict
+        A dictionary containing two keys: 'regressor_info' and 'parameters_info'.
+        'regressor_info' is a string with the concatenated text of all relevant <p> tags before the first <dl>. This is: Description of regressor
+        'parameters_info' is a list of dictionaries, each containing 'parameter', 'description', and 'value_default' for each parameter.
     """
-    dl_tags = soup.find_all('dd', class_='field-odd')
-    dt_parameters_tags = [dt for dt in dl_tags[0].find_all('dt') if dt.find('strong')]
-    
+    # Find decription of regressor 
+    dd_tag_of_descriprion_regressor = soup.find_all('dl')[0].find('dd')
+    p_tags_before_first_dl = []
+    for sibling in dd_tag_of_descriprion_regressor.children:
+        if sibling.name == 'dl':  
+            break
+        if sibling.name == 'p': 
+            p_tags_before_first_dl.append(sibling)
+    regressor_info = "\n".join([p.text for p in p_tags_before_first_dl])
+
+    # Find parameters and its default values and descriptions
+    dd_tags = soup.find_all('dd', class_='field-odd')
+    dt_parameters_tags = [dt for dt in dd_tags[0].find_all('dt') if dt.find('strong')]
     # Extract parameter names and default values
     parameters, values_default = zip(*[
         [
@@ -65,33 +78,34 @@ def extract_regressor_info(soup, parameter_subset=None):
         if dt.find_next_sibling() and dt.find_next_sibling().name == 'dd'
     ]
 
-    descriptions = [dd.text for dd in dd_parameters_tags]
+    parameters_descriptions = [dd.text for dd in dd_parameters_tags]
 
     # Filter the information based on parameter_subset
-    info = [
+    parameters_info = [
         {"parameter": parameter, "description": description, "value_default": value_default}
-        for parameter, value_default, description in zip(parameters, values_default, descriptions)
+        for parameter, value_default, description in zip(parameters, values_default, parameters_descriptions)
         if parameter_subset is None or parameter in parameter_subset
     ]
-    return info
-
+    return {"regressor_info":regressor_info, "parameters_info":parameters_info}
 
 def get_regressor_info(regressor_name, parameter_subset=None):
     """
-    Scrape the scikit-learn documentation to obtain detailed information about a regressor, with an optional parameter subset filter.
+    Retrieves and scrapes the scikit-learn documentation for a specified regressor to obtain detailed information, 
+    optionally filtered by a subset of its parameters.
 
     Parameters
     ----------
     regressor_name : str
-        The name of the regressor for which information is to be scraped.
+        Name of the regressor whose information is to be scraped from the scikit-learn documentation.
     parameter_subset : list of str, optional
-        A list of parameter names to filter the information. If None (default), information for all parameters is returned.
+        A list of parameter names to filter the information. If None (default), information for all parameters is retrieved.
 
     Returns
     -------
     dict or str
-        A dictionary containing the description and parameters of the regressor. If a specific parameter subset is requested,
-        returns information only for those parameters. If the parameter is not found, a message is returned indicating no information is available.
+        If successful, returns a dictionary with the regressor name as the key and the extracted information as the value. 
+        The value is a dictionary containing 'regressor_info' and 'parameters_info'.
+        If the regressor name is not found or an HTTP error occurs, returns an error message string.
     """
     # Create a mapping of regressor names to their module paths
     mapping = {name: clazz.__module__ for name, clazz in all_estimators(type_filter='regressor')}
@@ -106,8 +120,8 @@ def get_regressor_info(regressor_name, parameter_subset=None):
 
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
-            regressor_info = extract_regressor_info(soup, parameter_subset)
-            return {regressor_name : regressor_info}
+            info = extract_regressor_info(soup, parameter_subset)
+            return {regressor_name : info}
         else:
             print(f"Failed to retrieve documentation for {regressor_name}. Link: {base_url}")
             return None

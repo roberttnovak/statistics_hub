@@ -243,3 +243,76 @@ def create_interactive_boxplot(df, category_col, subcategory_col, value_col):
     )
 
     return fig
+
+
+def create_treeplot(df, path_cols, value_col=None, summary_metric='mean'):
+    """
+    Create an interactive treeplot using Plotly, displaying a hierarchy of nodes based on specified path columns.
+    The function calculates various statistics for the given value column and displays these statistics on the 
+    most granular level of the treeplot. It allows for an interactive exploration of data at different hierarchical levels.
+
+    Parameters:
+    df (pd.DataFrame): The DataFrame containing the data. This DataFrame should have the columns specified in 'path_cols' 
+                       and, if provided, the 'value_col'.
+    path_cols (list of str): A list of column names that define the hierarchy for the treeplot. 
+                             These columns will determine the structure and levels of the treeplot.
+    value_col (str, optional): The name of the column in 'df' for which various statistics (like mean, median, quartiles, etc.) 
+                               will be calculated. If None, the function will count the occurrences at each hierarchical level.
+                               Default is None.
+    summary_metric (str): A specific metric from the calculated statistics to determine the size of each node in the treeplot.
+                          Common choices include 'mean', 'median', 'count', etc. This is only relevant if 'value_col' is provided.
+                          Default is 'mean'.
+
+    Returns:
+    plotly.graph_objs._figure.Figure: A Plotly figure object representing the interactive treeplot.
+
+    Examples:
+    # Example DataFrame
+    data = {'id_device': ['DBEM003', 'DBEM003'], 'id_sensor': ['sWEA', 'sWEA'],
+            'id_variable': ['00-temp', '00-temp'], 'value': [18.57, 18.56]}
+    df = pd.DataFrame(data)
+
+    # Create a treeplot with counts (no value_col provided)
+    fig = create_treeplot(df, ['id_device', 'id_sensor', 'id_variable'])
+    fig.show()
+
+    # Create a treeplot with value statistics (value_col provided)
+    fig = create_treeplot(df, ['id_device', 'id_sensor', 'id_variable'], value_col='value')
+    fig.show()
+
+    Notes:
+    - The function is designed to provide an overview of data distribution and statistics in a hierarchical format.
+    - The interactive nature of the treemap allows users to explore different levels of the hierarchy easily.
+    - The hover text on the most granular level nodes provides detailed statistical information, 
+      offering insights into the underlying data distribution.
+    """
+    # Ensure path columns exist in the DataFrame
+    for col in path_cols:
+        if col not in df.columns:
+            raise ValueError(f"Column '{col}' not found in DataFrame")
+
+    # Determine the aggregation function based on the presence of a value column
+    if value_col:
+        if value_col not in df.columns:
+            raise ValueError(f"Value column '{value_col}' not found in DataFrame")
+        # Aggregate using the specified value column
+        df_agg = df.groupby(path_cols)[value_col].agg(
+            count=('count'),
+            Q1=(lambda x: x.quantile(0.25)),
+            Q3=(lambda x: x.quantile(0.75)),
+            percentile_90=(lambda x: x.quantile(0.9)),
+            percentile_99=(lambda x: x.quantile(0.99)),
+            median=('median'),
+            mean=('mean'),
+            std=('std'),
+            min=('min'),
+            max=('max')
+        ).reset_index()
+    else:
+        # Count occurrences if no value column is provided
+        df_agg = df.groupby(path_cols).size().reset_index(name='count')
+
+    # Creating the treeplot with all metrics in hover_data
+    fig = px.treemap(df_agg, path=[px.Constant('All')] + path_cols, values=summary_metric, 
+                     hover_data=df_agg.columns)
+    return fig

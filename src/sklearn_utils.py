@@ -33,9 +33,7 @@ The script requires an internet connection to access scikit-learn's online docum
 when use extract_regressor_info() and get_regressor_info() functions()
 """
 
-import json
-import os
-from sklearn.utils import all_estimators
+from sklearn.utils.discovery import all_estimators
 import requests
 from bs4 import BeautifulSoup
 
@@ -121,106 +119,6 @@ def get_all_regressors_with_its_parameters():
             print("----------------------")
     
     return regressor_params
-
-
-# def export_regressor_sklearn_details(filename="all_regressors_of_sklearn_and_its_parameters.json", 
-#                                      directory=".", 
-#                                      indent=4,
-#                                      create_dir_if_not_exists=False):
-#     """
-#     Export a dictionary of scikit-learn regressors and their parameters to a JSON file.
-#     The file will include a comment at the beginning.
-    
-#     Parameters:
-#     -----------
-#     filename : str, default="all_regressors_of_sklearn_and_its_parameters.json"
-#         The name of the file where the parameters will be saved.
-        
-#     directory : str, default="."
-#         The directory where the file will be saved. Default is the current directory.
-        
-#     indent : int, default=4
-#         Indentation level for the exported JSON.
-
-#     create_dir_if_not_exists : bool, default=False
-#         Whether to create the directory if it doesn't exist.
-
-#     Returns:
-#     --------
-#     None
-    
-#     Example:
-#     --------
-#     >> export_regressor_sklearn_details(filename="my_regressors.json", directory="/desired/path/", create_dir_if_not_exists=True)
-#     """
-    
-#     # Check if directory exists and is writable
-#     if not os.path.isdir(directory):
-#         if create_dir_if_not_exists:
-#             os.makedirs(directory)
-#         else:
-#             raise FileNotFoundError(f"The specified directory '{directory}' does not exist.")
-    
-#     # Get the parameters of the regressors
-#     regressor_params = get_all_regressors_with_its_parameters()
-
-#     # Prepare the JSON with a comment
-#     data_to_save = {
-#         "__comment__": "This file contains a mapping from scikit-learn regressors to their respective parameters.",
-#         "regressor_parameters": regressor_params
-#     }
-
-#     # Create the complete path
-#     full_path = os.path.join(directory, filename)
-
-#     # Save the JSON file at the specified path
-#     with open(full_path, "w") as json_file:
-#         json.dump(data_to_save, json_file, indent=indent)
-
-
-# def load_regressor_sklearn_details(filename, directory="."):
-#     """
-#     Load a dictionary of scikit-learn regressors and their parameters from a JSON file.
-    
-#     Parameters:
-#     -----------
-#     filename : str
-#         The name of the file where the parameters are saved.
-        
-#     directory : str, default="."
-#         The directory where the file is located. Default is the current directory.
-        
-#     Returns:
-#     --------
-#     dict
-#         A dictionary containing the parameters of scikit-learn regressors.
-        
-#     Raises:
-#     -------
-#     FileNotFoundError
-#         If the specified directory or file does not exist.
-    
-#     Example:
-#     --------
-#     >> params = load_regressor_sklearn_details(filename="my_regressors.json", directory="/desired/path/")
-#     """
-
-#     # Create the complete path
-#     full_path = os.path.join(directory, filename)
-
-#     # Check if directory and file exist
-#     if not os.path.isdir(directory):
-#         raise FileNotFoundError(f"The specified directory '{directory}' does not exist.")
-    
-#     if not os.path.isfile(full_path):
-#         raise FileNotFoundError(f"The specified file '{full_path}' does not exist.")
-    
-#     # Load the JSON file
-#     with open(full_path, "r") as json_file:
-#         data_loaded = json.load(json_file)
-    
-#     return data_loaded.get("regressor_parameters", {})
-
 
 
 def extract_regressor_info(soup, parameter_subset=None):
@@ -373,10 +271,7 @@ def get_all_regressors_info(all_regressors_with_its_parameters = None):
     if all_regressors_with_its_parameters is None:
         all_regressors_with_its_parameters = get_all_regressors_with_its_parameters()
     all_regressors_info = {}
-    for regressor, parameters in all_regressors_with_its_parameters.items():
-        for parameter in parameters:
-            regressor_info = get_regressor_info(regressor, parameter)
-            # Combine the information for each regressor and parameter into one dictionary
-            all_regressors_info.update(regressor_info)
+    for regressor, parameters in all_regressors_with_its_parameters.items(): 
+        regressor_info = get_regressor_info(regressor, parameters)
+        all_regressors_info.update(regressor_info)
     return all_regressors_info
-

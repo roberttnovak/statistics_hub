@@ -215,6 +215,7 @@ def get_regressor_info(regressor_name, parameter_subset=None):
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             info = extract_regressor_info(soup, parameter_subset)
+            info.update({"url_scrapped":base_url})
             return {regressor_name : info}
         else:
             print(f"Failed to retrieve documentation for {regressor_name}. Link: {base_url}")

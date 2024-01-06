@@ -62,7 +62,8 @@
                 "description": "Maximum number of iterations.\n\nDeprecated since version 1.3: n_iter is deprecated in 1.3 and will be removed in 1.5. Use\nmax_iter instead.\n\n",
                 "value_default": null
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html"
     },
     "AdaBoostRegressor": {
         "regressor_info": "An AdaBoost regressor.\nAn AdaBoost [1] regressor is a meta-estimator that begins by fitting a\nregressor on the original dataset and then fits additional copies of the\nregressor on the same dataset but where the weights of instances are\nadjusted according to the error of the current prediction. As such,\nsubsequent regressors focus more on difficult cases.\nThis class implements the algorithm known as AdaBoost.R2 [2].\nRead more in the User Guide.",
@@ -97,7 +98,8 @@
                 "description": "The base estimator from which the boosted ensemble is built.\nIf None, then the base estimator is\nDecisionTreeRegressor initialized with\nmax_depth=3.\n\nDeprecated since version 1.2: base_estimator is deprecated and will be removed in 1.4.\nUse estimator instead.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html"
     },
     "BaggingRegressor": {
         "regressor_info": "A Bagging regressor.\nA Bagging regressor is an ensemble meta-estimator that fits base\nregressors each on random subsets of the original dataset and then\naggregate their individual predictions (either by voting or by averaging)\nto form a final prediction. Such a meta-estimator can typically be used as\na way to reduce the variance of a black-box estimator (e.g., a decision\ntree), by introducing randomization into its construction procedure and\nthen making an ensemble out of it.\nThis algorithm encompasses several works from the literature. When random\nsubsets of the dataset are drawn as random subsets of the samples, then\nthis algorithm is known as Pasting [1]. If samples are drawn with\nreplacement, then the method is known as Bagging [2]. When random subsets\nof the dataset are drawn as random subsets of the features, then the method\nis known as Random Subspaces [3]. Finally, when base estimators are built\non subsets of both samples and features, then the method is known as\nRandom Patches [4].\nRead more in the User Guide.",
@@ -162,7 +164,8 @@
                 "description": "Use estimator instead.\n\nDeprecated since version 1.2: base_estimator is deprecated and will be removed in 1.4.\nUse estimator instead.\n\n",
                 "value_default": "\u201ddeprecated\u201d"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html"
     },
     "BayesianRidge": {
         "regressor_info": "Bayesian ridge regression.\nFit a Bayesian ridge model. See the Notes section for details on this\nimplementation and the optimization of the regularization parameters\nlambda (precision of the weights) and alpha (precision of the noise).\nRead more in the User Guide.",
@@ -232,7 +235,8 @@
                 "description": "Maximum number of iterations. Should be greater than or equal to 1.\n\nDeprecated since version 1.3: n_iter is deprecated in 1.3 and will be removed in 1.5. Use\nmax_iter instead.\n\n",
                 "value_default": null
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html"
     },
     "CCA": {
         "regressor_info": "Canonical Correlation Analysis, also known as \u201cMode B\u201d PLS.\nRead more in the User Guide.",
@@ -262,7 +266,8 @@
                 "description": "Whether to copy X and Y in fit before applying centering, and\npotentially scaling. If False, these operations will be done inplace,\nmodifying both arrays.\n",
                 "value_default": "True"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.CCA.html"
     },
     "DecisionTreeRegressor": {
         "regressor_info": "A decision tree regressor.\nRead more in the User Guide.",
@@ -322,7 +327,8 @@
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html"
     },
     "DummyRegressor": {
         "regressor_info": "Regressor that makes predictions using simple rules.\nThis regressor is useful as a simple baseline to compare with other\n(real) regressors. Do not use it for real problems.\nRead more in the User Guide.",
@@ -342,7 +348,8 @@
                 "description": "The quantile to predict using the \u201cquantile\u201d strategy. A quantile of\n0.5 corresponds to the median, while 0.0 to the minimum and 1.0 to the\nmaximum.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html"
     },
     "ElasticNet": {
         "regressor_info": "Linear regression with combined L1 and L2 priors as regularizer.\nMinimizes the objective function:\nIf you are interested in controlling the L1 and L2 penalty\nseparately, keep in mind that this is equivalent to:\nwhere:\nThe parameter l1_ratio corresponds to alpha in the glmnet R package while\nalpha corresponds to the lambda parameter in glmnet. Specifically, l1_ratio\n= 1 is the lasso penalty. Currently, l1_ratio <= 0.01 is not reliable,\nunless you supply your own sequence of alpha.\nRead more in the User Guide.",
@@ -402,7 +409,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html"
     },
     "ElasticNetCV": {
         "regressor_info": "Elastic Net model with iterative fitting along a regularization path.\nSee glossary entry for cross-validation estimator.\nRead more in the User Guide.",
@@ -482,7 +490,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html"
     },
     "ExtraTreeRegressor": {
         "regressor_info": "An extremely randomized tree regressor.\nExtra-trees differ from classic decision trees in the way they are built.\nWhen looking for the best split to separate the samples of a node into two\ngroups, random splits are drawn for each of the max_features randomly\nselected features and the best split among those is chosen. When\nmax_features is set 1, this amounts to building a totally random\ndecision tree.\nWarning: Extra-trees should only be used within ensemble methods.\nRead more in the User Guide.",
@@ -542,7 +551,8 @@
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html"
     },
     "ExtraTreesRegressor": {
         "regressor_info": "An extra-trees regressor.\nThis class implements a meta estimator that fits a number of\nrandomized decision trees (a.k.a. extra-trees) on various sub-samples\nof the dataset and uses averaging to improve the predictive accuracy\nand control over-fitting.\nRead more in the User Guide.",
@@ -632,7 +642,8 @@
                 "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max_samples * X.shape[0] samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html"
     },
     "GammaRegressor": {
         "regressor_info": "Generalized Linear Model with a Gamma distribution.\nThis regressor uses the \u2018log\u2019 link function.\nRead more in the User Guide.",
@@ -672,7 +683,8 @@
                 "description": "For the lbfgs solver set verbose to any positive number for verbosity.\nValues must be in the range [0, inf).\n",
                 "value_default": "0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html"
     },
     "GaussianProcessRegressor": {
         "regressor_info": "Gaussian process regression (GPR).\nThe implementation is based on Algorithm 2.1 of [RW2006].\nIn addition to standard scikit-learn estimator API,\nGaussianProcessRegressor:\nTo learn the difference between a point-estimate approach vs. a more\nBayesian modelling approach, refer to the example entitled\nComparison of kernel ridge and Gaussian process regression.\nRead more in the User Guide.",
@@ -717,7 +729,8 @@
                 "description": "Determines random number generation used to initialize the centers.\nPass an int for reproducible results across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html"
     },
     "GradientBoostingRegressor": {
         "regressor_info": "Gradient Boosting for regression.\nThis estimator builds an additive model in a forward stage-wise fashion; it\nallows for the optimization of arbitrary differentiable loss functions. In\neach stage a regression tree is fit on the negative gradient of the given\nloss function.\nsklearn.ensemble.HistGradientBoostingRegressor is a much faster\nvariant of this algorithm for intermediate datasets (n_samples >= 10_000).\nRead more in the User Guide.",
@@ -827,7 +840,8 @@
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed.\nValues must be in the range [0.0, inf).\nSee Minimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html"
     },
     "HistGradientBoostingRegressor": {
         "regressor_info": "Histogram-based Gradient Boosting Regression Tree.\nThis estimator is much faster than\nGradientBoostingRegressor\nfor big datasets (n_samples >= 10 000).\nThis estimator has native support for missing values (NaNs). During\ntraining, the tree grower learns at each split point whether samples\nwith missing values should go to the left or right child, based on the\npotential gain. When predicting, samples with missing values are\nassigned to the left or right child consequently. If no missing values\nwere encountered for a given feature during training, then samples with\nmissing values are mapped to whichever child has the most samples.\nThis implementation is inspired by\nLightGBM.\nRead more in the User Guide.",
@@ -932,7 +946,8 @@
                 "description": "Pseudo-random number generator to control the subsampling in the\nbinning process, and the train/validation data split if early stopping\nis enabled.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html"
     },
     "HuberRegressor": {
         "regressor_info": "L2-regularized linear regression model that is robust to outliers.\nThe Huber Regressor optimizes the squared loss for the samples where\n|(y - Xw - c) / sigma| < epsilon and the absolute loss for the samples\nwhere |(y - Xw - c) / sigma| > epsilon, where the model coefficients\nw, the intercept c and the scale sigma are parameters\nto be optimized. The parameter sigma makes sure that if y is scaled up\nor down by a certain factor, one does not need to rescale epsilon to\nachieve the same robustness. Note that this does not take into account\nthe fact that the different features of X may be of different scales.\nThe Huber loss function has the advantage of not being heavily influenced\nby the outliers while not completely ignoring their effect.\nRead more in the User Guide",
@@ -967,7 +982,8 @@
                 "description": "The iteration will stop when\nmax{|proj g_i | i = 1, ..., n} <= tol\nwhere pg_i is the i-th component of the projected gradient.\n",
                 "value_default": "1e-05"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html"
     },
     "IsotonicRegression": {
         "regressor_info": "Isotonic regression model.\nRead more in the User Guide.",
@@ -992,7 +1008,8 @@
                 "description": "Handles how X values outside of the training domain are handled\nduring prediction.\n\n\u2018nan\u2019, predictions will be NaN.\n\u2018clip\u2019, predictions will be set to the value corresponding to\nthe nearest train interval endpoint.\n\u2018raise\u2019, a ValueError is raised.\n\n",
                 "value_default": "\u2019nan\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html"
     },
     "KNeighborsRegressor": {
         "regressor_info": "Regression based on k-nearest neighbors.\nThe target is predicted by local interpolation of the targets\nassociated of the nearest neighbors in the training set.\nRead more in the User Guide.",
@@ -1037,7 +1054,8 @@
                 "description": "The number of parallel jobs to run for neighbors search.\nNone means 1 unless in a joblib.parallel_backend context.\n-1 means using all processors. See Glossary\nfor more details.\nDoesn\u2019t affect fit method.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html"
     },
     "KernelRidge": {
         "regressor_info": "Kernel ridge regression.\nKernel ridge regression (KRR) combines ridge regression (linear least\nsquares with l2-norm regularization) with the kernel trick. It thus\nlearns a linear function in the space induced by the respective kernel and\nthe data. For non-linear kernels, this corresponds to a non-linear\nfunction in the original space.\nThe form of the model learned by KRR is identical to support vector\nregression (SVR). However, different loss functions are used: KRR uses\nsquared error loss while support vector regression uses epsilon-insensitive\nloss, both combined with l2 regularization. In contrast to SVR, fitting a\nKRR model can be done in closed-form and is typically faster for\nmedium-sized datasets. On the other hand, the learned model is non-sparse\nand thus slower than SVR, which learns a sparse model for epsilon > 0, at\nprediction-time.\nThis estimator has built-in support for multi-variate regression\n(i.e., when y is a 2d-array of shape [n_samples, n_targets]).\nRead more in the User Guide.",
@@ -1072,7 +1090,8 @@
                 "description": "Additional parameters (keyword arguments) for kernel function passed\nas callable object.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html"
     },
     "Lars": {
         "regressor_info": "Least Angle Regression model a.k.a. LAR.\nRead more in the User Guide.",
@@ -1127,7 +1146,8 @@
                 "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lars.html"
     },
     "LarsCV": {
         "regressor_info": "Cross-validated Least Angle Regression model.\nSee glossary entry for cross-validation estimator.\nRead more in the User Guide.",
@@ -1182,7 +1202,8 @@
                 "description": "If True, X will be copied; else, it may be overwritten.\n",
                 "value_default": "True"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LarsCV.html"
     },
     "Lasso": {
         "regressor_info": "Linear Model trained with L1 prior as regularizer (aka the Lasso).\nThe optimization objective for Lasso is:\nTechnically the Lasso model is optimizing the same objective function as\nthe Elastic Net with l1_ratio=1.0 (no L2 penalty).\nRead more in the User Guide.",
@@ -1237,7 +1258,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html"
     },
     "LassoCV": {
         "regressor_info": "Lasso linear model with iterative fitting along a regularization path.\nSee glossary entry for cross-validation estimator.\nThe best model is selected by cross-validation.\nThe optimization objective for Lasso is:\nRead more in the User Guide.",
@@ -1312,7 +1334,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html"
     },
     "LassoLars": {
         "regressor_info": "Lasso model fit with Least Angle Regression a.k.a. Lars.\nIt is a Linear Model trained with an L1 prior as regularizer.\nThe optimization objective for Lasso is:\nRead more in the User Guide.",
@@ -1377,7 +1400,8 @@
                 "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html"
     },
     "LassoLarsCV": {
         "regressor_info": "Cross-validated Lasso, using the LARS algorithm.\nSee glossary entry for cross-validation estimator.\nThe optimization objective for Lasso is:\nRead more in the User Guide.",
@@ -1437,7 +1461,8 @@
                 "description": "Restrict coefficients to be >= 0. Be aware that you might want to\nremove fit_intercept which is set True by default.\nUnder the positive restriction the model coefficients do not converge\nto the ordinary-least-squares solution for small values of alpha.\nOnly coefficients up to the smallest alpha value (alphas_[alphas_ >\n0.].min() when fit_path=True) reached by the stepwise Lars-Lasso\nalgorithm are typically in congruence with the solution of the\ncoordinate descent Lasso estimator.\nAs a consequence using LassoLarsCV only makes sense for problems where\na sparse solution is expected and/or reached.\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLarsCV.html"
     },
     "LassoLarsIC": {
         "regressor_info": "Lasso model fit with Lars using BIC or AIC for model selection.\nThe optimization objective for Lasso is:\nAIC is the Akaike information criterion [2] and BIC is the Bayes\nInformation criterion [3]. Such criteria are useful to select the value\nof the regularization parameter by making a trade-off between the\ngoodness of fit and the complexity of the model. A good model should\nexplain well the data while being simple.\nRead more in the User Guide.",
@@ -1492,7 +1517,8 @@
                 "description": "The estimated noise variance of the data. If None, an unbiased\nestimate is computed by an OLS model. However, it is only possible\nin the case where n_samples > n_features + fit_intercept.\n\nNew in version 1.1.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLarsIC.html"
     },
     "LinearRegression": {
         "regressor_info": "Ordinary least squares Linear Regression.\nLinearRegression fits a linear model with coefficients w = (w1, \u2026, wp)\nto minimize the residual sum of squares between the observed targets in\nthe dataset, and the targets predicted by the linear approximation.",
@@ -1517,7 +1543,8 @@
                 "description": "When set to True, forces the coefficients to be positive. This\noption is only supported for dense arrays.\n\nNew in version 0.24.\n\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html"
     },
     "LinearSVR": {
         "regressor_info": "Linear Support Vector Regression.\nSimilar to SVR with parameter kernel=\u2019linear\u2019, but implemented in terms of\nliblinear rather than libsvm, so it has more flexibility in the choice of\npenalties and loss functions and should scale better to large numbers of\nsamples.\nThe main differences between LinearSVR and\nSVR lie in the loss function used by default, and in\nthe handling of intercept regularization between those two implementations.\nThis class supports both dense and sparse input.\nRead more in the User Guide.",
@@ -1572,7 +1599,8 @@
                 "description": "The maximum number of iterations to be run.\n",
                 "value_default": "1000"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html"
     },
     "MLPRegressor": {
         "regressor_info": "Multi-layer Perceptron regressor.\nThis model optimizes the squared error using LBFGS or stochastic gradient\ndescent.",
@@ -1692,7 +1720,8 @@
                 "description": "Only used when solver=\u2019lbfgs\u2019. Maximum number of function calls.\nThe solver iterates until convergence (determined by tol), number\nof iterations reaches max_iter, or this number of function calls.\nNote that number of function calls will be greater than or equal to\nthe number of iterations for the MLPRegressor.\n\nNew in version 0.22.\n\n",
                 "value_default": "15000"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html"
     },
     "MultiTaskElasticNet": {
         "regressor_info": "Multi-task ElasticNet model trained with L1/L2 mixed-norm as regularizer.\nThe optimization objective for MultiTaskElasticNet is:\nWhere:\ni.e. the sum of norms of each row.\nRead more in the User Guide.",
@@ -1742,7 +1771,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNet.html"
     },
     "MultiTaskElasticNetCV": {
         "regressor_info": "Multi-task L1/L2 ElasticNet with built-in cross-validation.\nSee glossary entry for cross-validation estimator.\nThe optimization objective for MultiTaskElasticNet is:\nWhere:\ni.e. the sum of norm of each row.\nRead more in the User Guide.",
@@ -1812,7 +1842,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNetCV.html"
     },
     "MultiTaskLasso": {
         "regressor_info": "Multi-task Lasso model trained with L1/L2 mixed-norm as regularizer.\nThe optimization objective for Lasso is:\nWhere:\ni.e. the sum of norm of each row.\nRead more in the User Guide.",
@@ -1857,7 +1888,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLasso.html"
     },
     "MultiTaskLassoCV": {
         "regressor_info": "Multi-task Lasso model trained with L1/L2 mixed-norm as regularizer.\nSee glossary entry for cross-validation estimator.\nThe optimization objective for MultiTaskLasso is:\nWhere:\ni.e. the sum of norm of each row.\nRead more in the User Guide.",
@@ -1922,7 +1954,8 @@
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "\u2019cyclic\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLassoCV.html"
     },
     "NuSVR": {
         "regressor_info": "Nu Support Vector Regression.\nSimilar to NuSVC, for regression, uses a parameter nu to control\nthe number of support vectors. However, unlike NuSVC, where nu\nreplaces C, here nu replaces the parameter epsilon of epsilon-SVR.\nThe implementation is based on libsvm.\nRead more in the User Guide.",
@@ -1982,7 +2015,8 @@
                 "description": "Hard limit on iterations within solver, or -1 for no limit.\n",
                 "value_default": "-1"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html"
     },
     "OrthogonalMatchingPursuit": {
         "regressor_info": "Orthogonal Matching Pursuit model (OMP).\nRead more in the User Guide.",
@@ -2012,7 +2046,8 @@
                 "description": "Whether to use a precomputed Gram and Xy matrix to speed up\ncalculations. Improves performance when n_targets or\nn_samples is very large. Note that if you already have such\nmatrices, you can pass them directly to the fit method.\n",
                 "value_default": "\u2019auto\u2019"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html"
     },
     "OrthogonalMatchingPursuitCV": {
         "regressor_info": "Cross-validated Orthogonal Matching Pursuit model (OMP).\nSee glossary entry for cross-validation estimator.\nRead more in the User Guide.",
@@ -2052,7 +2087,8 @@
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuitCV.html"
     },
     "PLSCanonical": {
         "regressor_info": "Partial Least Squares transformer and regressor.\nRead more in the User Guide.",
@@ -2087,7 +2123,8 @@
                 "description": "Whether to copy X and Y in fit before applying centering, and\npotentially scaling. If False, these operations will be done inplace,\nmodifying both arrays.\n",
                 "value_default": "True"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSCanonical.html"
     },
     "PLSRegression": {
         "regressor_info": "PLS regression.\nPLSRegression is also known as PLS2 or PLS1, depending on the number of\ntargets.\nRead more in the User Guide.",
@@ -2117,7 +2154,8 @@
                 "description": "Whether to copy X and Y in fit before applying centering,\nand potentially scaling. If False, these operations will be done\ninplace, modifying both arrays.\n",
                 "value_default": "True"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html"
     },
     "PassiveAggressiveRegressor": {
         "regressor_info": "Passive Aggressive Regressor.\nRead more in the User Guide.",
@@ -2192,7 +2230,8 @@
                 "description": "When set to True, computes the averaged SGD weights and stores the\nresult in the coef_ attribute. If set to an int greater than 1,\naveraging will begin once the total number of samples seen reaches\naverage. So average=10 will begin averaging after seeing 10 samples.\n\nNew in version 0.19: parameter average to use weights averaging in SGD.\n\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html"
     },
     "PoissonRegressor": {
         "regressor_info": "Generalized Linear Model with a Poisson distribution.\nThis regressor uses the \u2018log\u2019 link function.\nRead more in the User Guide.",
@@ -2232,7 +2271,8 @@
                 "description": "For the lbfgs solver set verbose to any positive number for verbosity.\nValues must be in the range [0, inf).\n",
                 "value_default": "0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html"
     },
     "QuantileRegressor": {
         "regressor_info": "Linear regression model that predicts conditional quantiles.\nThe linear QuantileRegressor optimizes the pinball loss for a\ndesired quantile and is robust to outliers.\nThis model uses an L1 regularization like\nLasso.\nRead more in the User Guide.",
@@ -2262,7 +2302,8 @@
                 "description": "Additional parameters passed to scipy.optimize.linprog as\noptions. If None and if solver='interior-point', then\n{\"lstsq\": True} is passed to scipy.optimize.linprog for the\nsake of stability.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.QuantileRegressor.html"
     },
     "RANSACRegressor": {
         "regressor_info": "RANSAC (RANdom SAmple Consensus) algorithm.\nRANSAC is an iterative algorithm for the robust estimation of parameters\nfrom a subset of inliers from the complete data set.\nRead more in the User Guide.",
@@ -2327,7 +2368,8 @@
                 "description": "The generator used to initialize the centers.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html"
     },
     "RadiusNeighborsRegressor": {
         "regressor_info": "Regression based on neighbors within a fixed radius.\nThe target is predicted by local interpolation of the targets\nassociated of the nearest neighbors in the training set.\nRead more in the User Guide.",
@@ -2372,7 +2414,8 @@
                 "description": "The number of parallel jobs to run for neighbors search.\nNone means 1 unless in a joblib.parallel_backend context.\n-1 means using all processors. See Glossary\nfor more details.\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html"
     },
     "RandomForestRegressor": {
         "regressor_info": "A random forest regressor.\nA random forest is a meta estimator that fits a number of classifying\ndecision trees on various sub-samples of the dataset and uses averaging\nto improve the predictive accuracy and control over-fitting.\nThe sub-sample size is controlled with the max_samples parameter if\nbootstrap=True (default), otherwise the whole dataset is used to build\neach tree.\nFor a comparison between tree-based ensemble models see the example\nComparing Random Forests and Histogram Gradient Boosting models.\nRead more in the User Guide.",
@@ -2462,7 +2505,8 @@
                 "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max(round(n_samples * max_samples), 1) samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html"
     },
     "Ridge": {
         "regressor_info": "Linear least squares with l2 regularization.\nMinimizes the objective function:\nThis model solves a regression model where the loss function is\nthe linear least squares function and regularization is given by\nthe l2-norm. Also known as Ridge Regression or Tikhonov regularization.\nThis estimator has built-in support for multi-variate regression\n(i.e., when y is a 2d-array of shape (n_samples, n_targets)).\nRead more in the User Guide.",
@@ -2507,7 +2551,8 @@
                 "description": "Used when solver == \u2018sag\u2019 or \u2018saga\u2019 to shuffle the data.\nSee Glossary for details.\n\nNew in version 0.17: random_state to support Stochastic Average Gradient.\n\n",
                 "value_default": "None"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html"
     },
     "RidgeCV": {
         "regressor_info": "Ridge regression with built-in cross-validation.\nSee glossary entry for cross-validation estimator.\nBy default, it performs efficient Leave-One-Out Cross-Validation.\nRead more in the User Guide.",
@@ -2547,7 +2592,8 @@
                 "description": "Flag indicating whether to optimize the alpha value (picked from the\nalphas parameter list) for each target separately (for multi-output\nsettings: multiple prediction targets). When set to True, after\nfitting, the alpha_ attribute will contain a value for each target.\nWhen set to False, a single alpha is used for all targets.\n\nNew in version 0.24.\n\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html"
     },
     "SGDRegressor": {
         "regressor_info": "Linear model fitted by minimizing a regularized empirical loss with SGD.\nSGD stands for Stochastic Gradient Descent: the gradient of the loss is\nestimated each sample at a time and the model is updated along the way with\na decreasing strength schedule (aka learning rate).\nThe regularizer is a penalty added to the loss function that shrinks model\nparameters towards the zero vector using either the squared euclidean norm\nL2 or the absolute norm L1 or a combination of both (Elastic Net). If the\nparameter update crosses the 0.0 value because of the regularizer, the\nupdate is truncated to 0.0 to allow for learning sparse models and achieve\nonline feature selection.\nThis implementation works with data represented as dense numpy arrays of\nfloating point values for the features.\nRead more in the User Guide.",
@@ -2647,7 +2693,8 @@
                 "description": "When set to True, computes the averaged SGD weights across all\nupdates and stores the result in the coef_ attribute. If set to\nan int greater than 1, averaging will begin once the total number of\nsamples seen reaches average. So average=10 will begin\naveraging after seeing 10 samples.\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html"
     },
     "SVR": {
         "regressor_info": "Epsilon-Support Vector Regression.\nThe free parameters in the model are C and epsilon.\nThe implementation is based on libsvm. The fit time complexity\nis more than quadratic with the number of samples which makes it hard\nto scale to datasets with more than a couple of 10000 samples. For large\ndatasets consider using LinearSVR or\nSGDRegressor instead, possibly after a\nNystroem transformer or\nother Kernel Approximation.\nRead more in the User Guide.",
@@ -2707,7 +2754,8 @@
                 "description": "Hard limit on iterations within solver, or -1 for no limit.\n",
                 "value_default": "-1"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html"
     },
     "TheilSenRegressor": {
         "regressor_info": "Theil-Sen Estimator: robust multivariate regression model.\nThe algorithm calculates least square solutions on subsets with size\nn_subsamples of the samples in X. Any value of n_subsamples between the\nnumber of features and samples leads to an estimator with a compromise\nbetween robustness and efficiency. Since the number of least square\nsolutions is \u201cn_samples choose n_subsamples\u201d, it can be extremely large\nand can therefore be limited with max_subpopulation. If this limit is\nreached, the subsets are chosen randomly. In a final step, the spatial\nmedian (or L1 median) is calculated of all least square solutions.\nRead more in the User Guide.",
@@ -2757,7 +2805,8 @@
                 "description": "Verbose mode when fitting the model.\n",
                 "value_default": "False"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html"
     },
     "TransformedTargetRegressor": {
         "regressor_info": "Meta-estimator to regress on a transformed target.\nUseful for applying a non-linear transformation to the target y in\nregression problems. This transformation can be given as a Transformer\nsuch as the QuantileTransformer or as a\nfunction and its inverse such as np.log and np.exp.\nThe computation during fit is:\nor:\nThe computation during predict is:\nor:\nRead more in the User Guide.",
@@ -2787,7 +2836,8 @@
                 "description": "Whether to check that transform followed by inverse_transform\nor func followed by inverse_func leads to the original targets.\n",
                 "value_default": "True"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html"
     },
     "TweedieRegressor": {
         "regressor_info": "Generalized Linear Model with a Tweedie distribution.\nThis estimator can be used to model different GLMs depending on the\npower parameter, which determines the underlying distribution.\nRead more in the User Guide.",
@@ -2837,6 +2887,7 @@
                 "description": "For the lbfgs solver set verbose to any positive number for verbosity.\nValues must be in the range [0, inf).\n",
                 "value_default": "0"
             }
-        ]
+        ],
+        "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html"
     }
 }

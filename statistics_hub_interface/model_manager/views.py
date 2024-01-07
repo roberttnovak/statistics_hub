@@ -16,9 +16,10 @@ import pandas as pd
 import plotly.offline as py
 import plotly.graph_objs as go
 import datetime
+from django.views.decorators.clickjacking import xframe_options_exempt
  
 sys.path.append(str(Path("../src")))
-from visualisations import create_interactive_boxplot, create_interactive_plot, plot_box_time_series, plot_weight_evolution
+from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import filter_dataframe_by_column_values, load_json, modify_json_values
@@ -33,7 +34,7 @@ creds_path = '../global_creds/sql.json'
 # ToDo: Use ConfigManager in all functions when necessary (for example upload_file instead manual modification)
 # ToDo: Document better and apply good practice
 
-
+@xframe_options_exempt
 @login_required
 def user_resources(request):
     return render(request, 'model_manager/user_resources.html')
@@ -406,7 +407,8 @@ def preprocess_dataset(request, selected_dataset, separator):
         'selected_dataset': selected_dataset,
         'separator': separator,
         'eda_results_html' : generate_html(eda_results, id_table = 'eda-results-table'),
-        'eda_plot_html' : eda_plot_html 
+        'eda_plot_html' : eda_plot_html,
+        "preprocessing_plot_html": preprocessing_plot_html
     }
 
 
@@ -460,6 +462,8 @@ def preprocess_dataset(request, selected_dataset, separator):
             timestamp_column = request.POST.get('timestamp_column')
             date_range_user = request.POST.get('date_range')
             filters_data_json = request.POST.get('filters_data')
+            eda_columns = json.loads(request.POST.get('eda_columns'))
+            eda_groupby_columns = json.loads(request.POST.get('eda_groupby_columns'))
 
             if date_range_user:
                 min_date_user, max_date_user = date_range_user.split(" to ")
@@ -473,8 +477,7 @@ def preprocess_dataset(request, selected_dataset, separator):
                 except json.JSONDecodeError:
                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
                     print("Error al decodificar los datos de los filtros")
-
-            eda_results = summary_statistics_numerical(df = df_filtered, variables = "value", groupby = ["id_device"])
+            eda_results = summary_statistics(df = df_filtered, variables = eda_columns, groupby = eda_groupby_columns)
             print(eda_results)
             fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
             eda_plot_html = py.plot(fig_eda, output_type='div')
@@ -486,6 +489,24 @@ def preprocess_dataset(request, selected_dataset, separator):
                     "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
                 }
             )
+            response_data = context
+            return JsonResponse(response_data)
+
+        if request.POST.get('action') == 'update_plot_eda':
+            visualization_type = request.POST.get('visualization_type')
+            path_cols = json.loads(request.POST.get('path_columns')) # ['id_device','id_sensor'] #request.POST.getlist('path_columns')  
+            value_col = request.POST.get('value_column')
+            summary_metric = request.POST.get('summary_metric')
+            print(visualization_type)
+            print(path_cols)
+            print(value_col)
+            print(summary_metric)
+            if visualization_type == 'treemap':
+                fig_eda = create_treeplot(df=df, path_cols=path_cols, value_col=value_col, summary_metric=summary_metric)
+                eda_plot_html = py.plot(fig_eda, output_type='div')
+                context.update({
+                    "eda_plot_html": eda_plot_html
+                })
             response_data = context
             return JsonResponse(response_data)
 
@@ -617,16 +638,44 @@ def model_parameters(request, model_name):
     try:
         # Load the model's current parameters from the configuration.
         model_parameters = config_manager.load_config(model_name, subfolder="models_parameters")
+        config_manager_metadata_parameters = ConfigManager(f"../config")
+
+        # Get metadata of sklearn regressor
+        all_sklearn_regressors_with_all_info = config_manager_metadata_parameters.load_config("all_sklearn_regressors_with_all_info", subfolder="models_parameters/metadata")
+        regressor_info = all_sklearn_regressors_with_all_info[model_name]['regressor_info']
+        url_scrapped = all_sklearn_regressors_with_all_info[model_name]['url_scrapped']
+        sklearn_parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info'] 
+
+        # Get metadata of other parameters 
+        legible_names_of_own_parameters = config_manager_metadata_parameters.load_config("legible_names_of_own_parameters", subfolder="models_parameters/metadata")
+        descriptions_of_own_parameters = config_manager_metadata_parameters.load_config("descriptions_of_own_parameters", subfolder="models_parameters/metadata")
+        metadata_of_own_parameters = [
+        {
+            "name": param,
+            "legible_name": legible_names_of_own_parameters.get(param, param),  # Usa el nombre del parámetro como respaldo
+            "description": descriptions_of_own_parameters.get(param, ""),
+            "value": value
+        }
+        for param, value in model_parameters.items()
+        ]
+        print(metadata_of_own_parameters)
+        context = {
+                'model_name': model_name,
+                'model_parameters': model_parameters,
+                'regressor_info': regressor_info,
+                'url_scrapped': url_scrapped,
+                'sklearn_parameters_info': sklearn_parameters_info,
+                'legible_names_of_own_parameters': legible_names_of_own_parameters,
+                'descriptions_of_own_parameters' : descriptions_of_own_parameters,
+                'metadata_of_own_parameters': metadata_of_own_parameters
+            }
 
     except FileNotFoundError:
         # If the config file is not found, handle the error appropriately (e.g., log it, send an error message to the template, etc.)
         model_parameters = {}
 
     # Render the page with the current model parameters.
-    return render(request, 'model_manager/model_parameters.html', {
-        'model_name': model_name,
-        'model_parameters': model_parameters
-    })
+    return render(request, 'model_manager/model_parameters.html', context)
 
 def data_source_selection(request):
     return render(request, 'model_manager/data_source_selection.html')
@@ -788,4 +837,5 @@ def upload_file(request):
         # Return a response indicating that the method is not allowed.
         # Only POST and GET are supported.
         return HttpResponseNotAllowed(['POST', 'GET'])
+    
 

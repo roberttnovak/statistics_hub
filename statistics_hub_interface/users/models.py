@@ -13,7 +13,7 @@ import sys
 
 sys.path.append(str(Path("../src")))
 from ConfigManager import ConfigManager
-from predictions import get_all_regressors_with_its_parameters
+from sklearn_utils import get_all_regressors
 
 # ToDo: Investigar lo de si el instance.username puede dar problemas con respecto a .user que se usa en las otras funciones
 # en las views de model_manager
@@ -70,8 +70,7 @@ def create_user_directory(sender, instance, created, **kwargs):
         # Change correct path to save models 
         config_manager = ConfigManager("../statistics_hub_interface/tenants/admin/config")
         
-        all_regressors_with_its_parameters = get_all_regressors_with_its_parameters()
-        all_regressors = list(all_regressors_with_its_parameters.keys())
+        all_regressors = get_all_regressors()
 
         # Update paths to save model
         # [config_manager.update_config(regressor, {"path_to_save_model": f"tenants/{instance.username}/models"}, subfolder = "models_parameters") 

@@ -20,4 +20,4 @@ pytest-mock
 dash
 django-plotly-dash
 beautifulsoup4
-manim
+# manim

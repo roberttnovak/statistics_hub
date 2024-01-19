@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-sxvq6qm^eq_+8i%!w=!e%rma(7tqt9-m=bjr_k(qegh8g%)s3v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['statistics-hub.senialab.com', 'localhost', '127.0.0.1']
 
 
 # Application definition

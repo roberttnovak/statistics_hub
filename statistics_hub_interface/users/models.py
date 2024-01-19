@@ -1,4 +1,5 @@
 
+import json
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
@@ -53,8 +54,8 @@ def create_user_directory(sender, instance, created, **kwargs):
     """
     if created:
     
-        tenant_dir = os.path.join(settings.BASE_DIR, 'tenants', instance.username)
-        data_dir = os.path.join(tenant_dir, 'data')  # Subdirectorio para archivos subidos
+        tenant_dir = os.path.normpath(os.path.join(settings.BASE_DIR, 'tenants', instance.username))
+        data_dir = os.path.normpath(os.path.join(tenant_dir, 'data'))  # Subdirectorio para archivos subidos
         os.makedirs(data_dir, exist_ok=True)
         
         # and copy the global configuration to the user's 'config' directory
@@ -63,10 +64,24 @@ def create_user_directory(sender, instance, created, **kwargs):
         shutil.copytree(global_config_dir, user_config_dir, dirs_exist_ok=True)
 
         # we copy them to a 'creds' folder within the tenant's directory.
-        global_creds_dir = os.path.abspath(os.path.join(settings.BASE_DIR, '..', 'global_creds'))
-        user_creds_dir = os.path.join(tenant_dir, 'creds')
-        shutil.copytree(global_creds_dir, user_creds_dir, dirs_exist_ok=True)
-
+        try:
+            global_creds_dir = os.path.abspath(os.path.join(settings.BASE_DIR, '..', 'global_creds'))
+            user_creds_dir = os.path.normpath(os.path.join(tenant_dir, 'creds'))
+            shutil.copytree(global_creds_dir, user_creds_dir, dirs_exist_ok=True)
+        except FileNotFoundError:
+            # Create the creds directory and a default creds.json file.
+            os.makedirs(user_creds_dir, exist_ok=True)
+            default_creds = {
+                "ssh_host": "",
+                "ssh_port": None, 
+                "ssh_user": "",
+                "ssh_password": "",
+                "db_server": "",
+                "db_user": "",
+                "db_password": ""
+            }
+            with open(os.path.join(user_creds_dir, 'creds.json'), 'w') as f:
+                json.dump(default_creds, f, indent=4)
         # Change correct path to save models 
         config_manager = ConfigManager("../statistics_hub_interface/tenants/admin/config")
         

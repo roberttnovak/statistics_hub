@@ -93,17 +93,24 @@ def summary_statistics_categorical(df, variables=None, groupby=None):
     dfs_summary = []
 
     for variable in variables:
-        df_summary = df.groupby(groupby + [variable]).size().reset_index(name='count')
-        total = df_summary.groupby(groupby)['count'].sum()
-        df_summary = df_summary.merge(total, on=groupby, suffixes=('', '_total'))
+        print(list(set(groupby + [variable])))
+        df_summary = df.groupby(list(set(groupby + [variable]))).size().reset_index(name='count')
+        total = df_summary.groupby(groupby)['count'].sum().reset_index(name='count_total')
+        df_summary = df_summary.merge(total, on=groupby)
         df_summary['percentage'] = (df_summary['count'] / df_summary['count_total']) * 100
 
+        # Renombrar columnas de agrupación a subcategorías
+        for idx, col in enumerate(groupby, 1):
+            df_summary.rename(columns={col: f"subcategory_{idx}"}, inplace=True)
+
         df_summary["variable_summary"] = variable
+        df_summary.rename(columns={variable: "category"}, inplace=True)
         dfs_summary.append(df_summary)
 
-    final_summary_df = pd.concat(dfs_summary)
+    final_summary_df = pd.concat(dfs_summary, ignore_index=True)
 
     return final_summary_df
+
 
 
 def summary_statistics(df, variables=None, groupby=None):
@@ -127,9 +134,10 @@ def summary_statistics(df, variables=None, groupby=None):
     """
 
     # Handling 'variables' argument
-    if variables is not None:
+    if variables is not None or variables == []:
         if isinstance(variables, str):
             variables = [variables]
+        groupby = None if groupby == [] else groupby
         df = df[variables + (groupby if groupby is not None else [])]
 
     # Split dataframe into numeric and categorical parts

@@ -1,6 +1,3 @@
-#ToDo: Move sklearn functions utils to this script and fix dependencies
-#ToDo: Usar versión nueva de all_estimators a ver si funciona 
-
 """
 This script provides a suite of functions to interact with scikit-learn's regressors. 
 It includes utilities for retrieving the list of all available regressors, obtaining their parameters, 

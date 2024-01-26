@@ -387,6 +387,22 @@ def filter_dataframe_by_column_values(df, filters):
 
     return df
 
+def evaluate_or_return_default(value):
+    """
+    Attempts to evaluate the given value. If an error occurs during evaluation,
+    returns the original value.
+
+    Parameters:
+    value (str): The value to be evaluated. Expected to be a string representation of a Python expression.
+
+    Returns:
+    Any: The evaluated value if successful, or the original value as a string if an error occurs.
+    """
+    try:
+        return eval(value)
+    except Exception:
+        return value
+
 
 
 

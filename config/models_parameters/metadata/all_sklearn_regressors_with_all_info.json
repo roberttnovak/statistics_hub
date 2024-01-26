@@ -40,7 +40,7 @@
             {
                 "parameter": "threshold_lambda",
                 "description": "Threshold for removing (pruning) weights with high precision from\nthe computation.\n",
-                "value_default": "10 000"
+                "value_default": "10000"
             },
             {
                 "parameter": "fit_intercept",
@@ -86,16 +86,11 @@
             {
                 "parameter": "loss",
                 "description": "The loss function to use when updating the weights after each\nboosting iteration.\n",
-                "value_default": "\u2019linear\u2019"
+                "value_default": "linear"
             },
             {
                 "parameter": "random_state",
                 "description": "Controls the random seed given at each estimator at each\nboosting iteration.\nThus, it is only used when estimator exposes a random_state.\nIn addition, it controls the bootstrap of the weights used to train the\nestimator at each boosting iteration.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
-                "value_default": "None"
-            },
-            {
-                "parameter": "base_estimator",
-                "description": "The base estimator from which the boosted ensemble is built.\nIf None, then the base estimator is\nDecisionTreeRegressor initialized with\nmax_depth=3.\n\nDeprecated since version 1.2: base_estimator is deprecated and will be removed in 1.4.\nUse estimator instead.\n\n",
                 "value_default": "None"
             }
         ],
@@ -158,11 +153,6 @@
                 "parameter": "verbose",
                 "description": "Controls the verbosity when fitting and predicting.\n",
                 "value_default": "0"
-            },
-            {
-                "parameter": "base_estimator",
-                "description": "Use estimator instead.\n\nDeprecated since version 1.2: base_estimator is deprecated and will be removed in 1.4.\nUse estimator instead.\n\n",
-                "value_default": "\u201ddeprecated\u201d"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html"
@@ -275,12 +265,12 @@
             {
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
-                "value_default": "\u201dsquared_error\u201d"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "splitter",
                 "description": "The strategy used to choose the split at each node. Supported\nstrategies are \u201cbest\u201d to choose the best split and \u201crandom\u201d to choose\nthe best random split.\n",
-                "value_default": "\u201dbest\u201d"
+                "value_default": "best"
             },
             {
                 "parameter": "max_depth",
@@ -336,7 +326,7 @@
             {
                 "parameter": "strategy",
                 "description": "Strategy to use to generate predictions.\n\n\u201cmean\u201d: always predicts the mean of the training set\n\u201cmedian\u201d: always predicts the median of the training set\n\u201cquantile\u201d: always predicts a specified quantile of the training set,\nprovided with the quantile parameter.\n\u201cconstant\u201d: always predicts a constant value that is provided by\nthe user.\n\n",
-                "value_default": "\u201dmean\u201d"
+                "value_default": "mean"
             },
             {
                 "parameter": "constant",
@@ -407,7 +397,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html"
@@ -443,7 +433,7 @@
             {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "max_iter",
@@ -488,7 +478,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html"
@@ -499,12 +489,12 @@
             {
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
-                "value_default": "\u201dsquared_error\u201d"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "splitter",
                 "description": "The strategy used to choose the split at each node. Supported\nstrategies are \u201cbest\u201d to choose the best split and \u201crandom\u201d to choose\nthe best random split.\n",
-                "value_default": "\u201drandom\u201d"
+                "value_default": "random"
             },
             {
                 "parameter": "max_depth",
@@ -565,7 +555,7 @@
             {
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n",
-                "value_default": "\u201dsquared_error\u201d"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -661,7 +651,7 @@
             {
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
-                "value_default": "\u2019lbfgs\u2019"
+                "value_default": "lbfgs"
             },
             {
                 "parameter": "max_iter",
@@ -702,7 +692,7 @@
             {
                 "parameter": "optimizer",
                 "description": "Can either be one of the internally supported optimizers for optimizing\nthe kernel\u2019s parameters, specified by a string, or an externally\ndefined optimizer passed as a callable. If a callable is passed, it\nmust have the signature:\ndef optimizer(obj_func, initial_theta, bounds):\n    # * 'obj_func': the objective function to be minimized, which\n    #   takes the hyperparameters theta as a parameter and an\n    #   optional flag eval_gradient, which determines if the\n    #   gradient is returned additionally to the function value\n    # * 'initial_theta': the initial value for theta, which can be\n    #   used by local optimizers\n    # * 'bounds': the bounds on the values of theta\n    ....\n    # Returned are the best found hyperparameters theta and\n    # the corresponding value of the target function.\n    return theta_opt, func_min\n\n\nPer default, the L-BFGS-B algorithm from scipy.optimize.minimize\nis used. If None is passed, the kernel\u2019s parameters are kept fixed.\nAvailable internal optimizers are: {'fmin_l_bfgs_b'}.\n",
-                "value_default": "\u201dfmin_l_bfgs_b\u201d"
+                "value_default": "fmin_l_bfgs_b"
             },
             {
                 "parameter": "n_restarts_optimizer",
@@ -738,7 +728,7 @@
             {
                 "parameter": "loss",
                 "description": "Loss function to be optimized. \u2018squared_error\u2019 refers to the squared\nerror for regression. \u2018absolute_error\u2019 refers to the absolute error of\nregression and is a robust loss function. \u2018huber\u2019 is a\ncombination of the two. \u2018quantile\u2019 allows quantile regression (use\nalpha to specify the quantile).\n",
-                "value_default": "\u2019squared_error\u2019"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "learning_rate",
@@ -758,7 +748,7 @@
             {
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria are\n\u201cfriedman_mse\u201d for the mean squared error with improvement score by\nFriedman, \u201csquared_error\u201d for mean squared error. The default value of\n\u201cfriedman_mse\u201d is generally the best as it can provide a better\napproximation in some cases.\n\nNew in version 0.18.\n\n",
-                "value_default": "\u2019friedman_mse\u2019"
+                "value_default": "friedman_mse"
             },
             {
                 "parameter": "min_samples_split",
@@ -827,7 +817,7 @@
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "n_iter_no_change is used to decide if early stopping will be used\nto terminate training when validation score is not improving. By\ndefault it is set to None to disable early stopping. If set to a\nnumber, it will set aside validation_fraction size of the training\ndata as validation and terminate training when validation score is not\nimproving in all of the previous n_iter_no_change numbers of\niterations.\nValues must be in the range [1, inf).\n\nNew in version 0.20.\n\n",
+                "description": "n_iter_no_change is used to decide if early stopping will be used\nto terminate training when validation score is not improving. By\ndefault it is set to None to disable early stopping. If set to a\nnumber, it will set aside validation_fraction size of the training\ndata as validation and terminate training when validation score is not\nimproving in all of the previous n_iter_no_change numbers of\niterations.\nValues must be in the range [1, inf).\nSee\nEarly stopping in Gradient Boosting.\n\nNew in version 0.20.\n\n",
                 "value_default": "None"
             },
             {
@@ -849,7 +839,7 @@
             {
                 "parameter": "loss",
                 "description": "The loss function to use in the boosting process. Note that the\n\u201csquared error\u201d, \u201cgamma\u201d and \u201cpoisson\u201d losses actually implement\n\u201chalf least squares loss\u201d, \u201chalf gamma deviance\u201d and \u201chalf poisson\ndeviance\u201d to simplify the computation of the gradient. Furthermore,\n\u201cgamma\u201d and \u201cpoisson\u201d losses internally use a log-link, \u201cgamma\u201d\nrequires y > 0 and \u201cpoisson\u201d requires y >= 0.\n\u201cquantile\u201d uses the pinball loss.\n\nChanged in version 0.23: Added option \u2018poisson\u2019.\n\n\nChanged in version 1.1: Added option \u2018quantile\u2019.\n\n\nChanged in version 1.3: Added option \u2018gamma\u2019.\n\n",
-                "value_default": "\u2019squared_error\u2019"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "quantile",
@@ -883,7 +873,7 @@
             },
             {
                 "parameter": "l2_regularization",
-                "description": "The L2 regularization parameter. Use 0 for no regularization\n(default).\n",
+                "description": "The L2 regularization parameter. Use 0 for no regularization (default).\n",
                 "value_default": "0"
             },
             {
@@ -893,12 +883,12 @@
             },
             {
                 "parameter": "categorical_features",
-                "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\nFor each categorical feature, there must be at most max_bins unique\ncategories, and each categorical value must be less then max_bins - 1.\nNegative values for categorical features are treated as missing values.\nAll categorical values are converted to floating point numbers.\nThis means that categorical values of 1.0 and 1 are treated as\nthe same category.\nRead more in the User Guide.\n\nNew in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n",
+                "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\"from_dtype\": dataframe columns with dtype \u201ccategory\u201d are\nconsidered to be categorical features. The input must be an object\nexposing a __dataframe__ method such as pandas or polars\nDataFrames to use this feature.\n\nFor each categorical feature, there must be at most max_bins unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\nRead more in the User Guide.\n\nNew in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n\nChanged in version 1.4: Added \"from_dtype\" option. The default will change to \"from_dtype\" in\nv1.6.\n\n",
                 "value_default": "None"
             },
             {
                 "parameter": "monotonic_cst",
-                "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n1: monotonic increase\n0: no constraint\n-1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\nUsing feature names to specify monotonic constraints for a usage example.\nThe constraints are only valid for binary classifications and hold\nover the probability of the positive class.\nRead more in the User Guide.\n\nNew in version 0.23.\n\n\nChanged in version 1.2: Accept dict of constraints with feature names as keys.\n\n",
+                "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n1: monotonic increase\n0: no constraint\n-1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\nUsing feature names to specify monotonic constraints for a usage example.\nRead more in the User Guide.\n\nNew in version 0.23.\n\n\nChanged in version 1.2: Accept dict of constraints with feature names as keys.\n\n",
                 "value_default": "None"
             },
             {
@@ -914,12 +904,12 @@
             {
                 "parameter": "early_stopping",
                 "description": "If \u2018auto\u2019, early stopping is enabled if the sample size is larger than\n10000. If True, early stopping is enabled, otherwise early stopping is\ndisabled.\n\nNew in version 0.23.\n\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "scoring",
                 "description": "Scoring parameter to use for early stopping. It can be a single\nstring (see The scoring parameter: defining model evaluation rules) or a callable (see\nDefining your scoring strategy from metric functions). If None, the estimator\u2019s default scorer is used. If\nscoring='loss', early stopping is checked w.r.t the loss value.\nOnly used if early stopping is performed.\n",
-                "value_default": "\u2019loss\u2019"
+                "value_default": "loss"
             },
             {
                 "parameter": "validation_fraction",
@@ -1006,7 +996,7 @@
             {
                 "parameter": "out_of_bounds",
                 "description": "Handles how X values outside of the training domain are handled\nduring prediction.\n\n\u2018nan\u2019, predictions will be NaN.\n\u2018clip\u2019, predictions will be set to the value corresponding to\nthe nearest train interval endpoint.\n\u2018raise\u2019, a ValueError is raised.\n\n",
-                "value_default": "\u2019nan\u2019"
+                "value_default": "nan"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html"
@@ -1022,12 +1012,12 @@
             {
                 "parameter": "weights",
                 "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\n",
-                "value_default": "\u2019uniform\u2019"
+                "value_default": "uniform"
             },
             {
                 "parameter": "algorithm",
                 "description": "Algorithm used to compute the nearest neighbors:\n\n\u2018ball_tree\u2019 will use BallTree\n\u2018kd_tree\u2019 will use KDTree\n\u2018brute\u2019 will use a brute-force search.\n\u2018auto\u2019 will attempt to decide the most appropriate algorithm\nbased on the values passed to fit method.\n\nNote: fitting on sparse input will override the setting of\nthis parameter, using brute force.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "leaf_size",
@@ -1041,8 +1031,8 @@
             },
             {
                 "parameter": "metric",
-                "description": "Metric to use for distance computation. Default is \u201cminkowski\u201d, which\nresults in the standard Euclidean distance when p = 2. See the\ndocumentation of scipy.spatial.distance and\nthe metrics listed in\ndistance_metrics for valid metric\nvalues.\nIf metric is \u201cprecomputed\u201d, X is assumed to be a distance matrix and\nmust be square during fit. X may be a sparse graph, in which\ncase only \u201cnonzero\u201d elements may be considered neighbors.\nIf metric is a callable function, it takes two arrays representing 1D\nvectors as inputs and must return one value indicating the distance\nbetween those vectors. This works for Scipy\u2019s metrics, but is less\nefficient than passing the metric name as a string.\n",
-                "value_default": "\u2019minkowski\u2019"
+                "description": "Metric to use for distance computation. Default is \u201cminkowski\u201d, which\nresults in the standard Euclidean distance when p = 2. See the\ndocumentation of scipy.spatial.distance and\nthe metrics listed in\ndistance_metrics for valid metric\nvalues.\nIf metric is \u201cprecomputed\u201d, X is assumed to be a distance matrix and\nmust be square during fit. X may be a sparse graph, in which\ncase only \u201cnonzero\u201d elements may be considered neighbors.\nIf metric is a callable function, it takes two arrays representing 1D\nvectors as inputs and must return one value indicating the distance\nbetween those vectors. This works for Scipy\u2019s metrics, but is less\nefficient than passing the metric name as a string.\nIf metric is a DistanceMetric object, it will be passed directly to\nthe underlying computation routines.\n",
+                "value_default": "minkowski"
             },
             {
                 "parameter": "metric_params",
@@ -1068,7 +1058,7 @@
             {
                 "parameter": "kernel",
                 "description": "Kernel mapping used internally. This parameter is directly passed to\npairwise_kernels.\nIf kernel is a string, it must be one of the metrics\nin pairwise.PAIRWISE_KERNEL_FUNCTIONS or \u201cprecomputed\u201d.\nIf kernel is \u201cprecomputed\u201d, X is assumed to be a kernel matrix.\nAlternatively, if kernel is a callable function, it is called on\neach pair of instances (rows) and the resulting value recorded. The\ncallable should take two rows from X as input and return the\ncorresponding kernel value as a single number. This means that\ncallables from sklearn.metrics.pairwise are not allowed, as\nthey operate on matrices, not single samples. Use the string\nidentifying the kernel instead.\n",
-                "value_default": "\u201dlinear\u201d"
+                "value_default": "linear"
             },
             {
                 "parameter": "gamma",
@@ -1107,14 +1097,9 @@
                 "value_default": "False"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "n_nonzero_coefs",
@@ -1168,14 +1153,9 @@
                 "value_default": "500"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram matrix\ncannot be passed as argument since we will use only subsets of X.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "cv",
@@ -1256,7 +1236,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html"
@@ -1287,7 +1267,7 @@
             {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "max_iter",
@@ -1332,7 +1312,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html"
@@ -1356,14 +1336,9 @@
                 "value_default": "False"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "max_iter",
@@ -1422,14 +1397,9 @@
                 "value_default": "500"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram matrix\ncannot be passed as argument since we will use only subsets of X.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "cv",
@@ -1470,7 +1440,7 @@
             {
                 "parameter": "criterion",
                 "description": "The type of criterion to use.\n",
-                "value_default": "\u2019aic\u2019"
+                "value_default": "aic"
             },
             {
                 "parameter": "fit_intercept",
@@ -1483,14 +1453,9 @@
                 "value_default": "False"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "max_iter",
@@ -1567,7 +1532,7 @@
             {
                 "parameter": "loss",
                 "description": "Specifies the loss function. The epsilon-insensitive loss\n(standard SVR) is the L1 loss, while the squared epsilon-insensitive\nloss (\u2018squared_epsilon_insensitive\u2019) is the L2 loss.\n",
-                "value_default": "\u2019epsilon_insensitive\u2019"
+                "value_default": "epsilon_insensitive"
             },
             {
                 "parameter": "fit_intercept",
@@ -1613,12 +1578,12 @@
             {
                 "parameter": "activation",
                 "description": "Activation function for the hidden layer.\n\n\u2018identity\u2019, no-op activation, useful to implement linear bottleneck,\nreturns f(x) = x\n\u2018logistic\u2019, the logistic sigmoid function,\nreturns f(x) = 1 / (1 + exp(-x)).\n\u2018tanh\u2019, the hyperbolic tan function,\nreturns f(x) = tanh(x).\n\u2018relu\u2019, the rectified linear unit function,\nreturns f(x) = max(0, x)\n\n",
-                "value_default": "\u2019relu\u2019"
+                "value_default": "relu"
             },
             {
                 "parameter": "solver",
                 "description": "The solver for weight optimization.\n\n\u2018lbfgs\u2019 is an optimizer in the family of quasi-Newton methods.\n\u2018sgd\u2019 refers to stochastic gradient descent.\n\u2018adam\u2019 refers to a stochastic gradient-based optimizer proposed by\nKingma, Diederik, and Jimmy Ba\n\nNote: The default solver \u2018adam\u2019 works pretty well on relatively\nlarge datasets (with thousands of training samples or more) in terms of\nboth training time and validation score.\nFor small datasets, however, \u2018lbfgs\u2019 can converge faster and perform\nbetter.\n",
-                "value_default": "\u2019adam\u2019"
+                "value_default": "adam"
             },
             {
                 "parameter": "alpha",
@@ -1628,12 +1593,12 @@
             {
                 "parameter": "batch_size",
                 "description": "Size of minibatches for stochastic optimizers.\nIf the solver is \u2018lbfgs\u2019, the regressor will not use minibatch.\nWhen set to \u201cauto\u201d, batch_size=min(200, n_samples).\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "learning_rate",
                 "description": "Learning rate schedule for weight updates.\n\n\u2018constant\u2019 is a constant learning rate given by\n\u2018learning_rate_init\u2019.\n\u2018invscaling\u2019 gradually decreases the learning rate learning_rate_\nat each time step \u2018t\u2019 using an inverse scaling exponent of \u2018power_t\u2019.\neffective_learning_rate = learning_rate_init / pow(t, power_t)\n\u2018adaptive\u2019 keeps the learning rate constant to\n\u2018learning_rate_init\u2019 as long as training loss keeps decreasing.\nEach time two consecutive epochs fail to decrease training loss by at\nleast tol, or fail to increase validation score by at least tol if\n\u2018early_stopping\u2019 is on, the current learning rate is divided by 5.\n\nOnly used when solver=\u2019sgd\u2019.\n",
-                "value_default": "\u2019constant\u2019"
+                "value_default": "constant"
             },
             {
                 "parameter": "learning_rate_init",
@@ -1769,7 +1734,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNet.html"
@@ -1840,7 +1805,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNetCV.html"
@@ -1886,7 +1851,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLasso.html"
@@ -1952,7 +1917,7 @@
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
-                "value_default": "\u2019cyclic\u2019"
+                "value_default": "cyclic"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLassoCV.html"
@@ -1973,7 +1938,7 @@
             {
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
-                "value_default": "\u2019rbf\u2019"
+                "value_default": "rbf"
             },
             {
                 "parameter": "degree",
@@ -1983,7 +1948,7 @@
             {
                 "parameter": "gamma",
                 "description": "Kernel coefficient for \u2018rbf\u2019, \u2018poly\u2019 and \u2018sigmoid\u2019.\n\nif gamma='scale' (default) is passed then it uses\n1 / (n_features * X.var()) as value of gamma,\nif \u2018auto\u2019, uses 1 / n_features\nif float, must be non-negative.\n\n\nChanged in version 0.22: The default value of gamma changed from \u2018auto\u2019 to \u2018scale\u2019.\n\n",
-                "value_default": "\u2019scale\u2019"
+                "value_default": "scale"
             },
             {
                 "parameter": "coef0",
@@ -2037,14 +2002,9 @@
                 "value_default": "True"
             },
             {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
-            },
-            {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram and Xy matrix to speed up\ncalculations. Improves performance when n_targets or\nn_samples is very large. Note that if you already have such\nmatrices, you can pass them directly to the fit method.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             }
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html"
@@ -2061,11 +2021,6 @@
                 "parameter": "fit_intercept",
                 "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. data is expected to be centered).\n",
                 "value_default": "True"
-            },
-            {
-                "parameter": "normalize",
-                "description": "This parameter is ignored when fit_intercept is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\nStandardScaler before calling fit\non an estimator with normalize=False.\n\nChanged in version 1.2: default changed from True to False in 1.2.\n\n\nDeprecated since version 1.2: normalize was deprecated in version 1.2 and will be removed in 1.4.\n\n",
-                "value_default": "False"
             },
             {
                 "parameter": "max_iter",
@@ -2106,7 +2061,7 @@
             {
                 "parameter": "algorithm",
                 "description": "The algorithm used to estimate the first singular vectors of the\ncross-covariance matrix. \u2018nipals\u2019 uses the power method while \u2018svd\u2019\nwill compute the whole SVD.\n",
-                "value_default": "\u2019nipals\u2019"
+                "value_default": "nipals"
             },
             {
                 "parameter": "max_iter",
@@ -2208,7 +2163,7 @@
             {
                 "parameter": "loss",
                 "description": "The loss function to be used:\nepsilon_insensitive: equivalent to PA-I in the reference paper.\nsquared_epsilon_insensitive: equivalent to PA-II in the reference\npaper.\n",
-                "value_default": "\u201depsilon_insensitive\u201d"
+                "value_default": "epsilon_insensitive"
             },
             {
                 "parameter": "epsilon",
@@ -2249,7 +2204,7 @@
             {
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
-                "value_default": "\u2019lbfgs\u2019"
+                "value_default": "lbfgs"
             },
             {
                 "parameter": "max_iter",
@@ -2294,8 +2249,8 @@
             },
             {
                 "parameter": "solver",
-                "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nFrom scipy>=1.6.0, it is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver will change to \"highs\" in version 1.4.\n\n",
-                "value_default": "\u2019interior-point\u2019"
+                "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nFrom scipy>=1.6.0, it is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver changed to \"highs\" in version 1.4.\n\n",
+                "value_default": "highs"
             },
             {
                 "parameter": "solver_options",
@@ -2361,7 +2316,7 @@
             {
                 "parameter": "loss",
                 "description": "String inputs, \u2018absolute_error\u2019 and \u2018squared_error\u2019 are supported which\nfind the absolute error and squared error per sample respectively.\nIf loss is a callable, then it should be a function that takes\ntwo arrays as inputs, the true and predicted value and returns a 1-D\narray with the i-th value of the array corresponding to the loss\non X[i].\nIf the loss on a sample is greater than the residual_threshold,\nthen this sample is classified as an outlier.\n\nNew in version 0.18.\n\n",
-                "value_default": "\u2019absolute_error\u2019"
+                "value_default": "absolute_error"
             },
             {
                 "parameter": "random_state",
@@ -2382,12 +2337,12 @@
             {
                 "parameter": "weights",
                 "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\n",
-                "value_default": "\u2019uniform\u2019"
+                "value_default": "uniform"
             },
             {
                 "parameter": "algorithm",
                 "description": "Algorithm used to compute the nearest neighbors:\n\n\u2018ball_tree\u2019 will use BallTree\n\u2018kd_tree\u2019 will use KDTree\n\u2018brute\u2019 will use a brute-force search.\n\u2018auto\u2019 will attempt to decide the most appropriate algorithm\nbased on the values passed to fit method.\n\nNote: fitting on sparse input will override the setting of\nthis parameter, using brute force.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "leaf_size",
@@ -2402,7 +2357,7 @@
             {
                 "parameter": "metric",
                 "description": "Metric to use for distance computation. Default is \u201cminkowski\u201d, which\nresults in the standard Euclidean distance when p = 2. See the\ndocumentation of scipy.spatial.distance and\nthe metrics listed in\ndistance_metrics for valid metric\nvalues.\nIf metric is \u201cprecomputed\u201d, X is assumed to be a distance matrix and\nmust be square during fit. X may be a sparse graph, in which\ncase only \u201cnonzero\u201d elements may be considered neighbors.\nIf metric is a callable function, it takes two arrays representing 1D\nvectors as inputs and must return one value indicating the distance\nbetween those vectors. This works for Scipy\u2019s metrics, but is less\nefficient than passing the metric name as a string.\n",
-                "value_default": "\u2019minkowski\u2019"
+                "value_default": "minkowski"
             },
             {
                 "parameter": "metric_params",
@@ -2418,7 +2373,7 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html"
     },
     "RandomForestRegressor": {
-        "regressor_info": "A random forest regressor.\nA random forest is a meta estimator that fits a number of classifying\ndecision trees on various sub-samples of the dataset and uses averaging\nto improve the predictive accuracy and control over-fitting.\nThe sub-sample size is controlled with the max_samples parameter if\nbootstrap=True (default), otherwise the whole dataset is used to build\neach tree.\nFor a comparison between tree-based ensemble models see the example\nComparing Random Forests and Histogram Gradient Boosting models.\nRead more in the User Guide.",
+        "regressor_info": "A random forest regressor.\nA random forest is a meta estimator that fits a number of decision tree\nregressors on various sub-samples of the dataset and uses averaging to\nimprove the predictive accuracy and control over-fitting.\nTrees in the forest use the best split strategy, i.e. equivalent to passing\nsplitter=\"best\" to the underlying DecisionTreeRegressor.\nThe sub-sample size is controlled with the max_samples parameter if\nbootstrap=True (default), otherwise the whole dataset is used to build\neach tree.\nFor a comparison between tree-based ensemble models see the example\nComparing Random Forests and Histogram Gradient Boosting models.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "n_estimators",
@@ -2428,7 +2383,7 @@
             {
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 1.0: Poisson criterion.\n\n",
-                "value_default": "\u201dsquared_error\u201d"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -2539,7 +2494,7 @@
             {
                 "parameter": "solver",
                 "description": "Solver to use in the computational routines:\n\n\u2018auto\u2019 chooses the solver automatically based on the type of data.\n\u2018svd\u2019 uses a Singular Value Decomposition of X to compute the Ridge\ncoefficients. It is the most stable solver, in particular more stable\nfor singular matrices than \u2018cholesky\u2019 at the cost of being slower.\n\u2018cholesky\u2019 uses the standard scipy.linalg.solve function to\nobtain a closed-form solution.\n\u2018sparse_cg\u2019 uses the conjugate gradient solver as found in\nscipy.sparse.linalg.cg. As an iterative algorithm, this solver is\nmore appropriate than \u2018cholesky\u2019 for large-scale data\n(possibility to set tol and max_iter).\n\u2018lsqr\u2019 uses the dedicated regularized least-squares routine\nscipy.sparse.linalg.lsqr. It is the fastest and uses an iterative\nprocedure.\n\u2018sag\u2019 uses a Stochastic Average Gradient descent, and \u2018saga\u2019 uses\nits improved, unbiased version named SAGA. Both methods also use an\niterative procedure, and are often faster than other solvers when\nboth n_samples and n_features are large. Note that \u2018sag\u2019 and\n\u2018saga\u2019 fast convergence is only guaranteed on features with\napproximately the same scale. You can preprocess the data with a\nscaler from sklearn.preprocessing.\n\u2018lbfgs\u2019 uses L-BFGS-B algorithm implemented in\nscipy.optimize.minimize. It can be used only when positive\nis True.\n\nAll solvers except \u2018svd\u2019 support both dense and sparse data. However, only\n\u2018lsqr\u2019, \u2018sag\u2019, \u2018sparse_cg\u2019, and \u2018lbfgs\u2019 support sparse input when\nfit_intercept is True.\n\nNew in version 0.17: Stochastic Average Gradient descent solver.\n\n\nNew in version 0.19: SAGA solver.\n\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "positive",
@@ -2560,7 +2515,7 @@
             {
                 "parameter": "alphas",
                 "description": "Array of alpha values to try.\nRegularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to 1 / (2C) in other linear models such as\nLogisticRegression or\nLinearSVC.\nIf using Leave-One-Out cross-validation, alphas must be positive.\n",
-                "value_default": "(0.1, 1.0, 10.0)"
+                "value_default": "(0.1,1.0,10.0)"
             },
             {
                 "parameter": "fit_intercept",
@@ -2580,7 +2535,7 @@
             {
                 "parameter": "gcv_mode",
                 "description": "Flag indicating which strategy to use when performing\nLeave-One-Out Cross-Validation. Options are:\n'auto' : use 'svd' if n_samples > n_features, otherwise use 'eigen'\n'svd' : force use of singular value decomposition of X when X is\n    dense, eigenvalue decomposition of X^T.X when X is sparse.\n'eigen' : force computation via eigendecomposition of X.X^T\n\n\nThe \u2018auto\u2019 mode is the default and is intended to pick the cheaper\noption of the two depending on the shape of the training data.\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "store_cv_values",
@@ -2601,12 +2556,12 @@
             {
                 "parameter": "loss",
                 "description": "The loss function to be used. The possible values are \u2018squared_error\u2019,\n\u2018huber\u2019, \u2018epsilon_insensitive\u2019, or \u2018squared_epsilon_insensitive\u2019\nThe \u2018squared_error\u2019 refers to the ordinary least squares fit.\n\u2018huber\u2019 modifies \u2018squared_error\u2019 to focus less on getting outliers\ncorrect by switching from squared to linear loss past a distance of\nepsilon. \u2018epsilon_insensitive\u2019 ignores errors less than epsilon and is\nlinear past that; this is the loss function used in SVR.\n\u2018squared_epsilon_insensitive\u2019 is the same but becomes squared loss past\na tolerance of epsilon.\nMore details about the losses formulas can be found in the\nUser Guide.\n",
-                "value_default": "\u2019squared_error\u2019"
+                "value_default": "squared_error"
             },
             {
                 "parameter": "penalty",
                 "description": "The penalty (aka regularization term) to be used. Defaults to \u2018l2\u2019\nwhich is the standard regularizer for linear SVM models. \u2018l1\u2019 and\n\u2018elasticnet\u2019 might bring sparsity to the model (feature selection)\nnot achievable with \u2018l2\u2019. No penalty is added when set to None.\n",
-                "value_default": "\u2019l2\u2019"
+                "value_default": "l2"
             },
             {
                 "parameter": "alpha",
@@ -2656,7 +2611,7 @@
             {
                 "parameter": "learning_rate",
                 "description": "The learning rate schedule:\n\n\u2018constant\u2019: eta = eta0\n\u2018optimal\u2019: eta = 1.0 / (alpha * (t + t0))\nwhere t0 is chosen by a heuristic proposed by Leon Bottou.\n\u2018invscaling\u2019: eta = eta0 / pow(t, power_t)\n\u2018adaptive\u2019: eta = eta0, as long as the training keeps decreasing.\nEach time n_iter_no_change consecutive epochs fail to decrease the\ntraining loss by tol or fail to increase validation score by tol if\nearly_stopping is True, the current learning rate is divided by 5.\n\n\nNew in version 0.20: Added \u2018adaptive\u2019 option\n\n\n\n\n",
-                "value_default": "\u2019invscaling\u2019"
+                "value_default": "invscaling"
             },
             {
                 "parameter": "eta0",
@@ -2702,7 +2657,7 @@
             {
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
-                "value_default": "\u2019rbf\u2019"
+                "value_default": "rbf"
             },
             {
                 "parameter": "degree",
@@ -2712,7 +2667,7 @@
             {
                 "parameter": "gamma",
                 "description": "Kernel coefficient for \u2018rbf\u2019, \u2018poly\u2019 and \u2018sigmoid\u2019.\n\nif gamma='scale' (default) is passed then it uses\n1 / (n_features * X.var()) as value of gamma,\nif \u2018auto\u2019, uses 1 / n_features\nif float, must be non-negative.\n\n\nChanged in version 0.22: The default value of gamma changed from \u2018auto\u2019 to \u2018scale\u2019.\n\n",
-                "value_default": "\u2019scale\u2019"
+                "value_default": "scale"
             },
             {
                 "parameter": "coef0",
@@ -2860,12 +2815,12 @@
             {
                 "parameter": "link",
                 "description": "The link function of the GLM, i.e. mapping from linear predictor\nX @ coeff + intercept to prediction y_pred. Option \u2018auto\u2019 sets\nthe link depending on the chosen power parameter as follows:\n\n\u2018identity\u2019 for power <= 0, e.g. for the Normal distribution\n\u2018log\u2019 for power > 0, e.g. for Poisson, Gamma and Inverse Gaussian\ndistributions\n\n",
-                "value_default": "\u2019auto\u2019"
+                "value_default": "auto"
             },
             {
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
-                "value_default": "\u2019lbfgs\u2019"
+                "value_default": "lbfgs"
             },
             {
                 "parameter": "max_iter",

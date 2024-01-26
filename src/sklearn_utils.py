@@ -9,7 +9,7 @@ The key functionalities include:
 - `get_all_regressors_with_its_parameters`: Generates a dictionary mapping each regressor to its parameters.
 - `extract_regressor_info`: Extracts detailed information of a specific regressor from its BeautifulSoup-parsed HTML documentation.
 - `get_regressor_info`: Scrapes the scikit-learn documentation for a specific regressor to obtain detailed information.
-- `get_all_regressors_info`: Compiles detailed information about all scikit-learn regressors and their parameters into a comprehensive dictionary.
+- `get_valid_regressors_info`: Compiles detailed information about all scikit-learn regressors and their parameters into a comprehensive dictionary.
 
 The script is designed to be modular and can be extended or modified to incorporate additional functionalities 
 related to machine learning regressors in scikit-learn. It's an ideal tool for data scientists and machine learning practitioners 
@@ -30,6 +30,7 @@ The script requires an internet connection to access scikit-learn's online docum
 when use extract_regressor_info() and get_regressor_info() functions()
 """
 
+import re
 from sklearn.utils.discovery import all_estimators
 import requests
 from bs4 import BeautifulSoup
@@ -155,9 +156,9 @@ def extract_regressor_info(soup, parameter_subset=None):
     parameters, values_default = zip(*[
         [
             parameter_tag.strong.text, 
-            parameter_tag.find('span', class_='classifier').text.split('default=')[1] 
+            re.sub(r"[\"'“”‘’ ]","",parameter_tag.find('span', class_='classifier').text.split('default=')[1]) # Some defaults values are string and sometimes is obtained as, for example, ’linear’
             if parameter_tag.find('span', class_='classifier') and 'default=' in parameter_tag.find('span', class_='classifier').text 
-            else None
+            else None # Some parameters dont have default values
         ]
         for parameter_tag in dt_parameters_tags
     ])
@@ -220,8 +221,9 @@ def get_regressor_info(regressor_name, parameter_subset=None):
     else:   
         print(f"Class name {regressor_name} not found in module mapping.")
         return None
-    
-def get_all_regressors_info(all_regressors_with_its_parameters = None):
+
+#ToDo: Rename get_all_regressor_info
+def get_valid_regressors_info(all_regressors_with_its_parameters = None):
     """
     Retrieves detailed information for all scikit-learn regressors and their parameters.
     
@@ -260,7 +262,7 @@ def get_all_regressors_info(all_regressors_with_its_parameters = None):
 
     Example
     -------
-    >>> all_regressors_info = get_all_regressors_info()
+    >>> all_regressors_info = get_valid_regressors_info()
     >>> print(all_regressors_info['LinearRegression']['regressor_info'])
     'LinearRegression regressor description...'
     >>> print(all_regressors_info['LinearRegression']['parameters_info'][0])

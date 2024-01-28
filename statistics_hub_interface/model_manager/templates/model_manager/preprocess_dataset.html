@@ -1,9 +1,15 @@
 {% load static %}
+{% load plotly_dash %}
 
 {% block head %}
 <style>
     body {
         background-color: #ffffff; 
+    }
+
+    .dash-container {
+        width: 100%;    /* Ocupa todo el ancho del contenedor */
+        height: 500px;  /* Altura fija, pero puedes ajustarla según tus necesidades */
     }
 
     .form-section, #eda-view, #preprocessing-view {
@@ -185,6 +191,58 @@
         cursor: pointer;
         margin-bottom: 10px;
     }
+    .sortable-ghost {
+        background-color: #f0f0f0;
+        border: 1px dashed #666;
+    }
+
+    /* Estilos para la lista */
+    #selected-order {
+        list-style-type: none; /* Eliminar puntos de la lista */
+        padding: 0;
+    }
+    
+    /* Estilos para cada elemento de la lista */
+    #selected-order .list-group-item {
+        cursor: grab; /* Cursor tipo 'agarrar' para indicar que se puede mover */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 5px; /* Espacio entre elementos */
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Cambiar el cursor al arrastrar */
+    #selected-order .list-group-item:active {
+        cursor: grabbing;
+    }
+    
+    
+    /* Estilos para el elemento arrastrado */
+    .sortable-ghost {
+        background-color: #e9ecef;
+        border: 1px dashed #666;
+    }
+
+    .delete-column {
+        background-color: #FF0000; /* Color rojo para el botón */
+        color: white; /* Texto blanco para contraste */
+        border: none; /* Sin borde para un aspecto más limpio */
+        padding: 5px 10px; /* Espaciado interno para que no sea muy grande */
+        border-radius: 4px; /* Bordes redondeados */
+        cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+        font-size: 12px; /* Tamaño de fuente reducido para un botón más pequeño */
+    }
+    
+    /* Estilo para cambiar el color al pasar el ratón por encima */
+    .delete-column:hover {
+        back
+        ground-color: #e60000; /* Un tono de rojo más oscuro al pasar el ratón */
+    }
+
+    
 </style>
 <!-- Añadir jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -320,7 +378,7 @@
                     <select id="visualization-type" class="form-control">
                         <option value="" disabled selected>Select Visualization</option>
                         <option value="treemap">Treemap</option>
-                        <!-- Otras visualizaciones si las hay -->
+                        <!-- ... -->
                     </select>
                 </div>
                 
@@ -373,7 +431,10 @@
                         </select>
                     </div>
             
-                    <button type="button" id="generate-treemap" class="btn btn-primary">Generate Treemap</button>
+                </div>
+
+                <div class="center-button-container">
+                    <button id="visualise-eda-button" class="green-button">Visualise</button>
                 </div>
             
                 <!-- Contenedor para el gráfico Plotly ya generado -->
@@ -514,6 +575,14 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Process Data</button>
         </div>
+
+        <div style='padding-bottom: 100.0%;'>
+            {% plotly_app name="Dashboard1" %}
+        </div>
+
+        <div id="plotly-preprocessing">
+            {{ preprocessing_plot_html|safe }}
+        </div>  
     </div>
 </div>
 
@@ -722,9 +791,52 @@
                 success: function(response) {
                     $('#eda-results-table').html(response.eda_results_html);
                     initializeDataTable("eda-results-table");
-                    $('#plotly-eda-container').html(response.eda_plot_html);
+                    $('#plotly-chart-container').html(response.eda_plot_html);
                 },
                 error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", error);
+                }
+            });
+        });
+
+        $('#visualise-eda-button').click(function() {
+            // Recoger los datos del formulario
+            var visualizationType = $('#visualization-type').val();
+            var pathColumns = $('#column-selector').val();
+            var valueColumn = $('#value-col').val();
+            var summaryMetric = $('#summary-metric').val();
+            var ajaxUrl = buildAjaxUrl();
+
+            var orderedColumns = [];
+            $('#selected-order li').each(function() {
+                var columnName = $(this).find('.column-name').text().trim();
+                orderedColumns.push(columnName);
+            });
+        
+            
+
+            // Crear el objeto de datos para enviar
+            var dataToSend = {
+                'action':'update_plot_eda',
+                'visualization_type': visualizationType,
+                'path_columns': JSON.stringify(orderedColumns),
+                'value_column': valueColumn,
+                'summary_metric': summaryMetric
+            };
+    
+            $.ajax({
+                url: ajaxUrl, 
+                type: 'POST',
+                data: dataToSend,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
+                },
+                success: function(response) {
+                    $('#plotly-chart-container').html(response.eda_plot_html);
+                    
+                },
+                error: function(xhr, status, error) {
+                    // Manejar errores aquí
                     console.error("Error en la solicitud AJAX:", error);
                 }
             });
@@ -890,35 +1002,36 @@
         $('#column-selector').change(function() {
             const selectedColumn = $(this).val();
             if (selectedColumn) {
-                // Agregar la columna seleccionada a la lista de orden
                 $('#selected-order').append(
                     `<li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${selectedColumn}
-                        <div>
-                            <button class="btn btn-sm btn-secondary move-up">↑</button>
-                            <button class="btn btn-sm btn-secondary move-down">↓</button>
-                            <button class="btn btn-sm btn-danger delete">X</button>
-                        </div>
+                        <span class="column-name">${selectedColumn}</span>
+                        <button class="btn btn-danger btn-sm delete-column">X</button>
                     </li>`
                 );
-                $(this).val(''); // Resetear la selección
+                $(this).val('');
             }
         });
     
-        // Eventos para reordenar y eliminar
-        $('#selected-order').on('click', '.move-up', function() {
-            const li = $(this).closest('li');
-            li.prev().before(li);
+        $('#selected-order').on('click', '.delete-column', function() {
+            $(this).parent().remove();
         });
     
-        $('#selected-order').on('click', '.move-down', function() {
-            const li = $(this).closest('li');
-            li.next().after(li);
+        Sortable.create(document.getElementById('selected-order'), {
+            animation: 150,
+            ghostClass: "sortable-ghost",
         });
     
-        $('#selected-order').on('click', '.delete', function() {
-            $(this).closest('li').remove();
+        // Inicializar SortableJS en la lista
+        var el = document.getElementById('selected-order');
+        Sortable.create(el, {
+            animation: 150, // ms, tiempo de animación para reordenar
+            ghostClass: "sortable-ghost", // Clase aplicada al elemento mientras se arrastra
+            onEnd: function (/**Event*/evt) {
+                // Puedes manejar eventos después de reordenar aquí si es necesario
+            },
         });
+    
+
         // Preprocessing functions
         $("#help-button").click(function() {
             $("#explanation-preprocessing-section").toggle();

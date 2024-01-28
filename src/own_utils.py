@@ -403,6 +403,114 @@ def evaluate_or_return_default(value):
     except Exception:
         return value
 
+def get_deepest_keys_values(d):
+    """
+    Extracts keys and values from the deepest level of a nested dictionary, including intermediate level keys if their values are not dictionaries.
+
+    This function traverses a nested dictionary and returns a new dictionary containing keys and values from the deepest level of each branch. 
+    For intermediate levels, keys and values are included only if the values are not dictionaries themselves.
+
+    Parameters:
+    d (dict): A nested dictionary from which to extract keys and values.
+
+    Returns:
+    dict: A dictionary containing keys and values from the deepest level of the nested dictionary, including intermediate levels where values are not dictionaries.
+
+    Examples:
+    >>> example_dict = {
+        'level1a': {
+            'level2a': {
+                'level3a': 'value3a',
+                'level3b': 'value3b'
+            },
+            'level2b': 'value2b'
+        },
+        'level1b' : value1b
+    }
+    >>> get_deepest_keys_values(example_dict)
+    {'level1b': 'value1b', 'level3a': 'value3a', 'level3b': 'value3b', 'level2b': 'value2b'}
+    
+    The example shows that the function includes 'level2b' from an intermediate level as its value is not a dictionary.
+    """
+
+    def extract_keys_values(sub_dict, current_dict):
+        for key, value in sub_dict.items():
+            if isinstance(value, dict):
+                extract_keys_values(value, current_dict)
+            else:
+                current_dict[key] = value
+
+    deepest_keys_values = {}
+    extract_keys_values(d, deepest_keys_values)
+    return deepest_keys_values
+
+def extract_nested_dict_values(nested_dict, path_mapping):
+    """
+    Extracts values from a nested dictionary based on a provided path mapping.
+
+    This function navigates through a nested dictionary (which could be a JSON-like structure)
+    using the paths defined in the path mapping to locate and extract the desired values.
+
+    Parameters:
+    - nested_dict (dict): The nested dictionary from which values are to be extracted. 
+                          It should be a dictionary with potentially nested structures.
+    - path_mapping (dict): A mapping dictionary where keys are the names of the fields to be extracted,
+                           and values are tuples representing the paths to these fields within the
+                           nested dictionary. Each tuple contains strings and/or integers that correspond
+                           to the keys or indices for navigating through the nested structure.
+
+    Returns:
+    - dict: A dictionary containing the extracted values. The keys of this dictionary match the keys
+            provided in the path_mapping parameter. If a specified path in the mapping does not exist
+            in the nested_dict, the corresponding value in the returned dictionary will be None.
+
+    Example:
+    >>> nested_dict = {
+            'doc': {
+                'params': {
+                    'rx_time': 1705479916.622762,
+                    'radio': {
+                        'freq': 868.3,
+                        'modulation': {
+                            'type': 'LORA'
+                        }
+                    }
+                },
+                'meta': {
+                    'network': 'ad4bc0f8d0cb49928b65d7d7219ef52c'
+                }
+            }
+        }
+    >>> path_mapping = {
+            "time": ("doc", "params", "rx_time"),
+            "frequency": ("doc", "params", "radio", "freq"),
+            "modulation_type": ("doc", "params", "radio", "modulation", "type"),
+            "network_id": ("doc", "meta", "network"),
+            "non_existing_field": ("doc", "params", "non_existing")
+        }
+    >>> extract_nested_dict_values(nested_dict, path_mapping)
+    {
+        'time': 1705479916.622762,
+        'frequency': 868.3,
+        'modulation_type': 'LORA',
+        'network_id': 'ad4bc0f8d0cb49928b65d7d7219ef52c',
+        'non_existing_field': None
+    }
+    """
+
+    extracted_values = {}
+
+    for field_name, path in path_mapping.items():
+        try:
+            current_value = nested_dict
+            for step in path:
+                current_value = current_value[step]
+            extracted_values[field_name] = current_value
+        except (KeyError, TypeError):
+            extracted_values[field_name] = None  # Or use a default value or raise an exception
+
+    return extracted_values
+
 
 
 

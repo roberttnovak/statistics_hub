@@ -355,7 +355,6 @@ def load_dataset(request):
 def preprocess_dataset(request, selected_dataset, separator):
 
     user = request.user
-    # active_view = request.POST.get('active_view', 'table-preview-view')
 
     # Funciones auxiliares definidas dentro de preprocess_dataset
     def load_data():
@@ -497,10 +496,6 @@ def preprocess_dataset(request, selected_dataset, separator):
             path_cols = json.loads(request.POST.get('path_columns')) # ['id_device','id_sensor'] #request.POST.getlist('path_columns')  
             value_col = request.POST.get('value_column')
             summary_metric = request.POST.get('summary_metric')
-            print(visualization_type)
-            print(path_cols)
-            print(value_col)
-            print(summary_metric)
             if visualization_type == 'treemap':
                 fig_eda = create_treeplot(df=df, path_cols=path_cols, value_col=value_col, summary_metric=summary_metric)
                 eda_plot_html = py.plot(fig_eda, output_type='div')

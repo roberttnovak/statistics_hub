@@ -18,8 +18,6 @@ from sklearn_utils import get_all_regressors
 
 # ToDo: Investigar lo de si el instance.username puede dar problemas con respecto a .user que se usa en las otras funciones
 # en las views de model_manager
-# ToDo: No funciona crear usuarios desde la interfaz (ip/admin). Pero sí desde la consola con 
-# python manage.py createsuperuser. Solucionar esto en algún momento. De momento, tiro así
 
 class CustomUser(AbstractUser):
     groups = models.ManyToManyField(

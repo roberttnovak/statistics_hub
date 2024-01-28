@@ -61,3 +61,14 @@ Framework django. El framework Django es una herramienta de desarrollo web de al
 - Aplicaciones Reutilizables: Django fomenta el desarrollo de aplicaciones reutilizables, que pueden ser "enchufadas" en cualquier proyecto de Django. Esto promueve la reutilización del código y una arquitectura modular.
 
 En el contexto de la plataforma se han creado dos aplicaciones. Una es la de model_manager que es donde se gestiona principalmente toda la plataforma y donde están situadas todas las templates y la lógica backend del views.py. Además, en todas las plantillas creadas hay también código javascript asociado. Por otro lado, se ha creado otra aplicación para el manejo de usuario y la creación de estos. Cada vez que se crea un usuario se copia la estructura que hay en global (archivos de configuración, etc) y se guarda en una estructura de carpetas del estilo tenants/nombre_usuario/… donde los siguientes subdirectorios son parecidos a la estructura de global en el sentido de que cada usuario tiene sus modelos, su capeta de data, etc… , En este diseño compartimental se almacena la información que se va generando en la plataforma
+
+# Tests:
+
+Para ejecutar los tests, desde la raíz del proyecto:
+python -m pytest tests
+
+Para ejecutar un script en concreto:
+python -m pytest tests/test_own_utils.py
+
+Para ejecutar el test de una ejecución en concreto:
+python -m pytest tests/test_own_utils.py::TestExecuteConcurrently

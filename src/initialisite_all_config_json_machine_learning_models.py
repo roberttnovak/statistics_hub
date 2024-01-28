@@ -70,11 +70,14 @@ initial_dict_parameters = {
         'lead_columns': 'y',
         'num_obs_to_predict': None
     }, 
-    'predictor': 'KNeighborsRegressor', 
-    'scale_in_preprocessing': True, 
-    'save_preprocessing': True, 
-    'folder_name_model': None, 
-    'folder_name_time_execution': None, 
+    'predictor': 'KNeighborsRegressor',
+    'save_args':
+    {
+        'scale_in_preprocessing': True, 
+        'save_preprocessing': True, 
+        'folder_name_model': None, 
+        'folder_name_time_execution': None 
+    }
 }
 
 initial_dict_parameters_legible_names = {

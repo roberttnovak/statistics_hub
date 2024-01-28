@@ -633,6 +633,10 @@ def model_parameters(request, model_name):
     try:
         # Load the model's current parameters from the configuration.
         model_parameters = config_manager.load_config(model_name, subfolder="models_parameters")
+
+        regressor_params = model_parameters["regressor_params"]
+        time_series_args = model_parameters["time_series_args"]
+
         config_manager_metadata_parameters = ConfigManager(f"../config")
 
         # Get metadata of sklearn regressor
@@ -653,7 +657,6 @@ def model_parameters(request, model_name):
         }
         for param, value in model_parameters.items()
         ]
-        print(metadata_of_own_parameters)
         context = {
                 'model_name': model_name,
                 'model_parameters': model_parameters,

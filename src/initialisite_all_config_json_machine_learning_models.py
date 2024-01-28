@@ -44,7 +44,6 @@ initial_dict_parameters = {
             'data_importer_save_importation': True, 
             'data_importer_file_name': None
         }, 
-    'prepare_dataframe_from_db_cols_for_query': ['00-eco2', '00-temp', '01-hum', '01-tvoc', '02-pres', '03-siaq', '04-diaq'], 
     'preprocess_time_series_data_args':
         {
             'preprocess_time_series_data_resample_freq': '60S', 
@@ -57,11 +56,12 @@ initial_dict_parameters = {
         'fin_train': '2023-04-25 00:00:00+00:00',
         'fin_test': '2023-04-26 00:00:00+00:00'
     },
-    'time_series_args': {
+    'time_serie_args': {
         'name_time_column': 'timestamp',
         'name_id_sensor_column': 'id_device',
         'id_device': 'DBEM003', 
         'names_objective_variable': 'y', 
+        'prepare_dataframe_from_db_cols_for_query': ['00-eco2', '00-temp', '01-hum', '01-tvoc', '02-pres', '03-siaq', '04-diaq'], 
         'X_name_features': None,
         'Y_name_features': 'y',
         'n_lags': 10,

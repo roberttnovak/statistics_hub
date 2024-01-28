@@ -70,7 +70,7 @@ initial_dict_parameters = {
         'lead_columns': 'y',
         'num_obs_to_predict': None
     }, 
-    'predictor': 'KNeighborsRegressor',
+    'predictor': '',
     'save_args':
     {
         'scale_in_preprocessing': True, 
@@ -154,6 +154,8 @@ initial_dict_parameters_descriptions = {
     "machine_learning_model_args": "Dictionary of additional arguments to pass to the machine learning model."
 }
 
+all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters for regressor in all_regressors}
+
 # Initialisation of a instance of ConfigManager
 config_manager = ConfigManager("../config")
 
@@ -188,6 +190,8 @@ config_manager.save_config(
     subfolder = "models_parameters/metadata",
     create = True
 )
+
+# Save descriptions of own parameters (frontend purposes)
 config_manager.save_config(
     config_filename = "descriptions_of_own_parameters", 
     config = initial_dict_parameters_descriptions, 
@@ -195,29 +199,25 @@ config_manager.save_config(
     create = True
 )
 
-# Save all config
-[config_manager.save_config(regressor, initial_dict_parameters, subfolder = "models_parameters") 
- for regressor in all_regressors]
+# Save json in which will be saved parameters which user will change in application
+config_manager.save_config(
+    config_filename = "all_sklearn_regressors_set_parameters", 
+    config = all_sklearn_regressors_set_parameters, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
 
-# Update predictor parameter according to the regressor
-# [config_manager.update_config(regressor, {"predictor":regressor}, subfolder = "models_parameters") 
-#  for regressor in all_regressors]
+
 
 # 1- Update predictor parameter according to the regressor
-# 2- Add own parameters of each regressor
-
-for regressor, parameters in all_regressors_with_its_parameters.items():
-    new_values = {
-        "predictor": regressor,
-        "regressor_params": {
-            param_info['parameter']: evaluate_or_return_default(param_info['value_default'])
-            for param_info in all_regressors_with_all_info[regressor]['parameters_info']
-            # Loop only parameters with a default values and valid parameters according get_all_regressors_with_its_parameters() function
-            if param_info['value_default'] is not None and param_info['parameter'] in parameters 
-        }
+new_values = {
+    regressor: {
+        "predictor": regressor
     }
-    config_manager.update_config(
-        config_filename = regressor, 
-        new_values = new_values,
-        subfolder="models_parameters"
-    )
+for regressor, _ in all_regressors_with_its_parameters.items() }
+
+config_manager.update_config(
+    config_filename = "all_sklearn_regressors_set_parameters", 
+    new_values = new_values,
+    subfolder="models_parameters/metadata"
+)

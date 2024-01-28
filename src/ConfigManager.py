@@ -72,26 +72,39 @@ class ConfigManager:
         folder_path = self._get_folder_path(subfolder)
         return [f.stem for f in folder_path.glob("*.json")]
 
-    def update_config(self, config_filename: str, new_values: Dict[str, str], subfolder: Union[str, List[str]] = None):
+    def update_config(self, config_filename: str, new_values: Dict[str, Any], subfolder: Union[str, List[str]] = None):
         """
-        Update specific keys in a configuration file in a specified subfolder. Converts the value types
-        to match the original config types if necessary.
+        Update specific keys in a configuration file in a specified subfolder, supporting nested updates.
+
+        This method allows updating both top-level and nested configuration settings by passing a dictionary
+        with keys representing the paths to the settings. Nested paths should be indicated by dictionaries.
 
         Parameters:
         - config_filename (str): The name of the configuration file (without extension).
-        - new_values (Dict[str, str]): A dictionary of keys and string values to update.
+        - new_values (Dict[str, Any]): A dictionary of keys and values to update. For nested updates, the value should be a dictionary.
         - subfolder (Union[str, List[str]], optional): The subfolder or subfolder path where the configuration file is located. Defaults to None.
+
+        Examples:
+        - To update a top-level setting: `{"predictor": "RandomForestRegressor"}`
+        - To update a nested setting: `{"time_serie_args": {"name_time_column": "time"}}`
+
+        The method will maintain the existing structure of the configuration, only updating the keys provided in `new_values`.
         """
         config = self.load_config(config_filename, subfolder)  # Load the existing config
 
-        # Update the config with new values, converting types as necessary
-        for key, value in new_values.items():
-            if key in config:
-                config[key] = self._safe_convert_type(value, type(config[key]))
-            else:
-                config[key] = value
+        def update_dict(d, u):
+            """
+            Recursively update dictionary `d` with values from `u`, supporting nested dictionaries.
+            """
+            for k, v in u.items():
+                if isinstance(v, dict):
+                    d[k] = update_dict(d.get(k, {}), v)
+                else:
+                    d[k] = self._safe_convert_type(v, type(d.get(k, v)))
+            return d
 
-        self.save_config(config_filename, config, subfolder)  # Save the updated config back to file
+        updated_config = update_dict(config, new_values)
+        self.save_config(config_filename, updated_config, subfolder)  # Save the updated config back to file
 
     def _safe_convert_type(self, value: str, original_type: type) -> Any:
         """

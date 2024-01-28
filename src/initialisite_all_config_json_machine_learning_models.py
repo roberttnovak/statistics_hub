@@ -201,9 +201,9 @@ config_manager.save_config(
 
 # Save json in which will be saved parameters which user will change in application
 config_manager.save_config(
-    config_filename = "all_sklearn_regressors_set_parameters", 
+    config_filename = "parameters", 
     config = all_sklearn_regressors_set_parameters, 
-    subfolder = "models_parameters/metadata",
+    subfolder = "models_parameters",
     create = True
 )
 
@@ -217,7 +217,8 @@ new_values = {
 for regressor, _ in all_regressors_with_its_parameters.items() }
 
 config_manager.update_config(
-    config_filename = "all_sklearn_regressors_set_parameters", 
+    config_filename = "parameters", 
     new_values = new_values,
-    subfolder="models_parameters/metadata"
+    subfolder="models_parameters"
 )
+print()

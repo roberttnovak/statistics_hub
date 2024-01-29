@@ -11,7 +11,7 @@ It performs the following operations:
 """
 import sklearn 
 import datetime
-from own_utils import evaluate_or_return_default
+from own_utils import evaluate_or_return_default, update_deep_nested_dict_value
 from sklearn_utils import get_all_regressors, get_all_regressors_with_its_parameters, get_valid_regressors_info
 from ConfigManager import ConfigManager
 
@@ -56,6 +56,7 @@ initial_dict_parameters = {
         'fin_train': '2023-04-25 00:00:00+00:00',
         'fin_test': '2023-04-26 00:00:00+00:00'
     },
+    'regressor_params':{},
     'time_serie_args': {
         'name_time_column': 'timestamp',
         'name_id_sensor_column': 'id_device',
@@ -70,8 +71,7 @@ initial_dict_parameters = {
         'lead_columns': 'y',
         'num_obs_to_predict': None
     }, 
-    'predictor': '',
-    'save_args':
+    'save_args': 
     {
         'scale_in_preprocessing': True, 
         'save_preprocessing': True, 
@@ -154,7 +154,7 @@ initial_dict_parameters_descriptions = {
     "machine_learning_model_args": "Dictionary of additional arguments to pass to the machine learning model."
 }
 
-all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters for regressor in all_regressors}
+all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters.copy() for regressor in all_regressors}
 
 # Initialisation of a instance of ConfigManager
 config_manager = ConfigManager("../config")
@@ -199,6 +199,15 @@ config_manager.save_config(
     create = True
 )
 
+# Get parameters of each sklearn regressor
+for regressor, metadata in all_regressors_with_all_info.items():
+    regressor_params = {}
+    for metadata_parameter in metadata['parameters_info']:
+        parameter = metadata_parameter['parameter']
+        value_default = evaluate_or_return_default(metadata_parameter['value_default'])
+        regressor_params[parameter] = value_default
+    all_sklearn_regressors_set_parameters[regressor]['regressor_params'] = regressor_params.copy()
+
 # Save json in which will be saved parameters which user will change in application
 config_manager.save_config(
     config_filename = "parameters", 
@@ -206,19 +215,3 @@ config_manager.save_config(
     subfolder = "models_parameters",
     create = True
 )
-
-
-
-# 1- Update predictor parameter according to the regressor
-new_values = {
-    regressor: {
-        "predictor": regressor
-    }
-for regressor, _ in all_regressors_with_its_parameters.items() }
-
-config_manager.update_config(
-    config_filename = "parameters", 
-    new_values = new_values,
-    subfolder="models_parameters"
-)
-print()

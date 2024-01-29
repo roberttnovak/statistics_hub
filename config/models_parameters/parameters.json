@@ -18,6 +18,20 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "max_iter": null,
+            "tol": 0.001,
+            "alpha_1": 1e-06,
+            "alpha_2": 1e-06,
+            "lambda_1": 1e-06,
+            "lambda_2": 1e-06,
+            "compute_score": false,
+            "threshold_lambda": 10000,
+            "fit_intercept": true,
+            "copy_X": true,
+            "verbose": false,
+            "n_iter": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -40,7 +54,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "ARDRegression",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -67,6 +80,13 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "estimator": null,
+            "n_estimators": 50,
+            "learning_rate": 1.0,
+            "loss": "linear",
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -89,7 +109,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "AdaBoostRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -116,6 +135,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "estimator": null,
+            "n_estimators": 10,
+            "max_samples": 1.0,
+            "max_features": 1.0,
+            "bootstrap": true,
+            "bootstrap_features": false,
+            "oob_score": false,
+            "warm_start": false,
+            "n_jobs": null,
+            "random_state": null,
+            "verbose": 0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -138,7 +170,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "BaggingRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -165,6 +196,21 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "max_iter": null,
+            "tol": 0.001,
+            "alpha_1": 1e-06,
+            "alpha_2": 1e-06,
+            "lambda_1": 1e-06,
+            "lambda_2": 1e-06,
+            "alpha_init": null,
+            "lambda_init": null,
+            "compute_score": false,
+            "fit_intercept": true,
+            "copy_X": true,
+            "verbose": false,
+            "n_iter": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -187,7 +233,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "BayesianRidge",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -214,6 +259,13 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_components": 2,
+            "scale": true,
+            "max_iter": 500,
+            "tol": 1e-06,
+            "copy": true
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -236,7 +288,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "CCA",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -263,6 +314,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "criterion": "squared_error",
+            "splitter": "best",
+            "max_depth": null,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "min_weight_fraction_leaf": 0.0,
+            "max_features": null,
+            "random_state": null,
+            "max_leaf_nodes": null,
+            "min_impurity_decrease": 0.0,
+            "ccp_alpha": 0.0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -285,7 +349,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "DecisionTreeRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -312,6 +375,11 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "strategy": "mean",
+            "constant": null,
+            "quantile": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -334,7 +402,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "DummyRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -361,6 +428,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "l1_ratio": 0.5,
+            "fit_intercept": true,
+            "precompute": false,
+            "max_iter": 1000,
+            "copy_X": true,
+            "tol": 0.0001,
+            "warm_start": false,
+            "positive": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -383,7 +463,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "ElasticNet",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -410,6 +489,23 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "l1_ratio": 0.5,
+            "eps": 0.001,
+            "n_alphas": 100,
+            "alphas": null,
+            "fit_intercept": true,
+            "precompute": "auto",
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "cv": null,
+            "copy_X": true,
+            "verbose": 0,
+            "n_jobs": null,
+            "positive": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -432,7 +528,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "ElasticNetCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -459,6 +554,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "criterion": "squared_error",
+            "splitter": "random",
+            "max_depth": null,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "min_weight_fraction_leaf": 0.0,
+            "max_features": 1.0,
+            "random_state": null,
+            "min_impurity_decrease": 0.0,
+            "max_leaf_nodes": null,
+            "ccp_alpha": 0.0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -481,7 +589,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "ExtraTreeRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -508,6 +615,25 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_estimators": 100,
+            "criterion": "squared_error",
+            "max_depth": null,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "min_weight_fraction_leaf": 0.0,
+            "max_features": 1.0,
+            "max_leaf_nodes": null,
+            "min_impurity_decrease": 0.0,
+            "bootstrap": false,
+            "oob_score": false,
+            "n_jobs": null,
+            "random_state": null,
+            "verbose": 0,
+            "warm_start": false,
+            "ccp_alpha": 0.0,
+            "max_samples": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -530,7 +656,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "ExtraTreesRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -557,6 +682,15 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1,
+            "fit_intercept": true,
+            "solver": "lbfgs",
+            "max_iter": 100,
+            "tol": 0.0001,
+            "warm_start": false,
+            "verbose": 0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -579,7 +713,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "GammaRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -606,6 +739,16 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "kernel": null,
+            "alpha": 1e-10,
+            "optimizer": "fmin_l_bfgs_b",
+            "n_restarts_optimizer": 0,
+            "normalize_y": false,
+            "copy_X_train": true,
+            "n_targets": null,
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -628,7 +771,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "GaussianProcessRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -655,6 +797,29 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "n_estimators": 100,
+            "subsample": 1.0,
+            "criterion": "friedman_mse",
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "min_weight_fraction_leaf": 0.0,
+            "max_depth": 3,
+            "min_impurity_decrease": 0.0,
+            "init": null,
+            "random_state": null,
+            "max_features": null,
+            "alpha": 0.9,
+            "verbose": 0,
+            "max_leaf_nodes": null,
+            "warm_start": false,
+            "validation_fraction": 0.1,
+            "n_iter_no_change": null,
+            "tol": 0.0001,
+            "ccp_alpha": 0.0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -677,7 +842,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "GradientBoostingRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -704,6 +868,28 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "loss": "squared_error",
+            "quantile": null,
+            "learning_rate": 0.1,
+            "max_iter": 100,
+            "max_leaf_nodes": 31,
+            "max_depth": null,
+            "min_samples_leaf": 20,
+            "l2_regularization": 0,
+            "max_bins": 255,
+            "categorical_features": null,
+            "monotonic_cst": null,
+            "interaction_cst": null,
+            "warm_start": false,
+            "early_stopping": "auto",
+            "scoring": "loss",
+            "validation_fraction": 0.1,
+            "n_iter_no_change": 10,
+            "tol": 1e-07,
+            "verbose": 0,
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -726,7 +912,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "HistGradientBoostingRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -753,6 +938,14 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "epsilon": 1.35,
+            "max_iter": 100,
+            "alpha": 0.0001,
+            "warm_start": false,
+            "fit_intercept": true,
+            "tol": 1e-05
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -775,7 +968,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "HuberRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -802,6 +994,12 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "y_min": null,
+            "y_max": null,
+            "increasing": true,
+            "out_of_bounds": "nan"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -824,7 +1022,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "IsotonicRegression",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -851,6 +1048,16 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_neighbors": 5,
+            "weights": "uniform",
+            "algorithm": "auto",
+            "leaf_size": 30,
+            "p": 2,
+            "metric": "minkowski",
+            "metric_params": null,
+            "n_jobs": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -873,7 +1080,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "KNeighborsRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -900,6 +1106,14 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "kernel": "linear",
+            "gamma": null,
+            "degree": 3,
+            "coef0": 1,
+            "kernel_params": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -922,7 +1136,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "KernelRidge",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -949,6 +1162,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "fit_intercept": true,
+            "verbose": false,
+            "precompute": "auto",
+            "n_nonzero_coefs": 500,
+            "eps": "np.finfo(float).eps",
+            "copy_X": true,
+            "fit_path": true,
+            "jitter": null,
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -971,7 +1195,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "Lars",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -998,6 +1221,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "fit_intercept": true,
+            "verbose": false,
+            "max_iter": 500,
+            "precompute": "auto",
+            "cv": null,
+            "max_n_alphas": 1000,
+            "n_jobs": null,
+            "eps": "np.finfo(float).eps",
+            "copy_X": true
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1020,7 +1254,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LarsCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1047,6 +1280,18 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "precompute": false,
+            "copy_X": true,
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "warm_start": false,
+            "positive": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1069,7 +1314,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "Lasso",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1096,6 +1340,22 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "eps": 0.001,
+            "n_alphas": 100,
+            "alphas": null,
+            "fit_intercept": true,
+            "precompute": "auto",
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "copy_X": true,
+            "cv": null,
+            "verbose": false,
+            "n_jobs": null,
+            "positive": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1118,7 +1378,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LassoCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1145,6 +1404,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "verbose": false,
+            "precompute": "auto",
+            "max_iter": 500,
+            "eps": "np.finfo(float).eps",
+            "copy_X": true,
+            "fit_path": true,
+            "positive": false,
+            "jitter": null,
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1167,7 +1439,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LassoLars",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1194,6 +1465,18 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "fit_intercept": true,
+            "verbose": false,
+            "max_iter": 500,
+            "precompute": "auto",
+            "cv": null,
+            "max_n_alphas": 1000,
+            "n_jobs": null,
+            "eps": "np.finfo(float).eps",
+            "copy_X": true,
+            "positive": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1216,7 +1499,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LassoLarsCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1243,6 +1525,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "criterion": "aic",
+            "fit_intercept": true,
+            "verbose": false,
+            "precompute": "auto",
+            "max_iter": 500,
+            "eps": "np.finfo(float).eps",
+            "copy_X": true,
+            "positive": false,
+            "noise_variance": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1265,7 +1558,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LassoLarsIC",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1292,6 +1584,12 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "fit_intercept": true,
+            "copy_X": true,
+            "n_jobs": null,
+            "positive": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1314,7 +1612,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LinearRegression",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1341,6 +1638,18 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "epsilon": 0.0,
+            "tol": 0.0001,
+            "C": 1.0,
+            "loss": "epsilon_insensitive",
+            "fit_intercept": true,
+            "intercept_scaling": 1.0,
+            "dual": true,
+            "verbose": 0,
+            "random_state": null,
+            "max_iter": 1000
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1363,7 +1672,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "LinearSVR",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1390,6 +1698,33 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "hidden_layer_sizes": [
+                100
+            ],
+            "activation": "relu",
+            "solver": "adam",
+            "alpha": 0.0001,
+            "batch_size": "auto",
+            "learning_rate": "constant",
+            "learning_rate_init": 0.001,
+            "power_t": 0.5,
+            "max_iter": 200,
+            "shuffle": true,
+            "random_state": null,
+            "tol": 0.0001,
+            "verbose": false,
+            "warm_start": false,
+            "momentum": 0.9,
+            "nesterovs_momentum": true,
+            "early_stopping": false,
+            "validation_fraction": 0.1,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-08,
+            "n_iter_no_change": 10,
+            "max_fun": 15000
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1412,7 +1747,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "MLPRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1439,6 +1773,7 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {},
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1461,7 +1796,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1488,6 +1822,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "l1_ratio": 0.5,
+            "fit_intercept": true,
+            "copy_X": true,
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "warm_start": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1510,7 +1855,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "MultiTaskElasticNet",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1537,6 +1881,21 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "l1_ratio": 0.5,
+            "eps": 0.001,
+            "n_alphas": 100,
+            "alphas": null,
+            "fit_intercept": true,
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "cv": null,
+            "copy_X": true,
+            "verbose": 0,
+            "n_jobs": null,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1559,7 +1918,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "MultiTaskElasticNetCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1586,6 +1944,16 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "copy_X": true,
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "warm_start": false,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1608,7 +1976,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "MultiTaskLasso",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1635,6 +2002,20 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "eps": 0.001,
+            "n_alphas": 100,
+            "alphas": null,
+            "fit_intercept": true,
+            "max_iter": 1000,
+            "tol": 0.0001,
+            "copy_X": true,
+            "cv": null,
+            "verbose": false,
+            "n_jobs": null,
+            "random_state": null,
+            "selection": "cyclic"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1657,7 +2038,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "MultiTaskLassoCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1684,6 +2064,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "nu": 0.5,
+            "C": 1.0,
+            "kernel": "rbf",
+            "degree": 3,
+            "gamma": "scale",
+            "coef0": 0.0,
+            "shrinking": true,
+            "tol": 0.001,
+            "cache_size": 200,
+            "verbose": false,
+            "max_iter": -1
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1706,7 +2099,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "NuSVR",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1733,6 +2125,12 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_nonzero_coefs": null,
+            "tol": null,
+            "fit_intercept": true,
+            "precompute": "auto"
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1755,7 +2153,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "OrthogonalMatchingPursuit",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1782,6 +2179,14 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "copy": true,
+            "fit_intercept": true,
+            "max_iter": null,
+            "cv": null,
+            "n_jobs": null,
+            "verbose": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1804,7 +2209,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "OrthogonalMatchingPursuitCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1831,6 +2235,14 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_components": 2,
+            "scale": true,
+            "algorithm": "nipals",
+            "max_iter": 500,
+            "tol": 1e-06,
+            "copy": true
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1853,7 +2265,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "PLSCanonical",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1880,6 +2291,13 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_components": 2,
+            "scale": true,
+            "max_iter": 500,
+            "tol": 1e-06,
+            "copy": true
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1902,7 +2320,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "PLSRegression",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1929,6 +2346,22 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "C": 1.0,
+            "fit_intercept": true,
+            "max_iter": 1000,
+            "tol": 0.001,
+            "early_stopping": false,
+            "validation_fraction": 0.1,
+            "n_iter_no_change": 5,
+            "shuffle": true,
+            "verbose": 0,
+            "loss": "epsilon_insensitive",
+            "epsilon": 0.1,
+            "random_state": null,
+            "warm_start": false,
+            "average": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -1951,7 +2384,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "PassiveAggressiveRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -1978,6 +2410,15 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1,
+            "fit_intercept": true,
+            "solver": "lbfgs",
+            "max_iter": 100,
+            "tol": 0.0001,
+            "warm_start": false,
+            "verbose": 0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2000,7 +2441,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "PoissonRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2027,6 +2467,13 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "quantile": 0.5,
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "solver": "highs",
+            "solver_options": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2049,7 +2496,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "QuantileRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2076,6 +2522,20 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "estimator": null,
+            "min_samples": null,
+            "residual_threshold": null,
+            "is_data_valid": null,
+            "is_model_valid": null,
+            "max_trials": 100,
+            "max_skips": "np.inf",
+            "stop_n_inliers": "np.inf",
+            "stop_score": "np.inf",
+            "stop_probability": 0.99,
+            "loss": "absolute_error",
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2098,7 +2558,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "RANSACRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2125,6 +2584,16 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "radius": 1.0,
+            "weights": "uniform",
+            "algorithm": "auto",
+            "leaf_size": 30,
+            "p": 2,
+            "metric": "minkowski",
+            "metric_params": null,
+            "n_jobs": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2147,7 +2616,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "RadiusNeighborsRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2174,6 +2642,25 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "n_estimators": 100,
+            "criterion": "squared_error",
+            "max_depth": null,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "min_weight_fraction_leaf": 0.0,
+            "max_features": 1.0,
+            "max_leaf_nodes": null,
+            "min_impurity_decrease": 0.0,
+            "bootstrap": true,
+            "oob_score": false,
+            "n_jobs": null,
+            "random_state": null,
+            "verbose": 0,
+            "warm_start": false,
+            "ccp_alpha": 0.0,
+            "max_samples": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2196,7 +2683,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "RandomForestRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2223,6 +2709,7 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {},
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2245,7 +2732,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2272,6 +2758,16 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "copy_X": true,
+            "max_iter": null,
+            "tol": 0.0001,
+            "solver": "auto",
+            "positive": false,
+            "random_state": null
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2294,7 +2790,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "Ridge",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2321,6 +2816,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "alphas": [
+                0.1,
+                1.0,
+                10.0
+            ],
+            "fit_intercept": true,
+            "scoring": null,
+            "cv": null,
+            "gcv_mode": "auto",
+            "store_cv_values": false,
+            "alpha_per_target": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2343,7 +2851,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "RidgeCV",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2370,6 +2877,27 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "loss": "squared_error",
+            "penalty": "l2",
+            "alpha": 0.0001,
+            "l1_ratio": 0.15,
+            "fit_intercept": true,
+            "max_iter": 1000,
+            "tol": 0.001,
+            "shuffle": true,
+            "verbose": 0,
+            "epsilon": 0.1,
+            "random_state": null,
+            "learning_rate": "invscaling",
+            "eta0": 0.01,
+            "power_t": 0.25,
+            "early_stopping": false,
+            "validation_fraction": 0.1,
+            "n_iter_no_change": 5,
+            "warm_start": false,
+            "average": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2392,7 +2920,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "SGDRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2419,6 +2946,19 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "kernel": "rbf",
+            "degree": 3,
+            "gamma": "scale",
+            "coef0": 0.0,
+            "tol": 0.001,
+            "C": 1.0,
+            "epsilon": 0.1,
+            "shrinking": true,
+            "cache_size": 200,
+            "verbose": false,
+            "max_iter": -1
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2441,7 +2981,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "SVR",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2468,6 +3007,7 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {},
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2490,7 +3030,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2517,6 +3056,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "fit_intercept": true,
+            "copy_X": true,
+            "max_subpopulation": 10000.0,
+            "n_subsamples": null,
+            "max_iter": 300,
+            "tol": 0.001,
+            "random_state": null,
+            "n_jobs": null,
+            "verbose": false
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2539,7 +3089,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "TheilSenRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2566,6 +3115,13 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "regressor": null,
+            "transformer": null,
+            "func": null,
+            "inverse_func": null,
+            "check_inverse": true
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2588,7 +3144,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "TransformedTargetRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2615,6 +3170,17 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {
+            "power": 0,
+            "alpha": 1,
+            "fit_intercept": true,
+            "link": "auto",
+            "solver": "lbfgs",
+            "max_iter": 100,
+            "tol": 0.0001,
+            "warm_start": false,
+            "verbose": 0
+        },
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2637,7 +3203,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "TweedieRegressor",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,
@@ -2664,6 +3229,7 @@
             "fin_train": "2023-04-25 00:00:00+00:00",
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
+        "regressor_params": {},
         "time_serie_args": {
             "name_time_column": "timestamp",
             "name_id_sensor_column": "id_device",
@@ -2686,7 +3252,6 @@
             "lead_columns": "y",
             "num_obs_to_predict": null
         },
-        "predictor": "",
         "save_args": {
             "scale_in_preprocessing": true,
             "save_preprocessing": true,

@@ -10,6 +10,7 @@ import inspect
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import time
 from typing import Any, Dict
+import copy
 
 
 # nos conectamos a la BD pasada como argumento
@@ -512,5 +513,72 @@ def extract_nested_dict_values(nested_dict, path_mapping):
     return extracted_values
 
 
+def update_deep_nested_dict_value(config_dict, keys_tuple=None, new_values=None):
+    """
+    Create and return a copy of the given dictionary with updated or added key-value pairs
+    in a deeply nested dictionary. If a sequence of keys is provided, the function navigates
+    through the nested dictionary using these keys to reach the desired dictionary for the updates.
+    If no keys sequence is provided, the function updates or adds the key-value pairs at the
+    deepest possible level.
 
+    Parameters:
+    - config_dict (dict): The original dictionary to be updated.
+    - keys_tuple (tuple, optional): A tuple containing the sequence of keys to navigate through
+      the nested dictionaries, leading to the target dictionary where the updates will occur.
+      If not provided or empty, the updates occur at the deepest level or the top level, respectively.
+    - new_values (dict, optional): A dictionary containing the new key-value pairs to be set.
+      If keys_tuple is not provided, this should be a dictionary representing updates at the deepest level.
 
+    Returns:
+    A new dictionary with the updates applied.
+
+    Raises:
+    - KeyError: If any key in keys_tuple is not found at its respective level in the nested
+      dictionary.
+
+    Examples:
+    - Update multiple keys at a specified level:
+      config_dict = {'level1': {'level2': {'key1': 'value1', 'key2': 'value2'}}}
+      new_dict = update_deep_nested_dict_value(config_dict, ('level1', 'level2'), {'key1': 'new_value1', 'key3': 'value3'})
+      # Result: {'level1': {'level2': {'key1': 'new_value1', 'key2': 'value2', 'key3': 'value3'}}}
+
+    - Update at the deepest level without specifying keys:
+      config_dict = {'level1': {'level2': {'key1': 'value1'}}}
+      new_dict = update_deep_nested_dict_value(config_dict, new_values={'key2': 'value2', 'key3': 'value3'})
+      # Result: {'level1': {'level2': {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'}}}
+
+    Note:
+        This function has been thoroughly tested. Refer to `tests/test_own_utils.py` for the test cases.
+    """
+    # Create a deep copy of the original dictionary to preserve its state
+    new_config_dict = copy.deepcopy(config_dict)
+
+    # Determine the target dictionary for updates
+    target_dict = new_config_dict
+    if keys_tuple:
+        for key in keys_tuple:
+            if key in target_dict and isinstance(target_dict[key], dict):
+                target_dict = target_dict[key]  # Navigate to the next level
+            else:
+                raise KeyError(f"Key '{key}' not found or not associated with a dictionary.")
+    else:
+        # Find the deepest level if keys_tuple is None
+        while any(isinstance(v, dict) for v in target_dict.values()):
+            for k, v in target_dict.items():
+                if isinstance(v, dict):
+                    target_dict = v  # Move to the nested dictionary
+                    break
+
+    # Apply the updates
+    if not isinstance(new_values, dict):
+        raise ValueError("new_values must be a dictionary.")
+    
+    for key, value in new_values.items():
+        if isinstance(value, dict) and isinstance(target_dict.get(key), dict):
+            # Merge dictionaries if both the existing and new value are dictionaries
+            target_dict[key].update(value)
+        else:
+            # Update or add the key with the new value
+            target_dict[key] = value
+
+    return new_config_dict

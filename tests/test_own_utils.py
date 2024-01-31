@@ -3,7 +3,15 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 from pathlib import Path
 import pytest
-from own_utils import execute_concurrently, extract_nested_dict_values, get_deepest_keys_values, list_directories_by_depth
+from own_utils import execute_concurrently, extract_nested_dict_values, get_deepest_keys_values, list_directories_by_depth, update_deep_nested_dict_value
+
+#ToDo: Agregar en la docstring de todas las funciones testadas que se han testado y referenciar el path donde se han testado, por ejemplo
+# """
+# ...existing documentation...
+
+# Note:
+#     This function has been thoroughly tested. Refer to `tests/test_own_utils.py` for the test cases.
+# """
 
 # Funciones de ejemplo para pruebas
 def add(x, y):
@@ -402,6 +410,79 @@ class TestExtractNestedDictValues:
     def test_extract_nested_dict_values(self, nested_dict, path_mapping, expected_output):
         """Test that extract_nested_dict_values correctly extracts values from nested dictionaries."""
         assert extract_nested_dict_values(nested_dict, path_mapping) == expected_output
+
+class TestUpdateDeepNestedDictValue:
+    @pytest.mark.parametrize(
+        "original_dict, keys_tuple, new_values, expected_result",
+        [
+            # Docstring example with specific level update
+            (
+                {'level1': {'level2': {'key1': 'value1', 'key2': 'value2'}}},
+                ('level1', 'level2'),
+                {'key1': 'new_value1', 'key3': 'value3'},
+                {'level1': {'level2': {'key1': 'new_value1', 'key2': 'value2', 'key3': 'value3'}}}
+            ),
+            # Update at the deepest level without specifying keys
+            (
+                {'level1': {'level2': {'key1': 'value1'}}},
+                None,
+                {'key2': 'value2', 'key3': 'value3'},
+                {'level1': {'level2': {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'}}}
+            ),
+            # Update at the top level with an empty keys_tuple
+            (
+                {'key1': 'value1', 'key2': 'value2'},
+                (),
+                {'key1': 'new_value1', 'key3': 'value3'},
+                {'key1': 'new_value1', 'key2': 'value2', 'key3': 'value3'}
+            ),
+            # KeyError for non-existing path
+            (
+                {'level1': {'level2': {}}},
+                ('level1', 'level3'),
+                {'key': 'value'},
+                KeyError  # Expected exception
+            ),
+            # Update with nested dictionaries
+            (
+                {'level1': {'level2': {'level3': {'key1': 'value1'}}}},
+                ('level1', 'level2'),
+                {'level3': {'key2': 'value2'}},
+                {'level1': {'level2': {'level3': {'key1': 'value1', 'key2': 'value2'}}}}
+            ),
+            # ValueError when new_values is not a dictionary
+            (
+                {'level1': {'level2': {'key1': 'value1'}}},
+                ('level1', 'level2'),
+                'not_a_dict',  # Invalid new_values
+                ValueError  # Expected exception
+            ),
+            # Update without keys_tuple and new_values as a dictionary
+            (
+                {'key1': 'value1'},
+                None,
+                {'key1': 'new_value1', 'key2': 'new_value2'},
+                {'key1': 'new_value1', 'key2': 'new_value2'}
+            ),
+            # Complex nested update
+            (
+                {'level1': {'level2': {'level3a': {'key1': 'value1'}, 'level3b': {'key2': 'value2'}}}},
+                ('level1', 'level2'),
+                {'level3a': {'key3': 'value3'}, 'level3b': {'key4': 'value4'}},
+                {'level1': {'level2': {'level3a': {'key1': 'value1', 'key3': 'value3'}, 'level3b': {'key2': 'value2', 'key4': 'value4'}}}}
+            )
+            # Add more test cases as needed...
+        ]
+    )
+    def test_update_deep_nested_dict_value(self, original_dict, keys_tuple, new_values, expected_result):
+        """Test the update_deep_nested_dict_value function for various scenarios."""
+        if isinstance(expected_result, type) and issubclass(expected_result, Exception):
+            with pytest.raises(expected_result):
+                update_deep_nested_dict_value(original_dict, keys_tuple, new_values)
+        else:
+            updated_dict = update_deep_nested_dict_value(original_dict, keys_tuple, new_values)
+            assert updated_dict == expected_result
+
 
 class TestCreateLogger:
     #ToDo :  Hacer los tests para create_logger

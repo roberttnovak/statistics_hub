@@ -13,66 +13,89 @@
             body{
                 padding: 5%;
             }
+            .hidden {
+                display: none;
+            }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body>
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todoModal">
-            #ToDos
-        </button>
-        <br>
-        <!-- Modal -->
-        <div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="todoModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="todoModalLabel">ToDo List</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <ul>
-                            <li> #ToDO: Dejar los nombres de los parámetros legibles  </li>
-                            <li> #ToDo: Dejar las descripciones de los parámetros  </li>
-                            <li> #ToDo: Hacer un filtro de los parámetros: Cuáles dejar visibles y cuáles no  </li>
-                            <li> #ToDo: Agrupar parámetros de naturaleza parecida </li>
-                            <li> #ToDo: Pensar en una estética mejor</li>
-                            <li> #ToDo: Hay algunos parámetros de path cuando automatic_importation es True que están mal: Adaptarlo a la estructura de tenants </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h1>Edit parameters for: {{ model_name }}</h2>
+        <h1>{{ model_name }}</h2>
         <p>More info at: <a href="{{ url_scrapped }}">{{ url_scrapped }}</a></p>
         <p>{{ regressor_info }}</p>
+        <h4>References</h4>
+        {% if references %}
+            <ul>
+                {% for reference in references %}
+                    <li>{{ reference }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No references available.</p>
+        {% endif %}
         <div>
-
-        <div>
+        <h4>Edit parameters</h4>
+        <br>
         <form method="post">
             {% csrf_token %}
-            {% for param in sklearn_parameters_info %}
-            <div class="mb-3">
-                <div class="form-group">
-                    <label for="param_{{ param.parameter }}">{{ param.parameter }}:</label>
-                    <small class="form-text text-muted">{{ param.description }}</small>
-                    <input type="text" class="form-control" id="param_{{ param.parameter }}" placeholder="Default: {{ param.value_default }}">
-                    <br>
+            <button type="button" class="btn btn-info" onclick="toggleRegressorParameters()">Regressor parameters</button>
+            <br> <br>
+            <div id="regressorParametersContainer" class="hidden">
+                {% for param in sklearn_parameters_info %}
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="param_{{ param.parameter }}">{{ param.parameter }}:</label>
+                        <small class="form-text text-muted">{{ param.description }}</small>
+                        <input type="text" class="form-control" id="param_{{ param.parameter }}" placeholder="Default: {{ param.value_default }}">
+                        <br>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-            {% for param in metadata_of_own_parameters %}
-            <div class="mb-3">
-                <div class="form-group">
-                    <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
-                    <small class="form-text text-muted">{{ param.description }}</small>
-                    <input type="text" class="form-control" name="{{ param.name }}" id="param_{{ param.name }}" value="{{ param.value }}">
-                    <br>
+            <button type="button" class="btn btn-info" onclick="toggleTimeSeriesParameters()">Time Serie Parameters</button>
+            <br> <br>
+            <div id="timeSeriesParametersContainer" class="hidden">
+                {% for param in time_serie_args_with_metadata %}
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
+                        <small class="form-text text-muted">{{ param.description }}</small>
+                        <input type="text" class="form-control" name="{{ param.name }}" id="param_{{ param.name }}" value="{{ param.value }}">
+                        <br>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            <button type="button" class="btn btn-info" onclick="toggleTrainTestSplit()">Train and Test Split</button>
+            <div id="trainTestSplitContainer" class="hidden">
+                {% for param in split_train_test_args_with_metadata %}
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
+                        <small class="form-text text-muted">{{ param.description }}</small>
+                        <input type="text" class="form-control" name="{{ param.name }}" id="param_{{ param.name }}" value="{{ param.value }}">
+                        <br>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <br><br>
             <button type="submit">Save Changes</button>
         </form>
     </body>
+
+    <script>
+        function toggleRegressorParameters() {
+            var container = document.getElementById("regressorParametersContainer");
+            container.classList.toggle("hidden");
+        }
+        function toggleTimeSeriesParameters() {
+            var container = document.getElementById("timeSeriesParametersContainer");
+            container.classList.toggle("hidden");
+        }
+        function toggleTrainTestSplit() {
+            var container = document.getElementById("trainTestSplitContainer");
+            container.classList.toggle("hidden");
+        }
+    </script>

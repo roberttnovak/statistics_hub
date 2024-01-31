@@ -477,7 +477,6 @@ def preprocess_dataset(request, selected_dataset, separator):
                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
                     print("Error al decodificar los datos de los filtros")
             eda_results = summary_statistics(df = df_filtered, variables = eda_columns, groupby = eda_groupby_columns)
-            print(eda_results)
             fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
             eda_plot_html = py.plot(fig_eda, output_type='div')
 
@@ -569,6 +568,11 @@ def model_train(request, model_name):
 @login_required
 def model_selection(request):
     selected_model = request.GET.get('selected_model')
+    config_path = f"tenants/{request.user}/config"
+    config_manager = ConfigManager(config_folder_path = config_path)
+    parameters = config_manager.load_config(config_filename = 'parameters' ,subfolder = 'models_parameters')
+    sklearn_regressors = list(parameters.keys())
+    models_list = sklearn_regressors
 
     if request.method == 'POST':
         selected_model = request.POST.get('model_type')
@@ -586,7 +590,6 @@ def model_selection(request):
 
             return redirect('../user_resources_models_saved', model_name=selected_model)
 
-    models_list = get_models_list(request)
     return render(request, 'model_manager/model_selection.html', {
         'models_list': models_list,
         'selected_model': selected_model  
@@ -610,12 +613,15 @@ def model_parameters(request, model_name):
     # Instantiate the ConfigManager with the path to the user's tenant configuration.
     config_manager = ConfigManager(f"tenants/{user}/config")
 
+    context = {}
+
     if request.method == 'POST':
         if not model_name:
             model_name = request.POST.get('model_type')  
         # Capture the form data as a dictionary.
         updated_parameters = {param: request.POST.get(param) for param in request.POST if param != 'csrfmiddlewaretoken'}
 
+        print(updated_parameters)
         try:
             # Update the model's configuration using the captured form data.
             config_manager.update_config(model_name, updated_parameters, subfolder="models_parameters")
@@ -632,45 +638,81 @@ def model_parameters(request, model_name):
     # For a GET request, load the existing parameters to display in the form.
     try:
         # Load the model's current parameters from the configuration.
-        model_parameters = config_manager.load_config(model_name, subfolder="models_parameters")
+        model_parameters = config_manager.load_config(
+            "parameters", 
+            subfolder="models_parameters"
+        )
 
-        regressor_params = model_parameters["regressor_params"]
-        time_series_args = model_parameters["time_series_args"]
-
-        config_manager_metadata_parameters = ConfigManager(f"../config")
+        regressor_params = model_parameters[model_name]["regressor_params"]
+        time_serie_args = model_parameters[model_name]["time_serie_args"]
+        split_train_test_args = model_parameters[model_name]["split_train_test_args"]
 
         # Get metadata of sklearn regressor
+        config_manager_metadata_parameters = ConfigManager(f"../config")
         all_sklearn_regressors_with_all_info = config_manager_metadata_parameters.load_config("all_sklearn_regressors_with_all_info", subfolder="models_parameters/metadata")
         regressor_info = all_sklearn_regressors_with_all_info[model_name]['regressor_info']
         url_scrapped = all_sklearn_regressors_with_all_info[model_name]['url_scrapped']
-        sklearn_parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info'] 
+        sklearn_parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info']
+        references = all_sklearn_regressors_with_all_info[model_name]['references']
 
         # Get metadata of other parameters 
         legible_names_of_own_parameters = config_manager_metadata_parameters.load_config("legible_names_of_own_parameters", subfolder="models_parameters/metadata")
         descriptions_of_own_parameters = config_manager_metadata_parameters.load_config("descriptions_of_own_parameters", subfolder="models_parameters/metadata")
-        metadata_of_own_parameters = [
+        
+        # Data structure to get info inside html template
+
+        ## Sklearn regressor parameters 
+        regressor_params_with_metadata = [
         {
             "name": param,
-            "legible_name": legible_names_of_own_parameters.get(param, param),  # Usa el nombre del parámetro como respaldo
+            "legible_name": legible_names_of_own_parameters.get(param, param), 
             "description": descriptions_of_own_parameters.get(param, ""),
             "value": value
         }
-        for param, value in model_parameters.items()
+        for param, value in regressor_params.items()
         ]
+
+        ## Use case parameteres 
+        time_serie_args_with_metadata = [
+        {
+            "name": param,
+            "legible_name": legible_names_of_own_parameters.get(param, param), 
+            "description": descriptions_of_own_parameters.get(param, ""),
+            "value": value
+        }
+        for param, value in time_serie_args.items()
+        ]
+
+        ## Split train test parameters
+        split_train_test_args_with_metadata = [
+        {
+            "name": param,
+            "legible_name": legible_names_of_own_parameters.get(param, param), 
+            "description": descriptions_of_own_parameters.get(param, ""),
+            "value": value
+        }
+        for param, value in split_train_test_args.items()
+        ]
+
+
         context = {
                 'model_name': model_name,
-                'model_parameters': model_parameters,
+                'regressor_params': regressor_params,
+                'split_train_test_args': split_train_test_args,
                 'regressor_info': regressor_info,
                 'url_scrapped': url_scrapped,
                 'sklearn_parameters_info': sklearn_parameters_info,
                 'legible_names_of_own_parameters': legible_names_of_own_parameters,
                 'descriptions_of_own_parameters' : descriptions_of_own_parameters,
-                'metadata_of_own_parameters': metadata_of_own_parameters
+                'time_serie_args_with_metadata': time_serie_args_with_metadata,
+                'regressor_params_with_metadata': regressor_params_with_metadata,
+                'split_train_test_args_with_metadata': split_train_test_args_with_metadata,
+                'references': references
             }
 
     except FileNotFoundError:
         # If the config file is not found, handle the error appropriately (e.g., log it, send an error message to the template, etc.)
-        model_parameters = {}
+        pass
 
     # Render the page with the current model parameters.
     return render(request, 'model_manager/model_parameters.html', context)

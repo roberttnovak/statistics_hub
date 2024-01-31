@@ -63,6 +63,10 @@
                 "value_default": null
             }
         ],
+        "references": [
+            "D. J. C. MacKay, Bayesian nonlinear modeling for the prediction\ncompetition, ASHRAE Transactions, 1994.",
+            "R. Salakhutdinov, Lecture notes on Statistical Machine Learning,\nhttp://www.utstat.toronto.edu/~rsalakhu/sta4273/notes/Lecture2.pdf#page=15\nTheir beta is our self.alpha_\nTheir alpha is our self.lambda_\nARD is a little different than the slide: only dimensions/features for\nwhich self.lambda_ < self.threshold_lambda are kept and the rest are\ndiscarded."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html"
     },
     "AdaBoostRegressor": {
@@ -93,6 +97,10 @@
                 "description": "Controls the random seed given at each estimator at each\nboosting iteration.\nThus, it is only used when estimator exposes a random_state.\nIn addition, it controls the bootstrap of the weights used to train the\nestimator at each boosting iteration.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None"
             }
+        ],
+        "references": [
+            "[1]\nY. Freund, R. Schapire, \u201cA Decision-Theoretic Generalization of\non-Line Learning and an Application to Boosting\u201d, 1995.",
+            "[2]\n\nDrucker, \u201cImproving Regressors using Boosting Techniques\u201d, 1997."
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html"
     },
@@ -154,6 +162,12 @@
                 "description": "Controls the verbosity when fitting and predicting.\n",
                 "value_default": "0"
             }
+        ],
+        "references": [
+            "[1]\nL. Breiman, \u201cPasting small votes for classification in large\ndatabases and on-line\u201d, Machine Learning, 36(1), 85-103, 1999.",
+            "[2]\nL. Breiman, \u201cBagging predictors\u201d, Machine Learning, 24(2), 123-140,\n1996.",
+            "[3]\nT. Ho, \u201cThe random subspace method for constructing decision\nforests\u201d, Pattern Analysis and Machine Intelligence, 20(8), 832-844,\n1998.",
+            "[4]\nG. Louppe and P. Geurts, \u201cEnsembles on Random Patches\u201d, Machine\nLearning and Knowledge Discovery in Databases, 346-361, 2012."
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html"
     },
@@ -226,6 +240,10 @@
                 "value_default": null
             }
         ],
+        "references": [
+            "D. J. C. MacKay, Bayesian Interpolation, Computation and Neural Systems,\nVol. 4, No. 3, 1992.",
+            "M. E. Tipping, Sparse Bayesian Learning and the Relevance Vector Machine,\nJournal of Machine Learning Research, Vol. 1, 2001."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html"
     },
     "CCA": {
@@ -257,6 +275,7 @@
                 "value_default": "True"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.CCA.html"
     },
     "DecisionTreeRegressor": {
@@ -318,6 +337,12 @@
                 "value_default": "0.0"
             }
         ],
+        "references": [
+            "[1]\nhttps://en.wikipedia.org/wiki/Decision_tree_learning",
+            "[2]\nL. Breiman, J. Friedman, R. Olshen, and C. Stone, \u201cClassification\nand Regression Trees\u201d, Wadsworth, Belmont, CA, 1984.",
+            "[3]\nT. Hastie, R. Tibshirani and J. Friedman. \u201cElements of Statistical\nLearning\u201d, Springer, 2009.",
+            "[4]\nL. Breiman, and A. Cutler, \u201cRandom Forests\u201d,\nhttps://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html"
     },
     "DummyRegressor": {
@@ -339,6 +364,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html"
     },
     "ElasticNet": {
@@ -400,6 +426,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html"
     },
     "ElasticNetCV": {
@@ -481,6 +508,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html"
     },
     "ExtraTreeRegressor": {
@@ -541,6 +569,9 @@
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0"
             }
+        ],
+        "references": [
+            "[1]\nP. Geurts, D. Ernst., and L. Wehenkel, \u201cExtremely randomized trees\u201d,\nMachine Learning, 63(1), 3-42, 2006."
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html"
     },
@@ -633,6 +664,9 @@
                 "value_default": "None"
             }
         ],
+        "references": [
+            "[1]\nP. Geurts, D. Ernst., and L. Wehenkel, \u201cExtremely randomized trees\u201d,\nMachine Learning, 63(1), 3-42, 2006."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html"
     },
     "GammaRegressor": {
@@ -674,6 +708,7 @@
                 "value_default": "0"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html"
     },
     "GaussianProcessRegressor": {
@@ -719,6 +754,9 @@
                 "description": "Determines random number generation used to initialize the centers.\nPass an int for reproducible results across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None"
             }
+        ],
+        "references": [
+            "[RW2006]\nCarl E. Rasmussen and Christopher K.I. Williams,\n\u201cGaussian Processes for Machine Learning\u201d,\nMIT Press 2006"
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html"
     },
@@ -831,6 +869,10 @@
                 "value_default": "0.0"
             }
         ],
+        "references": [
+            "J. Friedman, Greedy Function Approximation: A Gradient Boosting\nMachine, The Annals of Statistics, Vol. 29, No. 5, 2001.",
+            "T. Hastie, R. Tibshirani and J. Friedman.\nElements of Statistical Learning Ed. 2, Springer, 2009."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html"
     },
     "HistGradientBoostingRegressor": {
@@ -937,6 +979,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html"
     },
     "HuberRegressor": {
@@ -973,6 +1016,10 @@
                 "value_default": "1e-05"
             }
         ],
+        "references": [
+            "[1]\nPeter J. Huber, Elvezio M. Ronchetti, Robust Statistics\nConcomitant scale estimates, pg 172",
+            "[2]\nArt B. Owen (2006), A robust hybrid of lasso and ridge regression.\nhttps://statweb.stanford.edu/~owen/reports/hhu.pdf"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html"
     },
     "IsotonicRegression": {
@@ -998,6 +1045,11 @@
                 "description": "Handles how X values outside of the training domain are handled\nduring prediction.\n\n\u2018nan\u2019, predictions will be NaN.\n\u2018clip\u2019, predictions will be set to the value corresponding to\nthe nearest train interval endpoint.\n\u2018raise\u2019, a ValueError is raised.\n\n",
                 "value_default": "nan"
             }
+        ],
+        "references": [
+            "Isotonic Median Regression: A Linear Programming Approach\nNilotpal Chakravarti\nMathematics of Operations Research\nVol. 14, No. 2 (May, 1989), pp. 303-308",
+            "Isotone Optimization in R : Pool-Adjacent-Violators\nAlgorithm (PAVA) and Active Set Methods\nde Leeuw, Hornik, Mair\nJournal of Statistical Software 2009",
+            "Correctness of Kruskal\u2019s algorithms for monotone regression with ties\nde Leeuw, Psychometrica, 1977"
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html"
     },
@@ -1045,6 +1097,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html"
     },
     "KernelRidge": {
@@ -1081,6 +1134,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html"
     },
     "Lars": {
@@ -1132,6 +1186,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lars.html"
     },
     "LarsCV": {
@@ -1183,6 +1238,7 @@
                 "value_default": "True"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LarsCV.html"
     },
     "Lasso": {
@@ -1239,6 +1295,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html"
     },
     "LassoCV": {
@@ -1315,6 +1372,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html"
     },
     "LassoLars": {
@@ -1376,6 +1434,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html"
     },
     "LassoLarsCV": {
@@ -1432,6 +1491,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLarsCV.html"
     },
     "LassoLarsIC": {
@@ -1483,6 +1543,11 @@
                 "value_default": "None"
             }
         ],
+        "references": [
+            "[1]\n(1,2)\nZou, Hui, Trevor Hastie, and Robert Tibshirani.\n\u201cOn the degrees of freedom of the lasso.\u201d\nThe Annals of Statistics 35.5 (2007): 2173-2192.",
+            "[2]\nWikipedia entry on the Akaike information criterion",
+            "[3]\nWikipedia entry on the Bayesian information criterion"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLarsIC.html"
     },
     "LinearRegression": {
@@ -1509,6 +1574,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html"
     },
     "LinearSVR": {
@@ -1565,6 +1631,7 @@
                 "value_default": "1000"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html"
     },
     "MLPRegressor": {
@@ -1686,6 +1753,12 @@
                 "value_default": "15000"
             }
         ],
+        "references": [
+            "Hinton, Geoffrey E. \u201cConnectionist learning procedures.\u201d\nArtificial intelligence 40.1 (1989): 185-234.",
+            "Glorot, Xavier, and Yoshua Bengio.\n\u201cUnderstanding the difficulty of training deep feedforward neural networks.\u201d\nInternational Conference on Artificial Intelligence and Statistics. 2010.",
+            "He, Kaiming, et al (2015). \u201cDelving deep into rectifiers:\nSurpassing human-level performance on imagenet classification.\u201d",
+            "Kingma, Diederik, and Jimmy Ba (2014)\n\u201cAdam: A method for stochastic optimization.\u201d"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html"
     },
     "MultiTaskElasticNet": {
@@ -1737,6 +1810,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNet.html"
     },
     "MultiTaskElasticNetCV": {
@@ -1808,6 +1882,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskElasticNetCV.html"
     },
     "MultiTaskLasso": {
@@ -1854,6 +1929,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLasso.html"
     },
     "MultiTaskLassoCV": {
@@ -1920,6 +1996,7 @@
                 "value_default": "cyclic"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.MultiTaskLassoCV.html"
     },
     "NuSVR": {
@@ -1981,6 +2058,10 @@
                 "value_default": "-1"
             }
         ],
+        "references": [
+            "[1]\nLIBSVM: A Library for Support Vector Machines",
+            "[2]\nPlatt, John (1999). \u201cProbabilistic Outputs for Support Vector\nMachines and Comparisons to Regularized Likelihood Methods\u201d"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html"
     },
     "OrthogonalMatchingPursuit": {
@@ -2007,6 +2088,7 @@
                 "value_default": "auto"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html"
     },
     "OrthogonalMatchingPursuitCV": {
@@ -2043,6 +2125,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuitCV.html"
     },
     "PLSCanonical": {
@@ -2079,6 +2162,7 @@
                 "value_default": "True"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSCanonical.html"
     },
     "PLSRegression": {
@@ -2110,6 +2194,7 @@
                 "value_default": "True"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html"
     },
     "PassiveAggressiveRegressor": {
@@ -2186,6 +2271,9 @@
                 "value_default": "False"
             }
         ],
+        "references": [
+            "Online Passive-Aggressive Algorithms\n<http://jmlr.csail.mit.edu/papers/volume7/crammer06a/crammer06a.pdf>\nK. Crammer, O. Dekel, J. Keshat, S. Shalev-Shwartz, Y. Singer - JMLR (2006)."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html"
     },
     "PoissonRegressor": {
@@ -2227,6 +2315,7 @@
                 "value_default": "0"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html"
     },
     "QuantileRegressor": {
@@ -2258,6 +2347,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.QuantileRegressor.html"
     },
     "RANSACRegressor": {
@@ -2324,6 +2414,11 @@
                 "value_default": "None"
             }
         ],
+        "references": [
+            "[1]\nhttps://en.wikipedia.org/wiki/RANSAC",
+            "[2]\nhttps://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf",
+            "[3]\nhttp://www.bmva.org/bmvc/2009/Papers/Paper355/Paper355.pdf"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html"
     },
     "RadiusNeighborsRegressor": {
@@ -2370,6 +2465,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html"
     },
     "RandomForestRegressor": {
@@ -2461,6 +2557,10 @@
                 "value_default": "None"
             }
         ],
+        "references": [
+            "[1]\n\nBreiman, \u201cRandom Forests\u201d, Machine Learning, 45(1), 5-32, 2001.",
+            "[2]\nP. Geurts, D. Ernst., and L. Wehenkel, \u201cExtremely randomized\ntrees\u201d, Machine Learning, 63(1), 3-42, 2006."
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html"
     },
     "Ridge": {
@@ -2507,6 +2607,7 @@
                 "value_default": "None"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html"
     },
     "RidgeCV": {
@@ -2548,6 +2649,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html"
     },
     "SGDRegressor": {
@@ -2649,6 +2751,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html"
     },
     "SVR": {
@@ -2710,6 +2813,10 @@
                 "value_default": "-1"
             }
         ],
+        "references": [
+            "[1]\nLIBSVM: A Library for Support Vector Machines",
+            "[2]\nPlatt, John (1999). \u201cProbabilistic Outputs for Support Vector\nMachines and Comparisons to Regularized Likelihood Methods\u201d"
+        ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html"
     },
     "TheilSenRegressor": {
@@ -2761,6 +2868,7 @@
                 "value_default": "False"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html"
     },
     "TransformedTargetRegressor": {
@@ -2792,6 +2900,7 @@
                 "value_default": "True"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html"
     },
     "TweedieRegressor": {
@@ -2843,6 +2952,7 @@
                 "value_default": "0"
             }
         ],
+        "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html"
     }
 }

@@ -121,23 +121,22 @@ def get_all_regressors_with_its_parameters():
 
 def extract_regressor_info(soup, parameter_subset=None):
     """
-    Extracts regressor information and parameter details from the BeautifulSoup object. 
-    It includes an optional filter for specific parameters.
+    Extracts regressor information, parameter details, and references from the BeautifulSoup object of the regressor documentation page. It optionally filters for specific parameters.
 
     Parameters
     ----------
     soup : BeautifulSoup
         BeautifulSoup object containing the parsed HTML of the regressor documentation page.
     parameter_subset : list of str, optional
-        A list of parameter names to specifically include in the extraction. 
-        If None (default), information for all parameters is extracted.
+        A list of parameter names to specifically include in the extraction. If None (default), information for all parameters is extracted.
 
     Returns
     -------
     dict
-        A dictionary containing two keys: 'regressor_info' and 'parameters_info'.
-        'regressor_info' is a string with the concatenated text of all relevant <p> tags before the first <dl>. This is: Description of regressor
+        A dictionary containing three keys: 'regressor_info', 'parameters_info', and 'references'.
+        'regressor_info' is a string with the concatenated text of all relevant <p> tags before the first <dl>, providing a description of the regressor.
         'parameters_info' is a list of dictionaries, each containing 'parameter', 'description', and 'value_default' for each parameter.
+        'references' is a list of strings, each representing a reference from the documentation page. References are extracted from a 'citation-list' class or paragraphs following a 'References' heading if the 'citation-list' class is not present.
     """
     # Find decription of regressor 
     dd_tag_of_descriprion_regressor = soup.find_all('dl')[0].find('dd')
@@ -178,7 +177,28 @@ def extract_regressor_info(soup, parameter_subset=None):
         for parameter, value_default, description in zip(parameters, values_default, parameters_descriptions)
         if parameter_subset is None or parameter in parameter_subset
     ]
-    return {"regressor_info":regressor_info, "parameters_info":parameters_info}
+
+    # Find references
+    references = []
+    citation_list = soup.find('div', class_='citation-list')
+    if citation_list:
+        citations = citation_list.find_all('div', class_='citation')
+        for citation in citations:
+            ref_text = citation.text.strip()
+            references.append(ref_text)
+    else:
+        # If citation list is not found, look for 'References' section and subsequent paragraphs
+        references_heading = soup.find(lambda tag: tag.name == "p" and "References" in tag.text)
+        if references_heading:
+            for sibling in references_heading.find_next_siblings():
+                # Stop if reach next section of references as examples or methods
+                if sibling.get('class') and 'rubric' in sibling.get('class'):
+                    break
+                if sibling.name == 'p':
+                    ref_text = sibling.text.strip()
+                    references.append(ref_text)
+
+    return {"regressor_info":regressor_info, "parameters_info": parameters_info, "references": references}
 
 def get_regressor_info(regressor_name, parameter_subset=None):
     """

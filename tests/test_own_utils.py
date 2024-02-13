@@ -470,6 +470,87 @@ class TestUpdateDeepNestedDictValue:
                 ('level1', 'level2'),
                 {'level3a': {'key3': 'value3'}, 'level3b': {'key4': 'value4'}},
                 {'level1': {'level2': {'level3a': {'key1': 'value1', 'key3': 'value3'}, 'level3b': {'key2': 'value2', 'key4': 'value4'}}}}
+            ),
+            # Specific update in one branch without affecting a parallel branch with similar structure
+            (
+                {'level1a': {'level2': {'key1': 'value1', 'key2': 'value2'}}, 'level1b': {'level2': {'key1': 'value1', 'key2': 'value2'}}},
+                ('level1a', 'level2'),
+                {'key1': 'updated_value1', 'key3': 'new_value3'},
+                {'level1a': {'level2': {'key1': 'updated_value1', 'key2': 'value2', 'key3': 'new_value3'}}, 'level1b': {'level2': {'key1': 'value1', 'key2': 'value2'}}}
+            ),
+            # Updating a deeply nested level within a complex structure
+            (
+                {'root': {'branch1': {'leaf1': 'value1'}, 'branch2': {'leaf2': 'value2', 'subBranch': {'leaf3': 'value3'}}}},
+                ('root', 'branch2', 'subBranch'),
+                {'leaf3': 'updated_value3', 'leaf4': 'new_value4'},
+                {'root': {'branch1': {'leaf1': 'value1'}, 'branch2': {'leaf2': 'value2', 'subBranch': {'leaf3': 'updated_value3', 'leaf4': 'new_value4'}}}}
+            ),
+            # Update a nested dictionary where the target is an empty dictionary
+            (
+                {'level1': {'level2': {}, 'level3': {'key1': 'value1'}}},
+                ('level1', 'level2'),
+                {'key2': 'new_value2', 'key3': 'new_value3'},
+                {'level1': {'level2': {'key2': 'new_value2', 'key3': 'new_value3'}, 'level3': {'key1': 'value1'}}}
+            ),
+            # Update a nested dictionary where the keys_tuple leads to a deeper level than exists
+            (
+                {'level1': {'level2': {'level3': {'key1': 'value1'}}}},
+                ('level1', 'level2', 'level3', 'nonexistent_level'),
+                {'key2': 'new_value2'},
+                KeyError  # Expected exception because 'nonexistent_level' does not exist
+            ),
+            # Test case with 3 levels and changes referring to the last level
+            (
+                {
+                    'level1a': {
+                        'level2a': {'key1': 'value1', 'key2': 'value2'},
+                        'level2b': {'key1': 'value1', 'key2': 'value2'}
+                    },
+                    'level1b': {
+                        'level2a': {'key1': 'value1', 'key2': 'value2'},
+                        'level2b': {'key1': 'value1', 'key2': 'value2'}
+                    }
+                },
+                ('level1a',),  # Specify only the first level
+                {
+                    'level2a': {'key1': 'updated_value1', 'key3': 'new_value3'},
+                    'level2b': {'key1': 'value1', 'key2': 'value2'}
+                },
+                {
+                    'level1a': {
+                        'level2a': {'key1': 'updated_value1', 'key2': 'value2', 'key3': 'new_value3'},
+                        'level2b': {'key1': 'value1', 'key2': 'value2'}
+                    },
+                    'level1b': {
+                        'level2a': {'key1': 'value1', 'key2': 'value2'},
+                        'level2b': {'key1': 'value1', 'key2': 'value2'}
+                    }
+                }
+            ),
+            # Test case with 3 levels and changes referring to the last level
+            (
+                {
+                    'level1a': {
+                        'level2a': {'key1a': 'value1a', 'key2a': 'value2a'},
+                        'level2b': {'key1b': 'value1b', 'key2b': 'value2b'}
+                    },
+                    'level1b': {
+                        'level2a': {'key1a': 'value1a', 'key2a': 'value2a'},
+                        'level2b': {'key1b': 'value1b', 'key2b': 'value2b'}
+                    }
+                },
+                ('level1a',),
+                {'key1a': 'updated_value1'},
+                {
+                    'level1a': {
+                        'level2a': {'key1a': 'updated_value1', 'key2a': 'value2a'},
+                        'level2b': {'key1b': 'value1b', 'key2b': 'value2b'}
+                    },
+                    'level1b': {
+                        'level2a': {'key1a': 'value1a', 'key2a': 'value2a'},
+                        'level2b': {'key1b': 'value1b', 'key2b': 'value2b'}
+                    }
+                }
             )
             # Add more test cases as needed...
         ]

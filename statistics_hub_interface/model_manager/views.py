@@ -22,7 +22,7 @@ sys.path.append(str(Path("../src")))
 from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
-from own_utils import filter_dataframe_by_column_values, load_json, modify_json_values
+from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager
 from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 from eda import summary_statistics, summary_statistics_numerical
@@ -613,18 +613,72 @@ def model_parameters(request, model_name):
     # Instantiate the ConfigManager with the path to the user's tenant configuration.
     config_manager = ConfigManager(f"tenants/{user}/config")
 
+    # Load the model's current parameters from the configuration.
+    model_parameters = config_manager.load_config(
+        config_filename = "parameters", 
+        subfolder="models_parameters"
+    )
+
+    # Instantiate the ConfigManager with the path of metadata proyect
+    config_manager_metadata_parameters = ConfigManager(f"../config")
+
+    #Load data_type of own parameters
+    data_type_of_own_parameters = config_manager_metadata_parameters.load_config("data_type_of_own_parameters", subfolder="models_parameters/metadata")
+
+    # Load metadata of sklearn regressors
+    all_sklearn_regressors_with_all_info = config_manager_metadata_parameters.load_config(
+        "all_sklearn_regressors_with_all_info", 
+        subfolder="models_parameters/metadata"
+    )
+
+    # Load mapping of wrong data type to fix bad scrapping (because structure of html)
+    mapping_wrong_data_type_sklearn = config_manager_metadata_parameters.load_config(
+        "mapping_wrong_data_type_sklearn", 
+        subfolder="models_parameters/metadata"
+    )
+
     context = {}
 
     if request.method == 'POST':
         if not model_name:
             model_name = request.POST.get('model_type')  
         # Capture the form data as a dictionary.
-        updated_parameters = {param: request.POST.get(param) for param in request.POST if param != 'csrfmiddlewaretoken'}
+        post_parameters = {}
+        for param in request.POST:
+            # We need to skip the CSRF token, which is included in the POST data.
+            if param != 'csrfmiddlewaretoken':
+                # In model_parametesrs.html de name and classification of each parameter is separated by '__'
+                param_classification, param_name = param.split('__')
+                param_value = request.POST.get(param)
+                # We have all data types of own parameters, so we can convert the string to the correct data type
+                if param_classification not in ["regressor_params"]:
+                    data_type = data_type_of_own_parameters[param_classification][param_name]
+                    param_value = convert_string_to_python_data_type(value = param_value, data_type = data_type)
+                # For sklearn regressors, we need to fix the data type of the parameters
+                else:
+                    parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info']
+                    data_type = "str"
+                    #TODO: ¿Existe una forma más eficiente de hacer esto? Investigarlo en algún momento
+                    for parameter_info in parameters_info:
+                        if parameter_info['parameter'] == param_name:
+                            data_type = parameter_info['data_type']
+                            break  
+                    data_type_fixed = mapping_wrong_data_type_sklearn.get(data_type, data_type)
+                    param_value = convert_string_to_python_data_type(param_value, data_type = data_type_fixed)
 
-        print(updated_parameters)
+                if param_classification in post_parameters:
+                    post_parameters[param_classification].update({param_name: param_value})
+                else:
+                    post_parameters[param_classification] = {param_name: param_value}
+
+        updated_parameters = update_deep_nested_dict_value(model_parameters, keys_tuple=(model_name,), new_values=post_parameters)
+
         try:
-            # Update the model's configuration using the captured form data.
-            config_manager.update_config(model_name, updated_parameters, subfolder="models_parameters")
+            # Update the model's configuration using the captured form data in the correct format
+            config_manager.save_config(
+                config_filename = 'parameters', 
+                config = updated_parameters, 
+                subfolder="models_parameters")
 
             # Redirect to avoid post data resubmission if the user refreshes the page.
             # return redirect('../../model_selection', model_name=model_name)
@@ -637,22 +691,15 @@ def model_parameters(request, model_name):
 
     # For a GET request, load the existing parameters to display in the form.
     try:
-        # Load the model's current parameters from the configuration.
-        model_parameters = config_manager.load_config(
-            "parameters", 
-            subfolder="models_parameters"
-        )
-
         regressor_params = model_parameters[model_name]["regressor_params"]
         time_serie_args = model_parameters[model_name]["time_serie_args"]
         split_train_test_args = model_parameters[model_name]["split_train_test_args"]
 
         # Get metadata of sklearn regressor
-        config_manager_metadata_parameters = ConfigManager(f"../config")
         all_sklearn_regressors_with_all_info = config_manager_metadata_parameters.load_config("all_sklearn_regressors_with_all_info", subfolder="models_parameters/metadata")
         regressor_info = all_sklearn_regressors_with_all_info[model_name]['regressor_info']
         url_scrapped = all_sklearn_regressors_with_all_info[model_name]['url_scrapped']
-        sklearn_parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info']
+        sklearn_parameters_info = all_sklearn_regressors_with_all_info[model_name]['parameters_info']     
         references = all_sklearn_regressors_with_all_info[model_name]['references']
 
         # Get metadata of other parameters 
@@ -663,14 +710,16 @@ def model_parameters(request, model_name):
 
         ## Sklearn regressor parameters 
         regressor_params_with_metadata = [
-        {
-            "name": param,
-            "legible_name": legible_names_of_own_parameters.get(param, param), 
-            "description": descriptions_of_own_parameters.get(param, ""),
-            "value": value
-        }
-        for param, value in regressor_params.items()
+            {
+                "name": info["parameter"],
+                "legible_name": info["parameter"], 
+                "description": info["description"],
+                "value_default": info["value_default"],
+                "value": regressor_params.get(info["parameter"],"")
+            }
+            for info in sklearn_parameters_info
         ]
+
 
         ## Use case parameteres 
         time_serie_args_with_metadata = [

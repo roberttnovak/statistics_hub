@@ -42,12 +42,18 @@
             <button type="button" class="btn btn-info" onclick="toggleRegressorParameters()">Regressor parameters</button>
             <br> <br>
             <div id="regressorParametersContainer" class="hidden">
-                {% for param in sklearn_parameters_info %}
+                {% for param in regressor_params_with_metadata %}
                 <div class="mb-3">
                     <div class="form-group">
-                        <label for="param_{{ param.parameter }}">{{ param.parameter }}:</label>
+                        <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
                         <small class="form-text text-muted">{{ param.description }}</small>
-                        <input type="text" class="form-control" id="param_{{ param.parameter }}" placeholder="Default: {{ param.value_default }}">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            name="regressor_params__{{ param.name }}" 
+                            id="param_{{ param.name }}" 
+                            value="{{ param.value }}"
+                        >
                         <br>
                     </div>
                 </div>
@@ -61,26 +67,38 @@
                     <div class="form-group">
                         <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
                         <small class="form-text text-muted">{{ param.description }}</small>
-                        <input type="text" class="form-control" name="{{ param.name }}" id="param_{{ param.name }}" value="{{ param.value }}">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            name="time_serie_args__{{ param.name }}" 
+                            id="param_{{ param.name }}" 
+                            value="{{ param.value }}"
+                        >
                         <br>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             <button type="button" class="btn btn-info" onclick="toggleTrainTestSplit()">Train and Test Split</button>
+            <br> <br>
             <div id="trainTestSplitContainer" class="hidden">
                 {% for param in split_train_test_args_with_metadata %}
                 <div class="mb-3">
                     <div class="form-group">
                         <label for="param_{{ param.name }}">{{ param.legible_name }}</label>
                         <small class="form-text text-muted">{{ param.description }}</small>
-                        <input type="text" class="form-control" name="{{ param.name }}" id="param_{{ param.name }}" value="{{ param.value }}">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            name="split_train_test_args__{{ param.name }}" 
+                            id="param_{{ param.name }}" 
+                            value="{{ param.value }}"
+                        >
                         <br>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <br><br>
             <button type="submit">Save Changes</button>
         </form>
     </body>

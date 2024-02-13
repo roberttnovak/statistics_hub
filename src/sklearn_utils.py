@@ -118,10 +118,11 @@ def get_all_regressors_with_its_parameters():
     
     return regressor_params
 
-
+#TODO: En esta función hay algunos inconvenientes con el datatype. Por ejemplo, aparece como "boolorint" o "int,RandomStateinstance"
+# Entre otros. En algún momento tratar estos casos problemáticos en una función para que los maneje adecuadamente. 
 def extract_regressor_info(soup, parameter_subset=None):
     """
-    Extracts regressor information, parameter details, and references from the BeautifulSoup object of the regressor documentation page. It optionally filters for specific parameters.
+    Extracts regressor information, parameter details, including data types, and references from the BeautifulSoup object of the regressor documentation page. It optionally filters for specific parameters.
 
     Parameters
     ----------
@@ -134,9 +135,9 @@ def extract_regressor_info(soup, parameter_subset=None):
     -------
     dict
         A dictionary containing three keys: 'regressor_info', 'parameters_info', and 'references'.
-        'regressor_info' is a string with the concatenated text of all relevant <p> tags before the first <dl>, providing a description of the regressor.
-        'parameters_info' is a list of dictionaries, each containing 'parameter', 'description', and 'value_default' for each parameter.
-        'references' is a list of strings, each representing a reference from the documentation page. References are extracted from a 'citation-list' class or paragraphs following a 'References' heading if the 'citation-list' class is not present.
+        - 'regressor_info' is a string with the concatenated text of all relevant <p> tags before the first <dl>, providing a description of the regressor.
+        - 'parameters_info' is a list of dictionaries, each containing 'parameter', 'description', 'value_default', and 'data_type' for each parameter. The 'data_type' key contains the type of the parameter as specified in the documentation.
+        - 'references' is a list of strings, each representing a reference from the documentation page. References are extracted from a 'citation-list' class or paragraphs following a 'References' heading if the 'citation-list' class is not present.
     """
     # Find decription of regressor 
     dd_tag_of_descriprion_regressor = soup.find_all('dl')[0].find('dd')
@@ -152,9 +153,10 @@ def extract_regressor_info(soup, parameter_subset=None):
     dd_tags = soup.find_all('dd', class_='field-odd')
     dt_parameters_tags = [dt for dt in dd_tags[0].find_all('dt') if dt.find('strong')]
     # Extract parameter names and default values
-    parameters, values_default = zip(*[
+    parameters, datas_type, values_default = zip(*[
         [
-            parameter_tag.strong.text, 
+            parameter_tag.strong.text,
+            re.sub(r"[\"'“”‘’ ]","",parameter_tag.find('span', class_='classifier').text.split(', default=')[0]),
             re.sub(r"[\"'“”‘’ ]","",parameter_tag.find('span', class_='classifier').text.split('default=')[1]) # Some defaults values are string and sometimes is obtained as, for example, ’linear’
             if parameter_tag.find('span', class_='classifier') and 'default=' in parameter_tag.find('span', class_='classifier').text 
             else None # Some parameters dont have default values
@@ -173,8 +175,8 @@ def extract_regressor_info(soup, parameter_subset=None):
 
     # Filter the information based on parameter_subset
     parameters_info = [
-        {"parameter": parameter, "description": description, "value_default": value_default}
-        for parameter, value_default, description in zip(parameters, values_default, parameters_descriptions)
+        {"parameter": parameter, "description": description, "value_default": value_default, "data_type": data_type}
+        for parameter, value_default, data_type, description in zip(parameters, values_default, datas_type, parameters_descriptions)
         if parameter_subset is None or parameter in parameter_subset
     ]
 

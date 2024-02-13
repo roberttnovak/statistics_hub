@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 from pathlib import Path
 import pytest
-from own_utils import execute_concurrently, extract_nested_dict_values, get_deepest_keys_values, list_directories_by_depth, update_deep_nested_dict_value
+from own_utils import convert_string_to_python_data_type, execute_concurrently, extract_nested_dict_values, get_deepest_keys_values, list_directories_by_depth, update_deep_nested_dict_value
 
 #ToDo: Agregar en la docstring de todas las funciones testadas que se han testado y referenciar el path donde se han testado, por ejemplo
 # """
@@ -564,6 +564,39 @@ class TestUpdateDeepNestedDictValue:
             updated_dict = update_deep_nested_dict_value(original_dict, keys_tuple, new_values)
             assert updated_dict == expected_result
 
+class TestConvertStringToPythonDataType:
+    @pytest.mark.parametrize(
+        "value, data_type, expected_result",
+        [
+            # Basic type conversion tests
+            ("123", "int", 123),
+            ("123", "float", 123.),
+            ("45.67", "float", 45.67),
+            ("true", "bool", True),
+            ("false", "bool", False),
+            # Simple list and dict conversion tests
+            ("[1, 2, 3]", "list", ["1", "2", "3"]),
+            ("{key1: value1, key2: value2}", "dict", {"key1": "value1", "key2": "value2"}),
+            # Tests for unchanged string values
+            ("unchanged", "str", "unchanged"),
+            # Tests for invalid inputs that should raise exceptions
+            ("not_an_int", "int", ValueError),
+            ("not_a_float", "float", ValueError),
+            ("not_exactly_true", "bool", ValueError),
+            ("not_exactly_false", "bool", ValueError),
+            ("not_a_list", "list", ValueError),
+            ("not_a_dict", "dict", ValueError),
+            # Test for unsupported data type
+            ("any_value", "unsupported_type", ValueError),
+        ]
+    )
+    def test_convert_string_to_python_data_type(self, value, data_type, expected_result):
+        """Test the convert_string_to_python_data_type function for various input values and data types."""
+        if isinstance(expected_result, type) and issubclass(expected_result, Exception):
+            with pytest.raises(expected_result):
+                convert_string_to_python_data_type(value, data_type)
+        else:
+            assert convert_string_to_python_data_type(value, data_type) == expected_result
 
 class TestCreateLogger:
     #ToDo :  Hacer los tests para create_logger

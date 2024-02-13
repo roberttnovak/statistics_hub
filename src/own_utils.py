@@ -589,3 +589,69 @@ def update_deep_nested_dict_value(dict_to_update, keys_tuple=None, new_values=No
             target_dict[key] = value
 
     return new_dict_to_update
+
+def convert_string_to_python_data_type(value: str, data_type: str):
+    """
+    Convert a string to a specified Python data type.
+
+    This function takes a string representation of a value and attempts to convert it to a specified Python data type. It supports basic data types such as 'int', 'float', and 'bool', as well as complex types like 'list' and 'dict'. For boolean conversion, the function strictly checks for 'true' or 'false' (case-insensitive) and raises a ValueError for any other input. The function is designed to handle simple string representations of lists and dictionaries, where lists are expected to be delimited by square brackets '[]' and dictionary entries by curly braces '{}', with key-value pairs separated by colons ':'.
+
+    Parameters:
+    - value (str): The string representation of the value to be converted.
+    - data_type (str): The target Python data type to convert the string to. Supported types are 'str', 'int', 'float', 'bool', 'list', and 'dict'.
+
+    Returns:
+    - The converted value in the specified Python data type.
+
+    Raises:
+    - ValueError: If the conversion is not possible due to an inappropriate format of the input string, an unsupported data type is specified, or the string cannot be converted to the desired boolean value.
+
+    Examples:
+    - convert_string_to_python_data_type("123", "int") returns 123 (as an integer)
+    - convert_string_to_python_data_type("45.67", "float") returns 45.67 (as a float)
+    - convert_string_to_python_data_type("true", "bool") returns True (as a boolean)
+    - convert_string_to_python_data_type("[1, 2, 3]", "list") returns ['1', '2', '3'] (as a list of strings)
+    - convert_string_to_python_data_type("{key1: value1, key2: value2}", "dict") returns {'key1': 'value1', 'key2': 'value2'} (as a dictionary)
+
+    Note: The function does not support nested or complex data structures in 'list' or 'dict' conversions and is limited to simple, flat structures.
+    """
+    if data_type == 'str':
+        return value  # No conversion needed
+    elif data_type == 'int':
+        try:
+            return int(value)
+        except ValueError:
+            raise ValueError(f"Cannot convert '{value}' to int")
+    elif data_type == 'float':
+        try:
+            return float(value)
+        except ValueError:
+            raise ValueError(f"Cannot convert '{value}' to float")
+    elif data_type == 'bool':
+        if value.lower() in ['true']:
+            return True
+        elif value.lower() in ['false']:
+            return False
+        else:
+            raise ValueError(f"Cannot convert '{value}' to bool")
+    elif data_type == 'list':
+        if value.startswith("[") and value.endswith("]"):
+            # Removing brackets and splitting by comma
+            value = value[1:-1]
+            return [item.strip() for item in value.split(",") if item.strip()]  # Removing any extra spaces
+        else:
+            raise ValueError(f"Value '{value}' does not represent a valid list")
+    elif data_type == 'dict':
+        if value.startswith("{") and value.endswith("}"):
+            # Simple parsing assuming the dict is in the format "{key1: value1, key2: value2}"
+            value = value[1:-1]
+            dict_items = [item.strip() for item in value.split(",") if item.strip()]
+            result_dict = {}
+            for item in dict_items:
+                key, val = item.split(":")
+                result_dict[key.strip()] = val.strip()
+            return result_dict
+        else:
+            raise ValueError(f"Value '{value}' does not represent a valid dict")
+    else:
+        raise ValueError(f"Unsupported data type: {data_type}")

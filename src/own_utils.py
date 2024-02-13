@@ -555,12 +555,19 @@ def update_deep_nested_dict_value(dict_to_update, keys_tuple=None, new_values=No
 
     # Determine the target dictionary for updates
     target_dict = new_dict_to_update
+
     if keys_tuple:
         for key in keys_tuple:
             if key in target_dict and isinstance(target_dict[key], dict):
                 target_dict = target_dict[key]  # Navigate to the next level
             else:
                 raise KeyError(f"Key '{key}' not found or not associated with a dictionary.")
+        # Find the deepest level or a level containing a key from new_values
+        while any(isinstance(v, dict) for v in target_dict.values()) and not any(k in new_values for k in target_dict):
+            for k, v in target_dict.items():
+                if isinstance(v, dict):
+                    target_dict = v  # Move to the nested dictionary
+                    break
     else:
         # Find the deepest level if keys_tuple is None
         while any(isinstance(v, dict) for v in target_dict.values()):

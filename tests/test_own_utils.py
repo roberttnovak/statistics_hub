@@ -572,11 +572,20 @@ class TestConvertStringToPythonDataType:
             ("123", "int", 123),
             ("123", "float", 123.),
             ("45.67", "float", 45.67),
+            # Boolean conversion tests
             ("true", "bool", True),
             ("false", "bool", False),
             # Simple list and dict conversion tests
             ("[1, 2, 3]", "list", ["1", "2", "3"]),
+            ("['1', '2', '3']", "list", ["1", "2", "3"]),
             ("{key1: value1, key2: value2}", "dict", {"key1": "value1", "key2": "value2"}),
+            ("{'key1': 'value1', 'key2': 'value2'}", "dict", {"key1": "value1", "key2": "value2"}),
+            # Test None for all data types
+            ("None", "int", None),
+            ("None", "float", None),
+            ("None", "bool", None),
+            ("None", "list", None),
+            ("None", "dict", None),
             # Tests for unchanged string values
             ("unchanged", "str", "unchanged"),
             # Tests for invalid inputs that should raise exceptions

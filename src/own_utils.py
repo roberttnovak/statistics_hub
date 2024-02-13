@@ -594,14 +594,14 @@ def convert_string_to_python_data_type(value: str, data_type: str):
     """
     Convert a string to a specified Python data type.
 
-    This function takes a string representation of a value and attempts to convert it to a specified Python data type. It supports basic data types such as 'int', 'float', and 'bool', as well as complex types like 'list' and 'dict'. For boolean conversion, the function strictly checks for 'true' or 'false' (case-insensitive) and raises a ValueError for any other input. The function is designed to handle simple string representations of lists and dictionaries, where lists are expected to be delimited by square brackets '[]' and dictionary entries by curly braces '{}', with key-value pairs separated by colons ':'.
+    This function takes a string representation of a value and attempts to convert it to a specified Python data type. It supports basic data types such as 'int', 'float', and 'bool', as well as complex types like 'list' and 'dict'. For boolean conversion, the function strictly checks for 'true' or 'false' (case-insensitive) and raises a ValueError for any other input. The function is designed to handle simple string representations of lists and dictionaries, where lists are expected to be delimited by square brackets '[]' and dictionary entries by curly braces '{}', with key-value pairs separated by colons ':'. Quotes within list items or dictionary keys/values are removed.
 
     Parameters:
     - value (str): The string representation of the value to be converted.
     - data_type (str): The target Python data type to convert the string to. Supported types are 'str', 'int', 'float', 'bool', 'list', and 'dict'.
 
     Returns:
-    - The converted value in the specified Python data type.
+    - The converted value in the specified Python data type, with quotes removed from list items or dictionary keys/values.
 
     Raises:
     - ValueError: If the conversion is not possible due to an inappropriate format of the input string, an unsupported data type is specified, or the string cannot be converted to the desired boolean value.
@@ -610,48 +610,55 @@ def convert_string_to_python_data_type(value: str, data_type: str):
     - convert_string_to_python_data_type("123", "int") returns 123 (as an integer)
     - convert_string_to_python_data_type("45.67", "float") returns 45.67 (as a float)
     - convert_string_to_python_data_type("true", "bool") returns True (as a boolean)
-    - convert_string_to_python_data_type("[1, 2, 3]", "list") returns ['1', '2', '3'] (as a list of strings)
-    - convert_string_to_python_data_type("{key1: value1, key2: value2}", "dict") returns {'key1': 'value1', 'key2': 'value2'} (as a dictionary)
+    - convert_string_to_python_data_type("['1', '2', '3']", "list") returns ['1', '2', '3'] (as a list of strings, with quotes removed)
+    - convert_string_to_python_data_type("{'key1': 'value1', 'key2': 'value2'}", "dict") returns {'key1': 'value1', 'key2': 'value2'} (as a dictionary, with quotes removed from keys/values)
 
     Note: The function does not support nested or complex data structures in 'list' or 'dict' conversions and is limited to simple, flat structures.
     """
+    def remove_quotes(item):
+        return item.strip().replace("'", "").replace('"', "")
+
     if data_type == 'str':
-        return value  # No conversion needed
-    elif data_type == 'int':
+        if value.lower() in ['none', 'null']:
+            return None
+        return remove_quotes(value)  # Removing quotes if present
+    elif data_type in ['int', 'float']:
+        if value.lower() in ['none', 'null']:
+            return None
         try:
-            return int(value)
+            return {'int': int, 'float': float}[data_type](value)
         except ValueError:
-            raise ValueError(f"Cannot convert '{value}' to int")
-    elif data_type == 'float':
-        try:
-            return float(value)
-        except ValueError:
-            raise ValueError(f"Cannot convert '{value}' to float")
+            raise ValueError(f"Cannot convert '{value}' to {data_type}")
     elif data_type == 'bool':
-        if value.lower() in ['true']:
+        if value.lower() in ['none', 'null']:
+            return None
+        elif value.lower() in ['true']:
             return True
         elif value.lower() in ['false']:
             return False
         else:
             raise ValueError(f"Cannot convert '{value}' to bool")
     elif data_type == 'list':
+        if value.lower() in ['none', 'null']:
+            return None
         if value.startswith("[") and value.endswith("]"):
-            # Removing brackets and splitting by comma
             value = value[1:-1]
-            return [item.strip() for item in value.split(",") if item.strip()]  # Removing any extra spaces
+            return [remove_quotes(item) for item in value.split(",") if item.strip()]
         else:
             raise ValueError(f"Value '{value}' does not represent a valid list")
     elif data_type == 'dict':
+        if value.lower() in ['none', 'null']:
+            return None
         if value.startswith("{") and value.endswith("}"):
-            # Simple parsing assuming the dict is in the format "{key1: value1, key2: value2}"
             value = value[1:-1]
             dict_items = [item.strip() for item in value.split(",") if item.strip()]
             result_dict = {}
             for item in dict_items:
                 key, val = item.split(":")
-                result_dict[key.strip()] = val.strip()
+                result_dict[remove_quotes(key)] = remove_quotes(val)
             return result_dict
         else:
             raise ValueError(f"Value '{value}' does not represent a valid dict")
     else:
         raise ValueError(f"Unsupported data type: {data_type}")
+

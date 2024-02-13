@@ -1,0 +1,8 @@
+{
+    "{linear,square,exponential}": "str",
+    "int,RandomStateinstanceorNone": "int",
+    "object": "str",
+    "intorfloat": "float",
+    "{best,random}": "str",
+    "int,floator{sqrt,log2}": "float"
+}

@@ -196,6 +196,17 @@ initial_dict_parameters_descriptions = {
     "machine_learning_model_args": "Dictionary of additional arguments to pass to the machine learning model."
 }
 
+mapping_wrong_data_type_sklearn = {
+    "{linear,square,exponential}": "str",
+    "int,RandomStateinstanceorNone": "int",
+    "object": "str",
+    "intorfloat": "float",
+    "int,RandomStateinstanceorNone": "int",
+    "{best,random}": "str",
+    "int,floator{sqrt,log2}" : "float"
+    #TODO: Add more mappings
+}
+
 all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters.copy() for regressor in all_regressors}
 
 
@@ -242,9 +253,18 @@ config_manager.save_config(
     create = True
 )
 
+# Save data type of own parameters
 config_manager.save_config(
     config_filename = "data_type_of_own_parameters", 
     config = data_type_dict_parameters_types, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
+
+# Save mapping of wrong data types (because of scrapping) in sklearn
+config_manager.save_config(
+    config_filename = "mapping_wrong_data_type_sklearn", 
+    config = mapping_wrong_data_type_sklearn, 
     subfolder = "models_parameters/metadata",
     create = True
 )
@@ -265,7 +285,7 @@ config_manager.save_config(
     subfolder = "models_parameters",
     create = True
 )
-
+print()
 #TODO: En algún momento, unificar todo el archivo que hay un un único diccionario. Por ejemplo:
 # {
 # 'data_importer_args': {

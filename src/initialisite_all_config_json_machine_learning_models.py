@@ -80,6 +80,48 @@ initial_dict_parameters = {
     }
 }
 
+data_type_dict_parameters_types = {
+    'data_importer_args': {
+        'data_importer_automatic_importation': 'bool', 
+        'data_importer_database': 'str',
+        'data_importer_query': 'str',  
+        'data_importer_save_importation': 'bool', 
+        'data_importer_file_name': 'str'  
+    },
+    'preprocess_time_series_data_args': {
+        'preprocess_time_series_data_resample_freq': 'str', 
+        'preprocess_time_series_data_aggregation_func': 'str', 
+        'preprocess_time_series_data_method': 'str', 
+        'preprocess_time_series_data_outlier_cols': 'list' 
+    },
+    'split_train_test_args': {
+        'ini_train': 'str',
+        'fin_train': 'str',
+        'fin_test': 'str'
+    },
+    'regressor_params': 'dict',
+    'time_serie_args': {
+        'name_time_column': 'str',
+        'name_id_sensor_column': 'str',
+        'id_device': 'str', 
+        'names_objective_variable': 'str', 
+        'prepare_dataframe_from_db_cols_for_query': 'list', 
+        'X_name_features': 'list',  
+        'Y_name_features': 'str',
+        'n_lags': 'int',
+        'n_predictions': 'int',
+        'lag_columns': 'list',  
+        'lead_columns': 'str',
+        'num_obs_to_predict': 'int'  
+    },
+    'save_args': {
+        'scale_in_preprocessing': 'bool', 
+        'save_preprocessing': 'bool', 
+        'folder_name_model': 'str',  
+        'folder_name_time_execution': 'str'  
+    }
+}
+
 initial_dict_parameters_legible_names = {
     "data_importer_automatic_importation": "Automatic Data Importation",
     "data_importer_creds_path": "Credentials Path",
@@ -156,6 +198,7 @@ initial_dict_parameters_descriptions = {
 
 all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters.copy() for regressor in all_regressors}
 
+
 # Initialisation of a instance of ConfigManager
 config_manager = ConfigManager("../config")
 
@@ -199,6 +242,13 @@ config_manager.save_config(
     create = True
 )
 
+config_manager.save_config(
+    config_filename = "data_type_of_own_parameters", 
+    config = data_type_dict_parameters_types, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
+
 # Get parameters of each sklearn regressor
 for regressor, metadata in all_regressors_with_all_info.items():
     regressor_params = {}
@@ -215,3 +265,13 @@ config_manager.save_config(
     subfolder = "models_parameters",
     create = True
 )
+
+#TODO: En algún momento, unificar todo el archivo que hay un un único diccionario. Por ejemplo:
+# {
+# 'data_importer_args': {
+#     'data_importer_automatic_importation': {'value': False, 'type': bool, ...},
+#     'data_importer_database': {'value': None, 'type': str, ...},
+#     'data_importer_query': {'value': None, 'type': str, ...},
+#     'data_importer_save_importation': {'value': True, 'type': bool, ...},
+#     'data_importer_file_name': {'value': None, 'type': str, ...}
+# },...

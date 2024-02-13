@@ -1,0 +1,41 @@
+{
+    "data_importer_args": {
+        "data_importer_automatic_importation": "bool",
+        "data_importer_database": "str",
+        "data_importer_query": "str",
+        "data_importer_save_importation": "bool",
+        "data_importer_file_name": "str"
+    },
+    "preprocess_time_series_data_args": {
+        "preprocess_time_series_data_resample_freq": "str",
+        "preprocess_time_series_data_aggregation_func": "str",
+        "preprocess_time_series_data_method": "str",
+        "preprocess_time_series_data_outlier_cols": "list"
+    },
+    "split_train_test_args": {
+        "ini_train": "str",
+        "fin_train": "str",
+        "fin_test": "str"
+    },
+    "regressor_params": "dict",
+    "time_serie_args": {
+        "name_time_column": "str",
+        "name_id_sensor_column": "str",
+        "id_device": "str",
+        "names_objective_variable": "str",
+        "prepare_dataframe_from_db_cols_for_query": "list",
+        "X_name_features": "list",
+        "Y_name_features": "str",
+        "n_lags": "int",
+        "n_predictions": "int",
+        "lag_columns": "list",
+        "lead_columns": "str",
+        "num_obs_to_predict": "int"
+    },
+    "save_args": {
+        "scale_in_preprocessing": "bool",
+        "save_preprocessing": "bool",
+        "folder_name_model": "str",
+        "folder_name_time_execution": "str"
+    }
+}

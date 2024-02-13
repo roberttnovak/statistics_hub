@@ -285,7 +285,6 @@ config_manager.save_config(
     subfolder = "models_parameters",
     create = True
 )
-print()
 #TODO: En algún momento, unificar todo el archivo que hay un un único diccionario. Por ejemplo:
 # {
 # 'data_importer_args': {

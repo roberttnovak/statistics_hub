@@ -1,13 +1,13 @@
 """
-This script initializes and configuration for regression models of sklearn.
+This script initializes configurations for scikit-learn regression models, performing operations such as:
 
-It performs the following operations:
-1. Imports necessary functions and classes from other modules.
-2. Retrieves a list of regressors of sklearn along with their parameters and other information
-3. Constructs a template dictionary of initial parameters for configuration.
-4. Creates an instance of ConfigManager to manage configurations.
-5. Saves the list of regressors with their parameters as a configuration.
-6. Saves the initial configuration for each regressor.
+1. Retrieving a list of all scikit-learn regressors along with their parameters and additional information obtained
+    from the official documentation scraped from the scikit-learn website.
+2. Constructing a template dictionary for initial parameter configurations and its data type.
+3. Creating legible names and descriptions for each parameter in the template dictionary.
+4. Creating a mapping of wrong data types for parameters obtained from the scikit-learn documentation to fix data type.
+5. Saving the list of regressors with their parameters as a configuration file.
+6. Saving the list of regressors with their parameters and additional information as configuration files.
 """
 import sklearn 
 import datetime
@@ -196,15 +196,81 @@ initial_dict_parameters_descriptions = {
     "machine_learning_model_args": "Dictionary of additional arguments to pass to the machine learning model."
 }
 
+#TODO: Pensar en una forma mejor de manejar todos y cada uno de estos tipos de datos que se han hecho en el scrapping
+# Por ejemplo, en aquellos donde se puede meter un str o un float
 mapping_wrong_data_type_sklearn = {
-    "{linear,square,exponential}": "str",
-    "int,RandomStateinstanceorNone": "int",
     "object": "str",
-    "intorfloat": "float",
-    "int,RandomStateinstanceorNone": "int",
-    "{best,random}": "str",
-    "int,floator{sqrt,log2}" : "float"
-    #TODO: Add more mappings
+    "{linear, square, exponential}" : "str",
+    "int, RandomState instance or None": "int",
+    "int or float": "float",
+    "{squared_error, friedman_mse, absolute_error, poisson}": "srt",
+    "{best, random}": "str",
+    "int, float or {sqrt, log2}": "float",
+    "non-negative float": "float",
+    "{mean, median, quantile, constant}": "str",
+    "int or float or array-like of shape (n_outputs,)": "int",
+    "float in [0.0, 1.0]": "float",
+    "bool or array-like of shape (n_features, n_features), default=False": "bool",
+    "int, RandomState instance": "int",
+    "{cyclic, random}": "str",
+    "float or list of float": "float",
+    "array-like": "list",
+    "auto, bool or array-like of shape (n_features, n_features)": "bool",
+    "int, cross-validation generator or iterable": "int",
+    "bool or int": "bool",
+    "{squared_error, friedman_mse, absolute_error, poisson}, default=squared_error": "str",
+    "{random, best}": "str",
+    "int, float, {sqrt, log2} or None": "float",
+    "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error": "str",
+    "{sqrt, log2, None}, int or float": "float",
+    "bool or callable": "bool",
+    "{lbfgs, newton-cholesky}": "str",
+    "kernel instance": "str",
+    "float or ndarray of shape (n_samples,)": "float", 
+    "fmin_l_bfgs_b, callable or None": "str",
+    "{squared_error, absolute_error, huber, quantile}, default=squared_error": "str",
+    "{friedman_mse, squared_error}": "str",
+    "int or None": "int",
+    "estimator or zero": "str",
+    "{sqrt, log2}, int or float": "float",
+    "{squared_error, absolute_error, gamma, poisson, quantile}, default=squared_error": "str",
+    "array-like of {bool, int, str} of shape (n_features) or shape (n_categorical_features,)": "bool",
+    "array-like of int of shape (n_features) or dict": "list",
+    "{pairwise, no_interactions} or sequence of lists/tuples/sets of int": "str",
+    "auto or bool": "str",
+    "str or callable or None": "str",
+    "int or float or None": "float",
+    "{nan, clip, raise}": "str", 
+    "bool or auto": "bool",
+    "{uniform, distance}, callable or None": "str",
+    "{auto, ball_tree, kd_tree, brute}": "str",
+    "str, DistanceMetric object or callable": "str",
+    "float or array-like of shape (n_targets,)": "float",
+    "str or callable": "str",
+    "bool, auto or array-like": "bool",
+    "int, cross-validation generator or an iterable": "int", 
+    "{aic, bic}": "str",
+    "{epsilon_insensitive, squared_epsilon_insensitive}, default=epsilon_insensitive": "str",
+    "array-like of shape(n_layers - 2,)": "list",
+    "{identity, logistic, tanh, relu}": "str",
+    "{lbfgs, sgd, adam}": "str",
+    "{constant, invscaling, adaptive}": "str",
+    "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf": "str", 
+    "{scale, auto} or float" : "str",
+    "{nipals, svd}": "str",
+    "{highs-ds, highs-ipm, highs, interior-point, revised simplex}": "str",
+    "int (>= 1) or float ([0, 1])": "float",
+    "callable": "str",
+    "float in range [0, 1]": "float",
+    "str, callable": "str",
+    "{float, ndarray of shape (n_targets,)}": "float",
+    "{auto, svd, cholesky, lsqr, sparse_cg, sag, saga, lbfgs}": "str",
+    "array-like of shape (n_alphas,)": "list",
+    "{auto, svd, eigen}": "str",
+    "{l2, l1, elasticnet, None}": "str", 
+    "float or None": "float", 
+    "function": "str",
+    "{auto, identity, log}": "str"
 }
 
 all_sklearn_regressors_set_parameters = {regressor: initial_dict_parameters.copy() for regressor in all_regressors}
@@ -285,6 +351,7 @@ config_manager.save_config(
     subfolder = "models_parameters",
     create = True
 )
+
 #TODO: En algún momento, unificar todo el archivo que hay un un único diccionario. Por ejemplo:
 # {
 # 'data_importer_args': {

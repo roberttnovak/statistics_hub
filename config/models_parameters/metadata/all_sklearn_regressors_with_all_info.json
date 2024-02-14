@@ -331,7 +331,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, friedman_mse, absolute_error,             poisson}"
+                "data_type": "{squared_error, friedman_mse, absolute_error, poisson}"
             },
             {
                 "parameter": "splitter",
@@ -452,7 +452,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\n",
                 "value_default": "False",
-                "data_type": "bool or array-like of shape (n_features, n_features),                 default=False"
+                "data_type": "bool or array-like of shape (n_features, n_features), default=False"
             },
             {
                 "parameter": "max_iter",
@@ -537,7 +537,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "auto, bool or array-like of shape             (n_features, n_features)"
+                "data_type": "auto, bool or array-like of shape (n_features, n_features)"
             },
             {
                 "parameter": "max_iter",
@@ -604,7 +604,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, friedman_mse, absolute_error, poisson},             default=squared_error"
+                "data_type": "{squared_error, friedman_mse, absolute_error, poisson}, default=squared_error"
             },
             {
                 "parameter": "splitter",
@@ -685,7 +685,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, absolute_error, friedman_mse, poisson},             default=squared_error"
+                "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -896,7 +896,7 @@
                 "parameter": "loss",
                 "description": "Loss function to be optimized. \u2018squared_error\u2019 refers to the squared\nerror for regression. \u2018absolute_error\u2019 refers to the absolute error of\nregression and is a robust loss function. \u2018huber\u2019 is a\ncombination of the two. \u2018quantile\u2019 allows quantile regression (use\nalpha to specify the quantile).\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, absolute_error, huber, quantile},             default=squared_error"
+                "data_type": "{squared_error, absolute_error, huber, quantile}, default=squared_error"
             },
             {
                 "parameter": "learning_rate",
@@ -1032,7 +1032,7 @@
                 "parameter": "loss",
                 "description": "The loss function to use in the boosting process. Note that the\n\u201csquared error\u201d, \u201cgamma\u201d and \u201cpoisson\u201d losses actually implement\n\u201chalf least squares loss\u201d, \u201chalf gamma deviance\u201d and \u201chalf poisson\ndeviance\u201d to simplify the computation of the gradient. Furthermore,\n\u201cgamma\u201d and \u201cpoisson\u201d losses internally use a log-link, \u201cgamma\u201d\nrequires y > 0 and \u201cpoisson\u201d requires y >= 0.\n\u201cquantile\u201d uses the pinball loss.\n\nChanged in version 0.23: Added option \u2018poisson\u2019.\n\n\nChanged in version 1.1: Added option \u2018quantile\u2019.\n\n\nChanged in version 1.3: Added option \u2018gamma\u2019.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, absolute_error, gamma, poisson, quantile},             default=squared_error"
+                "data_type": "{squared_error, absolute_error, gamma, poisson, quantile}, default=squared_error"
             },
             {
                 "parameter": "quantile",
@@ -1086,7 +1086,7 @@
                 "parameter": "categorical_features",
                 "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\"from_dtype\": dataframe columns with dtype \u201ccategory\u201d are\nconsidered to be categorical features. The input must be an object\nexposing a __dataframe__ method such as pandas or polars\nDataFrames to use this feature.\n\nFor each categorical feature, there must be at most max_bins unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\nRead more in the User Guide.\n\nNew in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n\nChanged in version 1.4: Added \"from_dtype\" option. The default will change to \"from_dtype\" in\nv1.6.\n\n",
                 "value_default": "None",
-                "data_type": "array-like of {bool, int, str} of shape (n_features)             or shape (n_categorical_features,)"
+                "data_type": "array-like of {bool, int, str} of shape (n_features) or shape (n_categorical_features,)"
             },
             {
                 "parameter": "monotonic_cst",
@@ -1098,7 +1098,7 @@
                 "parameter": "interaction_cst",
                 "description": "Specify interaction constraints, the sets of features which can\ninteract with each other in child node splits.\nEach item specifies the set of feature indices that are allowed\nto interact with each other. If there are more features than\nspecified in these constraints, they are treated as if they were\nspecified as an additional set.\nThe strings \u201cpairwise\u201d and \u201cno_interactions\u201d are shorthands for\nallowing only pairwise or no interactions, respectively.\nFor instance, with 5 features in total, interaction_cst=[{0, 1}]\nis equivalent to interaction_cst=[{0, 1}, {2, 3, 4}],\nand specifies that each branch of a tree will either only split\non features 0 and 1 or only split on features 2, 3 and 4.\n\nNew in version 1.2.\n\n",
                 "value_default": "None",
-                "data_type": "{pairwise, no_interactions} or sequence of lists/tuples/sets             of int"
+                "data_type": "{pairwise, no_interactions} or sequence of lists/tuples/sets of int"
             },
             {
                 "parameter": "warm_start",
@@ -1472,7 +1472,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\n",
                 "value_default": "False",
-                "data_type": "bool or array-like of shape (n_features, n_features),                 default=False"
+                "data_type": "bool or array-like of shape (n_features, n_features), default=False"
             },
             {
                 "parameter": "copy_X",
@@ -1551,7 +1551,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "auto, bool or array-like of shape             (n_features, n_features)"
+                "data_type": "auto, bool or array-like of shape (n_features, n_features)"
             },
             {
                 "parameter": "max_iter",
@@ -1872,7 +1872,7 @@
                 "parameter": "loss",
                 "description": "Specifies the loss function. The epsilon-insensitive loss\n(standard SVR) is the L1 loss, while the squared epsilon-insensitive\nloss (\u2018squared_epsilon_insensitive\u2019) is the L2 loss.\n",
                 "value_default": "epsilon_insensitive",
-                "data_type": "{epsilon_insensitive, squared_epsilon_insensitive},             default=epsilon_insensitive"
+                "data_type": "{epsilon_insensitive, squared_epsilon_insensitive}, default=epsilon_insensitive"
             },
             {
                 "parameter": "fit_intercept",
@@ -2363,7 +2363,7 @@
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
                 "value_default": "rbf",
-                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable,          default=rbf"
+                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
             },
             {
                 "parameter": "degree",
@@ -2741,7 +2741,7 @@
                 "parameter": "solver",
                 "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nFrom scipy>=1.6.0, it is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver changed to \"highs\" in version 1.4.\n\n",
                 "value_default": "highs",
-                "data_type": "{highs-ds, highs-ipm, highs, interior-point,             revised simplex}"
+                "data_type": "{highs-ds, highs-ipm, highs, interior-point, revised simplex}"
             },
             {
                 "parameter": "solver_options",
@@ -2904,7 +2904,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 1.0: Poisson criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error, absolute_error, friedman_mse, poisson},             default=squared_error"
+                "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -3040,7 +3040,7 @@
                 "parameter": "solver",
                 "description": "Solver to use in the computational routines:\n\n\u2018auto\u2019 chooses the solver automatically based on the type of data.\n\u2018svd\u2019 uses a Singular Value Decomposition of X to compute the Ridge\ncoefficients. It is the most stable solver, in particular more stable\nfor singular matrices than \u2018cholesky\u2019 at the cost of being slower.\n\u2018cholesky\u2019 uses the standard scipy.linalg.solve function to\nobtain a closed-form solution.\n\u2018sparse_cg\u2019 uses the conjugate gradient solver as found in\nscipy.sparse.linalg.cg. As an iterative algorithm, this solver is\nmore appropriate than \u2018cholesky\u2019 for large-scale data\n(possibility to set tol and max_iter).\n\u2018lsqr\u2019 uses the dedicated regularized least-squares routine\nscipy.sparse.linalg.lsqr. It is the fastest and uses an iterative\nprocedure.\n\u2018sag\u2019 uses a Stochastic Average Gradient descent, and \u2018saga\u2019 uses\nits improved, unbiased version named SAGA. Both methods also use an\niterative procedure, and are often faster than other solvers when\nboth n_samples and n_features are large. Note that \u2018sag\u2019 and\n\u2018saga\u2019 fast convergence is only guaranteed on features with\napproximately the same scale. You can preprocess the data with a\nscaler from sklearn.preprocessing.\n\u2018lbfgs\u2019 uses L-BFGS-B algorithm implemented in\nscipy.optimize.minimize. It can be used only when positive\nis True.\n\nAll solvers except \u2018svd\u2019 support both dense and sparse data. However, only\n\u2018lsqr\u2019, \u2018sag\u2019, \u2018sparse_cg\u2019, and \u2018lbfgs\u2019 support sparse input when\nfit_intercept is True.\n\nNew in version 0.17: Stochastic Average Gradient descent solver.\n\n\nNew in version 0.19: SAGA solver.\n\n",
                 "value_default": "auto",
-                "data_type": "{auto, svd, cholesky, lsqr, sparse_cg,             sag, saga, lbfgs}"
+                "data_type": "{auto, svd, cholesky, lsqr, sparse_cg, sag, saga, lbfgs}"
             },
             {
                 "parameter": "positive",
@@ -3235,7 +3235,7 @@
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
                 "value_default": "rbf",
-                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable,          default=rbf"
+                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
             },
             {
                 "parameter": "degree",

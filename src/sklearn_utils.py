@@ -156,7 +156,7 @@ def extract_regressor_info(soup, parameter_subset=None):
     parameters, datas_type, values_default = zip(*[
         [
             parameter_tag.strong.text,
-            re.sub(r"[\"'“”‘’ ]","",parameter_tag.find('span', class_='classifier').text.split(', default=')[0]),
+            re.sub(r"[\"'“”‘’]","",parameter_tag.find('span', class_='classifier').text.split(', default=')[0]),
             re.sub(r"[\"'“”‘’ ]","",parameter_tag.find('span', class_='classifier').text.split('default=')[1]) # Some defaults values are string and sometimes is obtained as, for example, ’linear’
             if parameter_tag.find('span', class_='classifier') and 'default=' in parameter_tag.find('span', class_='classifier').text 
             else None # Some parameters dont have default values

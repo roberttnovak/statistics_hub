@@ -106,13 +106,13 @@
                 "parameter": "loss",
                 "description": "The loss function to use when updating the weights after each\nboosting iteration.\n",
                 "value_default": "linear",
-                "data_type": "{linear,square,exponential}"
+                "data_type": "{linear, square, exponential}"
             },
             {
                 "parameter": "random_state",
                 "description": "Controls the random seed given at each estimator at each\nboosting iteration.\nThus, it is only used when estimator exposes a random_state.\nIn addition, it controls the bootstrap of the weights used to train the\nestimator at each boosting iteration.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             }
         ],
         "references": [
@@ -140,13 +140,13 @@
                 "parameter": "max_samples",
                 "description": "The number of samples to draw from X to train each base estimator (with\nreplacement by default, see bootstrap for more details).\n\nIf int, then draw max_samples samples.\nIf float, then draw max_samples * X.shape[0] samples.\n\n",
                 "value_default": "1.0",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "max_features",
                 "description": "The number of features to draw from X to train each base estimator (\nwithout replacement by default, see bootstrap_features for more\ndetails).\n\nIf int, then draw max_features features.\nIf float, then draw max(1, int(max_features * n_features_in_)) features.\n\n",
                 "value_default": "1.0",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "bootstrap",
@@ -182,7 +182,7 @@
                 "parameter": "random_state",
                 "description": "Controls the random resampling of the original dataset\n(sample wise and feature wise).\nIf the base estimator accepts a random_state attribute, a different\nseed is generated for each instance in the ensemble.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "verbose",
@@ -288,7 +288,7 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html"
     },
     "CCA": {
-        "regressor_info": "Canonical Correlation Analysis, also known as \u201cMode B\u201d PLS.\nRead more in the User Guide.",
+        "regressor_info": "Canonical Correlation Analysis, also known as \u201cMode B\u201d PLS.\nFor a comparison between other cross decomposition algorithms, see\nCompare cross decomposition methods.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "n_components",
@@ -331,13 +331,13 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,friedman_mse,absolute_error,poisson}"
+                "data_type": "{squared_error, friedman_mse, absolute_error,             poisson}"
             },
             {
                 "parameter": "splitter",
                 "description": "The strategy used to choose the split at each node. Supported\nstrategies are \u201cbest\u201d to choose the best split and \u201crandom\u201d to choose\nthe best random split.\n",
                 "value_default": "best",
-                "data_type": "{best,random}"
+                "data_type": "{best, random}"
             },
             {
                 "parameter": "max_depth",
@@ -349,13 +349,13 @@
                 "parameter": "min_samples_split",
                 "description": "The minimum number of samples required to split an internal node:\n\nIf int, then consider min_samples_split as the minimum number.\nIf float, then min_samples_split is a fraction and\nceil(min_samples_split * n_samples) are the minimum\nnumber of samples for each split.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "2",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_samples_leaf",
                 "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast min_samples_leaf training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\nIf int, then consider min_samples_leaf as the minimum number.\nIf float, then min_samples_leaf is a fraction and\nceil(min_samples_leaf * n_samples) are the minimum\nnumber of samples for each node.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "1",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_weight_fraction_leaf",
@@ -367,13 +367,13 @@
                 "parameter": "max_features",
                 "description": "The number of features to consider when looking for the best split:\n\nIf int, then consider max_features features at each split.\nIf float, then max_features is a fraction and\nmax(1, int(max_features * n_features_in_)) features are considered at each\nsplit.\nIf \u201csqrt\u201d, then max_features=sqrt(n_features).\nIf \u201clog2\u201d, then max_features=log2(n_features).\nIf None, then max_features=n_features.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than max_features features.\n",
                 "value_default": "None",
-                "data_type": "int,floator{sqrt,log2}"
+                "data_type": "int, float or {sqrt, log2}"
             },
             {
                 "parameter": "random_state",
                 "description": "Controls the randomness of the estimator. The features are always\nrandomly permuted at each split, even if splitter is set to\n\"best\". When max_features < n_features, the algorithm will\nselect max_features at random at each split before finding the best\nsplit among them. But the best found split may vary across different\nruns, even if max_features=n_features. That is the case, if the\nimprovement of the criterion is identical for several splits and one\nsplit has to be selected at random. To obtain a deterministic behaviour\nduring fitting, random_state has to be fixed to an integer.\nSee Glossary for details.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "max_leaf_nodes",
@@ -391,7 +391,7 @@
                 "parameter": "ccp_alpha",
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0",
-                "data_type": "non-negativefloat"
+                "data_type": "non-negative float"
             }
         ],
         "references": [
@@ -409,19 +409,19 @@
                 "parameter": "strategy",
                 "description": "Strategy to use to generate predictions.\n\n\u201cmean\u201d: always predicts the mean of the training set\n\u201cmedian\u201d: always predicts the median of the training set\n\u201cquantile\u201d: always predicts a specified quantile of the training set,\nprovided with the quantile parameter.\n\u201cconstant\u201d: always predicts a constant value that is provided by\nthe user.\n\n",
                 "value_default": "mean",
-                "data_type": "{mean,median,quantile,constant}"
+                "data_type": "{mean, median, quantile, constant}"
             },
             {
                 "parameter": "constant",
                 "description": "The explicit constant as predicted by the \u201cconstant\u201d strategy. This\nparameter is useful only for the \u201cconstant\u201d strategy.\n",
                 "value_default": "None",
-                "data_type": "intorfloatorarray-likeofshape(n_outputs,)"
+                "data_type": "int or float or array-like of shape (n_outputs,)"
             },
             {
                 "parameter": "quantile",
                 "description": "The quantile to predict using the \u201cquantile\u201d strategy. A quantile of\n0.5 corresponds to the median, while 0.0 to the minimum and 1.0 to the\nmaximum.\n",
                 "value_default": "None",
-                "data_type": "floatin[0.0,1.0]"
+                "data_type": "float in [0.0, 1.0]"
             }
         ],
         "references": [],
@@ -452,7 +452,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\n",
                 "value_default": "False",
-                "data_type": "boolorarray-likeofshape(n_features,n_features),default=False"
+                "data_type": "bool or array-like of shape (n_features, n_features),                 default=False"
             },
             {
                 "parameter": "max_iter",
@@ -488,13 +488,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -507,7 +507,7 @@
                 "parameter": "l1_ratio",
                 "description": "Float between 0 and 1 passed to ElasticNet (scaling between\nl1 and l2 penalties). For l1_ratio = 0\nthe penalty is an L2 penalty. For l1_ratio = 1 it is an L1 penalty.\nFor 0 < l1_ratio < 1, the penalty is a combination of L1 and L2\nThis parameter can be a list, in which case the different\nvalues are tested by cross-validation and the one giving the best\nprediction score is used. Note that a good choice of list of\nvalues for l1_ratio is often to put more values close to 1\n(i.e. Lasso) and less close to 0 (i.e. Ridge), as in [.1, .5, .7,\n.9, .95, .99, 1].\n",
                 "value_default": "0.5",
-                "data_type": "floatorlistoffloat"
+                "data_type": "float or list of float"
             },
             {
                 "parameter": "eps",
@@ -537,7 +537,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "auto,boolorarray-likeofshape(n_features,n_features)"
+                "data_type": "auto, bool or array-like of shape             (n_features, n_features)"
             },
             {
                 "parameter": "max_iter",
@@ -555,7 +555,7 @@
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\nint, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororiterable"
+                "data_type": "int, cross-validation generator or iterable"
             },
             {
                 "parameter": "copy_X",
@@ -567,7 +567,7 @@
                 "parameter": "verbose",
                 "description": "Amount of verbosity.\n",
                 "value_default": "0",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "n_jobs",
@@ -585,13 +585,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -604,13 +604,13 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,friedman_mse,absolute_error,poisson},default=squared_error"
+                "data_type": "{squared_error, friedman_mse, absolute_error, poisson},             default=squared_error"
             },
             {
                 "parameter": "splitter",
                 "description": "The strategy used to choose the split at each node. Supported\nstrategies are \u201cbest\u201d to choose the best split and \u201crandom\u201d to choose\nthe best random split.\n",
                 "value_default": "random",
-                "data_type": "{random,best}"
+                "data_type": "{random, best}"
             },
             {
                 "parameter": "max_depth",
@@ -622,13 +622,13 @@
                 "parameter": "min_samples_split",
                 "description": "The minimum number of samples required to split an internal node:\n\nIf int, then consider min_samples_split as the minimum number.\nIf float, then min_samples_split is a fraction and\nceil(min_samples_split * n_samples) are the minimum\nnumber of samples for each split.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "2",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_samples_leaf",
                 "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast min_samples_leaf training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\nIf int, then consider min_samples_leaf as the minimum number.\nIf float, then min_samples_leaf is a fraction and\nceil(min_samples_leaf * n_samples) are the minimum\nnumber of samples for each node.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "1",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_weight_fraction_leaf",
@@ -640,13 +640,13 @@
                 "parameter": "max_features",
                 "description": "The number of features to consider when looking for the best split:\n\nIf int, then consider max_features features at each split.\nIf float, then max_features is a fraction and\nmax(1, int(max_features * n_features_in_)) features are considered at each\nsplit.\nIf \u201csqrt\u201d, then max_features=sqrt(n_features).\nIf \u201clog2\u201d, then max_features=log2(n_features).\nIf None, then max_features=n_features.\n\n\nChanged in version 1.1: The default of max_features changed from \"auto\" to 1.0.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than max_features features.\n",
                 "value_default": "1.0",
-                "data_type": "int,float,{sqrt,log2}orNone"
+                "data_type": "int, float, {sqrt, log2} or None"
             },
             {
                 "parameter": "random_state",
                 "description": "Used to pick randomly the max_features used at each split.\nSee Glossary for details.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "min_impurity_decrease",
@@ -664,7 +664,7 @@
                 "parameter": "ccp_alpha",
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0",
-                "data_type": "non-negativefloat"
+                "data_type": "non-negative float"
             }
         ],
         "references": [
@@ -685,7 +685,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,absolute_error,friedman_mse,poisson},default=squared_error"
+                "data_type": "{squared_error, absolute_error, friedman_mse, poisson},             default=squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -697,13 +697,13 @@
                 "parameter": "min_samples_split",
                 "description": "The minimum number of samples required to split an internal node:\n\nIf int, then consider min_samples_split as the minimum number.\nIf float, then min_samples_split is a fraction and\nceil(min_samples_split * n_samples) are the minimum\nnumber of samples for each split.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "2",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_samples_leaf",
                 "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast min_samples_leaf training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\nIf int, then consider min_samples_leaf as the minimum number.\nIf float, then min_samples_leaf is a fraction and\nceil(min_samples_leaf * n_samples) are the minimum\nnumber of samples for each node.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "1",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_weight_fraction_leaf",
@@ -715,7 +715,7 @@
                 "parameter": "max_features",
                 "description": "The number of features to consider when looking for the best split:\n\nIf int, then consider max_features features at each split.\nIf float, then max_features is a fraction and\nmax(1, int(max_features * n_features_in_)) features are considered at each\nsplit.\nIf \u201csqrt\u201d, then max_features=sqrt(n_features).\nIf \u201clog2\u201d, then max_features=log2(n_features).\nIf None or 1.0, then max_features=n_features.\n\n\nNote\nThe default of 1.0 is equivalent to bagged trees and more\nrandomness can be achieved by setting smaller values, e.g. 0.3.\n\n\nChanged in version 1.1: The default of max_features changed from \"auto\" to 1.0.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than max_features features.\n",
                 "value_default": "1.0",
-                "data_type": "{sqrt,log2,None},intorfloat"
+                "data_type": "{sqrt, log2, None}, int or float"
             },
             {
                 "parameter": "max_leaf_nodes",
@@ -739,7 +739,7 @@
                 "parameter": "oob_score",
                 "description": "Whether to use out-of-bag samples to estimate the generalization score.\nBy default, r2_score is used.\nProvide a callable with signature metric(y_true, y_pred) to use a\ncustom metric. Only available if bootstrap=True.\n",
                 "value_default": "False",
-                "data_type": "boolorcallable"
+                "data_type": "bool or callable"
             },
             {
                 "parameter": "n_jobs",
@@ -751,7 +751,7 @@
                 "parameter": "random_state",
                 "description": "Controls 3 sources of randomness:\n\nthe bootstrapping of the samples used when building trees\n(if bootstrap=True)\nthe sampling of the features to consider when looking for the best\nsplit at each node (if max_features < n_features)\nthe draw of the splits for each of the max_features\n\nSee Glossary for details.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "verbose",
@@ -769,13 +769,13 @@
                 "parameter": "ccp_alpha",
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0",
-                "data_type": "non-negativefloat"
+                "data_type": "non-negative float"
             },
             {
                 "parameter": "max_samples",
                 "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max_samples * X.shape[0] samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
                 "value_default": "None",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             }
         ],
         "references": [
@@ -802,7 +802,7 @@
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
-                "data_type": "{lbfgs,newton-cholesky}"
+                "data_type": "{lbfgs, newton-cholesky}"
             },
             {
                 "parameter": "max_iter",
@@ -839,19 +839,19 @@
                 "parameter": "kernel",
                 "description": "The kernel specifying the covariance function of the GP. If None is\npassed, the kernel ConstantKernel(1.0, constant_value_bounds=\"fixed\")\n* RBF(1.0, length_scale_bounds=\"fixed\") is used as default. Note that\nthe kernel hyperparameters are optimized during fitting unless the\nbounds are marked as \u201cfixed\u201d.\n",
                 "value_default": "None",
-                "data_type": "kernelinstance"
+                "data_type": "kernel instance"
             },
             {
                 "parameter": "alpha",
                 "description": "Value added to the diagonal of the kernel matrix during fitting.\nThis can prevent a potential numerical issue during fitting, by\nensuring that the calculated values form a positive definite matrix.\nIt can also be interpreted as the variance of additional Gaussian\nmeasurement noise on the training observations. Note that this is\ndifferent from using a WhiteKernel. If an array is passed, it must\nhave the same number of entries as the data used for fitting and is\nused as datapoint-dependent noise level. Allowing to specify the\nnoise level directly as a parameter is mainly for convenience and\nfor consistency with Ridge.\n",
                 "value_default": "1e-10",
-                "data_type": "floatorndarrayofshape(n_samples,)"
+                "data_type": "float or ndarray of shape (n_samples,)"
             },
             {
                 "parameter": "optimizer",
                 "description": "Can either be one of the internally supported optimizers for optimizing\nthe kernel\u2019s parameters, specified by a string, or an externally\ndefined optimizer passed as a callable. If a callable is passed, it\nmust have the signature:\ndef optimizer(obj_func, initial_theta, bounds):\n    # * 'obj_func': the objective function to be minimized, which\n    #   takes the hyperparameters theta as a parameter and an\n    #   optional flag eval_gradient, which determines if the\n    #   gradient is returned additionally to the function value\n    # * 'initial_theta': the initial value for theta, which can be\n    #   used by local optimizers\n    # * 'bounds': the bounds on the values of theta\n    ....\n    # Returned are the best found hyperparameters theta and\n    # the corresponding value of the target function.\n    return theta_opt, func_min\n\n\nPer default, the L-BFGS-B algorithm from scipy.optimize.minimize\nis used. If None is passed, the kernel\u2019s parameters are kept fixed.\nAvailable internal optimizers are: {'fmin_l_bfgs_b'}.\n",
                 "value_default": "fmin_l_bfgs_b",
-                "data_type": "fmin_l_bfgs_b,callableorNone"
+                "data_type": "fmin_l_bfgs_b, callable or None"
             },
             {
                 "parameter": "n_restarts_optimizer",
@@ -881,7 +881,7 @@
                 "parameter": "random_state",
                 "description": "Determines random number generation used to initialize the centers.\nPass an int for reproducible results across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             }
         ],
         "references": [
@@ -896,7 +896,7 @@
                 "parameter": "loss",
                 "description": "Loss function to be optimized. \u2018squared_error\u2019 refers to the squared\nerror for regression. \u2018absolute_error\u2019 refers to the absolute error of\nregression and is a robust loss function. \u2018huber\u2019 is a\ncombination of the two. \u2018quantile\u2019 allows quantile regression (use\nalpha to specify the quantile).\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,absolute_error,huber,quantile},default=squared_error"
+                "data_type": "{squared_error, absolute_error, huber, quantile},             default=squared_error"
             },
             {
                 "parameter": "learning_rate",
@@ -920,19 +920,19 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria are\n\u201cfriedman_mse\u201d for the mean squared error with improvement score by\nFriedman, \u201csquared_error\u201d for mean squared error. The default value of\n\u201cfriedman_mse\u201d is generally the best as it can provide a better\napproximation in some cases.\n\nNew in version 0.18.\n\n",
                 "value_default": "friedman_mse",
-                "data_type": "{friedman_mse,squared_error}"
+                "data_type": "{friedman_mse, squared_error}"
             },
             {
                 "parameter": "min_samples_split",
                 "description": "The minimum number of samples required to split an internal node:\n\nIf int, values must be in the range [2, inf).\nIf float, values must be in the range (0.0, 1.0] and min_samples_split\nwill be ceil(min_samples_split * n_samples).\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "2",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_samples_leaf",
                 "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast min_samples_leaf training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\nIf int, values must be in the range [1, inf).\nIf float, values must be in the range (0.0, 1.0) and min_samples_leaf\nwill be ceil(min_samples_leaf * n_samples).\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "1",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_weight_fraction_leaf",
@@ -944,7 +944,7 @@
                 "parameter": "max_depth",
                 "description": "Maximum depth of the individual regression estimators. The maximum\ndepth limits the number of nodes in the tree. Tune this parameter\nfor best performance; the best value depends on the interaction\nof the input variables. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.\nIf int, values must be in the range [1, inf).\n",
                 "value_default": "3",
-                "data_type": "intorNone"
+                "data_type": "int or None"
             },
             {
                 "parameter": "min_impurity_decrease",
@@ -956,19 +956,19 @@
                 "parameter": "init",
                 "description": "An estimator object that is used to compute the initial predictions.\ninit has to provide fit and predict. If \u2018zero\u2019, the\ninitial raw predictions are set to zero. By default a\nDummyEstimator is used, predicting either the average target value\n(for loss=\u2019squared_error\u2019), or a quantile for the other losses.\n",
                 "value_default": "None",
-                "data_type": "estimatororzero"
+                "data_type": "estimator or zero"
             },
             {
                 "parameter": "random_state",
                 "description": "Controls the random seed given to each Tree estimator at each\nboosting iteration.\nIn addition, it controls the random permutation of the features at\neach split (see Notes for more details).\nIt also controls the random splitting of the training data to obtain a\nvalidation set if n_iter_no_change is not None.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "max_features",
                 "description": "The number of features to consider when looking for the best split:\n\nIf int, values must be in the range [1, inf).\nIf float, values must be in the range (0.0, 1.0] and the features\nconsidered at each split will be max(1, int(max_features * n_features_in_)).\nIf \u201csqrt\u201d, then max_features=sqrt(n_features).\nIf \u201clog2\u201d, then max_features=log2(n_features).\nIf None, then max_features=n_features.\n\nChoosing max_features < n_features leads to a reduction of variance\nand an increase in bias.\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than max_features features.\n",
                 "value_default": "None",
-                "data_type": "{sqrt,log2},intorfloat"
+                "data_type": "{sqrt, log2}, int or float"
             },
             {
                 "parameter": "alpha",
@@ -1016,7 +1016,7 @@
                 "parameter": "ccp_alpha",
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed.\nValues must be in the range [0.0, inf).\nSee Minimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0",
-                "data_type": "non-negativefloat"
+                "data_type": "non-negative float"
             }
         ],
         "references": [
@@ -1032,7 +1032,7 @@
                 "parameter": "loss",
                 "description": "The loss function to use in the boosting process. Note that the\n\u201csquared error\u201d, \u201cgamma\u201d and \u201cpoisson\u201d losses actually implement\n\u201chalf least squares loss\u201d, \u201chalf gamma deviance\u201d and \u201chalf poisson\ndeviance\u201d to simplify the computation of the gradient. Furthermore,\n\u201cgamma\u201d and \u201cpoisson\u201d losses internally use a log-link, \u201cgamma\u201d\nrequires y > 0 and \u201cpoisson\u201d requires y >= 0.\n\u201cquantile\u201d uses the pinball loss.\n\nChanged in version 0.23: Added option \u2018poisson\u2019.\n\n\nChanged in version 1.1: Added option \u2018quantile\u2019.\n\n\nChanged in version 1.3: Added option \u2018gamma\u2019.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,absolute_error,gamma,poisson,quantile},default=squared_error"
+                "data_type": "{squared_error, absolute_error, gamma, poisson, quantile},             default=squared_error"
             },
             {
                 "parameter": "quantile",
@@ -1056,13 +1056,13 @@
                 "parameter": "max_leaf_nodes",
                 "description": "The maximum number of leaves for each tree. Must be strictly greater\nthan 1. If None, there is no maximum limit.\n",
                 "value_default": "31",
-                "data_type": "intorNone"
+                "data_type": "int or None"
             },
             {
                 "parameter": "max_depth",
                 "description": "The maximum depth of each tree. The depth of a tree is the number of\nedges to go from the root to the deepest leaf.\nDepth isn\u2019t constrained by default.\n",
                 "value_default": "None",
-                "data_type": "intorNone"
+                "data_type": "int or None"
             },
             {
                 "parameter": "min_samples_leaf",
@@ -1086,19 +1086,19 @@
                 "parameter": "categorical_features",
                 "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\"from_dtype\": dataframe columns with dtype \u201ccategory\u201d are\nconsidered to be categorical features. The input must be an object\nexposing a __dataframe__ method such as pandas or polars\nDataFrames to use this feature.\n\nFor each categorical feature, there must be at most max_bins unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\nRead more in the User Guide.\n\nNew in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n\nChanged in version 1.4: Added \"from_dtype\" option. The default will change to \"from_dtype\" in\nv1.6.\n\n",
                 "value_default": "None",
-                "data_type": "array-likeof{bool,int,str}ofshape(n_features)orshape(n_categorical_features,)"
+                "data_type": "array-like of {bool, int, str} of shape (n_features)             or shape (n_categorical_features,)"
             },
             {
                 "parameter": "monotonic_cst",
                 "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n1: monotonic increase\n0: no constraint\n-1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\nUsing feature names to specify monotonic constraints for a usage example.\nRead more in the User Guide.\n\nNew in version 0.23.\n\n\nChanged in version 1.2: Accept dict of constraints with feature names as keys.\n\n",
                 "value_default": "None",
-                "data_type": "array-likeofintofshape(n_features)ordict"
+                "data_type": "array-like of int of shape (n_features) or dict"
             },
             {
                 "parameter": "interaction_cst",
                 "description": "Specify interaction constraints, the sets of features which can\ninteract with each other in child node splits.\nEach item specifies the set of feature indices that are allowed\nto interact with each other. If there are more features than\nspecified in these constraints, they are treated as if they were\nspecified as an additional set.\nThe strings \u201cpairwise\u201d and \u201cno_interactions\u201d are shorthands for\nallowing only pairwise or no interactions, respectively.\nFor instance, with 5 features in total, interaction_cst=[{0, 1}]\nis equivalent to interaction_cst=[{0, 1}, {2, 3, 4}],\nand specifies that each branch of a tree will either only split\non features 0 and 1 or only split on features 2, 3 and 4.\n\nNew in version 1.2.\n\n",
                 "value_default": "None",
-                "data_type": "{pairwise,no_interactions}orsequenceoflists/tuples/setsofint"
+                "data_type": "{pairwise, no_interactions} or sequence of lists/tuples/sets             of int"
             },
             {
                 "parameter": "warm_start",
@@ -1110,19 +1110,19 @@
                 "parameter": "early_stopping",
                 "description": "If \u2018auto\u2019, early stopping is enabled if the sample size is larger than\n10000. If True, early stopping is enabled, otherwise early stopping is\ndisabled.\n\nNew in version 0.23.\n\n",
                 "value_default": "auto",
-                "data_type": "autoorbool"
+                "data_type": "auto or bool"
             },
             {
                 "parameter": "scoring",
                 "description": "Scoring parameter to use for early stopping. It can be a single\nstring (see The scoring parameter: defining model evaluation rules) or a callable (see\nDefining your scoring strategy from metric functions). If None, the estimator\u2019s default scorer is used. If\nscoring='loss', early stopping is checked w.r.t the loss value.\nOnly used if early stopping is performed.\n",
                 "value_default": "loss",
-                "data_type": "strorcallableorNone"
+                "data_type": "str or callable or None"
             },
             {
                 "parameter": "validation_fraction",
                 "description": "Proportion (or absolute size) of training data to set aside as\nvalidation data for early stopping. If None, early stopping is done on\nthe training data. Only used if early stopping is performed.\n",
                 "value_default": "0.1",
-                "data_type": "intorfloatorNone"
+                "data_type": "int or float or None"
             },
             {
                 "parameter": "n_iter_no_change",
@@ -1146,7 +1146,7 @@
                 "parameter": "random_state",
                 "description": "Pseudo-random number generator to control the subsampling in the\nbinning process, and the train/validation data split if early stopping\nis enabled.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             }
         ],
         "references": [],
@@ -1217,13 +1217,13 @@
                 "parameter": "increasing",
                 "description": "Determines whether the predictions should be constrained to increase\nor decrease with X. \u2018auto\u2019 will decide based on the Spearman\ncorrelation estimate\u2019s sign.\n",
                 "value_default": "True",
-                "data_type": "boolorauto"
+                "data_type": "bool or auto"
             },
             {
                 "parameter": "out_of_bounds",
                 "description": "Handles how X values outside of the training domain are handled\nduring prediction.\n\n\u2018nan\u2019, predictions will be NaN.\n\u2018clip\u2019, predictions will be set to the value corresponding to\nthe nearest train interval endpoint.\n\u2018raise\u2019, a ValueError is raised.\n\n",
                 "value_default": "nan",
-                "data_type": "{nan,clip,raise}"
+                "data_type": "{nan, clip, raise}"
             }
         ],
         "references": [
@@ -1246,13 +1246,13 @@
                 "parameter": "weights",
                 "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\n",
                 "value_default": "uniform",
-                "data_type": "{uniform,distance},callableorNone"
+                "data_type": "{uniform, distance}, callable or None"
             },
             {
                 "parameter": "algorithm",
                 "description": "Algorithm used to compute the nearest neighbors:\n\n\u2018ball_tree\u2019 will use BallTree\n\u2018kd_tree\u2019 will use KDTree\n\u2018brute\u2019 will use a brute-force search.\n\u2018auto\u2019 will attempt to decide the most appropriate algorithm\nbased on the values passed to fit method.\n\nNote: fitting on sparse input will override the setting of\nthis parameter, using brute force.\n",
                 "value_default": "auto",
-                "data_type": "{auto,ball_tree,kd_tree,brute}"
+                "data_type": "{auto, ball_tree, kd_tree, brute}"
             },
             {
                 "parameter": "leaf_size",
@@ -1270,7 +1270,7 @@
                 "parameter": "metric",
                 "description": "Metric to use for distance computation. Default is \u201cminkowski\u201d, which\nresults in the standard Euclidean distance when p = 2. See the\ndocumentation of scipy.spatial.distance and\nthe metrics listed in\ndistance_metrics for valid metric\nvalues.\nIf metric is \u201cprecomputed\u201d, X is assumed to be a distance matrix and\nmust be square during fit. X may be a sparse graph, in which\ncase only \u201cnonzero\u201d elements may be considered neighbors.\nIf metric is a callable function, it takes two arrays representing 1D\nvectors as inputs and must return one value indicating the distance\nbetween those vectors. This works for Scipy\u2019s metrics, but is less\nefficient than passing the metric name as a string.\nIf metric is a DistanceMetric object, it will be passed directly to\nthe underlying computation routines.\n",
                 "value_default": "minkowski",
-                "data_type": "str,DistanceMetricobjectorcallable"
+                "data_type": "str, DistanceMetric object or callable"
             },
             {
                 "parameter": "metric_params",
@@ -1295,13 +1295,13 @@
                 "parameter": "alpha",
                 "description": "Regularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to 1 / (2C) in other linear models such as\nLogisticRegression or\nLinearSVC. If an array is passed, penalties are\nassumed to be specific to the targets. Hence they must correspond in\nnumber. See Ridge regression and classification for formula.\n",
                 "value_default": "1.0",
-                "data_type": "floatorarray-likeofshape(n_targets,)"
+                "data_type": "float or array-like of shape (n_targets,)"
             },
             {
                 "parameter": "kernel",
                 "description": "Kernel mapping used internally. This parameter is directly passed to\npairwise_kernels.\nIf kernel is a string, it must be one of the metrics\nin pairwise.PAIRWISE_KERNEL_FUNCTIONS or \u201cprecomputed\u201d.\nIf kernel is \u201cprecomputed\u201d, X is assumed to be a kernel matrix.\nAlternatively, if kernel is a callable function, it is called on\neach pair of instances (rows) and the resulting value recorded. The\ncallable should take two rows from X as input and return the\ncorresponding kernel value as a single number. This means that\ncallables from sklearn.metrics.pairwise are not allowed, as\nthey operate on matrices, not single samples. Use the string\nidentifying the kernel instead.\n",
                 "value_default": "linear",
-                "data_type": "strorcallable"
+                "data_type": "str or callable"
             },
             {
                 "parameter": "gamma",
@@ -1344,13 +1344,13 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "bool,autoorarray-like"
+                "data_type": "bool, auto or array-like "
             },
             {
                 "parameter": "n_nonzero_coefs",
@@ -1386,7 +1386,7 @@
                 "parameter": "random_state",
                 "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             }
         ],
         "references": [],
@@ -1405,7 +1405,7 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "max_iter",
@@ -1417,13 +1417,13 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram matrix\ncannot be passed as argument since we will use only subsets of X.\n",
                 "value_default": "auto",
-                "data_type": "bool,autoorarray-like"
+                "data_type": "bool, auto or array-like "
             },
             {
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\ninteger, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororaniterable"
+                "data_type": "int, cross-validation generator or an iterable"
             },
             {
                 "parameter": "max_n_alphas",
@@ -1435,7 +1435,7 @@
                 "parameter": "n_jobs",
                 "description": "Number of CPUs to use during the cross validation.\nNone means 1 unless in a joblib.parallel_backend context.\n-1 means using all processors. See Glossary\nfor more details.\n",
                 "value_default": "None",
-                "data_type": "intorNone"
+                "data_type": "int or None"
             },
             {
                 "parameter": "eps",
@@ -1472,7 +1472,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\n",
                 "value_default": "False",
-                "data_type": "boolorarray-likeofshape(n_features,n_features),default=False"
+                "data_type": "bool or array-like of shape (n_features, n_features),                 default=False"
             },
             {
                 "parameter": "copy_X",
@@ -1508,13 +1508,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -1551,7 +1551,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "auto,boolorarray-likeofshape(n_features,n_features)"
+                "data_type": "auto, bool or array-like of shape             (n_features, n_features)"
             },
             {
                 "parameter": "max_iter",
@@ -1575,13 +1575,13 @@
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\nint, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororiterable"
+                "data_type": "int, cross-validation generator or iterable"
             },
             {
                 "parameter": "verbose",
                 "description": "Amount of verbosity.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "n_jobs",
@@ -1599,13 +1599,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -1630,13 +1630,13 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "bool,autoorarray-like"
+                "data_type": "bool, auto or array-like"
             },
             {
                 "parameter": "max_iter",
@@ -1678,7 +1678,7 @@
                 "parameter": "random_state",
                 "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             }
         ],
         "references": [],
@@ -1697,7 +1697,7 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "max_iter",
@@ -1709,13 +1709,13 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram matrix\ncannot be passed as argument since we will use only subsets of X.\n",
                 "value_default": "auto",
-                "data_type": "boolorauto"
+                "data_type": "bool or auto "
             },
             {
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\ninteger, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororaniterable"
+                "data_type": "int, cross-validation generator or an iterable"
             },
             {
                 "parameter": "max_n_alphas",
@@ -1727,7 +1727,7 @@
                 "parameter": "n_jobs",
                 "description": "Number of CPUs to use during the cross validation.\nNone means 1 unless in a joblib.parallel_backend context.\n-1 means using all processors. See Glossary\nfor more details.\n",
                 "value_default": "None",
-                "data_type": "intorNone"
+                "data_type": "int or None"
             },
             {
                 "parameter": "eps",
@@ -1758,7 +1758,7 @@
                 "parameter": "criterion",
                 "description": "The type of criterion to use.\n",
                 "value_default": "aic",
-                "data_type": "{aic,bic}"
+                "data_type": "{aic, bic}"
             },
             {
                 "parameter": "fit_intercept",
@@ -1770,13 +1770,13 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to 'auto' let us decide. The Gram\nmatrix can also be passed as argument.\n",
                 "value_default": "auto",
-                "data_type": "bool,autoorarray-like"
+                "data_type": "bool, auto or array-like"
             },
             {
                 "parameter": "max_iter",
@@ -1872,7 +1872,7 @@
                 "parameter": "loss",
                 "description": "Specifies the loss function. The epsilon-insensitive loss\n(standard SVR) is the L1 loss, while the squared epsilon-insensitive\nloss (\u2018squared_epsilon_insensitive\u2019) is the L2 loss.\n",
                 "value_default": "epsilon_insensitive",
-                "data_type": "{epsilon_insensitive,squared_epsilon_insensitive},default=epsilon_insensitive"
+                "data_type": "{epsilon_insensitive, squared_epsilon_insensitive},             default=epsilon_insensitive"
             },
             {
                 "parameter": "fit_intercept",
@@ -1890,7 +1890,7 @@
                 "parameter": "dual",
                 "description": "Select the algorithm to either solve the dual or primal\noptimization problem. Prefer dual=False when n_samples > n_features.\ndual=\"auto\" will choose the value of the parameter automatically,\nbased on the values of n_samples, n_features and loss. If\nn_samples < n_features and optimizer supports chosen loss,\nthen dual will be set to True, otherwise it will be set to False.\n\nChanged in version 1.3: The \"auto\" option is added in version 1.3 and will be the default\nin version 1.5.\n\n",
                 "value_default": "True",
-                "data_type": "autoorbool"
+                "data_type": "auto or bool"
             },
             {
                 "parameter": "verbose",
@@ -1902,7 +1902,7 @@
                 "parameter": "random_state",
                 "description": "Controls the pseudo random number generation for shuffling the data.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "max_iter",
@@ -1921,19 +1921,19 @@
                 "parameter": "hidden_layer_sizes",
                 "description": "The ith element represents the number of neurons in the ith\nhidden layer.\n",
                 "value_default": "(100,)",
-                "data_type": "array-likeofshape(n_layers-2,)"
+                "data_type": "array-like of shape(n_layers - 2,)"
             },
             {
                 "parameter": "activation",
                 "description": "Activation function for the hidden layer.\n\n\u2018identity\u2019, no-op activation, useful to implement linear bottleneck,\nreturns f(x) = x\n\u2018logistic\u2019, the logistic sigmoid function,\nreturns f(x) = 1 / (1 + exp(-x)).\n\u2018tanh\u2019, the hyperbolic tan function,\nreturns f(x) = tanh(x).\n\u2018relu\u2019, the rectified linear unit function,\nreturns f(x) = max(0, x)\n\n",
                 "value_default": "relu",
-                "data_type": "{identity,logistic,tanh,relu}"
+                "data_type": "{identity, logistic, tanh, relu}"
             },
             {
                 "parameter": "solver",
                 "description": "The solver for weight optimization.\n\n\u2018lbfgs\u2019 is an optimizer in the family of quasi-Newton methods.\n\u2018sgd\u2019 refers to stochastic gradient descent.\n\u2018adam\u2019 refers to a stochastic gradient-based optimizer proposed by\nKingma, Diederik, and Jimmy Ba\n\nNote: The default solver \u2018adam\u2019 works pretty well on relatively\nlarge datasets (with thousands of training samples or more) in terms of\nboth training time and validation score.\nFor small datasets, however, \u2018lbfgs\u2019 can converge faster and perform\nbetter.\n",
                 "value_default": "adam",
-                "data_type": "{lbfgs,sgd,adam}"
+                "data_type": "{lbfgs, sgd, adam}"
             },
             {
                 "parameter": "alpha",
@@ -1951,7 +1951,7 @@
                 "parameter": "learning_rate",
                 "description": "Learning rate schedule for weight updates.\n\n\u2018constant\u2019 is a constant learning rate given by\n\u2018learning_rate_init\u2019.\n\u2018invscaling\u2019 gradually decreases the learning rate learning_rate_\nat each time step \u2018t\u2019 using an inverse scaling exponent of \u2018power_t\u2019.\neffective_learning_rate = learning_rate_init / pow(t, power_t)\n\u2018adaptive\u2019 keeps the learning rate constant to\n\u2018learning_rate_init\u2019 as long as training loss keeps decreasing.\nEach time two consecutive epochs fail to decrease training loss by at\nleast tol, or fail to increase validation score by at least tol if\n\u2018early_stopping\u2019 is on, the current learning rate is divided by 5.\n\nOnly used when solver=\u2019sgd\u2019.\n",
                 "value_default": "constant",
-                "data_type": "{constant,invscaling,adaptive}"
+                "data_type": "{constant, invscaling, adaptive}"
             },
             {
                 "parameter": "learning_rate_init",
@@ -1981,7 +1981,7 @@
                 "parameter": "random_state",
                 "description": "Determines random number generation for weights and bias\ninitialization, train-test split if early stopping is used, and batch\nsampling when solver=\u2019sgd\u2019 or \u2018adam\u2019.\nPass an int for reproducible results across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "tol",
@@ -2113,13 +2113,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -2132,7 +2132,7 @@
                 "parameter": "l1_ratio",
                 "description": "The ElasticNet mixing parameter, with 0 < l1_ratio <= 1.\nFor l1_ratio = 1 the penalty is an L1/L2 penalty. For l1_ratio = 0 it\nis an L2 penalty.\nFor 0 < l1_ratio < 1, the penalty is a combination of L1/L2 and L2.\nThis parameter can be a list, in which case the different\nvalues are tested by cross-validation and the one giving the best\nprediction score is used. Note that a good choice of list of\nvalues for l1_ratio is often to put more values close to 1\n(i.e. Lasso) and less close to 0 (i.e. Ridge), as in [.1, .5, .7,\n.9, .95, .99, 1].\n",
                 "value_default": "0.5",
-                "data_type": "floatorlistoffloat"
+                "data_type": "float or list of float"
             },
             {
                 "parameter": "eps",
@@ -2174,7 +2174,7 @@
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\nint, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororiterable"
+                "data_type": "int, cross-validation generator or iterable"
             },
             {
                 "parameter": "copy_X",
@@ -2186,7 +2186,7 @@
                 "parameter": "verbose",
                 "description": "Amount of verbosity.\n",
                 "value_default": "0",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "n_jobs",
@@ -2198,13 +2198,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -2253,13 +2253,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -2314,13 +2314,13 @@
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\nint, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororiterable"
+                "data_type": "int, cross-validation generator or iterable"
             },
             {
                 "parameter": "verbose",
                 "description": "Amount of verbosity.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             },
             {
                 "parameter": "n_jobs",
@@ -2332,13 +2332,13 @@
                 "parameter": "random_state",
                 "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when selection == \u2018random\u2019.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "selection",
                 "description": "If set to \u2018random\u2019, a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to \u2018random\u2019) often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.\n",
                 "value_default": "cyclic",
-                "data_type": "{cyclic,random}"
+                "data_type": "{cyclic, random}"
             }
         ],
         "references": [],
@@ -2363,7 +2363,7 @@
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
                 "value_default": "rbf",
-                "data_type": "{linear,poly,rbf,sigmoid,precomputed}orcallable,default=rbf"
+                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable,          default=rbf"
             },
             {
                 "parameter": "degree",
@@ -2375,7 +2375,7 @@
                 "parameter": "gamma",
                 "description": "Kernel coefficient for \u2018rbf\u2019, \u2018poly\u2019 and \u2018sigmoid\u2019.\n\nif gamma='scale' (default) is passed then it uses\n1 / (n_features * X.var()) as value of gamma,\nif \u2018auto\u2019, uses 1 / n_features\nif float, must be non-negative.\n\n\nChanged in version 0.22: The default value of gamma changed from \u2018auto\u2019 to \u2018scale\u2019.\n\n",
                 "value_default": "scale",
-                "data_type": "{scale,auto}orfloat"
+                "data_type": "{scale, auto} or float"
             },
             {
                 "parameter": "coef0",
@@ -2445,7 +2445,7 @@
                 "parameter": "precompute",
                 "description": "Whether to use a precomputed Gram and Xy matrix to speed up\ncalculations. Improves performance when n_targets or\nn_samples is very large. Note that if you already have such\nmatrices, you can pass them directly to the fit method.\n",
                 "value_default": "auto",
-                "data_type": "autoorbool"
+                "data_type": "auto or bool"
             }
         ],
         "references": [],
@@ -2476,7 +2476,7 @@
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the default 5-fold cross-validation,\ninteger, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, KFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n\nChanged in version 0.22: cv default value if None changed from 3-fold to 5-fold.\n\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororiterable"
+                "data_type": "int, cross-validation generator or iterable"
             },
             {
                 "parameter": "n_jobs",
@@ -2488,14 +2488,14 @@
                 "parameter": "verbose",
                 "description": "Sets the verbosity amount.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             }
         ],
         "references": [],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuitCV.html"
     },
     "PLSCanonical": {
-        "regressor_info": "Partial Least Squares transformer and regressor.\nRead more in the User Guide.",
+        "regressor_info": "Partial Least Squares transformer and regressor.\nFor a comparison between other cross decomposition algorithms, see\nCompare cross decomposition methods.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "n_components",
@@ -2513,7 +2513,7 @@
                 "parameter": "algorithm",
                 "description": "The algorithm used to estimate the first singular vectors of the\ncross-covariance matrix. \u2018nipals\u2019 uses the power method while \u2018svd\u2019\nwill compute the whole SVD.\n",
                 "value_default": "nipals",
-                "data_type": "{nipals,svd}"
+                "data_type": "{nipals, svd}"
             },
             {
                 "parameter": "max_iter",
@@ -2538,7 +2538,7 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSCanonical.html"
     },
     "PLSRegression": {
-        "regressor_info": "PLS regression.\nPLSRegression is also known as PLS2 or PLS1, depending on the number of\ntargets.\nRead more in the User Guide.",
+        "regressor_info": "PLS regression.\nPLSRegression is also known as PLS2 or PLS1, depending on the number of\ntargets.\nFor a comparison between other cross decomposition algorithms, see\nCompare cross decomposition methods.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "n_components",
@@ -2599,7 +2599,7 @@
                 "parameter": "tol",
                 "description": "The stopping criterion. If it is not None, the iterations will stop\nwhen (loss > previous_loss - tol).\n\nNew in version 0.19.\n\n",
                 "value_default": "1e-3",
-                "data_type": "floatorNone"
+                "data_type": "float or None"
             },
             {
                 "parameter": "early_stopping",
@@ -2647,7 +2647,7 @@
                 "parameter": "random_state",
                 "description": "Used to shuffle the training data, when shuffle is set to\nTrue. Pass an int for reproducible output across multiple\nfunction calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "warm_start",
@@ -2659,7 +2659,7 @@
                 "parameter": "average",
                 "description": "When set to True, computes the averaged SGD weights and stores the\nresult in the coef_ attribute. If set to an int greater than 1,\naveraging will begin once the total number of samples seen reaches\naverage. So average=10 will begin averaging after seeing 10 samples.\n\nNew in version 0.19: parameter average to use weights averaging in SGD.\n\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             }
         ],
         "references": [
@@ -2686,7 +2686,7 @@
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
-                "data_type": "{lbfgs,newton-cholesky}"
+                "data_type": "{lbfgs, newton-cholesky}"
             },
             {
                 "parameter": "max_iter",
@@ -2741,7 +2741,7 @@
                 "parameter": "solver",
                 "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nFrom scipy>=1.6.0, it is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver changed to \"highs\" in version 1.4.\n\n",
                 "value_default": "highs",
-                "data_type": "{highs-ds,highs-ipm,highs,interior-point,revisedsimplex}"
+                "data_type": "{highs-ds, highs-ipm, highs, interior-point,             revised simplex}"
             },
             {
                 "parameter": "solver_options",
@@ -2766,7 +2766,7 @@
                 "parameter": "min_samples",
                 "description": "Minimum number of samples chosen randomly from original data. Treated\nas an absolute number of samples for min_samples >= 1, treated as a\nrelative number ceil(min_samples * X.shape[0]) for\nmin_samples < 1. This is typically chosen as the minimal number of\nsamples necessary to estimate the given estimator. By default a\nLinearRegression estimator is assumed and\nmin_samples is chosen as X.shape[1] + 1. This parameter is highly\ndependent upon the model, so if a estimator other than\nLinearRegression is used, the user must\nprovide a value.\n",
                 "value_default": "None",
-                "data_type": "int(>=1)orfloat([0,1])"
+                "data_type": "int (>= 1) or float ([0, 1])"
             },
             {
                 "parameter": "residual_threshold",
@@ -2814,19 +2814,19 @@
                 "parameter": "stop_probability",
                 "description": "RANSAC iteration stops if at least one outlier-free set of the training\ndata is sampled in RANSAC. This requires to generate at least N\nsamples (iterations):\nN >= log(1 - probability) / log(1 - e**m)\n\n\nwhere the probability (confidence) is typically set to high value such\nas 0.99 (the default) and e is the current fraction of inliers w.r.t.\nthe total number of samples.\n",
                 "value_default": "0.99",
-                "data_type": "floatinrange[0,1]"
+                "data_type": "float in range [0, 1]"
             },
             {
                 "parameter": "loss",
                 "description": "String inputs, \u2018absolute_error\u2019 and \u2018squared_error\u2019 are supported which\nfind the absolute error and squared error per sample respectively.\nIf loss is a callable, then it should be a function that takes\ntwo arrays as inputs, the true and predicted value and returns a 1-D\narray with the i-th value of the array corresponding to the loss\non X[i].\nIf the loss on a sample is greater than the residual_threshold,\nthen this sample is classified as an outlier.\n\nNew in version 0.18.\n\n",
                 "value_default": "absolute_error",
-                "data_type": "str,callable"
+                "data_type": "str, callable"
             },
             {
                 "parameter": "random_state",
                 "description": "The generator used to initialize the centers.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             }
         ],
         "references": [
@@ -2849,13 +2849,13 @@
                 "parameter": "weights",
                 "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\n",
                 "value_default": "uniform",
-                "data_type": "{uniform,distance},callableorNone"
+                "data_type": "{uniform, distance}, callable or None"
             },
             {
                 "parameter": "algorithm",
                 "description": "Algorithm used to compute the nearest neighbors:\n\n\u2018ball_tree\u2019 will use BallTree\n\u2018kd_tree\u2019 will use KDTree\n\u2018brute\u2019 will use a brute-force search.\n\u2018auto\u2019 will attempt to decide the most appropriate algorithm\nbased on the values passed to fit method.\n\nNote: fitting on sparse input will override the setting of\nthis parameter, using brute force.\n",
                 "value_default": "auto",
-                "data_type": "{auto,ball_tree,kd_tree,brute}"
+                "data_type": "{auto, ball_tree, kd_tree, brute}"
             },
             {
                 "parameter": "leaf_size",
@@ -2873,7 +2873,7 @@
                 "parameter": "metric",
                 "description": "Metric to use for distance computation. Default is \u201cminkowski\u201d, which\nresults in the standard Euclidean distance when p = 2. See the\ndocumentation of scipy.spatial.distance and\nthe metrics listed in\ndistance_metrics for valid metric\nvalues.\nIf metric is \u201cprecomputed\u201d, X is assumed to be a distance matrix and\nmust be square during fit. X may be a sparse graph, in which\ncase only \u201cnonzero\u201d elements may be considered neighbors.\nIf metric is a callable function, it takes two arrays representing 1D\nvectors as inputs and must return one value indicating the distance\nbetween those vectors. This works for Scipy\u2019s metrics, but is less\nefficient than passing the metric name as a string.\n",
                 "value_default": "minkowski",
-                "data_type": "strorcallable"
+                "data_type": "str or callable"
             },
             {
                 "parameter": "metric_params",
@@ -2904,7 +2904,7 @@
                 "parameter": "criterion",
                 "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 1.0: Poisson criterion.\n\n",
                 "value_default": "squared_error",
-                "data_type": "{squared_error,absolute_error,friedman_mse,poisson},default=squared_error"
+                "data_type": "{squared_error, absolute_error, friedman_mse, poisson},             default=squared_error"
             },
             {
                 "parameter": "max_depth",
@@ -2916,13 +2916,13 @@
                 "parameter": "min_samples_split",
                 "description": "The minimum number of samples required to split an internal node:\n\nIf int, then consider min_samples_split as the minimum number.\nIf float, then min_samples_split is a fraction and\nceil(min_samples_split * n_samples) are the minimum\nnumber of samples for each split.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "2",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_samples_leaf",
                 "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast min_samples_leaf training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\nIf int, then consider min_samples_leaf as the minimum number.\nIf float, then min_samples_leaf is a fraction and\nceil(min_samples_leaf * n_samples) are the minimum\nnumber of samples for each node.\n\n\nChanged in version 0.18: Added float values for fractions.\n\n",
                 "value_default": "1",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             },
             {
                 "parameter": "min_weight_fraction_leaf",
@@ -2934,7 +2934,7 @@
                 "parameter": "max_features",
                 "description": "The number of features to consider when looking for the best split:\n\nIf int, then consider max_features features at each split.\nIf float, then max_features is a fraction and\nmax(1, int(max_features * n_features_in_)) features are considered at each\nsplit.\nIf \u201csqrt\u201d, then max_features=sqrt(n_features).\nIf \u201clog2\u201d, then max_features=log2(n_features).\nIf None or 1.0, then max_features=n_features.\n\n\nNote\nThe default of 1.0 is equivalent to bagged trees and more\nrandomness can be achieved by setting smaller values, e.g. 0.3.\n\n\nChanged in version 1.1: The default of max_features changed from \"auto\" to 1.0.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than max_features features.\n",
                 "value_default": "1.0",
-                "data_type": "{sqrt,log2,None},intorfloat"
+                "data_type": "{sqrt, log2, None}, int or float"
             },
             {
                 "parameter": "max_leaf_nodes",
@@ -2958,7 +2958,7 @@
                 "parameter": "oob_score",
                 "description": "Whether to use out-of-bag samples to estimate the generalization score.\nBy default, r2_score is used.\nProvide a callable with signature metric(y_true, y_pred) to use a\ncustom metric. Only available if bootstrap=True.\n",
                 "value_default": "False",
-                "data_type": "boolorcallable"
+                "data_type": "bool or callable"
             },
             {
                 "parameter": "n_jobs",
@@ -2970,7 +2970,7 @@
                 "parameter": "random_state",
                 "description": "Controls both the randomness of the bootstrapping of the samples used\nwhen building trees (if bootstrap=True) and the sampling of the\nfeatures to consider when looking for the best split at each node\n(if max_features < n_features).\nSee Glossary for details.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "verbose",
@@ -2988,13 +2988,13 @@
                 "parameter": "ccp_alpha",
                 "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
                 "value_default": "0.0",
-                "data_type": "non-negativefloat"
+                "data_type": "non-negative float"
             },
             {
                 "parameter": "max_samples",
                 "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max(round(n_samples * max_samples), 1) samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
                 "value_default": "None",
-                "data_type": "intorfloat"
+                "data_type": "int or float"
             }
         ],
         "references": [
@@ -3010,7 +3010,7 @@
                 "parameter": "alpha",
                 "description": "Constant that multiplies the L2 term, controlling regularization\nstrength. alpha must be a non-negative float i.e. in [0, inf).\nWhen alpha = 0, the objective is equivalent to ordinary least\nsquares, solved by the LinearRegression object. For numerical\nreasons, using alpha = 0 with the Ridge object is not advised.\nInstead, you should use the LinearRegression object.\nIf an array is passed, penalties are assumed to be specific to the\ntargets. Hence they must correspond in number.\n",
                 "value_default": "1.0",
-                "data_type": "{float,ndarrayofshape(n_targets,)}"
+                "data_type": "{float, ndarray of shape (n_targets,)}"
             },
             {
                 "parameter": "fit_intercept",
@@ -3040,7 +3040,7 @@
                 "parameter": "solver",
                 "description": "Solver to use in the computational routines:\n\n\u2018auto\u2019 chooses the solver automatically based on the type of data.\n\u2018svd\u2019 uses a Singular Value Decomposition of X to compute the Ridge\ncoefficients. It is the most stable solver, in particular more stable\nfor singular matrices than \u2018cholesky\u2019 at the cost of being slower.\n\u2018cholesky\u2019 uses the standard scipy.linalg.solve function to\nobtain a closed-form solution.\n\u2018sparse_cg\u2019 uses the conjugate gradient solver as found in\nscipy.sparse.linalg.cg. As an iterative algorithm, this solver is\nmore appropriate than \u2018cholesky\u2019 for large-scale data\n(possibility to set tol and max_iter).\n\u2018lsqr\u2019 uses the dedicated regularized least-squares routine\nscipy.sparse.linalg.lsqr. It is the fastest and uses an iterative\nprocedure.\n\u2018sag\u2019 uses a Stochastic Average Gradient descent, and \u2018saga\u2019 uses\nits improved, unbiased version named SAGA. Both methods also use an\niterative procedure, and are often faster than other solvers when\nboth n_samples and n_features are large. Note that \u2018sag\u2019 and\n\u2018saga\u2019 fast convergence is only guaranteed on features with\napproximately the same scale. You can preprocess the data with a\nscaler from sklearn.preprocessing.\n\u2018lbfgs\u2019 uses L-BFGS-B algorithm implemented in\nscipy.optimize.minimize. It can be used only when positive\nis True.\n\nAll solvers except \u2018svd\u2019 support both dense and sparse data. However, only\n\u2018lsqr\u2019, \u2018sag\u2019, \u2018sparse_cg\u2019, and \u2018lbfgs\u2019 support sparse input when\nfit_intercept is True.\n\nNew in version 0.17: Stochastic Average Gradient descent solver.\n\n\nNew in version 0.19: SAGA solver.\n\n",
                 "value_default": "auto",
-                "data_type": "{auto,svd,cholesky,lsqr,sparse_cg,sag,saga,lbfgs}"
+                "data_type": "{auto, svd, cholesky, lsqr, sparse_cg,             sag, saga, lbfgs}"
             },
             {
                 "parameter": "positive",
@@ -3052,7 +3052,7 @@
                 "parameter": "random_state",
                 "description": "Used when solver == \u2018sag\u2019 or \u2018saga\u2019 to shuffle the data.\nSee Glossary for details.\n\nNew in version 0.17: random_state to support Stochastic Average Gradient.\n\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             }
         ],
         "references": [],
@@ -3065,7 +3065,7 @@
                 "parameter": "alphas",
                 "description": "Array of alpha values to try.\nRegularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to 1 / (2C) in other linear models such as\nLogisticRegression or\nLinearSVC.\nIf using Leave-One-Out cross-validation, alphas must be positive.\n",
                 "value_default": "(0.1,1.0,10.0)",
-                "data_type": "array-likeofshape(n_alphas,)"
+                "data_type": "array-like of shape (n_alphas,)"
             },
             {
                 "parameter": "fit_intercept",
@@ -3077,19 +3077,19 @@
                 "parameter": "scoring",
                 "description": "A string (see model evaluation documentation) or\na scorer callable object / function with signature\nscorer(estimator, X, y).\nIf None, the negative mean squared error if cv is \u2018auto\u2019 or None\n(i.e. when using leave-one-out cross-validation), and r2 score\notherwise.\n",
                 "value_default": "None",
-                "data_type": "str,callable"
+                "data_type": "str, callable"
             },
             {
                 "parameter": "cv",
                 "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\nNone, to use the efficient Leave-One-Out cross-validation\ninteger, to specify the number of folds.\nCV splitter,\nAn iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if y is binary or multiclass,\nStratifiedKFold is used, else,\nKFold is used.\nRefer User Guide for the various\ncross-validation strategies that can be used here.\n",
                 "value_default": "None",
-                "data_type": "int,cross-validationgeneratororaniterable"
+                "data_type": "int, cross-validation generator or an iterable"
             },
             {
                 "parameter": "gcv_mode",
                 "description": "Flag indicating which strategy to use when performing\nLeave-One-Out Cross-Validation. Options are:\n'auto' : use 'svd' if n_samples > n_features, otherwise use 'eigen'\n'svd' : force use of singular value decomposition of X when X is\n    dense, eigenvalue decomposition of X^T.X when X is sparse.\n'eigen' : force computation via eigendecomposition of X.X^T\n\n\nThe \u2018auto\u2019 mode is the default and is intended to pick the cheaper\noption of the two depending on the shape of the training data.\n",
                 "value_default": "auto",
-                "data_type": "{auto,svd,eigen}"
+                "data_type": "{auto, svd, eigen}"
             },
             {
                 "parameter": "store_cv_values",
@@ -3120,17 +3120,17 @@
                 "parameter": "penalty",
                 "description": "The penalty (aka regularization term) to be used. Defaults to \u2018l2\u2019\nwhich is the standard regularizer for linear SVM models. \u2018l1\u2019 and\n\u2018elasticnet\u2019 might bring sparsity to the model (feature selection)\nnot achievable with \u2018l2\u2019. No penalty is added when set to None.\n",
                 "value_default": "l2",
-                "data_type": "{l2,l1,elasticnet,None}"
+                "data_type": "{l2, l1, elasticnet, None}"
             },
             {
                 "parameter": "alpha",
-                "description": "Constant that multiplies the regularization term. The higher the\nvalue, the stronger the regularization.\nAlso used to compute the learning rate when set to learning_rate is\nset to \u2018optimal\u2019.\n",
+                "description": "Constant that multiplies the regularization term. The higher the\nvalue, the stronger the regularization. Also used to compute the\nlearning rate when learning_rate is set to \u2018optimal\u2019.\nValues must be in the range [0.0, inf).\n",
                 "value_default": "0.0001",
                 "data_type": "float"
             },
             {
                 "parameter": "l1_ratio",
-                "description": "The Elastic Net mixing parameter, with 0 <= l1_ratio <= 1.\nl1_ratio=0 corresponds to L2 penalty, l1_ratio=1 to L1.\nOnly used if penalty is \u2018elasticnet\u2019.\n",
+                "description": "The Elastic Net mixing parameter, with 0 <= l1_ratio <= 1.\nl1_ratio=0 corresponds to L2 penalty, l1_ratio=1 to L1.\nOnly used if penalty is \u2018elasticnet\u2019.\nValues must be in the range [0.0, 1.0].\n",
                 "value_default": "0.15",
                 "data_type": "float"
             },
@@ -3142,15 +3142,15 @@
             },
             {
                 "parameter": "max_iter",
-                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\n\nNew in version 0.19.\n\n",
+                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\nValues must be in the range [1, inf).\n\nNew in version 0.19.\n\n",
                 "value_default": "1000",
                 "data_type": "int"
             },
             {
                 "parameter": "tol",
-                "description": "The stopping criterion. If it is not None, training will stop\nwhen (loss > best_loss - tol) for n_iter_no_change consecutive\nepochs.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\n\nNew in version 0.19.\n\n",
+                "description": "The stopping criterion. If it is not None, training will stop\nwhen (loss > best_loss - tol) for n_iter_no_change consecutive\nepochs.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nValues must be in the range [0.0, inf).\n\nNew in version 0.19.\n\n",
                 "value_default": "1e-3",
-                "data_type": "floatorNone"
+                "data_type": "float or None"
             },
             {
                 "parameter": "shuffle",
@@ -3160,13 +3160,13 @@
             },
             {
                 "parameter": "verbose",
-                "description": "The verbosity level.\n",
+                "description": "The verbosity level.\nValues must be in the range [0, inf).\n",
                 "value_default": "0",
                 "data_type": "int"
             },
             {
                 "parameter": "epsilon",
-                "description": "Epsilon in the epsilon-insensitive loss functions; only if loss is\n\u2018huber\u2019, \u2018epsilon_insensitive\u2019, or \u2018squared_epsilon_insensitive\u2019.\nFor \u2018huber\u2019, determines the threshold at which it becomes less\nimportant to get the prediction exactly right.\nFor epsilon-insensitive, any differences between the current prediction\nand the correct label are ignored if they are less than this threshold.\n",
+                "description": "Epsilon in the epsilon-insensitive loss functions; only if loss is\n\u2018huber\u2019, \u2018epsilon_insensitive\u2019, or \u2018squared_epsilon_insensitive\u2019.\nFor \u2018huber\u2019, determines the threshold at which it becomes less\nimportant to get the prediction exactly right.\nFor epsilon-insensitive, any differences between the current prediction\nand the correct label are ignored if they are less than this threshold.\nValues must be in the range [0.0, inf).\n",
                 "value_default": "0.1",
                 "data_type": "float"
             },
@@ -3174,7 +3174,7 @@
                 "parameter": "random_state",
                 "description": "Used for shuffling the data, when shuffle is set to True.\nPass an int for reproducible output across multiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstance"
+                "data_type": "int, RandomState instance"
             },
             {
                 "parameter": "learning_rate",
@@ -3184,13 +3184,13 @@
             },
             {
                 "parameter": "eta0",
-                "description": "The initial learning rate for the \u2018constant\u2019, \u2018invscaling\u2019 or\n\u2018adaptive\u2019 schedules. The default value is 0.01.\n",
+                "description": "The initial learning rate for the \u2018constant\u2019, \u2018invscaling\u2019 or\n\u2018adaptive\u2019 schedules. The default value is 0.01.\nValues must be in the range [0.0, inf).\n",
                 "value_default": "0.01",
                 "data_type": "float"
             },
             {
                 "parameter": "power_t",
-                "description": "The exponent for inverse scaling learning rate.\n",
+                "description": "The exponent for inverse scaling learning rate.\nValues must be in the range (-inf, inf).\n",
                 "value_default": "0.25",
                 "data_type": "float"
             },
@@ -3202,13 +3202,13 @@
             },
             {
                 "parameter": "validation_fraction",
-                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\n\nNew in version 0.20: Added \u2018validation_fraction\u2019 option\n\n",
+                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\nValues must be in the range (0.0, 1.0).\n\nNew in version 0.20: Added \u2018validation_fraction\u2019 option\n\n",
                 "value_default": "0.1",
                 "data_type": "float"
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "Number of iterations with no improvement to wait before stopping\nfitting.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\n\nNew in version 0.20: Added \u2018n_iter_no_change\u2019 option\n\n",
+                "description": "Number of iterations with no improvement to wait before stopping\nfitting.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nInteger values must be in the range [1, max_iter).\n\nNew in version 0.20: Added \u2018n_iter_no_change\u2019 option\n\n",
                 "value_default": "5",
                 "data_type": "int"
             },
@@ -3222,7 +3222,7 @@
                 "parameter": "average",
                 "description": "When set to True, computes the averaged SGD weights across all\nupdates and stores the result in the coef_ attribute. If set to\nan int greater than 1, averaging will begin once the total number of\nsamples seen reaches average. So average=10 will begin\naveraging after seeing 10 samples.\n",
                 "value_default": "False",
-                "data_type": "boolorint"
+                "data_type": "bool or int"
             }
         ],
         "references": [],
@@ -3235,7 +3235,7 @@
                 "parameter": "kernel",
                 "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
                 "value_default": "rbf",
-                "data_type": "{linear,poly,rbf,sigmoid,precomputed}orcallable,default=rbf"
+                "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable,          default=rbf"
             },
             {
                 "parameter": "degree",
@@ -3247,7 +3247,7 @@
                 "parameter": "gamma",
                 "description": "Kernel coefficient for \u2018rbf\u2019, \u2018poly\u2019 and \u2018sigmoid\u2019.\n\nif gamma='scale' (default) is passed then it uses\n1 / (n_features * X.var()) as value of gamma,\nif \u2018auto\u2019, uses 1 / n_features\nif float, must be non-negative.\n\n\nChanged in version 0.22: The default value of gamma changed from \u2018auto\u2019 to \u2018scale\u2019.\n\n",
                 "value_default": "scale",
-                "data_type": "{scale,auto}orfloat"
+                "data_type": "{scale, auto} or float"
             },
             {
                 "parameter": "coef0",
@@ -3347,7 +3347,7 @@
                 "parameter": "random_state",
                 "description": "A random number generator instance to define the state of the random\npermutations generator. Pass an int for reproducible output across\nmultiple function calls.\nSee Glossary.\n",
                 "value_default": "None",
-                "data_type": "int,RandomStateinstanceorNone"
+                "data_type": "int, RandomState instance or None"
             },
             {
                 "parameter": "n_jobs",
@@ -3427,13 +3427,13 @@
                 "parameter": "link",
                 "description": "The link function of the GLM, i.e. mapping from linear predictor\nX @ coeff + intercept to prediction y_pred. Option \u2018auto\u2019 sets\nthe link depending on the chosen power parameter as follows:\n\n\u2018identity\u2019 for power <= 0, e.g. for the Normal distribution\n\u2018log\u2019 for power > 0, e.g. for Poisson, Gamma and Inverse Gaussian\ndistributions\n\n",
                 "value_default": "auto",
-                "data_type": "{auto,identity,log}"
+                "data_type": "{auto, identity, log}"
             },
             {
                 "parameter": "solver",
                 "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
-                "data_type": "{lbfgs,newton-cholesky}"
+                "data_type": "{lbfgs, newton-cholesky}"
             },
             {
                 "parameter": "max_iter",

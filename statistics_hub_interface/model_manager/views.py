@@ -577,7 +577,7 @@ def model_selection(request):
     if request.method == 'POST':
         selected_model = request.POST.get('model_type')
         action = request.POST.get('action')
-        if action == 'show_parameters':
+        if action == 'show_parameters' and selected_model is not None:
             return redirect('model_parameters', model_name=selected_model)
         elif action == 'train_model':
             config_path = f"tenants/{request.user.username}/config"

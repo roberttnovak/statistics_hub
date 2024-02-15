@@ -1,18 +1,167 @@
-<!-- model_selection.html -->
-<form method="post">
-    {% csrf_token %}
-    <label for="model_type">Select a model:</label>
-    <select name="model_type" id="model_type">
-        <option value="" disabled {% if not selected_model %}selected{% endif %}>Select a model</option>
-        {% for model in models_list %}
-            <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
-        {% endfor %}
-    </select>
-    <input type="hidden" name="action" id="formAction" value="show_parameters">
-    <button type="button" id="showParametersButton">Show Parameters</button>
-    <button type="button" id="trainModelButton">Train Model</button>
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Model</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding-top: 30px;
+        }
+        .instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .step {
+            text-align: center;
+            padding: 0px;
+        }
+        .step-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-group, .step {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-control, .btn {
+            display: inline-block;
+            margin: auto;
+        }
+        .btn-space {
+            margin-right: 10px;
+        }
+        .step-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
 
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    
+        .training-text {
+            font-family: 'Arial', sans-serif; /* Fuente más moderna */
+            font-size: 24px; /* Tamaño más grande */
+            color: #3498db; /* Color azul suave */
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2); /* Sombra sutil para mejorar la legibilidad */
+            border-right: 2px solid;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 14ch; /* Ajusta este valor según la longitud del texto */
+            animation: typing 2s steps(14), blink 0.5s step-end infinite alternate; /* Animación de escritura y parpadeo */
+            text-align: center;
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .alert-messages {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-error, .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center">Model Training Workflow</h3>
+    <p class="instructions">Follow these steps to train your model:</p>
+
+    <form method="post" class="form-horizontal">
+        {% csrf_token %}
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-cogs"></i></div>
+            <div class="step-header">Step 1: Select a Model</div>
+            <div class="form-group">
+                <select name="model_type" id="model_type" class="form-control" style="text-align: center; text-align-last: center; -moz-text-align-last: center; -webkit-text-align: center;">
+                    <option value="" disabled {% if not selected_model %}selected{% endif %}>Select a model</option>
+                    {% for model in models_list %}
+                    <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <input type="hidden" name="action" id="formAction" value="">
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+            <div class="step-header">Step 2: Edit Parameters (if necessary)</div>
+            <div class="form-group">
+                <button type="button" id="showParametersButton" class="btn btn-info">Edit Parameters</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-play"></i></div>
+            <div class="step-header">Step 3: Train Model</div>
+            {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <button type="button" id="trainModelButton" class="btn btn-success">Train Model</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- screen loading when train model -->
+<div id="loadingScreen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#FFFFFF; z-index:9999;">
+    <div class="loader"></div>
+    <p class="training-text">Training model...</p>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.getElementById('showParametersButton').addEventListener('click', function() {
         document.getElementById('formAction').value = 'show_parameters';
@@ -21,6 +170,11 @@
 
     document.getElementById('trainModelButton').addEventListener('click', function() {
         document.getElementById('formAction').value = 'train_model';
+        document.getElementById('loadingScreen').style.display = 'block';
         document.querySelector('form').submit();
     });
+    
 </script>
+
+</body>
+</html>

@@ -568,9 +568,9 @@ def model_train(request, model_name):
 @login_required
 def model_selection(request):
     selected_model = request.GET.get('selected_model')
-    config_path = f"tenants/{request.user}/config"
+    config_path = f"../config"
     config_manager = ConfigManager(config_folder_path = config_path)
-    parameters = config_manager.load_config(config_filename = 'parameters' ,subfolder = 'models_parameters')
+    parameters = config_manager.load_config(config_filename = 'all_regressors_with_its_parameters' ,subfolder = 'models_parameters/metadata')
     sklearn_regressors = list(parameters.keys())
     models_list = sklearn_regressors
 
@@ -580,13 +580,23 @@ def model_selection(request):
         if action == 'show_parameters' and selected_model is not None:
             return redirect('model_parameters', model_name=selected_model)
         elif action == 'train_model':
-            config_path = f"tenants/{request.user.username}/config"
-            #ToDo: Tratar en algún momento los logs 
+            config_user = f"tenants/{request.user.username}"
+            file_data_chosen = load_json(
+                folder_path= config_user,
+                json_filename = "data_source"
+            )['selected_file']
+            #TODO: ratar en algún momento los logs 
             config_log_filename = None
             try:
-                run_time_series_prediction_pipeline(config_path, selected_model, config_log_filename)
+                run_time_series_prediction_pipeline(
+                    config_user = config_user,
+                    model_name = selected_model,
+                    file_data_chosen = file_data_chosen,
+                    config_log_filename = config_log_filename
+                )
             except Exception as e:
                 messages.error(request, f"Error during training: {e}")
+                return redirect('model_selection')
 
             return redirect('../user_resources_models_saved', model_name=selected_model)
 
@@ -715,7 +725,8 @@ def model_parameters(request, model_name):
                 "legible_name": info["parameter"], 
                 "description": info["description"],
                 "value_default": info["value_default"],
-                "value": regressor_params.get(info["parameter"],"")
+                "value": regressor_params.get(info["parameter"],""),
+                "data_type": f': {info["data_type"]}'
             }
             for info in sklearn_parameters_info
         ]
@@ -834,8 +845,9 @@ def user_login(request):
             return render(request, 'model_manager/login.html', {'form': { 'errors': True }})
     else:
         return render(request, 'model_manager/login.html')
-    
-@login_required  # Ensures that only authenticated users can access this view.
+
+#TODO: Mejorar esta lógica y dejarlo de forma más consistente a como lo tengo en todas 
+@login_required  
 def upload_file(request):
     """
     Handles file uploads by authenticated users, displaying an upload form for GET requests

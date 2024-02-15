@@ -34,6 +34,13 @@ creds_path = '../global_creds/sql.json'
 # ToDo: Use ConfigManager in all functions when necessary (for example upload_file instead manual modification)
 # ToDo: Document better and apply good practice
 
+# Auxiliar functions
+def generate_html(df, id_table, n_first_rows_to_show=100, escape=True):
+    html = df.head(n_first_rows_to_show).to_html(classes='table table-striped',escape = escape)
+    html_with_id = html.replace('<table', f'<table id="{id_table}"', 1)
+
+    return html_with_id
+
 @xframe_options_exempt
 @login_required
 def user_resources(request):
@@ -101,12 +108,17 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
     folder_name_model = model
     folder_name_range_train = training_range
     folder_name_time_execution = execution_time
+
     pm = PersistenceManager(
         base_path=path_to_save_model,
         folder_name_model=folder_name_model,
         folder_name_range_train=folder_name_range_train, 
         folder_name_time_execution=folder_name_time_execution
     )
+
+    parameters = pm.load_dataset(file_name = "parameters")
+    # Replace \n to '<br>' to see new line in html table 
+    parameters = parameters.replace(to_replace=r'\n', value='<br>', regex=True)
 
     # flags_exist = (path_to_predictions / flag_predictions_done).exists() and (path_to_predictions / flag_evaluations_done).exists()
     flag_predictions_done = config["flag_predictions_done"]
@@ -126,6 +138,7 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
         'flag_predictions_done_exists': flag_predictions_done_exists,
         'flag_evaluations_done_exists' : flag_evaluations_done_exists,
         'evaluation_files': evaluation_files,
+        'parameters': generate_html(parameters, id_table = 'parameters-table', escape = False),
         'active_view': active_view
     }
 
@@ -138,8 +151,8 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
         selected_file = request.POST.get('selected_file')
         selected_figure = request.POST.get('selected_figure')
 
-        #ToDo: Generalizar mejor esto:
-        #ToDo: Homogenizar lógica de los .txt en predictions y evaluations 
+        #TODO: Generalizar mejor esto:
+        #TODO: Homogenizar lógica de los .txt en predictions y evaluations 
         save = True
         folder_name_preprocessed_data = config["folder_name_preprocessed_data"]
         folder_name_predictions = config["folder_name_predictions"]
@@ -185,6 +198,14 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
                 # save_name = "evaluations-extended",
                 group_by_timestamp = group_by_timestamp
             )
+            evaluation_files = pm.list_evaluations()
+            context.update(
+                {
+                    'flag_evaluations_done_exists': True,
+                    'evaluation_files': evaluation_files
+                }
+            )
+            return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
         if selected_file:
             try:

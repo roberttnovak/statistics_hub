@@ -81,10 +81,15 @@
 {% block content %}
 <div class="container">
     <div class="view-selector">
-        <button id="show-table-view">View Evaluation tables</button>
-        <button id="show-figure-view">View Figures tables</button>
+        <button id="show-parameters-view">Parameters used</button>
+        <button id="show-table-view">Evaluation tables</button>
+        <button id="show-figure-view">Figures</button>
     </div>
-    {% comment %} #ToDo: Revisar consistencia de datos tabla-figuras: {% endcomment %}
+
+    <div class="form-section" id="parameters-view" style="display:none;">
+        {{ parameters|safe }}
+    </div>
+
     <div class="form-section" id="table-view">
         <form action="{% url 'model_evaluation_time_execution' model training_range execution_time %}" method="post">
             {% csrf_token %}
@@ -110,23 +115,24 @@
 
         {% if flag_evaluations_done_exists %}
         <div class="evaluation-files">
-            <h2>Evaluaciones Guardadas</h2>
+            <h2>Evaluations saved</h2>
             <form method="post" action="{% url 'model_evaluation_time_execution' model training_range execution_time %}">
                 {% csrf_token %}
                 <select name="selected_file" id="evaluation-selector">
-                    <option value="">Seleccione una evaluación</option>
+                    <option value="">Select an evaluation</option>
                     {% for file in evaluation_files %}
                         <option value="{{ file }}">{{ file }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit">Ver Evaluación</button>
+                <button type="submit">Show evaluation</button>
             </form>
         </div>
         {% else %}
-        {% endif %}
         <div class="no-evaluations-message">
             <p>The model is trained but no predictions are produced. Press "Generate Evaluation" to do that</p>
-        </div>
+        </div> 
+        {% endif %}
+
         {% if table_html %}
         <div class="data-table">
             {{ table_html|safe }}
@@ -167,30 +173,41 @@
     $(document).ready(function() {
         var activeView = "{{ active_view }}";
 
+        $('#show-parameters-view').click(function() {
+            $('#parameters-view').show();
+            $('#table-view').hide();
+            $('#figure-view').hide();
+            initializeDataTable('parameters-table');
+        });
+
         $('#show-table-view').click(function() {
             $('#table-view').show();
             $('#figure-view').hide();
+            $('#parameters-view').hide();
         });
 
         $('#show-figure-view').click(function() {
             $('#figure-view').show();
             $('#table-view').hide();
+            $('#parameters-view').hide();
+            $('.data-table table').DataTable();
         });
 
-        // Establecer la vista activa en la carga de la página
-        if (activeView === 'figure-view') {
-            $('#figure-view').show();
-            $('#table-view').hide();
-        } else {
-            $('#table-view').show();
-            $('#figure-view').hide();
+        function initializeDataTable(tableId) {
+            if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+                $(`#${tableId}`).DataTable().destroy();
+            }
+            $(`#${tableId}`).DataTable({
+
+            });
         }
 
-        $('.data-table table').DataTable();
     });
 </script>
 
 <script>
+
+
     document.addEventListener('DOMContentLoaded', function() {
         var figureSelector = document.getElementById('selected_figure');
         var figureDescription = document.getElementById('figure-description');

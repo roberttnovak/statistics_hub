@@ -13,10 +13,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import all_estimators 
 from typing import Union, Tuple, List, Dict, Optional
 import numpy as np
+from ConfigManager import ConfigManager
 from OwnLog import OwnLogger
 from PersistanceManager import PersistenceManager, persist_model_to_disk_structure
 from cleaning import prepare_dataframe_from_db, process_time_series_data
-from own_utils import get_all_args, load_json
+from own_utils import get_all_args, get_deepest_keys_values, load_json
 from sql_utils import data_importer
 
 #ToDo: Acordarse de meter las funciones de que cada vez que se llaman a las funciones que tienen flags
@@ -777,6 +778,14 @@ def create_model_machine_learning_algorithm(
         │   ├── model
         │   └── metadata.json
     """
+    args_and_values_of_function = locals()
+
+    for arg, value in args_and_values_of_function.items():
+        if isinstance(value, pd.DataFrame):
+            # If a DataFrame is found, convert it to a string 
+            args_and_values_of_function[arg] = value.head().to_string(max_cols=None, show_dimensions=True)
+        elif isinstance(value, Path):
+            args_and_values_of_function[arg] = str(value)
 
     # Log model name
     if logger:
@@ -943,11 +952,20 @@ def create_model_machine_learning_algorithm(
             folder_name_range_train = folder_name_range_train,
             folder_name_time_execution = folder_name_time_execution,
             model = model,
-            metadata = metadata,
+            metadata = args_and_values_of_function,
             scaler = scaler,
             folder_name_preprocessed_data = folder_name_preprocessed_data if save_preprocessing else None,
             preprocessed_data = preprocessed_data,
             additional_persistable_objects_to_save=None
+        )
+
+        get_df_of_paramaters_executed_in_model(
+        model_name = folder_name_model, 
+        config_path = "../config",
+        model_base_path = path_to_save_model, 
+        folder_name_range_train =  folder_name_range_train,
+        folder_name_time_execution = folder_name_time_execution,
+        save = True
         )
 
     return {
@@ -1391,30 +1409,65 @@ def evaluate_model(
     # Return the summary data
     return predictions_train_test_summarise
 
-def run_time_series_prediction_pipeline(config_path: str, model_name: str, config_log_filename: str = None):
+def run_time_series_prediction_pipeline(
+        config_user: str, 
+        model_name: str, 
+        file_data_chosen: str,
+        config_log_filename: str = None):
     """
-    Execute the time series prediction pipeline from loading configurations, preprocessing data,
-    to running the machine learning model and saving the outputs.
+    Execute a time series prediction pipeline, encompassing configuration loading, data preprocessing,
+    machine learning model execution, and output saving. It supports custom configurations for model
+    parameters, logging, and data preparation.
 
     Parameters:
-    - config_path (str): Path to the configuration directory.
-    - model_name (str): Name of the machine learning model to be used.
-    - config_log_filename (str): Name of the log configuration file. Default None
+    - config_user (str): Path to the user's configuration directory, which includes model parameters and common settings.
+    - model_name (str): Identifier for the specific machine learning model to use, as defined in the configuration.
+    - file_data_chosen (str): Filename of the data to process, located within the user's data directory.
+    - config_log_filename (str, optional): Filename for log configuration settings. If not provided, logging is disabled.
+
+    The pipeline includes steps for:
+    1. Loading model-specific and common parameters from configuration files.
+    2. Preparing and preprocessing the input time series data.
+    3. Creating and training the specified machine learning model with the prepared data.
+    4. Optionally setting up a logging mechanism to track the pipeline's execution.
 
     Returns:
-    - None: This function is designed to process the pipeline and does not return a value.
-
-    Examples:
-    >>> run_time_series_prediction_pipeline("../config", "KNeighborsRegressor", "config_logs")
+    - The trained machine learning model instance, ready for making predictions or further analysis.
     """
-    # Load configuration parameters from JSON files
-    config_model_parameters = load_json(os.path.join(config_path, "models_parameters"), model_name)
-    config_model_common_parameters = load_json(os.path.join(config_path, "models_parameters","common_parameters"), "common_parameters")
-    # Get in a single dictionary all configs
+    
+    # Load the configuration of the models parameters (the last parameters entered by the user are saved in config file)
+    config_models_parameters = load_json(
+        folder_path = os.path.normpath(os.path.join(config_user,"config","models_parameters")), 
+        json_filename = "parameters"
+    )
+
+    # We access config of the specific model 
+    config_model_parameters = config_models_parameters[model_name]
+
+    # Load the common arguments of all models (folders to save the models, etc)
+    config_model_common_parameters = load_json(
+        folder_path = os.path.normpath(os.path.join(config_user,"config", "models_parameters","common_parameters")), 
+        json_filename = "common_parameters"
+    )  
+
+    # Get the specific parameters of the sklearn regressor entered by the user 
+    machine_learning_model_args = config_model_parameters["regressor_params"]
+
+    # We save the the specific parameters of the sklearn regressor so we dont need anymore
+    del config_model_parameters["regressor_params"]
+
+    # config_model_parameters are classified so we need to access to the deepest keys
+    config_model_parameters = get_deepest_keys_values(config_model_parameters)
+
+    # Get in a single dictionary all parameters in config file to use them when create the model
     config_model_parameters = {**config_model_parameters, **config_model_common_parameters}
+
     # Set up logging configuration
     if config_log_filename: 
-        config_logs_parameters = load_json(config_path, config_log_filename) 
+        config_logs_parameters = load_json(
+            folder_path = os.path.normpath(os.path.join(config_user,"config","config_logs")), 
+            json_filename = config_log_filename
+        ) 
         own_logger = OwnLogger(
             log_rotation=config_logs_parameters["log_rotation"],
             max_bytes=config_logs_parameters["max_bytes"],
@@ -1426,16 +1479,7 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
         logger = None
 
     # Import data from the database
-    df = data_importer(
-        automatic_importation=config_model_parameters["data_importer_automatic_importation"],
-        creds_path=Path(config_model_parameters["data_importer_creds_path"]),
-        path_instants_data_saved=Path(config_model_parameters["data_importer_path_instants_data_saved"]),
-        database=config_model_parameters["data_importer_database"],
-        query=config_model_parameters["data_importer_query"],
-        save_importation=config_model_parameters["data_importer_save_importation"],
-        file_name=config_model_parameters["data_importer_file_name"],
-        logger=logger  
-    )
+    df = pd.read_csv(os.path.normpath(os.path.join(config_user,"data",file_data_chosen)))
 
     # Prepare DataFrame from database
     df = prepare_dataframe_from_db(
@@ -1473,7 +1517,7 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     name_id_sensor_column = config_model_parameters["name_id_sensor_column"]
     id_device = config_model_parameters["id_device"]
     names_objective_variable = config_model_parameters["names_objective_variable"]
-    predictor = config_model_parameters["predictor"]
+    model_sklearn_name = model_name
     X_name_features = config_model_parameters["X_name_features"] if config_model_parameters["X_name_features"] is not None else list(set(df_preprocessed.columns)-set(['y','timestamp','id_device']))
     Y_name_features = config_model_parameters["Y_name_features"]
     n_lags = config_model_parameters["n_lags"]
@@ -1487,7 +1531,6 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     folder_name_preprocessed_data = config_model_parameters["folder_name_preprocessed_data"]
     now_str = f"execution-time-{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
     folder_name_time_execution = config_model_parameters["folder_name_time_execution"] if config_model_parameters["folder_name_time_execution"] is not None else now_str
-    machine_learning_model_args = config_model_parameters["machine_learning_model_args"]
 
     model_machine_learning = create_model_machine_learning_algorithm(
         tidy_data = df_preprocessed,
@@ -1495,7 +1538,7 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
         fin_train = fin_train,
         fin_test = fin_test,
         id_device = id_device,
-        model_sklearn_name = predictor,
+        model_sklearn_name = model_sklearn_name,
         X_name_features = X_name_features,
         Y_name_features = Y_name_features,
         n_lags = n_lags,
@@ -1514,3 +1557,120 @@ def run_time_series_prediction_pipeline(config_path: str, model_name: str, confi
     )
 
     return model_machine_learning
+
+def get_df_of_paramaters_executed_in_model(
+        model_name, 
+        config_path, 
+        model_base_path, 
+        folder_name_range_train, 
+        folder_name_time_execution,
+        save = False
+    ):
+    """
+    Prepares and merges metadata, including classification, legible names, and descriptions of parameters,
+    for a specific machine learning model using configuration files and persistence manager data.
+    
+    Parameters:
+    - model_name: str, the name of the machine learning model (e.g., "SVR").
+    - config_path: str, the path to the configuration directory.
+    - model_base_path: str, the path to the base directory where model data is stored.
+    - folder_name_range_train: str, the name of the folder within the model_base_path that contains training range data.
+    - folder_name_time_execution: str, the name of the folder within the model_base_path that contains execution time data.
+    - save: bool, whether to save the resulting DataFrame to disk.
+
+    Returns:
+    - df_initialisation_of_parameters_of_model: pandas DataFrame, containing merged information about model parameters, their classifications, legible names, descriptions, and the actual values used in the model.
+
+    Example:
+    get_df_of_paramaters_executed_in_model(
+    model_name = "SVR", 
+    config_path = "../config",
+    model_base_path = "tenants/admin/models", 
+    folder_name_range_train =  "initrain-2023_4_18_0_0_0-UTC0___fintrain-2023_4_25_0_0_0-UTC0",
+    folder_name_time_execution = "execution-time-2024_02_15_10_46_12",
+    save = False
+    )
+    """
+    
+    # Initialize the configuration manager with the given config path
+    config_manager_metadata_parameters = ConfigManager(config_path)
+
+    # Load various configurations related to model parameters
+    classification_of_parameters = config_manager_metadata_parameters.load_config(
+        "classification_of_parameters", 
+        subfolder="models_parameters/metadata"
+    )
+    legible_names_of_own_parameters = config_manager_metadata_parameters.load_config(
+        "legible_names_of_own_parameters", 
+        subfolder="models_parameters/metadata"
+    )
+    descriptions_of_own_parameters = config_manager_metadata_parameters.load_config(
+        "descriptions_of_own_parameters", 
+        subfolder="models_parameters/metadata"
+    )
+    all_sklearn_regressors_with_all_info = config_manager_metadata_parameters.load_config(
+        "all_sklearn_regressors_with_all_info", 
+        subfolder="models_parameters/metadata"
+    )
+
+    # Extract the specific model's regressor information
+    model_regressor_info = all_sklearn_regressors_with_all_info[model_name]["parameters_info"]
+
+    # Prepare dataframes for classification, legible names, and descriptions of parameters
+    df_classification_of_each_parameter = pd.DataFrame(
+        [[classification, parameter] for classification, parameters in classification_of_parameters.items() for parameter in parameters],
+        columns=["classification_of_parameter", "parameter"]
+    )
+    df_legible_names_of_own_parameter = pd.DataFrame(
+        [[parameter, legible_name] for parameter, legible_name in legible_names_of_own_parameters.items()],
+        columns=["parameter", "legible_parameter"]
+    )
+    df_description_of_own_parameters = pd.DataFrame(
+        [[parameter, description] for parameter, description in descriptions_of_own_parameters.items()],
+        columns=["parameter", "description"]
+    )
+
+    # Prepare a dataframe for sklearn parameters with descriptions
+    df_sklearn_parameters = pd.DataFrame(model_regressor_info)[["parameter", "description"]]
+    df_sklearn_parameters["legible_parameter"] = df_sklearn_parameters["parameter"]
+
+    # Merge dataframes to include own parameters with their classifications, legible names, and descriptions
+    df_own_parameters = df_classification_of_each_parameter.query(
+        "classification_of_parameter.isin(['preprocess_time_series_data_args','preprocess_time_series_data_args','time_serie_args'])"
+    )\
+    .reset_index(drop=True)\
+    .merge(df_legible_names_of_own_parameter, on="parameter")\
+    .merge(df_description_of_own_parameters, on="parameter")[["parameter", "legible_parameter", "description"]]
+
+    # Concatenate sklearn and own parameters dataframes
+    df_parameters = pd.concat([df_sklearn_parameters, df_own_parameters], axis=0).reset_index(drop=True)
+
+    # Correct parameter name if necessary
+    df_parameters.loc[df_parameters["parameter"] == "n_predictions", "parameter"] = "n_leads"
+
+    pm = PersistenceManager(
+        base_path = model_base_path,
+        folder_name_model = model_name,
+        folder_name_range_train = folder_name_range_train,
+        folder_name_time_execution = folder_name_time_execution
+    )
+
+    metadata = pm.load_metadata()
+
+    machine_learning_model_args = metadata.get("machine_learning_model_args", {})
+
+    # Update metadata with machine learning model arguments
+    metadata.update(machine_learning_model_args)
+    df_values_of_model = pd.DataFrame([[k, v] for k, v in metadata.items()], columns=["parameter", "value"])
+
+    # Merge parameters dataframe with values dataframe to get initialization information for each parameter of the model
+    df_initialisation_of_parameters_of_model = df_parameters.merge(df_values_of_model, how="inner", on="parameter")
+
+    df_initialisation_of_parameters_of_model = df_initialisation_of_parameters_of_model[["legible_parameter","description","value"]]\
+    .rename(columns={"legible_parameter": "parameter"})
+
+    if save:
+        pm.save_dataset(df_initialisation_of_parameters_of_model, "parameters")
+
+
+    return df_initialisation_of_parameters_of_model

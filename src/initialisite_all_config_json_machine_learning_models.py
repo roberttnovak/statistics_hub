@@ -34,7 +34,53 @@ sklearn_details = {
     "documentation_scrapping_date": documentation_scrapping_date
 }
 
-# Template of json to save in all models 
+# Template of classification parameters
+classification_of_parameters = {
+    'data_importer_args' :
+        [
+            'data_importer_automatic_importation',
+            'data_importer_database',
+            'data_importer_query',
+            'data_importer_save_importation', 
+            'data_importer_file_name'
+        ], 
+    'preprocess_time_series_data_args':
+        [
+            'preprocess_time_series_data_resample_freq', 
+            'preprocess_time_series_data_aggregation_func', 
+            'preprocess_time_series_data_method', 
+            'preprocess_time_series_data_outlier_cols',
+        ],
+    'split_train_test_args': [
+        'ini_train',
+        'fin_train',
+        'fin_test'
+    ],
+    'regressor_params':[],
+    'time_serie_args': [ 
+        'name_time_column',
+        'name_id_sensor_column',
+        'id_device', 
+        'names_objective_variable', 
+        'prepare_dataframe_from_db_cols_for_query', 
+        'X_name_features',
+        'Y_name_features',
+        'n_lags',
+        'n_predictions',
+        'lag_columns',
+        'lead_columns',
+        'num_obs_to_predict'
+    ], 
+    'save_args': 
+    [
+        'scale_in_preprocessing', 
+        'save_preprocessing', 
+        'folder_name_model', 
+        'folder_name_time_execution'
+    ]
+}
+
+# Template of json initialisation of parameters
 initial_dict_parameters = {
     'data_importer_args' :
         {
@@ -299,6 +345,14 @@ config_manager.save_config(
 config_manager.save_config(
     config_filename = "all_sklearn_regressors_with_all_info", 
     config = all_regressors_with_all_info, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
+
+# Save classification of paremeters
+config_manager.save_config(
+    config_filename = "classification_of_parameters", 
+    config = classification_of_parameters, 
     subfolder = "models_parameters/metadata",
     create = True
 )

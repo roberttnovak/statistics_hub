@@ -1,0 +1,41 @@
+{
+    "data_importer_args": [
+        "data_importer_automatic_importation",
+        "data_importer_database",
+        "data_importer_query",
+        "data_importer_save_importation",
+        "data_importer_file_name"
+    ],
+    "preprocess_time_series_data_args": [
+        "preprocess_time_series_data_resample_freq",
+        "preprocess_time_series_data_aggregation_func",
+        "preprocess_time_series_data_method",
+        "preprocess_time_series_data_outlier_cols"
+    ],
+    "split_train_test_args": [
+        "ini_train",
+        "fin_train",
+        "fin_test"
+    ],
+    "regressor_params": [],
+    "time_serie_args": [
+        "name_time_column",
+        "name_id_sensor_column",
+        "id_device",
+        "names_objective_variable",
+        "prepare_dataframe_from_db_cols_for_query",
+        "X_name_features",
+        "Y_name_features",
+        "n_lags",
+        "n_predictions",
+        "lag_columns",
+        "lead_columns",
+        "num_obs_to_predict"
+    ],
+    "save_args": [
+        "scale_in_preprocessing",
+        "save_preprocessing",
+        "folder_name_model",
+        "folder_name_time_execution"
+    ]
+}

@@ -68,7 +68,7 @@ class PersistenceManager:
             # Construct the path excluding None values from other components
             path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
             filtered_path_components = [component for component in path_components if component is not None]
-            self.path = os.path.join(*filtered_path_components)
+            self.path = os.path.normpath(os.path.join(*filtered_path_components))
 
     def get_available_models(self, folder_name_predictions="predictions", include_predictions_only=False):
         """
@@ -1098,11 +1098,11 @@ class PersistenceManager:
 
         # Build the full path for the metadata file using the `build_path` method
         # This will create a path string based on the provided sub-folder name and file name
-        metadata_file_path = self.build_path(file_name=name)
+        metadata_file_path = self.build_path()
         
         # Load the metadata object from disk using the `load_object` method
         # This will handle the file loading
-        metadata = self.load_object(folder_path = metadata_file_path, extension = extension)
+        metadata = self.load_object(folder_path = metadata_file_path, filename=name, extension = extension)
 
         return metadata
 
@@ -1401,7 +1401,7 @@ class PersistenceManager:
             raise ValueError(f"Unsupported extension '{extension}' for datasets.")
 
         # Build the folder path for datasets
-        folder_path = os.path.join(self.base_path, self.folder_datasets) if self.folder_datasets else self.base_path
+        folder_path = os.normpath(os.path.join(self.path, self.folder_datasets)) if self.folder_datasets else self.path
 
         # Use the load_object method to load the dataset
         return self.load_object(folder_path, file_name, extension, csv_sep = csv_sep)

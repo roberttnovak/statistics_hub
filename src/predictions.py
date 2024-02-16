@@ -1636,7 +1636,7 @@ def get_df_of_paramaters_executed_in_model(
 
     # Merge dataframes to include own parameters with their classifications, legible names, and descriptions
     df_own_parameters = df_classification_of_each_parameter.query(
-        "classification_of_parameter.isin(['preprocess_time_series_data_args','preprocess_time_series_data_args','time_serie_args'])"
+        "classification_of_parameter.isin(['split_train_test_args','preprocess_time_series_data_args','time_serie_args'])"
     )\
     .reset_index(drop=True)\
     .merge(df_legible_names_of_own_parameter, on="parameter")\
@@ -1674,3 +1674,70 @@ def get_df_of_paramaters_executed_in_model(
 
 
     return df_initialisation_of_parameters_of_model
+
+def load_evaluation_data_for_models(user):
+    """
+    Loads and consolidates evaluation and parameter data for all models associated with a specific user.
+
+    This function iterates through the hierarchy of models stored in a directory structure based on the user, 
+    training range, and execution time. For each model, it attempts to load both evaluation data and parameter 
+    data from predefined file formats. All successfully loaded data is then concatenated into separate pandas 
+    DataFrames for evaluation data and parameter data, respectively. If any errors occur during data loading 
+    (e.g., file not found, data format issues), those errors are logged, and the function continues with the 
+    next model.
+
+    Parameters:
+    - user (str): The username or identifier for which models' data should be loaded. This is used to construct 
+                  the base path for model data storage.
+
+    Returns:
+    - dict: A dictionary containing two pandas DataFrames:
+        - 'df_evaluations': A DataFrame containing all concatenated evaluation data for the models. If no evaluation 
+                            data could be loaded successfully, an empty DataFrame is returned.
+        - 'df_parameters': A DataFrame containing all concatenated parameter data for the models. If no parameter 
+                           data could be loaded successfully, an empty DataFrame is returned.
+
+    Note:
+    - The function relies on a specific directory and file naming convention. Ensure that the model data is 
+      organized according to this convention for the function to work correctly.
+    - Any exception encountered during the loading of individual model evaluation or parameter data is caught 
+      and logged, but does not halt the execution of the function for subsequent models.
+    """
+    pm = PersistenceManager(base_path=f"tenants/{user}/models")
+    model_range_train_execution_time = pm.get_models_hierarchy_list()
+
+    evaluations = []
+    parameters = []
+
+    for model, range_train, execution_time in model_range_train_execution_time:
+        try:
+            pm_instance = PersistenceManager(
+                base_path=f"tenants/{user}/models",
+                folder_name_model=model,
+                folder_name_range_train=range_train,
+                folder_name_time_execution=execution_time
+            )
+            data_evaluation = pm_instance.load_evaluation_data(name='freq-None___group_by_timestamp-False')
+            data_evaluation["training_range"] = range_train
+            data_evaluation["execution_time"] = execution_time
+            evaluations.append(data_evaluation)  
+
+            data_parameters = pm_instance.load_dataset("parameters")
+            data_parameters["training_range"] = range_train
+            data_parameters["execution_time"] = execution_time
+            parameters.append(data_parameters)
+
+        except Exception as e:
+            print(f"Error loading data for model {model}, range {range_train}, execution time {execution_time}: {e}")
+
+    if evaluations:
+        df_evaluations = pd.concat(evaluations, axis=0)
+    else:
+        df_evaluations = pd.DataFrame()
+
+    if parameters:
+        df_parameters = pd.concat(parameters, axis=0)
+    else:
+        df_parameters = pd.DataFrame()
+
+    return {"df_evaluations":df_evaluations, "df_parameters":df_parameters}

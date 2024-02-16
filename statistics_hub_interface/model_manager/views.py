@@ -24,7 +24,7 @@ from PersistanceManager import PersistenceManager
 from sql_utils import test_database_connection
 from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager
-from predictions import process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
+from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 from eda import summary_statistics, summary_statistics_numerical
 
 
@@ -91,6 +91,7 @@ def user_resources_models_saved(request):
         for range_ in ranges:
             execution_times = pm.get_execution_times_for_model_and_range(model, range_)
             models_with_details[model][range_] = execution_times
+    
 
     return render(request, 'model_manager/user_resources_models_saved.html', {
         'models_with_details': models_with_details
@@ -210,12 +211,16 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
         if selected_file:
             try:
                 # Suponiendo que 'load_evaluation_data' carga los datos del archivo
-                table = pm.load_evaluation_data(selected_file.split(".")[0], folder_name_evaluation_data=folder_name_evaluation)
-                table_html = table.to_html(classes='table table-striped')
+                evaluations = pm.load_evaluation_data(selected_file.split(".")[0], folder_name_evaluation_data=folder_name_evaluation)
             except Exception as e:
                 table_html = f"Error: {e}"
             
-            context['table_html'] = table_html
+            context.update(
+                {
+                    "evaluations": generate_html(evaluations, id_table = 'evaluations-table')
+                }
+            )
+
             return render(request, 'model_manager/model_evaluation_time_execution.html', context)
         
         if selected_figure:
@@ -247,7 +252,9 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
                 #     ]
                 # )
             plot_html = py.plot(fig, output_type='div')
-            context['plot_html'] = plot_html
+            context.update(
+                {'plot_html': plot_html}
+            )
             return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
         # return redirect('model_evaluation_time_execution', model=model, training_range=training_range, execution_time=execution_time)
@@ -256,9 +263,23 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
     return render(request, 'model_manager/model_evaluation_time_execution.html', context)
 
 @login_required
-def model_evaluation_train_range(request, training_range):
-    # Lógica para manejar la vista del rango de entrenamiento
-    return render(request, 'model_manager/model_evaluation_train_range.html')
+def model_evaluation_train_range(request, model, training_range):
+    user = request.user
+    evaluations_parameters = load_evaluation_data_for_models(user)
+
+
+    df_evaluations = evaluations_parameters['df_evaluations']
+    df_evaluations = df_evaluations[(df_evaluations['model'] == model) & (df_evaluations['training_range'] == training_range)] 
+    df_parameters = evaluations_parameters['df_parameters']
+    df_parameters
+
+    # evaluations = df_evaluations.merge(df_parameters, on=['model', 'training_range'])
+
+    context = {
+        "evaluations": generate_html(df_evaluations, id_table = "evaluations-table"),
+    }
+
+    return render(request, 'model_manager/model_evaluation_train_range.html', context)
 
 @login_required
 def model_evaluation_model(request, model):
@@ -380,6 +401,8 @@ def preprocess_dataset(request, selected_dataset, separator):
     # Funciones auxiliares definidas dentro de preprocess_dataset
     def load_data():
         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
+        print(pm.base_path)
+        print(pm.path)
         try:
             df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
             return df, None

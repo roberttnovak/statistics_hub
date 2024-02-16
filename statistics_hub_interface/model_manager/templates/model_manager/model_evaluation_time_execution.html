@@ -8,6 +8,7 @@
         background-color: #f4f4f4; 
     }
 
+
     .form-section {
         margin-top: 20px;
         background-color: #ffffff;
@@ -87,7 +88,7 @@
     </div>
 
     <div class="form-section" id="parameters-view" style="display:none;">
-        {{ parameters|safe }}
+        {{ parameters|safe }} 
     </div>
 
     <div class="form-section" id="table-view">
@@ -124,7 +125,7 @@
                         <option value="{{ file }}">{{ file }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit">Show evaluation</button>
+                <button type="submit" id='show-evaluations'>Show evaluation</button>
             </form>
         </div>
         {% else %}
@@ -133,11 +134,11 @@
         </div> 
         {% endif %}
 
-        {% if table_html %}
-        <div class="data-table">
-            {{ table_html|safe }}
-        </div>
-        {% endif %}
+        <div class="form-section" id="evaluations-view">
+            {{ evaluations|safe }}
+        </div> 
+        
+
     </div>
 
     <div id="figure-view" style="display:none;">
@@ -192,6 +193,8 @@
             $('#parameters-view').hide();
             $('.data-table table').DataTable();
         });
+
+        initializeDataTable('evaluations-table');  
 
         function initializeDataTable(tableId) {
             if ($.fn.DataTable.isDataTable(`#${tableId}`)) {

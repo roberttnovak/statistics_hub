@@ -1,9 +1,81 @@
-{% extends 'model_manager/base.html' %}
 {% load static %}
 
+{% block head %}
+<style>
+    .form-section {
+        margin-top: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, 
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .form-group button, .view-selector button {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group button:hover, .view-selector button:hover {
+        background-color: #45a049;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+{% endblock %}
+
 {% block content %}
+
 <div class="container">
-    <h2>Evaluation between train ranges</h2>
-    <p>Temporally disabled</p>
+
+
+
+    {% comment %} <div class="view-selector">
+        <button id="show-table-view">Evaluation tables</button>
+    </div> {% endcomment %}
+
+
+    <div class="form-section" id="evaluations-view" >
+        {{ evaluations|safe }} 
+    </div>
+
 </div>
+
+<script>
+    function initializeDataTable(tableId) {
+        if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+            $(`#${tableId}`).DataTable().destroy();
+        }
+        $(`#${tableId}`).DataTable({
+
+        });
+    }
+
+    $(document).ready(function () {
+        initializeDataTable('evaluations-table');
+    });
+</script>
+
 {% endblock %}

@@ -1,11 +1,18 @@
-{% extends 'model_manager/base.html' %}
+{% extends 'model_manager/base.html' %} 
 {% load static %}
 
 {% block content %}
 
-<h2>Resources</h2>
 
 <div class="container">
+
+    <div class="intro">
+        <h1>Model Management</h1>
+        <p>Welcome to the Model Management Dashboard, your one-stop destination for exploring and evaluating the performance of various machine learning models. This platform is designed to provide comprehensive insights into each model's capabilities, training ranges, and execution times, facilitating a deeper understanding and informed decision-making for researchers, data scientists, and enthusiasts alike.</p>
+        <p>The organization of this dashboard reflects our commitment to providing an intuitive and user-friendly experience. By categorizing models and their respective evaluations based on training ranges and execution times, we aim to present a clear and structured overview that enhances your navigation and exploration process. Whether you're assessing a model's overall performance or delving into specific training intervals and execution metrics, this dashboard is tailored to meet your analytical needs.</p>
+    </div>
+
+
     <!-- Lista anidada genérica con estilo de tarjeta -->
     <div class="nested-list">
         <ul>
@@ -22,7 +29,7 @@
                                 {% for range, execution_times in ranges.items %}
                                     <li>
                                         <!-- Enlace para la evaluación de un rango de entrenamiento específico -->
-                                        <a href="{% url 'model_evaluation_train_range' range %}" class="list-subtext">{{ range }}</a>
+                                        <a href="{% url 'model_evaluation_train_range' model range %}" class="list-subtext">{{ range }}</a>
                                         <ul>
                                             {% for execution_time in execution_times %}
                                                 <!-- Enlace para la evaluación de un tiempo de ejecución específico -->

@@ -208,6 +208,16 @@ class PersistenceManager:
 
         return models_with_details
     
+    def get_models_hierarchy_list(self):
+        """
+        """
+        return [
+            (model, range_, execution)
+            for model in self.get_available_models()
+            for range_ in self.get_training_ranges_for_model(model)
+            for execution in self.get_execution_times_for_model_and_range(model, range_)
+        ]
+    
     def get_models_info_as_dict(self, folder_name_predictions="predictions", include_predictions_only=False):
         """
         Recursively explores the directory structure from the base path to the model,
@@ -1401,10 +1411,10 @@ class PersistenceManager:
             raise ValueError(f"Unsupported extension '{extension}' for datasets.")
 
         # Build the folder path for datasets
-        folder_path = os.normpath(os.path.join(self.path, self.folder_datasets)) if self.folder_datasets else self.path
+        # folder_path = os.normpath(os.path.join(self.path, self.folder_datasets)) if self.folder_datasets else self.path
 
         # Use the load_object method to load the dataset
-        return self.load_object(folder_path, file_name, extension, csv_sep = csv_sep)
+        return self.load_object(self.path, file_name, extension, csv_sep = csv_sep)
 
 
     

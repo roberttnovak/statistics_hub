@@ -20,5 +20,6 @@ urlpatterns = [
     path('model_evaluation_all_models/', views.model_evaluation_all_models, name='model_evaluation_all_models'),
     path('load_dataset/', views.load_dataset, name='load_dataset'),
     path('preprocess_dataset/<str:selected_dataset>/<str:separator>/', views.preprocess_dataset, name='preprocess_dataset'),
+    path('learning_about_models/', views.learning_about_models, name='learning_about_models'),
     path('', views.user_login, name='login'),
 ]

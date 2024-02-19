@@ -984,3 +984,6 @@ def upload_file(request):
         return HttpResponseNotAllowed(['POST', 'GET'])
     
 
+def learning_about_models(request):
+    return render(request, 'model_manager/learning_about_models.html')
+

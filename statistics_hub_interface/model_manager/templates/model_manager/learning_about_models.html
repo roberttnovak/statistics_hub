@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Model Info</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        
+        
+        #tocContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; /* Ancho del TOC */
+            height: 100%; /* Altura completa de la ventana */
+            overflow-y: auto; /* Desplazamiento si es necesario */
+            background-color: #f0f2f5; /* Fondo gris claro */
+            box-shadow: 3px 0 10px rgba(0,0,0,0.05); /* Sombra suave para profundidad */
+            padding: 1em;
+            box-sizing: border-box;
+            border-right: 1px solid #e0e0e0; /* Línea sutil de separación */
+        }
+        
+        /* Contenido principal al lado del TOC */
+        main {
+            margin-left: 250px; /* Debería ser igual al ancho del TOC */
+            padding: 20px;
+            background: white;
+            min-height: 100vh; /* Altura mínima de la ventana gráfica */
+        }
+        
+        /* Títulos y párrafos */
+        h2, h3 {
+            color: #444;
+        }
+        p, ul {
+            margin-bottom: 1em;
+        }
+        
+        /* Estilos para el TOC */
+        #toc ul {
+            list-style-type: none; /* Elimina los bullets */
+            padding: 0;
+            margin: 0;
+        }
+        
+        #toc li {
+            margin-bottom: 1em; /* Espaciado entre elementos */
+        }
+        
+        #toc li ul {
+            padding-left: 20px; /* Indentación para las sublistas */
+            margin-top: 0.5em; /* Espaciado superior para sublistas */
+        }
+        
+        #toc li a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s ease; /* Transición suave para el color */
+        }
+        
+        #toc li a:hover, #toc li a.active {
+            color: #0056b3; /* Cambia el color al pasar el cursor o si está activo */
+            font-weight: bold; /* Resalta el enlace activo */
+        }
+        
+        /* Formato para las ecuaciones matemáticas */
+        div.math {
+            background: #f0f0f0;
+            border-left: 4px solid #333;
+            padding: 10px;
+            margin-bottom: 1em;
+            overflow-x: auto;
+        }
+    </style>
+    <!-- To render math expressions -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <aside id="tocContainer">
+        <nav id="toc">
+            <h3>Table Of Contents</h3>
+            <ul id="tocList"></ul> <!-- El TOC se generará aquí -->
+        </nav>
+    </aside>
+    <main>
+        <article>
+            <section>
+                <h2>Introduction</h2>
+                <p>
+                    Temporal dependencies within time series data are critical for understanding the dynamic nature of phenomena 
+                    across diverse fields. Recognizing these dependencies enables the identification of patterns and trends over
+                    time, facilitating more accurate forecasting and insightful analysis.
+                </p>
+                <p>
+                    In this document, we delve into the Temporal Dynamics Modeling Framework, elaborating on a methodology for 
+                    the precise prediction of time series.
+                </p>
+            </section>
+            
+            <section>
+                <h2>Temporal Dynamics Modeling Framework with Random Variables</h2>
+                <p>In the study of time series, accurately capturing temporal dependencies requires a robust mathematical framework. This section outlines the essential notations and constructs foundational to time series analysis, defining a series through a sequence of random variables indexed by time and possibly associated with multiple observations at any given moment.</p>
+                <strong>Definition:</strong>
+                <p>Let:</p>
+                <ul>
+                    <li><span>\(\mathcal{T} \subset \mathbb{N}\)</span> be a set representing different time instants.</li>
+                    <li><span>\(\mathcal{I}(t) \subset \mathbb{N}\)</span> be a set of indices corresponding to <span>\(|\mathcal{I}(t)|\)</span> random variables at time <span>\(t \in \mathcal{T}\)</span>.</li>
+                    <li><span>\(\{ X_{t}^{i}\}_{i \in \mathcal{I}(t)}\)</span> be the set of random variables at time <span>\(t \in \mathcal{T}\)</span>.</li>
+                    <li><span>\(\{ \{ X_{t}^{i} \}_{i \in \mathcal{I}(t')} \}_{t' \in \mathcal{T} }\)</span> with <span>\(t' \in \mathcal{T}\)</span> and <span>\(l \leq t' \leq t \quad \forall t'\)</span> represent the set of all random variables at time <span>\(t\)</span> and at <span>\(l\)</span> previous instants to <span>\(t\)</span>. This can be represented as an n-tuple in the form: <span>\((( X_{t}^{i})_{i \in \mathcal{I}(t')})_{t' \in \mathcal{T} }\)</span>.</li>
+                    <li><span>\(f_t((( X_{t}^{i})_{i \in \mathcal{I}(t')})_{t' \in \mathcal{T} })\)</span> be a function taking the aforementioned n-tuple as its elements.</li>
+                </ul>
+                <p>Then, <span>\(Y_t= f_t((( X_{t}^{i})_{i \in \mathcal{I}(t')})_{t' \in \mathcal{T} })\)</span> defines a new sequence of random variables indexed by the elements of a set representing different time instants, i.e., a time series decomposed by the aforementioned elements.</p>
+                
+                </section>
+
+                <section>
+
+                <h2>Temporal Dynamics Modeling Framework with Function</h2>
+
+                <p>The formal analysis of time series, as developed thus far, provides a framework for understanding and modeling phenomena that exhibit temporal dependencies and elements of randomness, defined solely through random variables. In practice, it's common to separate the relationship between variables into deterministic and random components. This separation aids in identifying the underlying deterministic relationship that best fits the observations and in applying machine learning algorithms. By distinguishing these components, the model training process is streamlined, allowing a focus on learning the data's underlying deterministic structure.</p>
+
+                <p>A general model can thus be represented as:</p>
+                
+                <div>
+                    <span>\[ \mathbf{Y} = (Y_1, Y_2, \dots, Y_m) = f(x_1, x_2, \dots, x_n) + \boldsymbol{\epsilon} \]</span>
+                </div>
+                
+                <p>where:</p>
+
+                <ul>
+                    <li>A phenomenon is assumed to be reducible to variables <span>\((x_1, x_2, \dots, x_n)\)</span> and <span>\((Y_1, Y_2, \dots, Y_m)\)</span>, with <span>\(x_i\)</span> as predictor or explanatory variables and <span>\(Y_j\)</span> as response or target variables. This modeling approach assumes that knowing <span>\((x_1, x_2, \dots, x_n)\)</span> allows for the prediction of <span>\((Y_1, Y_2, \dots, Y_m)\)</span>.</li>
+                    <li><span>\(f\)</span> represents the model's deterministic part, where a specific set of <span>\((x_1, x_2, \dots, x_n)\)</span> values always yields the same result through <span>\(f\)</span>. Machine learning algorithms aim to determine the function <span>\(f\)</span> that best fits the available data.</li>
+                    <li><span>\(\boldsymbol{\epsilon}\)</span> captures the variability and inherent uncertainty of the phenomenon not explained by <span>\(f\)</span>, ensuring the model accommodates the data's random nature.</li>
+                    <li><span>\(\mathbf{Y}\)</span> becomes a random variable due to <span>\(\boldsymbol{\epsilon}\)</span>, introducing variability in outcomes. Although <span>\(f\)</span> establishes a fixed relationship between <span>\(x_i\)</span> and <span>\(Y_j\)</span>, the presence of <span>\(\boldsymbol{\epsilon}\)</span> implies that for a given set of <span>\(x_i\)</span> values, <span>\(\mathbf{Y}\)</span> values may vary.</li>
+                </ul>
+                
+                <p>Thus, a general time series model can be represented as:</p>
+                
+                <div>
+                    <span>\[ (Y_{t+1}, Y_{t+2}, \dots, Y_{t+m}) = f_t((( x_{t}^{i})_{i \in \mathcal{I}(t')})_{t' \in \mathcal{T} }) + \epsilon_t \]</span>
+                </div>
+                
+                <p>The vector <span>\((Y_{t+1}, Y_{t+2}, \dots, Y_{t+m})\)</span> represents future observations in the time series, where each <span>\(Y_{t+j}\)</span> corresponds to a specific future instant. Similar to a general model formulation, the goal is to predict future values <span>\((Y_{t+1}, Y_{t+2}, \dots, Y_{t+m})\)</span> by knowing the variables <span>\((( x_{t}^{i})_{i \in \mathcal{I}(t')})_{t' \in \mathcal{T} }\)</span>. This implies forecasting future time series values based on previous instants of all variables considered in the phenomenon.</p>
+
+                </section>
+
+                <section>
+
+                <h3> Matrix Representation of a Temporal Instant </h3>
+
+                <p>The concepts discussed thus far can be succinctly represented in a matrix form for a specific temporal instant \( t \), considering the target variable as an input to the function \( f \) as follows:</p>
+                
+                <div>
+                    <span>\[
+                    \begin{pmatrix}
+                        Y_{t+1} \\
+                        Y_{t+2} \\
+                        \vdots \\
+                        Y_{t+m}
+                    \end{pmatrix}
+                    =
+                    f \left(
+                    \begin{pmatrix}
+                        x_{t}^{1} & x_{t}^{2} & \cdots & x_{t}^{n} \\
+                        x_{t-1}^{1} & x_{t-1}^{2} & \cdots & x_{t-1}^{n} \\
+                        \vdots & \vdots & \ddots & \vdots \\
+                        x_{t-l+1}^{1} & x_{t-l+1}^{2} & \cdots & x_{t-l+1}^{n}
+                    \end{pmatrix},
+                    \begin{pmatrix}
+                        Y_{t} \\
+                        Y_{t-1} \\
+                        \vdots \\
+                        Y_{t-l+1}
+                    \end{pmatrix}
+                    \right)
+                    +
+                    \begin{pmatrix}
+                        \epsilon_{t+1} \\
+                        \epsilon_{t+2} \\
+                        \vdots \\
+                        \epsilon_{t+m}
+                    \end{pmatrix}
+                    \]</span>
+                </div>
+
+                <p>A more compact form of this relationship for instant \( t \) is:</p>
+
+                <div>
+                    <span>\[
+                    \mathbf{Y}_{t+1:t+m}
+                    =
+                    f \left(
+                        \begin{pmatrix}
+                            \mathbf{X}^{1}_{t-l+1:t} & \mathbf{X}^{2}_{t-l+1:t} & \dots & \mathbf{X}^{n}_{t-l+1:t} & \mathbf{Y}_{t-l+1:t}
+                        \end{pmatrix}
+                    \right)
+                    +
+                    \boldsymbol{\epsilon}_{t+1:t+m}
+                    \]</span>
+                </div>
+                
+                <p>The elements within the matrix representation are defined as follows:</p>
+                
+                <ul>
+                    <li>\( \mathbf{X}^{i}_{t-l+1:t} \) represents the values of the \( i \)-th predictor variable from time \( t-l+1 \) to \( t \), including the predictor variable \( i \) values at \( l \) previous instants up to and including time \( t \).</li>
+                    <li>\( \mathbf{Y}_{t-l+1:t} \) denotes past observations of the target variable \( Y \) from time \( t-l+1 \) to \( t \), incorporating observations of \( Y \) at these times, used to forecast future values of \( Y \).</li>
+                    <li>\( \mathbf{Y}_{t+1:t+m} \) is the vector of future observations of \( Y \) to be predicted, from time \( t+1 \) to \( t+m \).</li>
+                    <li>\( \boldsymbol{\epsilon}_{t+1:t+m} \) represents the vector of error terms corresponding to the future predictions for the same temporal instants.</li>
+                </ul>
+
+                </section>
+
+                <section>
+
+                <h3> Matrix Representation of a The Expansion of All Time Instants </h3>
+                
+                <p>Expanding this to all temporal instants, and denoting by \( T \) the last temporal instant to be considered, the relationship can be expressed as:</p>
+                
+                <div>
+                    <span>\[
+                    \scriptsize
+                    \begin{pmatrix}
+                        Y_{1+1} & Y_{2+1} & \cdots & Y_{T+1} \\
+                        Y_{1+2} & Y_{2+2} & \cdots & Y_{T+2} \\
+                        \vdots & \vdots & \ddots & \vdots \\
+                        Y_{1+m} & Y_{2+m} & \cdots & Y_{T+m}
+                    \end{pmatrix}
+                    =
+                    f \left(
+                        \begin{pmatrix}
+                            \mathbf{X}^{1}_{1-l+1:1} & \mathbf{X}^{2}_{1-l+1:1} & \cdots & \mathbf{X}^{n}_{1-l+1:1} & \mathbf{Y}_{1-l+1:1} \\
+                            \mathbf{X}^{1}_{2-l+1:2} & \mathbf{X}^{2}_{2-l+1:2} & \cdots & \mathbf{X}^{n}_{2-l+1:2} & \mathbf{Y}_{2-l+1:2} \\
+                            \vdots & \vdots & \ddots & \vdots & \vdots \\
+                            \mathbf{X}^{1}_{T-l+1:T} & \mathbf{X}^{2}_{T-l+1:T} & \cdots & \mathbf{X}^{n}_{T-l+1:T} & \mathbf{Y}_{T-l+1:T}
+                        \end{pmatrix}
+                    \right)
+                    +
+                    \begin{pmatrix}
+                        \epsilon_{1+1} & \epsilon_{2+1} & \cdots & \epsilon_{T+1} \\
+                        \epsilon_{1+2} & \epsilon_{2+2} & \cdots & \epsilon_{T+2} \\
+                        \vdots & \vdots & \ddots & \vdots \\
+                        \epsilon_{1+m} & \epsilon_{2+m} & \cdots & \epsilon_{T+m}
+                    \end{pmatrix}
+                    \]</span>
+                </div>
+                
+                <p>In this formulation:</p>
+                
+                <ul>
+                    <li>Each row of the input matrix for \( f \) represents a set of predictor variables and past observations of the target variable for a specific time instant, ranging from instant 1 to \( T \).</li>
+                    <li>The matrix on the left side of the equation denotes the future observations of \( Y \) for each of these time instants.</li>
+                    <li>\( \mathbf{X}^{i}_{t-l+1:t} \) and \( \mathbf{Y}_{t-l+1:t} \) encompass all time instants, offering a complete perspective on the temporal dynamics throughout the observation period.</li>
+                </ul>
+
+                Incorporating Temporal Dynamics in Machine Learning Models
+
+                </section>
+
+                <section>
+
+                <h2> Incorporating Temporal Dynamics in Machine Learning Models </h2>
+                
+
+                <p>
+                    The described formulation allows data structures with temporal dependencies to be treated analogously to all
+                    known machine learning algorithms by introducing two additional parameters: the number of lags and the 
+                    number of future predictions or leads. These algorithms account for the relationship between past and 
+                    current observations as well as the interaction among all external variables combined at all past time 
+                    instants marked by the lags.
+                </p>
+
+            </section>
+
+        </article>
+
+    <main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tocList = document.getElementById("tocList");
+
+        // Crea el TOC
+        document.querySelectorAll("main h2, main h3").forEach((heading, index) => {
+            const id = `heading-${index}`;
+            heading.id = id;
+
+            const listItem = document.createElement("li");
+            listItem.classList.add(heading.tagName.toLowerCase()); // Agrega clase basada en la etiqueta del encabezado.
+
+            if(heading.tagName.toLowerCase() === 'h3') {
+                let lastH2ListItem = tocList.lastChild;
+                let sublist;
+                if(lastH2ListItem.tagName.toLowerCase() === 'li' && lastH2ListItem.querySelector('ul') === null) {
+                    sublist = document.createElement('ul');
+                    lastH2ListItem.appendChild(sublist);
+                } else {
+                    sublist = lastH2ListItem.querySelector('ul');
+                }
+                sublist.appendChild(listItem);
+            } else {
+                tocList.appendChild(listItem);
+            }
+
+            const link = document.createElement("a");
+            link.href = `#${id}`;
+            link.textContent = heading.textContent;
+            listItem.appendChild(link);
+
+            // Agrega un evento de clic que actualiza la clase 'active'
+            link.addEventListener('click', function() {
+                document.querySelectorAll('#toc a').forEach(el => el.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Función para actualizar el TOC en función del desplazamiento
+        function updateActiveTOCEntry() {
+            let fromTop = window.scrollY;
+
+            document.querySelectorAll("main h2, main h3").forEach(heading => {
+                if (heading.offsetTop <= fromTop && heading.offsetTop + heading.offsetHeight > fromTop) {
+                    document.querySelectorAll('#toc a').forEach(el => el.classList.remove('active'));
+                    document.querySelector(`#toc a[href='#${heading.id}']`).classList.add('active');
+                }
+            });
+        }
+
+        // Escucha el evento de desplazamiento para actualizar el TOC
+        window.addEventListener('scroll', updateActiveTOCEntry);
+    });
+</script>
+        
+        
+
+        
+    

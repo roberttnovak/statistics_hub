@@ -186,21 +186,21 @@ def execute_concurrently(func, args_list):
     return results
 
 
-def list_directories_by_depth(path, max_depth=3, list_only_last_level=True):
+def list_directories_by_depth(path, max_depth=3, list_only_last_level=True, include_files=False, specific_folder_last_level=None):
     """
-    Lists all directories and subdirectories up to a specified depth.
-    
+    Lists all directories and subdirectories up to a specified depth, and optionally lists files at the last level or within a specific folder at the last level.
+
     Parameters:
     path (str): The path of the directory to start from.
     max_depth (int): The maximum depth to explore. Default is 3.
-    list_only_last_level (bool): If True, only the directories at max_depth will be listed.
-                                 If False, all directories from the starting path to max_depth will be listed.
-                                 Default is True.
-    
+    list_only_last_level (bool): If True, only the directories (and files if include_files is True and specific_folder_last_level is specified) at max_depth will be listed.
+                                If False, all directories up to max_depth will be listed. Default is True.
+    include_files (bool): If True, files at the last level will also be listed. If specific_folder_last_level is specified, only files within that folder will be listed. Default is False.
+    specific_folder_last_level (str): Optionally specify a folder name at the last level from which to list files. This only takes effect if include_files is True and the folder exists at the last level.
+
     Returns:
-    list: A list of directories and subdirectories up to the specified depth, 
-          or a list of directories at the specified depth if list_only_last_level is True.
-    
+    list: A list of directories and subdirectories up to the specified depth, and optionally files at the last level or from the specific folder at the last level if include_files is True, or a list of directories at the specified depth if list_only_last_level is True.
+
     Example:
     --------
     Assume the directory structure is as follows:
@@ -211,12 +211,15 @@ def list_directories_by_depth(path, max_depth=3, list_only_last_level=True):
         - subdir2
             - subsubdir3
             - subsubdir4
-    
+
     >>> list_directories_by_depth('/path/to/dir', max_depth=2, list_only_last_level=True)
     ['/path/to/dir/subdir1/subsubdir1', '/path/to/dir/subdir1/subsubdir2', '/path/to/dir/subdir2/subsubdir3', '/path/to/dir/subdir2/subsubdir4']
-    
+
     >>> list_directories_by_depth('/path/to/dir', max_depth=2, list_only_last_level=False)
     ['/path/to/dir', '/path/to/dir/subdir1', '/path/to/dir/subdir1/subsubdir1', '/path/to/dir/subdir1/subsubdir2', '/path/to/dir/subdir2', '/path/to/dir/subdir2/subsubdir3', '/path/to/dir/subdir2/subsubdir4']
+
+    >>> list_directories_by_depth('/path/to/dir', max_depth=2, list_only_last_level=True, include_files=True, specific_folder_last_level='subsubdir2')
+    ['/path/to/dir/subdir1/subsubdir2/file1', '/path/to/dir/subdir1/subsubdir2/file2']
     """
     # Convert the path to a pathlib.Path object for easier path manipulation
     path = Path(path)
@@ -237,15 +240,21 @@ def list_directories_by_depth(path, max_depth=3, list_only_last_level=True):
         # Calculate the depth of the current directory relative to the root path
         depth = len(dirpath.parts) - root_depth - 1  # Subtract 1 as the root itself is not counted in the depth
         
+        filter_folder = specific_folder_last_level in str(dirpath) if specific_folder_last_level is not None else True
+
         # If the current depth is less than the max depth...
         if depth < max_depth:
             # ... and if list_only_last_level is False, add the current directory to the result
-            if not list_only_last_level:
+            if not list_only_last_level :
                 result.append(str(dirpath))
         # If the current depth is equal to the max depth...
-        elif depth == max_depth:
+        
+        elif depth == max_depth and filter_folder:
             # ... add the current directory to the result
             result.append(str(dirpath))
+            # If include_files is True, add the files in the current directory to the result
+            if include_files and filter_folder:
+                result.extend([str(dirpath / filename) for filename in filenames])
             # ... and stop os.walk from traversing deeper by clearing the dirnames list
             del dirnames[:]
     

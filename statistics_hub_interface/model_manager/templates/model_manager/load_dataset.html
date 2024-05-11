@@ -30,11 +30,11 @@
         <div class="container mt-5">
             <h2>Load a Dataset</h2>
 
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todoModal">
+            {% comment %} <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todoModal">
                 #ToDos
-            </button>
+            </button> {% endcomment %}
             <br>
-            <!-- Modal -->
+            <!-- Falta eliminar del código los ToDos -->
             <div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="todoModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -69,7 +69,7 @@
             <br>
             <!-- Selección de Dataset -->
             <div class="mb-3">
-                <label for="dataset-selector">Select a Dataset:</label>
+                <label for="dataset-selector">Select a dataset previous loaded:</label>
                 <select class="form-control" id="dataset-selector">
                     <option value="">-- Select a dataset --</option>
                     {% for dataset in datasets %}
@@ -212,13 +212,27 @@
         });
 
         $('#load-dataset-btn').click(function() {
-            var selectedDataset = $('#dataset-selector').val();
-            var separator = $('#separator-input').val();
-            if (selectedDataset) {
-                window.location.href = '/preprocess_dataset/' + encodeURIComponent(selectedDataset) + '/' + encodeURIComponent(separator) + '/';
-            } else {
+
+            var dataset = $('#dataset-selector').val();
+            
+            if (!dataset) {
                 alert("Please select a dataset.");
+                return;
             }
+
+            // Get all parameters from the dataset options : separator, header, usecols ...
+            var options = {};
+            $('#load-dataset-options input, #load-dataset-options select').each(function() {
+                var key = $(this).attr('id').replace('-input', '');  // Remove -input for cleaning purposes
+                var value = $(this).val();
+                options[key] = value;
+            });
+    
+            var queryParams = $.param(options);
+
+            console.log(queryParams)
+    
+            window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
         });
         // button to show and hide aditional option to read csv
         $('#toggle-options-btn').click(function() {

@@ -27,6 +27,7 @@ from ConfigManager import ConfigManager
 from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 from eda import summary_statistics, summary_statistics_numerical
 
+logger = logging.getLogger(__name__) 
 
 creds_path = '../global_creds/sql.json'
 
@@ -310,7 +311,7 @@ def model_evaluation_all_models(request):
         action = request.POST.get('action')
         selected_models = request.POST.getlist('selected_models')
 
-        # Define la función para calcular los pesos inversos
+        #función para calcular los pesos inversos
         def compute_inverse_weighted_averages(mae_contributions):
             inverse_weights = [1.0 / mae for mae in mae_contributions if mae != 0]
             total_inverse_weight = sum(inverse_weights)
@@ -372,13 +373,10 @@ def load_dataset(request):
     datasets = pm.list_datasets()
 
     if request.method == 'POST':
-        selected_dataset = request.POST.get('dataset')
 
-        # Si no es vista previa, procesa para redireccionar
-        separator = request.POST.get('separator', ',')
         if selected_dataset:
             # Redirige a la vista preprocess_dataset con los parámetros incluidos en la URL
-            return redirect('preprocess_dataset', selected_dataset=selected_dataset, separator=separator)
+            return redirect('preprocess_dataset', selected_dataset=selected_dataset)
         
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
@@ -394,17 +392,20 @@ def load_dataset(request):
 
 # preprocess_dataset backend logic
 @login_required
-def preprocess_dataset(request, selected_dataset, separator):
-
+def preprocess_dataset(request, selected_dataset):
     user = request.user
 
     # Funciones auxiliares definidas dentro de preprocess_dataset
     def load_data():
         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
-        print(pm.base_path)
-        print(pm.path)
+        # Get params from previous view (view of where dataset is selected)
+           
+        separator = request.GET.get('separator', ',')
+
+        logger.info(separator)
         try:
             df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
+            logger.info(df)
             return df, None
         except Exception as e:
             return None, str(e)
@@ -448,7 +449,6 @@ def preprocess_dataset(request, selected_dataset, separator):
     context = {
         # 'active_view': active_view,
         'selected_dataset': selected_dataset,
-        'separator': separator,
         'eda_results_html' : generate_html(eda_results, id_table = 'eda-results-table'),
         'eda_plot_html' : eda_plot_html,
         "preprocessing_plot_html": preprocessing_plot_html

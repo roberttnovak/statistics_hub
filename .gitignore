@@ -63,3 +63,5 @@ statistics_hub_interface/testeo*
 # Others
 # ToDo: Rearrage properly in another moment
 .vscode/launch.json
+
+django_info.log

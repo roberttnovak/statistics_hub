@@ -370,7 +370,8 @@ def model_evaluation_all_models(request):
 def load_dataset(request):
     user = request.user
     pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
-    datasets = pm.list_datasets()
+    datasets_with_structure = pm.list_datasets_with_structure()
+
 
     if request.method == 'POST':
 
@@ -381,14 +382,15 @@ def load_dataset(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
             selected_dataset = request.GET.get('dataset')
-            raw_preview = pm.load_csv_as_raw_string('data', selected_dataset, num_rows=10)
+            relative_path = request.GET.get('relativePath')
+            raw_preview = pm.load_csv_as_raw_string(f'data/{relative_path}', selected_dataset, num_rows=10)
             return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
         except FileNotFoundError as e:
             return JsonResponse({'error': str(e)}, status=500)
 
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
-    return render(request, 'model_manager/load_dataset.html', {'datasets': datasets})
+    return render(request, 'model_manager/load_dataset.html', {'datasets_with_structure': datasets_with_structure})
 
 # preprocess_dataset backend logic
 @login_required

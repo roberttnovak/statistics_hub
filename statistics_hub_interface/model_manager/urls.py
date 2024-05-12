@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
@@ -19,7 +19,7 @@ urlpatterns = [
     path('model_evaluation_model/<str:model>/', views.model_evaluation_model, name='model_evaluation_model'),
     path('model_evaluation_all_models/', views.model_evaluation_all_models, name='model_evaluation_all_models'),
     path('load_dataset/', views.load_dataset, name='load_dataset'),
-    path('preprocess_dataset/<str:selected_dataset>/<str:separator>/', views.preprocess_dataset, name='preprocess_dataset'),
+    re_path(r'^preprocess_dataset/(?P<selected_dataset>.+)/$', views.preprocess_dataset, name='preprocess_dataset'),
     path('learning_about_models/', views.learning_about_models, name='learning_about_models'),
     path('', views.user_login, name='login'),
 ]

@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Preprocesamiento de Datos</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <meta name="csrf-token" content="{{ csrf_token }}">
         <style>
@@ -20,6 +22,66 @@
             #csv-raw-preview-header {
                 text-align: center;
                 margin-bottom: 10px;
+            }
+            .folder-view {
+                list-style-type: none;
+                padding-left: 20px;
+            }
+            
+            .folder-view .folder-name {
+                cursor: pointer;
+            }
+            
+            .folder-name.opened > .fas {
+                transform: rotate(90deg); /* Gira el icono de la carpeta cuando está abierta */
+            }
+            
+            .folder-view .file {
+                cursor: pointer;
+                padding-left: 20px; /* Añade un poco de padding para alinear con los nombres de las carpetas */
+            }
+            
+            .folder-view .fas {
+                margin-right: 8px;
+            }
+            .folder-view ul {
+                list-style-type: none; /* Remove points of list */
+                display: none; /* Hide subdirectories by default */
+            }
+
+            .file-explorer {
+                border: 1px solid #ccc;
+                padding: 20px;
+                margin-top: 20px;
+                background-color: #f9f9f9;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                border-radius: 5px;
+            }
+            
+            .file-explorer h3 {
+                color: #333;
+                margin-bottom: 15px;
+            }
+            
+            .folder-view {
+                list-style-type: none;
+                padding-left: 0;
+                margin-top: 0;
+            }
+            
+            .folder-view .folder-name, .folder-view .file {
+                cursor: pointer;
+                padding: 5px 10px;
+                display: block;
+            }
+            
+            .folder-name > .fas, .file > .fas {
+                margin-right: 8px;
+            }
+            .file-selected {
+                background-color: #007BFF; /* Un color azul claro, ajusta según tu paleta de colores */
+                color: white;
+                border-radius: 4px;
             }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -68,15 +130,57 @@
                   the settings as per your dataset's format.</div>
             <br>
             <!-- Selección de Dataset -->
-            <div class="mb-3">
-                <label for="dataset-selector">Select a dataset previous loaded:</label>
-                <select class="form-control" id="dataset-selector">
-                    <option value="">-- Select a dataset --</option>
-                    {% for dataset in datasets %}
-                        <option value="{{ dataset }}">{{ dataset }}</option>
+            <div class="file-explorer">
+                <h3>File explorer of datasets</h3>
+                <ul class="folder-view">
+                    {% for name, contents in datasets_with_structure.items %}
+                        {% if contents|length == 0 %}
+                            <!-- Esto es un archivo en el nivel raíz -->
+                            <li class="file">
+                                <i class="fas fa-file-alt"></i>
+                                <span data-dataset="{{ name }}">{{ name }}</span>
+                            </li>
+                        {% else %}
+                            <!-- Esto es una carpeta -->
+                            <li>
+                                <span class="folder-name">
+                                    <i class="fas fa-folder"></i>
+                                    {{ name }}
+                                </span>
+                                {% if contents %}
+                                <ul>
+                                    {% for subfolder, subcontents in contents.items %}
+                                        <li>
+                                            <span class="folder-name">
+                                                <i class="fas fa-folder"></i>
+                                                {{ subfolder }}
+                                            </span>
+                                            {% if subcontents|length > 0 %}
+                                            <ul>
+                                                {% for file, empty_dict in subcontents.items %}
+                                                    <li class="file">
+                                                        <i class="fas fa-file-alt"></i>
+                                                        <span data-dataset="{{ file }}">{{ file }}</span>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                                <li class="file">
+                                                    <i class="fas fa-file-alt"></i>
+                                                    <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
+                                                </li>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </li>
+                        {% endif %}
                     {% endfor %}
-                </select>
+                </ul>
             </div>
+            
+            
     
             <!-- Vista previa en bruto del CSV -->
             <h5 id="csv-raw-preview-header" style="display: none; text-align: center; margin-bottom: 10px;">Preview of First Rows</h5>
@@ -172,18 +276,57 @@
 <script>
     $(document).ready(function() {
         var csrftoken = $('meta[name="csrf-token"]').attr('content');
+        var selectedDataset = null;
+        var selectedPath = null;
 
-        function loadCsvPreview(dataset) {
+        $('.folder-name').on('click', function() {
+            $(this).siblings('ul').toggle();
+            $(this).children('.fas').toggleClass('fa-folder fa-folder-open');
+        });
+        
+        $('.file').on('click', function(event) {
+            event.stopPropagation();  // Prevenir la propagación para no desencadenar eventos de carpetas padre
+            var fileInfo = gatherFileInfo($(this));
+            
+            // Eliminar la clase de todos los archivos para remover la selección anterior
+            $('.file').removeClass('file-selected');
+            // Añadir la clase al archivo actual para marcarlo como seleccionado
+            $(this).addClass('file-selected');
+        
+            selectedDataset = fileInfo.dataset;  // Guardar el dataset seleccionado globalmente
+            selectedPath = fileInfo.relativePath; // Guardar la ruta relativa seleccionada globalmente
+            console.log("Selected Dataset:", selectedDataset); // Debugging para ver el dataset seleccionado
+            console.log("Selected Path:", selectedPath); // Debugging para ver la ruta relativa seleccionada
+        
+            loadCsvPreview(fileInfo.dataset, fileInfo.relativePath);
+        });
+
+        function gatherFileInfo($fileElement) {
+            var pathComponents = [];
+            $fileElement.parentsUntil('.folder-view', 'li').each(function() {
+                var directory = $(this).children('span.folder-name').text().trim();
+                if (directory) {
+                    pathComponents.unshift(directory);
+                }
+            });
+            var dataset = $fileElement.find('span').data('dataset');
+            var relativePath = pathComponents.join('/');
+            return { dataset: dataset, relativePath: relativePath };
+        }
+    
+        function loadCsvPreview(dataset, relativePath) {
             $.ajax({
-                url: '/load_dataset/', // URL para cargar la vista previa del CSV
+                url: '/load_dataset/',
                 type: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': csrftoken
                 },
-                data: { 'dataset': dataset },
+                data: { 
+                    dataset: dataset,
+                    relativePath: relativePath
+                },
                 success: function(response) {
-                    // Muestra la vista previa del CSV
                     $('#csv-raw-preview').html(response.raw_preview_html);
                     $('#csv-raw-preview-header').show();
                     $('#csv-raw-preview').show();
@@ -194,46 +337,42 @@
             });
         }
 
-        $('#dataset-selector').change(function() {
-            var selectedDataset = $(this).val();
-            if (selectedDataset) {
-                loadCsvPreview(selectedDataset); 
-    
-                // Resto del código para manejar el botón de carga del dataset
-                $('#load-dataset-btn').click(function() {
-                    // Aquí puedes manejar la carga del dataset
-                });
-            } else {
-                $('#csv-raw-preview-header').hide();
-                $('#csv-raw-preview').hide();
-                $('#load-dataset-options').hide();
-                $('#dataset-preview').hide();
-            }
-        });
-
-        $('#load-dataset-btn').click(function() {
-
-            var dataset = $('#dataset-selector').val();
-            
-            if (!dataset) {
-                alert("Please select a dataset.");
-                return;
-            }
-
-            // Get all parameters from the dataset options : separator, header, usecols ...
+        function loadDataset(dataset) {
             var options = {};
             $('#load-dataset-options input, #load-dataset-options select').each(function() {
-                var key = $(this).attr('id').replace('-input', '');  // Remove -input for cleaning purposes
+                var key = $(this).attr('id').replace('-input', '');
                 var value = $(this).val();
                 options[key] = value;
             });
-    
+        
             var queryParams = $.param(options);
-
-            console.log(queryParams)
-    
+        
             window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
+        }    
+
+        $('#load-dataset-btn').click(function() {
+            if (!selectedDataset ) {
+                alert("Please select a dataset.");
+                return;
+            }
+        
+            var options = gatherOptions();
+            var queryParams = $.param(options);
+            var fullPath = selectedPath ? selectedPath + '/' + selectedDataset : selectedDataset;
+            window.location.href = '/preprocess_dataset/' + encodeURIComponent(fullPath) + '?' + queryParams;
         });
+
+        function gatherOptions() {
+            var options = {};
+            $('#load-dataset-options input, #load-dataset-options select').each(function() {
+                var key = $(this).attr('id').replace('-input', '');
+                var value = $(this).val();
+                options[key] = value;
+            });
+            return options;
+        }
+
+
         // button to show and hide aditional option to read csv
         $('#toggle-options-btn').click(function() {
             $('#load-dataset-options').toggle();

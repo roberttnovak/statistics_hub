@@ -713,7 +713,7 @@ class PersistenceManager:
 
 
 
-    def load_object(self, folder_path, filename, extension, csv_sep=";"):
+    def load_object(self, folder_path, filename, extension, csv_params=None):
         """
         Loads an object from disk based on the provided folder path, filename, and extension.
         The method supports multiple file formats defined in the constant SUPPORTED_EXTENSIONS.
@@ -726,6 +726,8 @@ class PersistenceManager:
             The name of the file from where the object will be loaded.
         extension : str
             The file extension indicating the format of the object file.
+        csv_params : dict, optional
+            Additional parameters to read csv files. Same as pd.read_csv parameters
 
         Returns:
         --------
@@ -767,7 +769,7 @@ class PersistenceManager:
             with open(full_path, 'r') as f:
                 obj = json.load(f)
         elif extension == 'csv':
-            obj = pd.read_csv(full_path, sep = csv_sep)
+            obj = pd.read_csv(full_path, **csv_params) if csv_params else pd.read_csv(full_path)
         else:
             # This else block is technically redundant due to the earlier check but kept for clarity.
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
@@ -1445,7 +1447,7 @@ class PersistenceManager:
         # Use the save_object method to save the dataset
         self.save_object(df, file_name, overwrite=overwrite, extension=extension, sub_folder=self.folder_datasets)
 
-    def load_dataset(self, file_name, extension='csv', csv_sep = ";"):
+    def load_dataset(self, file_name, extension='csv', csv_params = None):
         """
         Loads a dataset into a pandas DataFrame using the load_object method.
 
@@ -1455,8 +1457,8 @@ class PersistenceManager:
             The name of the file (without extension) to load the dataset from.
         extension : str, optional (default: 'csv')
             The file extension/format of the dataset.
-        csv_sep : str
-            Separator for csv
+        csv_params : dict, optional
+            params of csv file. Same as parameters in pd.read_csv
 
         Returns:
         --------
@@ -1475,7 +1477,7 @@ class PersistenceManager:
         # folder_path = os.normpath(os.path.join(self.path, self.folder_datasets)) if self.folder_datasets else self.path
 
         # Use the load_object method to load the dataset
-        return self.load_object(self.path, file_name, extension, csv_sep = csv_sep)
+        return self.load_object(self.path, file_name, extension, csv_params = csv_params)
 
 
     

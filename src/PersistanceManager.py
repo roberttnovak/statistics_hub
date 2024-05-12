@@ -382,6 +382,62 @@ class PersistenceManager:
         # List all files in the datasets directory
         return [f for f in os.listdir(datasets_path) if os.path.isfile(os.path.join(datasets_path, f))]
     
+    def list_datasets_with_structure(self):
+        """
+        Lists all dataset files within the folder_datasets directory, including those in subdirectories,
+        and returns a nested dictionary representing the folder structure and files.
+
+        Returns:
+        --------
+        dict
+            A nested dictionary where each key is a folder and each value is recursively another dictionary
+            for subfolders or an empty dictionary for files, representing the hierarchy of folders and datasets.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(base_path='path/to/base', folder_datasets='datasets')
+        >>> dataset_files = pm.list_datasets_with_structure()
+        {
+            'folder1': {'dataset1.csv': {}, 'dataset2.csv': {}},
+            'folder2': {
+                'folder3': {'dataset1.csv': {}, 'dataset2.csv': {}}
+            }
+        }
+
+        Notes:
+        ------
+        This method assumes that dataset files are stored in the folder_datasets directory and possibly its subdirectories.
+        The method is useful for displaying the directory and file structure in a file explorer interface, maintaining
+        the hierarchy of directories and files.
+        """
+        if self.folder_datasets is None:
+            raise ValueError("The folder_datasets attribute is not set.")
+
+        datasets_path = os.path.join(self.base_path, self.folder_datasets)
+        if not os.path.exists(datasets_path):
+            raise FileNotFoundError(f"The specified datasets directory '{datasets_path}' does not exist.")
+
+        dataset_list = []
+        for root, _, files in os.walk(datasets_path):
+            relative_path = os.path.relpath(root, datasets_path)
+            path_components = tuple(relative_path.split(os.sep)) if relative_path != "." else ()
+            for file in files:
+                dataset_list.append(path_components + (file,))
+
+        # Build the tree from the list of path components
+        return self._build_tree(dataset_list)
+
+    def _build_tree(self, paths):
+        tree = {}
+        for path in paths:
+            current = tree
+            for part in path[:-1]:  # Traverse through all parts except the last one
+                if part not in current:
+                    current[part] = {}
+                current = current[part]
+            current[path[-1]] = {}  # The last part is the file
+        return tree
+
     def list_all_files(self):
         """
         Lists all files within the base_path directory, including files in subdirectories.
@@ -642,10 +698,15 @@ class PersistenceManager:
             raise FileNotFoundError(f"The specified CSV file {csv_file_path} does not exist.")
 
         # Read the CSV file as a raw string
-        with open(csv_file_path, 'r') as file:
-            if num_rows is not None:
-                raw_string = ''.join([next(file) for _ in range(num_rows)])
-            else:
+        try:
+            with open(csv_file_path, 'r') as file:
+                if num_rows is not None:
+                    raw_string = ''.join([next(file) for _ in range(num_rows)])
+                else:
+                    raw_string = file.read()
+        except StopIteration:
+            # Handle the case where the file has fewer rows than num_rows
+            with open(csv_file_path, 'r') as file:
                 raw_string = file.read()
 
         return raw_string

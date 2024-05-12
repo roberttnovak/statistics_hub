@@ -221,16 +221,23 @@
                     <small class="form-text text-muted">Line numbers to skip (0-indexed) or number of lines to skip at the start of the file.</small>
                     <input type="text" class="form-control" id="skiprows-input" placeholder="E.g., 0, [1, 3]">
                     <br>
-                    <label for="na-values-input">NA Values (na_values):</label>
-                    <small class="form-text text-muted">Additional strings to consider as NA/NaN.</small>
-                    <input type="text" class="form-control" id="na-values-input" placeholder="E.g., 'NULL', 'N/A'">
-                    <br>
                     <label for="na-filter-input">NA Filter (na_filter):</label>
                     <small class="form-text text-muted">Detect missing values (default is True).</small>
                     <select class="form-control" id="na-filter-input">
                         <option value="True">True</option>
                         <option value="False">False</option>
                     </select>
+                    <br>
+                    <label for="keep-default-na-input">Keep default NA (keep_default_na):</label>
+                    <small class="form-text text-muted">Whether or not to include the default NaN values when parsing the data.  By default the following values are interpreted as NaN: “ “, “#N/A”, “#N/A N/A”, “#NA”, “-1.#IND”, “-1.#QNAN”, “-NaN”, “-nan”, “1.#IND”, “1.#QNAN”, “<NA>”, “N/A”, “NA”, “NULL”, “NaN”, “None”, “n/a”, “nan”, “null “.</small>
+                    <select class="form-control" id="keep-default-na-input">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                    <br>
+                    <label for="na-values-input">NA Values (na_values):</label>
+                    <small class="form-text text-muted">Additional strings to recognize as NA/NaN. To add multiples nulls pass a list. If dict passed, specific per-column NA values.</small>
+                    <input type="text" class="form-control" id="na-values-input" placeholder="E.g., 'NULL', 'N/A', ['NULL','N/A']">
                     <br>
                     <label for="chunksize-input">Chunk Size (chunksize):</label>
                     <small class="form-text text-muted">Number of rows per chunk. Useful for large files.</small>

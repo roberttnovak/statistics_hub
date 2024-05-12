@@ -401,13 +401,51 @@ def preprocess_dataset(request, selected_dataset):
     def load_data():
         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
         # Get params from previous view (view of where dataset is selected)
-           
-        separator = request.GET.get('separator', ',')
-
-        logger.info(separator)
+        params = request.GET 
+        params_csv_names_mapping = {
+            'separator': 'sep',
+            'header': 'header',
+            'usecols': 'usecols',
+            'dtype': 'dtype',
+            'parse-dates': 'parse_dates',
+            'index-col': 'index_col',
+            'skiprows': 'skiprows',
+            'na-values': 'na_values',
+            'keep-default-na': 'keep_default_na',
+            'na-filter': 'na_filter',
+            'chunksize': 'chunksize',
+            'compression': 'compression',
+            'thousands': 'thousands',
+            'decimal': 'decimal',
+            'lineterminator': 'lineterminator',
+            'quotechar': 'quotechar',
+            'quoting': 'quoting'
+        }  
+        read_csv_params = {}
+        for key, value in params.items():
+            if value:  # Only included parameters with a value (this implies that user specified a value for that parameter)
+                mapped_key = params_csv_names_mapping.get(key)  
+                if mapped_key: 
+                    if mapped_key in ['usecols', 'dtype', 'parse_dates']:
+                        try:
+                            read_csv_params[mapped_key] = eval(value)
+                        except SyntaxError:
+                            continue  # Ignora el error de eval, opcionalmente puedes registrar este error
+                    elif mapped_key == 'na_filter':
+                        read_csv_params[mapped_key] = value == 'True'
+                    elif mapped_key in ['header', 'skiprows', 'index_col', 'quoting'] and value.isdigit() and value not in ["None","none"]:
+                        read_csv_params[mapped_key] = int(value)
+                    elif value in ["None","none"]:
+                        read_csv_params[mapped_key] = None
+                    elif (value[0]=="[" and value[-1]=="]") or value in ["True","False","true","false"]:
+                        read_csv_params[mapped_key] = eval(value)
+                    else:
+                        read_csv_params[mapped_key] = value
+                else:
+                    continue
         try:
-            df = pm.load_dataset(selected_dataset.split(".")[0], csv_sep=separator)
-            logger.info(df)
+            logger.info(f"Loading dataset {selected_dataset} with params: {read_csv_params}")
+            df = pm.load_dataset(selected_dataset.split(".")[0], csv_params=read_csv_params)
             return df, None
         except Exception as e:
             return None, str(e)

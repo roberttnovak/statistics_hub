@@ -415,7 +415,11 @@
             var queryParams = $.param(options);
         
             window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
-        }    
+        }
+
+        $('#add-document-btn').click(function() {
+            window.open('/upload_file/', '_blank');
+        });
 
         $('#load-dataset-btn').click(function() {
             if (!selectedDataset ) {

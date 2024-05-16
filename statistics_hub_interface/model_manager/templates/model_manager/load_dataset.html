@@ -6,7 +6,6 @@
         <title>Preprocesamiento de Datos</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <meta name="csrf-token" content="{{ csrf_token }}">
         <style>
@@ -15,9 +14,8 @@
                 color: #333;
                 padding: 10px;
                 border-radius: 5px;
-                text-align: left;
-                margin: 10px 0;
                 text-align: center;
+                margin: 10px 0;
             }
             #csv-raw-preview-header {
                 text-align: center;
@@ -27,20 +25,16 @@
                 list-style-type: none;
                 padding-left: 20px;
             }
-            
             .folder-view .folder-name {
                 cursor: pointer;
             }
-            
             .folder-name.opened > .fas {
                 transform: rotate(90deg); /* Gira el icono de la carpeta cuando está abierta */
             }
-            
             .folder-view .file {
                 cursor: pointer;
                 padding-left: 20px; /* Añade un poco de padding para alinear con los nombres de las carpetas */
             }
-            
             .folder-view .fas {
                 margin-right: 8px;
             }
@@ -48,7 +42,6 @@
                 list-style-type: none; /* Remove points of list */
                 display: none; /* Hide subdirectories by default */
             }
-
             .file-explorer {
                 border: 1px solid #ccc;
                 padding: 20px;
@@ -57,24 +50,20 @@
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                 border-radius: 5px;
             }
-            
             .file-explorer h3 {
                 color: #333;
                 margin-bottom: 15px;
             }
-            
             .folder-view {
                 list-style-type: none;
                 padding-left: 0;
                 margin-top: 0;
             }
-            
             .folder-view .folder-name, .folder-view .file {
                 cursor: pointer;
                 padding: 5px 10px;
                 display: block;
             }
-            
             .folder-name > .fas, .file > .fas {
                 margin-right: 8px;
             }
@@ -82,6 +71,9 @@
                 background-color: #007BFF; /* Un color azul claro, ajusta según tu paleta de colores */
                 color: white;
                 border-radius: 4px;
+            }
+            .upload-section {
+                margin-top: 20px;
             }
             #toggle-options-btn {
                 border: none;
@@ -91,136 +83,140 @@
                 border-radius: 5px;
                 transition: background-color 0.2s, transform 0.2s;
             }
-            
             #toggle-options-btn:hover {
                 background-color: #f0f0f0;  /* Sutil fondo gris al pasar el mouse */
                 transform: scale(1.1);      /* Ligero aumento para indicar interactividad */
             }
         </style>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </head>
-
     <body>
         <div class="container mt-5">
-            <h2>Load a Dataset</h2>
-
-            {% comment %} <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todoModal">
-                #ToDos
-            </button> {% endcomment %}
-            <br>
-            <!-- Falta eliminar del código los ToDos -->
-            <div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="todoModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="todoModalLabel">ToDo List</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <ul>
-                                <li> Ahora mismo solo funciona la opción de lectura del delimitador. Tengo que ampliar la funcionalidad
-                                     Para que funcione para todas las opciones que he añadido. Para ello, tengo tanto que:
-                                     <ul> 
-                                        <li> Añadir como kwargs la función de PersistenceManager(...).load_dataset()
-                                        <li> Arreglar de manera flexible la lógica de los urls según añada cada uno de los elementos del html 
-                                             sin tener que hacer el encodeURIComponent 
-                                     </ul>  
-                                <li> Integrar en una única vista la carga del Dataset en este apartado sin necesidad de acceder
-                                     necesariamente a través de la pestaña de los modelos                                   
-                                <li> Mejora pendiente: En vez de que se vea como un desplegable se vea con una vista como de
-                                     explorador de archivos
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <div> Upload your dataset and tailor the loading process. Begin by selecting your file and then configure 
-                  the settings as per your dataset's format.</div>
-            <br>
-            <!-- Button to add new dataset-->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>File explorer of datasets</h3>
-                <button type="button" class="btn btn-primary" id="add-document-btn">
-                    <i class="fas fa-plus-circle"></i> Add New Dataset
-                </button>
-            </div>
-            <!-- Menu to show all datasets -->
-            <div class="file-explorer">
-                <ul class="folder-view">
-                    {% for name, contents in datasets_with_structure.items %}
-                        {% if contents|length == 0 %}
-                            <!-- Esto es un archivo en el nivel raíz -->
-                            <li class="file">
-                                <i class="fas fa-file-alt"></i>
-                                <span data-dataset="{{ name }}">{{ name }}</span>
-                            </li>
-                        {% else %}
-                            <!-- Esto es una carpeta -->
-                            <li>
-                                <span class="folder-name">
-                                    <i class="fas fa-folder"></i>
-                                    {{ name }}
-                                </span>
-                                {% if contents %}
-                                <ul>
-                                    {% for subfolder, subcontents in contents.items %}
-                                        <li>
-                                            <span class="folder-name">
-                                                <i class="fas fa-folder"></i>
-                                                {{ subfolder }}
-                                            </span>
-                                            {% if subcontents|length > 0 %}
-                                            <ul>
-                                                {% for file, empty_dict in subcontents.items %}
-                                                    <li class="file">
-                                                        <i class="fas fa-file-alt"></i>
-                                                        <span data-dataset="{{ file }}">{{ file }}</span>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% else %}
-                                                <li class="file">
-                                                    <i class="fas fa-file-alt"></i>
-                                                    <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
-                                                </li>
-                                            {% endif %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
+            <h2>Manage Datasets</h2>
+            <button id="toggle-explanation-btn" class="btn btn-info" style="margin-bottom: 15px;">
+                <i class="fas fa-info-circle"></i> Show Instructions
+            </button>
+            <div id="explanation-section" class="alert alert-info" role="alert" style="display: none;">
+                <h4 class="alert-heading">How to Use This Page</h4>
+                <p>Follow these steps to manage your datasets:</p>
+                <ul>
+                    <li>Navigate through the "File Explorer" tab to browse existing datasets. Click on folders to expand and view their contents.</li>
+                    <li>Use the "Upload File" tab to add new datasets. You can upload files or create new folders to organize your datasets.</li>
+                    <li>Select a dataset to preview its content in the preview section.</li>
+                    <li>Configure the import options for CSV files using the options provided in the "CSV Options" tab.</li>
+                    <li>Click "Load Dataset" to load and preprocess the selected dataset with the specified options.</li>
                 </ul>
+                <hr>
+                <p class="mb-0">Make sure to configure the options correctly before loading the dataset to ensure proper data preprocessing.</p>
             </div>
-
             <br>
-
-            <ul class="nav nav-tabs" id="fileTypeTabs" role="tablist">
+            <!-- Navegación de pestañas -->
+            <ul class="nav nav-tabs" id="fileManagementTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="csv-tab" data-toggle="tab" href="#csv-options" role="tab" aria-controls="csv-options" aria-selected="true">csv</a>
+                    <a class="nav-link active" id="explorer-tab" data-toggle="tab" href="#file-explorer-tab" role="tab" aria-controls="file-explorer-tab" aria-selected="true">File Explorer</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel-options" role="tab" aria-controls="excel-options" aria-selected="false">xlsx</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="sav-tab" data-toggle="tab" href="#sav-options" role="tab" aria-controls="sav-options" aria-selected="false">sav</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="json-tab" data-toggle="tab" href="#json-options" role="tab" aria-controls="json-options" aria-selected="false">json</a>
+                    <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload-file-tab" role="tab" aria-controls="upload-file-tab" aria-selected="false">Upload File</a>
                 </li>
             </ul>
+
+            <div class="tab-content">
+                <!-- Explorador de Archivos -->
+                <div class="tab-pane fade show active" id="file-explorer-tab" role="tabpanel" aria-labelledby="explorer-tab">
+                    <div class="file-explorer">
+                        <ul class="folder-view">
+                            {% for name, contents in datasets_with_structure.items %}
+                                {% if contents|length == 0 %}
+                                    <li class="file">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span data-dataset="{{ name }}">{{ name }}</span>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <span class="folder-name">
+                                            <i class="fas fa-folder"></i>
+                                            {{ name }}
+                                        </span>
+                                        {% if contents %}
+                                        <ul>
+                                            {% for subfolder, subcontents in contents.items %}
+                                                <li>
+                                                    <span class="folder-name">
+                                                        <i class="fas fa-folder"></i>
+                                                        {{ subfolder }}
+                                                    </span>
+                                                    {% if subcontents|length > 0 %}
+                                                    <ul>
+                                                        {% for file, empty_dict in subcontents.items %}
+                                                            <li class="file">
+                                                                <i class="fas fa-file-alt"></i>
+                                                                <span data-dataset="{{ file }}">{{ file }}</span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    {% else %}
+                                                        <li class="file">
+                                                            <i class="fas fa-file-alt"></i>
+                                                            <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
+                                                        </li>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+            </div>
+
+            <!-- Subir Archivo -->
+            <div class="tab-pane fade" id="upload-file-tab" role="tabpanel" aria-labelledby="upload-tab">
+                <div class="upload-section">
+                    <h3>Upload a New File</h3>
+                    <form id="upload-form" action="/upload_file/" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="file-input">Select file to upload:</label>
+                            <input type="file" class="form-control-file" id="file-input" name="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+
+                    <h3>Create New Folder</h3>
+                    <form id="create-folder-form" action="/create_folder/" method="post">
+                        <div class="form-group">
+                            <label for="folder-name-input">Folder name:</label>
+                            <input type="text" class="form-control" id="folder-name-input" name="folder_name" placeholder="Enter folder name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Folder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <ul class="nav nav-tabs" id="fileTypeTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="csv-tab" data-toggle="tab" href="#csv-options" role="tab" aria-controls="csv-options" aria-selected="true">csv</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel-options" role="tab" aria-controls="excel-options" aria-selected="false">xlsx</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="sav-tab" data-toggle="tab" href="#sav-options" role="tab" aria-controls="sav-options" aria-selected="false">sav</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="json-tab" data-toggle="tab" href="#json-options" role="tab" aria-controls="json-options" aria-selected="false">json</a>
+            </li>
+        </ul>
 
         <!-- Contenido de las pestañas -->
         <div class="tab-content">
             <!-- Opciones de CSV -->
             <div class="tab-pane fade show active" id="csv-options" role="tabpanel" aria-labelledby="csv-tab">
-            <!-- Opciones para cargar el Dataset -->
+                <!-- Opciones para cargar el Dataset -->
                 <button id="toggle-options-btn" class="btn" style="font-size: 24px; background-color: transparent; border: none; cursor: pointer;">
                     <i class="far fa-eye"></i>
                 </button>
@@ -229,7 +225,7 @@
                     <div class="form-group">
                         <label for="separator-input">Delimiter (sep):</label>
                         <small class="form-text text-muted">Delimiter to use. If `None`, will try to automatically detect.</small>
-                        <input type="text" class="form-control" id="separator-input" placeholder="E.g ," value = ",">
+                        <input type="text" class="form-control" id="separator-input" placeholder="E.g ," value=",">
                         <br>
                         <label for="header-input">Header Row (header):</label>
                         <small class="form-text text-muted">Row to use as header. Use `None` if there is no header row.</small>
@@ -263,7 +259,7 @@
                         </select>
                         <br>
                         <label for="keep-default-na-input">Keep default NA (keep_default_na):</label>
-                        <small class="form-text text-muted">Whether or not to include the default NaN values when parsing the data.  By default the following values are interpreted as NaN: “ “, “#N/A”, “#N/A N/A”, “#NA”, “-1.#IND”, “-1.#QNAN”, “-NaN”, “-nan”, “1.#IND”, “1.#QNAN”, “<NA>”, “N/A”, “NA”, “NULL”, “NaN”, “None”, “n/a”, “nan”, “null “.</small>
+                        <small class="form-text text-muted">Whether or not to include the default NaN values when parsing the data. By default the following values are interpreted as NaN: “ “, “#N/A”, “#N/A N/A”, “#NA”, “-1.#IND”, “-1.#QNAN”, “-NaN”, “-nan”, “1.#IND”, “1.#QNAN”, “<NA>”, “N/A”, “NA”, “NULL”, “NaN”, “None”, “n/a”, “nan”, “null “.</small>
                         <select class="form-control" id="keep-default-na-input">
                             <option value="True">True</option>
                             <option value="False">False</option>
@@ -302,14 +298,11 @@
                         <input type="text" class="form-control" id="quoting-input" placeholder="E.g., 0 (csv.QUOTE_MINIMAL)">
                     </div>
                 </div>
-
-
                 <!-- Raw preview of csv -->
-                <h5 id="csv-raw-preview-header" style="display: none; text-align: center; margin-bottom: 10px;">Preview of First Rows</h5>
+                <h5 id="csv-raw-preview-header" style="display: none;">Preview of First Rows</h5>
                 <div id="csv-raw-preview" class="mb-3" style="display: none;">
                     <!-- Aquí se mostrará la vista previa en bruto del CSV -->
                 </div>
-
             </div>
 
             <!-- Opciones de Excel -->
@@ -327,19 +320,16 @@
                 <!-- Opciones de carga de JSON aquí -->
             </div>
         </div>
-            
-            <br>
+        
+        <br>
+        <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
 
-            <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
-    
-            <!-- Vista previa del Dataset -->
-            <div id="dataset-preview" class="mb-3" style="display: none;">
-                <!-- Aquí se mostrará la vista previa del dataset -->
-            </div>
+        <!-- Vista previa del Dataset -->
+        <div id="dataset-preview" class="mb-3" style="display: none;">
+            <!-- Aquí se mostrará la vista previa del dataset -->
         </div>
-    </body>
-</html>
-
+    </div>
+</body>
 <script>
     $(document).ready(function() {
         var csrftoken = $('meta[name="csrf-token"]').attr('content');
@@ -456,6 +446,65 @@
             var newTitle = $(this).find('i').hasClass('fa-eye') ? "Click to toggle visibility of import options" : "Click to hide import options";
             $(this).attr('data-original-title', newTitle).tooltip('show');
         });
-    });
 
+
+        // Handle folder creation
+        $('#create-folder-form').on('submit', function(event) {
+            event.preventDefault();
+            var folderName = $('#folder-name-input').val();
+            if (folderName) {
+                $.ajax({
+                    url: '/create_folder/',
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: { folder_name: folderName },
+                    success: function(response) {
+                        // Handle success (e.g., reload file explorer or show a message)
+                        alert('Folder created successfully!');
+                    },
+                    error: function(error) {
+                        console.error("Error creating folder: ", error);
+                    }
+                });
+            } else {
+                alert("Please enter a folder name.");
+            }
+        });
+
+        // Handle file upload
+        $('#upload-form').on('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/upload_file/',
+                type: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // Handle success (e.g., reload file explorer or show a message)
+                    alert('File uploaded successfully!');
+                },
+                error: function(error) {
+                    console.error("Error uploading file: ", error);
+                }
+            });
+        });
+
+
+        $('#toggle-explanation-btn').click(function() {
+            $('#explanation-section').toggle();
+            var buttonText = $('#explanation-section').is(':visible') ? 'Hide Instructions' : 'Show Instructions';
+            $(this).html('<i class="fas fa-info-circle"></i> ' + buttonText);
+        });
+    
+    });
 </script>
+</html>

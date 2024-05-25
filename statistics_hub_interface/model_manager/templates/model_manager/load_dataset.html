@@ -498,6 +498,26 @@
             });
         });
 
+    // Ocultar elementos específicos al hacer clic en la pestaña "Upload File"
+    $('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').hide(); // Ocultar el botón "Load Dataset"
+        $('#fileTypeTabs').hide(); // Ocultar las pestañas de csv, xlsx, etc.
+        $('#csv-options').hide(); // Ocultar las opciones de CSV
+        $('#excel-options').hide(); // Ocultar las opciones de Excel
+        $('#sav-options').hide(); // Ocultar las opciones de SAV
+        $('#json-options').hide(); // Ocultar las opciones de JSON
+    });
+
+    // Mostrar todo de nuevo al cambiar a otra pestaña
+    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').show(); // Mostrar el botón "Load Dataset"
+        $('#fileTypeTabs').show(); // Mostrar las pestañas de csv, xlsx, etc.
+        $('#csv-options').show(); // Mostrar las opciones de CSV
+        $('#excel-options').show(); // Mostrar las opciones de Excel
+        $('#sav-options').show(); // Mostrar las opciones de SAV
+        $('#json-options').show(); // Mostrar las opciones de JSON
+    });
+
 
         $('#toggle-explanation-btn').click(function() {
             $('#explanation-section').toggle();

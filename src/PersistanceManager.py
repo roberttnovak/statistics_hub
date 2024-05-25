@@ -401,7 +401,8 @@ class PersistenceManager:
             'folder1': {'dataset1.csv': {}, 'dataset2.csv': {}},
             'folder2': {
                 'folder3': {'dataset1.csv': {}, 'dataset2.csv': {}}
-            }
+            },
+            'empty_folder': {}
         }
 
         Notes:
@@ -418,9 +419,14 @@ class PersistenceManager:
             raise FileNotFoundError(f"The specified datasets directory '{datasets_path}' does not exist.")
 
         dataset_list = []
-        for root, _, files in os.walk(datasets_path):
+        for root, dirs, files in os.walk(datasets_path):
             relative_path = os.path.relpath(root, datasets_path)
             path_components = tuple(relative_path.split(os.sep)) if relative_path != "." else ()
+            
+            # Add folders even if they are empty
+            if not files and not dirs:
+                dataset_list.append(path_components)
+            
             for file in files:
                 dataset_list.append(path_components + (file,))
 
@@ -435,7 +441,7 @@ class PersistenceManager:
                 if part not in current:
                     current[part] = {}
                 current = current[part]
-            current[path[-1]] = {}  # The last part is the file
+            current[path[-1]] = {}  # The last part is the file or empty folder
         return tree
 
     def list_all_files(self):

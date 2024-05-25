@@ -391,7 +391,7 @@ class PersistenceManager:
         --------
         dict
             A nested dictionary where each key is a folder and each value is recursively another dictionary
-            for subfolders or an empty dictionary for files, representing the hierarchy of folders and datasets.
+            for subfolders or an empty string "__folder__" for empty folders, representing the hierarchy of folders and datasets.
 
         Examples:
         ---------
@@ -402,7 +402,7 @@ class PersistenceManager:
             'folder2': {
                 'folder3': {'dataset1.csv': {}, 'dataset2.csv': {}}
             },
-            'empty_folder': {}
+            'empty_folder': "__folder__"
         }
 
         Notes:
@@ -418,32 +418,31 @@ class PersistenceManager:
         if not os.path.exists(datasets_path):
             raise FileNotFoundError(f"The specified datasets directory '{datasets_path}' does not exist.")
 
-        dataset_list = []
+        tree = {}
         for root, dirs, files in os.walk(datasets_path):
             relative_path = os.path.relpath(root, datasets_path)
-            path_components = tuple(relative_path.split(os.sep)) if relative_path != "." else ()
-            
-            # Add folders even if they are empty
-            if not files and not dirs:
-                dataset_list.append(path_components)
-            
-            for file in files:
-                dataset_list.append(path_components + (file,))
-
-        # Build the tree from the list of path components
-        return self._build_tree(dataset_list)
-
-    def _build_tree(self, paths):
-        tree = {}
-        for path in paths:
+            path_components = relative_path.split(os.sep) if relative_path != "." else []
             current = tree
-            for part in path[:-1]:  # Traverse through all parts except the last one
+            for part in path_components:
                 if part not in current:
                     current[part] = {}
                 current = current[part]
-            current[path[-1]] = {}  # The last part is the file or empty folder
-        return tree
+            if not files and not dirs:
+                current.update({"__folder__": "__folder__"})
+            for file in files:
+                current[file] = {}
 
+        # Simplify folders marked as empty
+        def simplify_tree(tree):
+            for key, value in list(tree.items()):
+                if value == {"__folder__": "__folder__"}:
+                    tree[key] = "__folder__"
+                elif isinstance(value, dict):
+                    simplify_tree(value)
+
+        simplify_tree(tree)
+        return tree
+    
     def list_all_files(self):
         """
         Lists all files within the base_path directory, including files in subdirectories.

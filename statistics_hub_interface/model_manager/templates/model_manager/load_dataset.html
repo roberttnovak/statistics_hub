@@ -40,7 +40,7 @@
                 <div class="file-explorer">
                     <ul class="folder-view">
                         {% for name, contents in datasets_with_structure.items %}
-                            {% if contents|length == 0 %}
+                            {% if contents|length == 0 and contents != "__folder__"%}
                                 <li class="file">
                                     <i class="fas fa-file-alt"></i>
                                     <span data-dataset="{{ name }}">{{ name }}</span>
@@ -54,7 +54,8 @@
                                     {% if contents %}
                                     <ul>
                                         {% for subfolder, subcontents in contents.items %}
-                                            <li>
+                                            
+                                        <li>
                                                 <span class="folder-name">
                                                     <i class="fas fa-folder"></i>
                                                     {{ subfolder }}
@@ -90,20 +91,28 @@
                 <div class="upload-section">
                     <h3>Upload a New File</h3>
                     <form id="upload-form" action="/upload_file/" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="file-input">Select file to upload:</label>
-                            <input type="file" class="form-control-file" id="file-input" name="file">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="file-input">Select file to upload:</label>
+                                <input type="file" class="form-control-file mb-2" id="file-input" name="file">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Upload</button>
                     </form>
-
+            
                     <h3>Create New Folder</h3>
                     <form id="create-folder-form" action="/create_folder/" method="post">
-                        <div class="form-group">
-                            <label for="folder-name-input">Folder name:</label>
-                            <input type="text" class="form-control" id="folder-name-input" name="folder_name" placeholder="Enter folder name">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="folder-name-input">Folder name:</label>
+                                <input type="text" class="form-control mb-2" id="folder-name-input" name="folder_name" placeholder="Enter folder name">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mb-2">Create Folder</button>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Create Folder</button>
                     </form>
                 </div>
             </div>

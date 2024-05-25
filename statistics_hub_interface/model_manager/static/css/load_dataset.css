@@ -1,0 +1,78 @@
+#csv-raw-preview {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+}
+#csv-raw-preview-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.folder-view {
+    list-style-type: none;
+    padding-left: 20px;
+}
+.folder-view .folder-name {
+    cursor: pointer;
+}
+.folder-name.opened > .fas {
+    transform: rotate(90deg); /* Gira el icono de la carpeta cuando está abierta */
+}
+.folder-view .file {
+    cursor: pointer;
+    padding-left: 20px; /* Añade un poco de padding para alinear con los nombres de las carpetas */
+}
+.folder-view .fas {
+    margin-right: 8px;
+}
+.folder-view ul {
+    list-style-type: none; /* Remove points of list */
+    display: none; /* Hide subdirectories by default */
+}
+.file-explorer {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+.file-explorer h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+.folder-view {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 0;
+}
+.folder-view .folder-name, .folder-view .file {
+    cursor: pointer;
+    padding: 5px 10px;
+    display: block;
+}
+.folder-name > .fas, .file > .fas {
+    margin-right: 8px;
+}
+.file-selected {
+    background-color: #007BFF; /* Un color azul claro, ajusta según tu paleta de colores */
+    color: white;
+    border-radius: 4px;
+}
+.upload-section {
+    margin-top: 20px;
+}
+#toggle-options-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+#toggle-options-btn:hover {
+    background-color: #f0f0f0;  /* Sutil fondo gris al pasar el mouse */
+    transform: scale(1.1);      /* Ligero aumento para indicar interactividad */
+}

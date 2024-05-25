@@ -1,175 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Preprocesamiento de Datos</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <meta name="csrf-token" content="{{ csrf_token }}">
-        <style>
-            #csv-raw-preview {
-                background-color: #f0f0f0;
-                color: #333;
-                padding: 10px;
-                border-radius: 5px;
-                text-align: center;
-                margin: 10px 0;
-            }
-            #csv-raw-preview-header {
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            .folder-view {
-                list-style-type: none;
-                padding-left: 20px;
-            }
-            .folder-view .folder-name {
-                cursor: pointer;
-            }
-            .folder-name.opened > .fas {
-                transform: rotate(90deg); /* Gira el icono de la carpeta cuando está abierta */
-            }
-            .folder-view .file {
-                cursor: pointer;
-                padding-left: 20px; /* Añade un poco de padding para alinear con los nombres de las carpetas */
-            }
-            .folder-view .fas {
-                margin-right: 8px;
-            }
-            .folder-view ul {
-                list-style-type: none; /* Remove points of list */
-                display: none; /* Hide subdirectories by default */
-            }
-            .file-explorer {
-                border: 1px solid #ccc;
-                padding: 20px;
-                margin-top: 20px;
-                background-color: #f9f9f9;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                border-radius: 5px;
-            }
-            .file-explorer h3 {
-                color: #333;
-                margin-bottom: 15px;
-            }
-            .folder-view {
-                list-style-type: none;
-                padding-left: 0;
-                margin-top: 0;
-            }
-            .folder-view .folder-name, .folder-view .file {
-                cursor: pointer;
-                padding: 5px 10px;
-                display: block;
-            }
-            .folder-name > .fas, .file > .fas {
-                margin-right: 8px;
-            }
-            .file-selected {
-                background-color: #007BFF; /* Un color azul claro, ajusta según tu paleta de colores */
-                color: white;
-                border-radius: 4px;
-            }
-            .upload-section {
-                margin-top: 20px;
-            }
-            #toggle-options-btn {
-                border: none;
-                background: none;
-                cursor: pointer;
-                padding: 5px;
-                border-radius: 5px;
-                transition: background-color 0.2s, transform 0.2s;
-            }
-            #toggle-options-btn:hover {
-                background-color: #f0f0f0;  /* Sutil fondo gris al pasar el mouse */
-                transform: scale(1.1);      /* Ligero aumento para indicar interactividad */
-            }
-        </style>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    </head>
-    <body>
-        <div class="container mt-5">
-            <h2>Manage Datasets</h2>
-            <button id="toggle-explanation-btn" class="btn btn-info" style="margin-bottom: 15px;">
-                <i class="fas fa-info-circle"></i> Show Instructions
-            </button>
-            <div id="explanation-section" class="alert alert-info" role="alert" style="display: none;">
-                <h4 class="alert-heading">How to Use This Page</h4>
-                <p>Follow these steps to manage your datasets:</p>
-                <ul>
-                    <li>Navigate through the "File Explorer" tab to browse existing datasets. Click on folders to expand and view their contents.</li>
-                    <li>Use the "Upload File" tab to add new datasets. You can upload files or create new folders to organize your datasets.</li>
-                    <li>Select a dataset to preview its content in the preview section.</li>
-                    <li>Configure the import options for CSV files using the options provided in the "CSV Options" tab.</li>
-                    <li>Click "Load Dataset" to load and preprocess the selected dataset with the specified options.</li>
-                </ul>
-                <hr>
-                <p class="mb-0">Make sure to configure the options correctly before loading the dataset to ensure proper data preprocessing.</p>
-            </div>
-            <br>
-            <!-- Navegación de pestañas -->
-            <ul class="nav nav-tabs" id="fileManagementTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="explorer-tab" data-toggle="tab" href="#file-explorer-tab" role="tab" aria-controls="file-explorer-tab" aria-selected="true">File Explorer</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload-file-tab" role="tab" aria-controls="upload-file-tab" aria-selected="false">Upload File</a>
-                </li>
-            </ul>
+{% load static %}
 
-            <div class="tab-content">
-                <!-- Explorador de Archivos -->
-                <div class="tab-pane fade show active" id="file-explorer-tab" role="tabpanel" aria-labelledby="explorer-tab">
-                    <div class="file-explorer">
-                        <ul class="folder-view">
-                            {% for name, contents in datasets_with_structure.items %}
-                                {% if contents|length == 0 %}
-                                    <li class="file">
-                                        <i class="fas fa-file-alt"></i>
-                                        <span data-dataset="{{ name }}">{{ name }}</span>
-                                    </li>
-                                {% else %}
-                                    <li>
-                                        <span class="folder-name">
-                                            <i class="fas fa-folder"></i>
-                                            {{ name }}
-                                        </span>
-                                        {% if contents %}
-                                        <ul>
-                                            {% for subfolder, subcontents in contents.items %}
-                                                <li>
-                                                    <span class="folder-name">
-                                                        <i class="fas fa-folder"></i>
-                                                        {{ subfolder }}
-                                                    </span>
-                                                    {% if subcontents|length > 0 %}
-                                                    <ul>
-                                                        {% for file, empty_dict in subcontents.items %}
-                                                            <li class="file">
-                                                                <i class="fas fa-file-alt"></i>
-                                                                <span data-dataset="{{ file }}">{{ file }}</span>
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                    {% else %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprocesamiento de Datos</title>
+    <link rel="stylesheet" href="{% static 'css/load_dataset.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<body>
+    <div class="container mt-5">
+
+        <h2>Manage Datasets</h2>
+
+        <button id="toggle-explanation-btn" class="btn btn-info" style="margin-bottom: 15px;">
+            <i class="fas fa-info-circle"></i> Show Instructions
+        </button>
+
+        {% include 'model_manager/load_dataset/explanation_page.html' %}
+
+        <br>
+            <!-- Navegación de pestañas -->
+        <ul class="nav nav-tabs" id="fileManagementTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="explorer-tab" data-toggle="tab" href="#file-explorer-tab" role="tab" aria-controls="file-explorer-tab" aria-selected="true">File Explorer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload-file-tab" role="tab" aria-controls="upload-file-tab" aria-selected="false">Upload File</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Explorador de Archivos -->
+            <div class="tab-pane fade show active" id="file-explorer-tab" role="tabpanel" aria-labelledby="explorer-tab">
+                <div class="file-explorer">
+                    <ul class="folder-view">
+                        {% for name, contents in datasets_with_structure.items %}
+                            {% if contents|length == 0 %}
+                                <li class="file">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span data-dataset="{{ name }}">{{ name }}</span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <span class="folder-name">
+                                        <i class="fas fa-folder"></i>
+                                        {{ name }}
+                                    </span>
+                                    {% if contents %}
+                                    <ul>
+                                        {% for subfolder, subcontents in contents.items %}
+                                            <li>
+                                                <span class="folder-name">
+                                                    <i class="fas fa-folder"></i>
+                                                    {{ subfolder }}
+                                                </span>
+                                                {% if subcontents|length > 0 %}
+                                                <ul>
+                                                    {% for file, empty_dict in subcontents.items %}
                                                         <li class="file">
                                                             <i class="fas fa-file-alt"></i>
-                                                            <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
+                                                            <span data-dataset="{{ file }}">{{ file }}</span>
                                                         </li>
-                                                    {% endif %}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-            </div>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% else %}
+                                                    <li class="file">
+                                                        <i class="fas fa-file-alt"></i>
+                                                        <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
+                                                    </li>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+        </div>
 
             <!-- Subir Archivo -->
             <div class="tab-pane fade" id="upload-file-tab" role="tabpanel" aria-labelledby="upload-tab">
@@ -212,7 +126,6 @@
             </li>
         </ul>
 
-        <!-- Contenido de las pestañas -->
         <div class="tab-content">
             <!-- Opciones de CSV -->
             <div class="tab-pane fade show active" id="csv-options" role="tabpanel" aria-labelledby="csv-tab">
@@ -330,201 +243,7 @@
         </div>
     </div>
 </body>
-<script>
-    $(document).ready(function() {
-        var csrftoken = $('meta[name="csrf-token"]').attr('content');
-        var selectedDataset = null;
-        var selectedPath = null;
-
-        $('.folder-name').on('click', function() {
-            $(this).siblings('ul').toggle();
-            $(this).children('.fas').toggleClass('fa-folder fa-folder-open');
-        });
-        
-        $('.file').on('click', function(event) {
-            event.stopPropagation();  // Prevenir la propagación para no desencadenar eventos de carpetas padre
-            var fileInfo = gatherFileInfo($(this));
-            
-            // Eliminar la clase de todos los archivos para remover la selección anterior
-            $('.file').removeClass('file-selected');
-            // Añadir la clase al archivo actual para marcarlo como seleccionado
-            $(this).addClass('file-selected');
-        
-            selectedDataset = fileInfo.dataset;  // Guardar el dataset seleccionado globalmente
-            selectedPath = fileInfo.relativePath; // Guardar la ruta relativa seleccionada globalmente
-            console.log("Selected Dataset:", selectedDataset); // Debugging para ver el dataset seleccionado
-            console.log("Selected Path:", selectedPath); // Debugging para ver la ruta relativa seleccionada
-        
-            loadCsvPreview(fileInfo.dataset, fileInfo.relativePath);
-        });
-
-        function gatherFileInfo($fileElement) {
-            var pathComponents = [];
-            $fileElement.parentsUntil('.folder-view', 'li').each(function() {
-                var directory = $(this).children('span.folder-name').text().trim();
-                if (directory) {
-                    pathComponents.unshift(directory);
-                }
-            });
-            var dataset = $fileElement.find('span').data('dataset');
-            var relativePath = pathComponents.join('/');
-            return { dataset: dataset, relativePath: relativePath };
-        }
-    
-        function loadCsvPreview(dataset, relativePath) {
-            $.ajax({
-                url: '/load_dataset/',
-                type: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': csrftoken
-                },
-                data: { 
-                    dataset: dataset,
-                    relativePath: relativePath
-                },
-                success: function(response) {
-                    $('#csv-raw-preview').html(response.raw_preview_html);
-                    $('#csv-raw-preview-header').show();
-                    $('#csv-raw-preview').show();
-                },
-                error: function(error) {
-                    console.error("Error al cargar la vista previa: ", error);
-                }
-            });
-        }
-
-        function loadDataset(dataset) {
-            var options = {};
-            $('#load-dataset-options input, #load-dataset-options select').each(function() {
-                var key = $(this).attr('id').replace('-input', '');
-                var value = $(this).val();
-                options[key] = value;
-            });
-        
-            var queryParams = $.param(options);
-        
-            window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
-        }
-
-        $('#add-document-btn').click(function() {
-            window.open('/upload_file/', '_blank');
-        });
-
-        $('#load-dataset-btn').click(function() {
-            if (!selectedDataset ) {
-                alert("Please select a dataset.");
-                return;
-            }
-        
-            var options = gatherOptions();
-            var queryParams = $.param(options);
-            var fullPath = selectedPath ? selectedPath + '/' + selectedDataset : selectedDataset;
-            window.location.href = '/preprocess_dataset/' + encodeURIComponent(fullPath) + '?' + queryParams;
-        });
-
-        function gatherOptions() {
-            var options = {};
-            $('#load-dataset-options input, #load-dataset-options select').each(function() {
-                var key = $(this).attr('id').replace('-input', '');
-                var value = $(this).val();
-                options[key] = value;
-            });
-            return options;
-        }
-
-
-        // Activar los tooltips de Bootstrap
-        $('[data-toggle="tooltip"]').tooltip();
-
-        // Botón para mostrar/ocultar las opciones de CSV
-        $('#toggle-options-btn').click(function() {
-            $('#load-dataset-options').toggle();
-            // Cambia el ícono del ojo de abierto a cerrado y viceversa
-            $(this).find('i').toggleClass('far fa-eye far fa-eye-slash');
-            // Actualiza el tooltip en función del estado del ícono
-            var newTitle = $(this).find('i').hasClass('fa-eye') ? "Click to toggle visibility of import options" : "Click to hide import options";
-            $(this).attr('data-original-title', newTitle).tooltip('show');
-        });
-
-
-        // Handle folder creation
-        $('#create-folder-form').on('submit', function(event) {
-            event.preventDefault();
-            var folderName = $('#folder-name-input').val();
-            if (folderName) {
-                $.ajax({
-                    url: '/create_folder/',
-                    type: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': csrftoken
-                    },
-                    data: { folder_name: folderName },
-                    success: function(response) {
-                        // Handle success (e.g., reload file explorer or show a message)
-                        alert('Folder created successfully!');
-                    },
-                    error: function(error) {
-                        console.error("Error creating folder: ", error);
-                    }
-                });
-            } else {
-                alert("Please enter a folder name.");
-            }
-        });
-
-        // Handle file upload
-        $('#upload-form').on('submit', function(event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: '/upload_file/',
-                type: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': csrftoken
-                },
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    // Handle success (e.g., reload file explorer or show a message)
-                    alert('File uploaded successfully!');
-                },
-                error: function(error) {
-                    console.error("Error uploading file: ", error);
-                }
-            });
-        });
-
-    // Ocultar elementos específicos al hacer clic en la pestaña "Upload File"
-    $('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').hide(); // Ocultar el botón "Load Dataset"
-        $('#fileTypeTabs').hide(); // Ocultar las pestañas de csv, xlsx, etc.
-        $('#csv-options').hide(); // Ocultar las opciones de CSV
-        $('#excel-options').hide(); // Ocultar las opciones de Excel
-        $('#sav-options').hide(); // Ocultar las opciones de SAV
-        $('#json-options').hide(); // Ocultar las opciones de JSON
-    });
-
-    // Mostrar todo de nuevo al cambiar a otra pestaña
-    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').show(); // Mostrar el botón "Load Dataset"
-        $('#fileTypeTabs').show(); // Mostrar las pestañas de csv, xlsx, etc.
-        $('#csv-options').show(); // Mostrar las opciones de CSV
-        $('#excel-options').show(); // Mostrar las opciones de Excel
-        $('#sav-options').show(); // Mostrar las opciones de SAV
-        $('#json-options').show(); // Mostrar las opciones de JSON
-    });
-
-
-        $('#toggle-explanation-btn').click(function() {
-            $('#explanation-section').toggle();
-            var buttonText = $('#explanation-section').is(':visible') ? 'Hide Instructions' : 'Show Instructions';
-            $(this).html('<i class="fas fa-info-circle"></i> ' + buttonText);
-        });
-    
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/load_dataset.js' %}"></script>
 </html>

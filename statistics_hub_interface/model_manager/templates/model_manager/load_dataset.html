@@ -40,7 +40,7 @@
                 <div class="file-explorer">
                     <ul class="folder-view">
                         {% for name, contents in datasets_with_structure.items %}
-                            {% if contents|length == 0 and contents != "__folder__"%}
+                            {% if contents|length == 0 and contents != "__folder__" %}
                                 <li class="file d-flex align-items-center">
                                     <i class="fas fa-file-alt mr-2"></i>
                                     <span data-dataset="{{ name }}" class="flex-grow-1">{{ name }}</span>
@@ -55,45 +55,45 @@
                                         {{ name }}
                                     </span>
                                     {% if contents %}
-                                    <ul>
-                                        {% for subfolder, subcontents in contents.items %}
-                                        <li>
-                                            <span class="folder-name d-flex align-items-center">
-                                                <i class="fas fa-folder mr-2"></i>
-                                                {{ subfolder }}
-                                            </span>
-                                            {% if subcontents|length > 0 %}
-                                            <ul>
-                                                {% for file, empty_dict in subcontents.items %}
-                                                    <li class="file d-flex align-items-center">
-                                                        <i class="fas fa-file-alt mr-2"></i>
-                                                        <span data-dataset="{{ file }}" class="flex-grow-1">{{ file }}</span>
-                                                        <button class="btn btn-danger btn-sm delete-file" data-file="{{ file }}">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% else %}
-                                                <li class="file d-flex align-items-center">
-                                                    <i class="fas fa-file-alt mr-2"></i>
-                                                    <span data-dataset="{{ subfolder }}" class="flex-grow-1">{{ subfolder }}</span>
-                                                    <button class="btn btn-danger btn-sm delete-file" data-file="{{ subfolder }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
+                                        <ul>
+                                            {% for subfolder, subcontents in contents.items %}
+                                                <li>
+                                                    <span class="folder-name d-flex align-items-center">
+                                                        <i class="fas fa-folder mr-2"></i>
+                                                        {{ subfolder }}
+                                                    </span>
+                                                    {% if subcontents|length > 0 %}
+                                                        <ul>
+                                                            {% for file, empty_dict in subcontents.items %}
+                                                                <li class="file d-flex align-items-center">
+                                                                    <i class="fas fa-file-alt mr-2"></i>
+                                                                    <span data-dataset="{{ file }}" class="flex-grow-1">{{ file }}</span>
+                                                                    <button class="btn btn-danger btn-sm delete-file" data-file="{{ file }}">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <li class="file d-flex align-items-center">
+                                                            <i class="fas fa-file-alt mr-2"></i>
+                                                            <span data-dataset="{{ subfolder }}" class="flex-grow-1">{{ subfolder }}</span>
+                                                            <button class="btn btn-danger btn-sm delete-file" data-file="{{ subfolder }}">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </li>
+                                                    {% endif %}
                                                 </li>
-                                            {% endif %}
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
+                                            {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 </li>
                             {% endif %}
                         {% endfor %}
                     </ul>                    
                 </div>
-        </div>
-
+            </div>
+            
             <!-- Subir Archivo -->
             <div class="tab-pane fade" id="upload-file-tab" role="tabpanel" aria-labelledby="upload-tab">
                 <div class="upload-section">
@@ -124,7 +124,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>            
 
         <br>
 

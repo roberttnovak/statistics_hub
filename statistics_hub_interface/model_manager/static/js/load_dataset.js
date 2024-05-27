@@ -103,23 +103,33 @@ $(document).ready(function() {
     });
 
     // Handle file deletion
-    $('.delete-file').on('click', function() {
+    $('.delete-file').click(function() {
+        var $fileElement = $(this).closest('li.file');
+        var fileInfo = gatherFileInfo($fileElement);
         var fileName = $(this).data('file');
-        $.ajax({
-            url: '/load_dataset/',
-            method: 'POST',
-            data: {
-                'file_name': fileName,
-                'action' : 'delete_file',
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                location.reload();  // Reload the page to update the view
-            },
-            error: function(response) {
-                alert('Error deleting file');
-            }
-        });
+
+        if (confirm("Are you sure you want to delete this file?")) {
+            $.ajax({
+                type: 'POST',
+                url: '/load_dataset/',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    'action': 'delete_file',
+                    'file_name': fileName,
+                    'relativePath': fileInfo.relativePath
+                },
+                success: function(response) {
+                    alert("File deleted successfully");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        }
     });
 
     // Handle CSV preview button click

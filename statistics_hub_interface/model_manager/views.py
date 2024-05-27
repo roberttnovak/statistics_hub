@@ -394,14 +394,20 @@ def load_dataset(request):
             except FileNotFoundError as e:
                 return JsonResponse({'error': str(e)}, status=500)
             
-        # elif action == 'delete_file':
-        #     logger.info("deleting file...")
-        #     try:
-        #         file_name = request.POST.get('file_name')
-        #         pm.delete_object(folder_path=pm.path, filename=file_name, extension=file_name.split('.')[-1])
-        #         return JsonResponse({'message': 'File deleted successfully'})
-        #     except Exception as e:
-        #         return JsonResponse({'error': str(e)}, status=500)
+        elif action == 'delete_file':
+            logger.info("deleting file...")
+            try:
+                file_name = request.POST.get('file_name')
+                relative_path = request.POST.get('relativePath')
+                logger.info(f"Relative Path: {relative_path}")
+                file_name_splitting = file_name.split('.')
+                file_name = file_name_splitting[0]
+                extension = file_name_splitting[-1]
+                folder_path = os.path.join(pm.path,relative_path)
+                pm.delete_object(folder_path=folder_path, filename=file_name, extension=extension)
+                return JsonResponse({'message': 'File deleted successfully'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
 
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset

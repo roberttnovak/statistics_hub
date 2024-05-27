@@ -14,7 +14,7 @@ import plotly.io as pio
 #       de procesado 
 
 # supported extension to save/load objects
-SUPPORTED_EXTENSIONS = ['joblib', 'pickle','json', 'csv']
+SUPPORTED_EXTENSIONS = ['joblib', 'pickle','json', 'csv', 'xlsx']
 
 class PersistenceManager:
     """
@@ -656,6 +656,51 @@ class PersistenceManager:
             obj.to_csv(file_path, sep=";", index = False)            
         else:
             raise ValueError(f"Unsupported extension '{extension}'.")
+        
+    def delete_object(self, folder_path, filename, extension):
+        """
+        Deletes an object file from disk based on the provided folder path, filename, and extension.
+        The method supports multiple file formats defined in the constant SUPPORTED_EXTENSIONS.
+
+        Parameters:
+        -----------
+        folder_path : str
+            The folder path where the object file resides.
+        filename : str
+            The name of the file (without extension) to be deleted.
+        extension : str
+            The file extension indicating the format of the object file.
+
+        Returns:
+        --------
+        None
+
+        Raises:
+        -------
+        ValueError:
+            If an unsupported file extension is provided.
+        FileNotFoundError:
+            If the specified file does not exist.
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager(base_path='path/to/base')
+        >>> pm.delete_object(folder_path='path/to', filename='file', extension='joblib')
+        """
+
+        # Validate the file extension against the list of supported extensions
+        if extension not in SUPPORTED_EXTENSIONS:
+            raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
+
+        # Combine folder path, filename, and extension to form the full path and normalize it
+        full_path = os.path.normpath(os.path.join(folder_path, f"{filename}.{extension}"))
+
+        # Check if the specified file exists
+        if not os.path.exists(full_path):
+            raise FileNotFoundError(f"The specified file {full_path} does not exist.")
+
+        # Delete the file
+        os.remove(full_path)
         
     def load_csv_as_raw_string(self, folder_path, filename, num_rows=None):
         """

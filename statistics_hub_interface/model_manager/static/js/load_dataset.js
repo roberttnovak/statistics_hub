@@ -55,7 +55,6 @@ $(document).ready(function() {
         console.log("Selected Dataset:", selectedDataset); // Debugging to see the selected dataset
         console.log("Selected Path:", selectedPath); // Debugging to see the selected relative path
     
-        loadCsvPreview(fileInfo.dataset, fileInfo.relativePath);
     });
 
     // Handle dataset load button click
@@ -104,10 +103,16 @@ $(document).ready(function() {
 
     // Handle file deletion
     $('.delete-file').click(function() {
-        var $fileElement = $(this).closest('li.file');
-        var fileInfo = gatherFileInfo($fileElement);
-        var fileName = $(this).data('file');
-
+        // It is necessary to select the file before deleting it
+        var $fileElement = $(this).closest('.file');
+        $fileElement.click();  // Trigger the file click event to select the file
+        
+        var $selectedFile = $('.file-selected');
+    
+        var fileInfo = gatherFileInfo($selectedFile);
+        selectedDataset = fileInfo.dataset;  
+        selectedPath = fileInfo.relativePath; 
+    
         if (confirm("Are you sure you want to delete this file?")) {
             $.ajax({
                 type: 'POST',
@@ -118,8 +123,8 @@ $(document).ready(function() {
                 },
                 data: {
                     'action': 'delete_file',
-                    'file_name': fileName,
-                    'relativePath': fileInfo.relativePath
+                    'file_name': selectedDataset,
+                    'relativePath': selectedPath
                 },
                 success: function(response) {
                     alert("File deleted successfully");

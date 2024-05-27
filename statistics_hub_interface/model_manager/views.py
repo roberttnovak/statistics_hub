@@ -373,7 +373,6 @@ def load_dataset(request):
     datasets_with_structure = pm.list_datasets_with_structure()
     selected_dataset = None
 
-
     if request.method == 'POST':
         
         if selected_dataset:
@@ -396,14 +395,19 @@ def load_dataset(request):
             
         elif action == 'delete_file':
             logger.info("deleting file...")
+            logger.info(f"request.POST: {request.POST}")
             try:
                 file_name = request.POST.get('file_name')
+                logger.info(f"file_name: {file_name}")
                 relative_path = request.POST.get('relativePath')
                 logger.info(f"Relative Path: {relative_path}")
                 file_name_splitting = file_name.split('.')
                 file_name = file_name_splitting[0]
                 extension = file_name_splitting[-1]
-                folder_path = os.path.join(pm.path,relative_path)
+                folder_path = os.path.normpath(os.path.join(pm.path,relative_path))
+                logger.info(f"file_name: {file_name}")
+                logger.info(f"extension: {extension}")
+                logger.info(f"folder_path: {folder_path}")
                 pm.delete_object(folder_path=folder_path, filename=file_name, extension=extension)
                 return JsonResponse({'message': 'File deleted successfully'})
             except Exception as e:

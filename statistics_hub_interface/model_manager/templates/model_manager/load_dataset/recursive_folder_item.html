@@ -1,0 +1,28 @@
+{% block recursive %}
+    <li>
+        {% if contents == "__folder__" %}
+            <span class="folder-name d-flex align-items-center">
+                <i class="fas fa-folder mr-2"></i>
+                {{ name }}
+            </span>
+        {% elif contents|length == 0 %}
+            <span class="file d-flex align-items-center">
+                <i class="fas fa-file-alt mr-2"></i>
+                <span data-dataset="{{ name }}" class="flex-grow-1">{{ name }}</span>
+                <button class="btn btn-danger btn-sm delete-file" data-file="{{ name }}" data-action="delete_file">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </span>
+        {% else %}
+            <span class="folder-name d-flex align-items-center">
+                <i class="fas fa-folder mr-2"></i>
+                {{ name }}
+            </span>
+            <ul>
+                {% for subname, subcontents in contents.items %}
+                    {% include 'model_manager/load_dataset/recursive_folder_item.html' with name=subname contents=subcontents %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endblock recursive %}

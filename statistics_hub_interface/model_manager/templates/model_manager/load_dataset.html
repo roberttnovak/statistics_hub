@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preprocesamiento de Datos</title>
     <link rel="stylesheet" href="{% static 'css/load_dataset.css' %}">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token }}">
 </head>
 
@@ -41,48 +41,56 @@
                     <ul class="folder-view">
                         {% for name, contents in datasets_with_structure.items %}
                             {% if contents|length == 0 and contents != "__folder__"%}
-                                <li class="file">
-                                    <i class="fas fa-file-alt"></i>
-                                    <span data-dataset="{{ name }}">{{ name }}</span>
+                                <li class="file d-flex align-items-center">
+                                    <i class="fas fa-file-alt mr-2"></i>
+                                    <span data-dataset="{{ name }}" class="flex-grow-1">{{ name }}</span>
+                                    <button class="btn btn-danger btn-sm delete-file" data-file="{{ name }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </li>
                             {% else %}
                                 <li>
-                                    <span class="folder-name">
-                                        <i class="fas fa-folder"></i>
+                                    <span class="folder-name d-flex align-items-center">
+                                        <i class="fas fa-folder mr-2"></i>
                                         {{ name }}
                                     </span>
                                     {% if contents %}
                                     <ul>
                                         {% for subfolder, subcontents in contents.items %}
-                                            
                                         <li>
-                                                <span class="folder-name">
-                                                    <i class="fas fa-folder"></i>
-                                                    {{ subfolder }}
-                                                </span>
-                                                {% if subcontents|length > 0 %}
-                                                <ul>
-                                                    {% for file, empty_dict in subcontents.items %}
-                                                        <li class="file">
-                                                            <i class="fas fa-file-alt"></i>
-                                                            <span data-dataset="{{ file }}">{{ file }}</span>
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
-                                                {% else %}
-                                                    <li class="file">
-                                                        <i class="fas fa-file-alt"></i>
-                                                        <span data-dataset="{{ subfolder }}">{{ subfolder }}</span>
+                                            <span class="folder-name d-flex align-items-center">
+                                                <i class="fas fa-folder mr-2"></i>
+                                                {{ subfolder }}
+                                            </span>
+                                            {% if subcontents|length > 0 %}
+                                            <ul>
+                                                {% for file, empty_dict in subcontents.items %}
+                                                    <li class="file d-flex align-items-center">
+                                                        <i class="fas fa-file-alt mr-2"></i>
+                                                        <span data-dataset="{{ file }}" class="flex-grow-1">{{ file }}</span>
+                                                        <button class="btn btn-danger btn-sm delete-file" data-file="{{ file }}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
                                                     </li>
-                                                {% endif %}
-                                            </li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                                <li class="file d-flex align-items-center">
+                                                    <i class="fas fa-file-alt mr-2"></i>
+                                                    <span data-dataset="{{ subfolder }}" class="flex-grow-1">{{ subfolder }}</span>
+                                                    <button class="btn btn-danger btn-sm delete-file" data-file="{{ subfolder }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </li>
+                                            {% endif %}
+                                        </li>
                                         {% endfor %}
                                     </ul>
                                     {% endif %}
                                 </li>
                             {% endif %}
                         {% endfor %}
-                    </ul>
+                    </ul>                    
                 </div>
         </div>
 
@@ -139,11 +147,11 @@
             <!-- Opciones de CSV -->
             <div class="tab-pane fade show active" id="csv-options" role="tabpanel" aria-labelledby="csv-tab">
                 <!-- Opciones para cargar el Dataset -->
-                <button id="toggle-options-btn" class="btn" style="font-size: 24px; background-color: transparent; border: none; cursor: pointer;">
-                    <i class="far fa-eye"></i>
-                </button>
-                <br><br>
-                <div id="load-dataset-options" class="mb-3" style="display: none;">
+                <br>
+                {% comment %} <button id="toggle-options-btn" class="btn btn-info my-3">
+                    <i class="fas fa-cog"></i> Import options
+                </button> {% endcomment %}
+                <div id="load-dataset-options" class="mb-3" >
                     <div class="form-group">
                         <label for="separator-input">Delimiter (sep):</label>
                         <small class="form-text text-muted">Delimiter to use. If `None`, will try to automatically detect.</small>
@@ -219,6 +227,11 @@
                         <small class="form-text text-muted">Control field quoting behavior.</small>
                         <input type="text" class="form-control" id="quoting-input" placeholder="E.g., 0 (csv.QUOTE_MINIMAL)">
                     </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <button id="preview-csv-rows-btn" class="btn btn-info my-3">
+                        <i class="fas fa-table"></i> Preview First Rows
+                    </button>
                 </div>
                 <!-- Raw preview of csv -->
                 <h5 id="csv-raw-preview-header" style="display: none;">Preview of First Rows</h5>

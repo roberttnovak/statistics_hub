@@ -64,15 +64,11 @@
 .upload-section {
     margin-top: 20px;
 }
-#toggle-options-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 5px;
-    transition: background-color 0.2s, transform 0.2s;
-}
-#toggle-options-btn:hover {
-    background-color: #f0f0f0;  /* Sutil fondo gris al pasar el mouse */
-    transform: scale(1.1);      /* Ligero aumento para indicar interactividad */
+#load-dataset-options {
+    max-height: 50vh; /* Altura máxima del 50% de la altura de la ventana */
+    overflow-y: auto; /* Scroll vertical si el contenido es demasiado grande */
+    border: 1px solid #ccc; /* Borde alrededor del cuadro */
+    padding: 15px; /* Espacio dentro del cuadro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f9f9f9; /* Color de fondo */
 }

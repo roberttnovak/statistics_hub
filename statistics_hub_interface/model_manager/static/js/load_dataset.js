@@ -38,29 +38,6 @@ $(document).ready(function() {
         return { dataset: dataset, relativePath: relativePath };
     }
 
-    function loadCsvPreview(dataset, relativePath) {
-        $.ajax({
-            url: '/load_dataset/',
-            type: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrftoken
-            },
-            data: { 
-                dataset: dataset,
-                relativePath: relativePath
-            },
-            success: function(response) {
-                $('#csv-raw-preview').html(response.raw_preview_html);
-                $('#csv-raw-preview-header').show();
-                $('#csv-raw-preview').show();
-            },
-            error: function(error) {
-                console.error("Error al cargar la vista previa: ", error);
-            }
-        });
-    }
-
     function loadDataset(dataset) {
         var options = {};
         $('#load-dataset-options input, #load-dataset-options select').each(function() {
@@ -105,14 +82,14 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
 
     // Botón para mostrar/ocultar las opciones de CSV
-    $('#toggle-options-btn').click(function() {
-        $('#load-dataset-options').toggle();
-        // Cambia el ícono del ojo de abierto a cerrado y viceversa
-        $(this).find('i').toggleClass('far fa-eye far fa-eye-slash');
-        // Actualiza el tooltip en función del estado del ícono
-        var newTitle = $(this).find('i').hasClass('fa-eye') ? "Click to toggle visibility of import options" : "Click to hide import options";
-        $(this).attr('data-original-title', newTitle).tooltip('show');
-    });
+    // $('#toggle-options-btn').click(function() {
+    //     $('#load-dataset-options').toggle();
+    //     // Cambia el ícono del ojo de abierto a cerrado y viceversa
+    //     $(this).find('i').toggleClass('far fa-eye far fa-eye-slash');
+    //     // Actualiza el tooltip en función del estado del ícono
+    //     var newTitle = $(this).find('i').hasClass('fa-eye') ? "Click to toggle visibility of import options" : "Click to hide import options";
+    //     $(this).attr('data-original-title', newTitle).tooltip('show');
+    // });
 
 
     // Handle folder creation
@@ -142,48 +119,48 @@ $(document).ready(function() {
     });
 
     // Handle file upload
-    $('#upload-form').on('submit', function(event) {
-        event.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: '/upload_file/',
-            type: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrftoken
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                // Handle success (e.g., reload file explorer or show a message)
-                alert('File uploaded successfully!');
-            },
-            error: function(error) {
-                console.error("Error uploading file: ", error);
-            }
-        });
+    // $('#upload-form').on('submit', function(event) {
+    //     event.preventDefault();
+    //     var formData = new FormData(this);
+    //     formData.append('action', 'preview_csv');
+    //     $.ajax({
+    //         url: '/load_dataset/',
+    //         type: 'POST',
+    //         headers: {
+    //             'X-Requested-With': 'XMLHttpRequest',
+    //             'X-CSRFToken': csrftoken
+    //         },
+    //         data: formData,
+    //         processData: false,
+    //         contentType: false,
+    //         success: function(response) {
+    //             alert('File uploaded successfully!');
+    //         },
+    //         error: function(error) {
+    //             console.error("Error uploading file: ", error);
+    //         }
+    //     });
+    // });
+
+    // Ocultar elementos específicos al hacer clic en la pestaña "Upload File"
+    $('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').hide(); // Ocultar el botón "Load Dataset"
+        $('#fileTypeTabs').hide(); // Ocultar las pestañas de csv, xlsx, etc.
+        $('#csv-options').hide(); // Ocultar las opciones de CSV
+        $('#excel-options').hide(); // Ocultar las opciones de Excel
+        $('#sav-options').hide(); // Ocultar las opciones de SAV
+        $('#json-options').hide(); // Ocultar las opciones de JSON
     });
 
-// Ocultar elementos específicos al hacer clic en la pestaña "Upload File"
-$('#upload-tab').on('shown.bs.tab', function() {
-    $('#load-dataset-btn').hide(); // Ocultar el botón "Load Dataset"
-    $('#fileTypeTabs').hide(); // Ocultar las pestañas de csv, xlsx, etc.
-    $('#csv-options').hide(); // Ocultar las opciones de CSV
-    $('#excel-options').hide(); // Ocultar las opciones de Excel
-    $('#sav-options').hide(); // Ocultar las opciones de SAV
-    $('#json-options').hide(); // Ocultar las opciones de JSON
-});
-
-// Mostrar todo de nuevo al cambiar a otra pestaña
-$('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
-    $('#load-dataset-btn').show(); // Mostrar el botón "Load Dataset"
-    $('#fileTypeTabs').show(); // Mostrar las pestañas de csv, xlsx, etc.
-    $('#csv-options').show(); // Mostrar las opciones de CSV
-    $('#excel-options').show(); // Mostrar las opciones de Excel
-    $('#sav-options').show(); // Mostrar las opciones de SAV
-    $('#json-options').show(); // Mostrar las opciones de JSON
-});
+    // Mostrar todo de nuevo al cambiar a otra pestaña
+    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').show(); // Mostrar el botón "Load Dataset"
+        $('#fileTypeTabs').show(); // Mostrar las pestañas de csv, xlsx, etc.
+        $('#csv-options').show(); // Mostrar las opciones de CSV
+        $('#excel-options').show(); // Mostrar las opciones de Excel
+        $('#sav-options').show(); // Mostrar las opciones de SAV
+        $('#json-options').show(); // Mostrar las opciones de JSON
+    });
 
 
     $('#toggle-explanation-btn').click(function() {
@@ -192,4 +169,59 @@ $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
         $(this).html('<i class="fas fa-info-circle"></i> ' + buttonText);
     });
 
+    $('.delete-file').on('click', function() {
+        var fileName = $(this).data('file');
+        $.ajax({
+            url: '/load_dataset/',
+            method: 'POST',
+            data: {
+                'file_name': fileName,
+                'action' : 'delete_file',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                location.reload();  // Recargar la página para actualizar la vista
+            },
+            error: function(response) {
+                alert('Error deleting file');
+            }
+        });
+    });
+
+    $('#preview-csv-rows-btn').on('click', function() {
+        if (!selectedDataset) {
+            alert("Please select a dataset.");
+            return;
+        }
+    
+        var $previewSection = $('#csv-raw-preview');
+        var $previewHeader = $('#csv-raw-preview-header');
+    
+        if ($previewSection.is(':visible')) {
+            $previewSection.hide();
+            $previewHeader.hide();
+        } else {
+            $.ajax({
+                url: '/load_dataset/',
+                type: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    action: 'preview_csv',
+                    dataset: selectedDataset,
+                    relativePath: selectedPath
+                },
+                success: function(response) {
+                    $('#csv-raw-preview').html(response.raw_preview_html);
+                    $previewHeader.show();
+                    $previewSection.show();
+                },
+                error: function(error) {
+                    console.error("Error previewing file: ", error);
+                }
+            });
+        }
+    });    
 });

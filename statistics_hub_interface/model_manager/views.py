@@ -371,22 +371,37 @@ def load_dataset(request):
     user = request.user
     pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
     datasets_with_structure = pm.list_datasets_with_structure()
+    selected_dataset = None
 
 
     if request.method == 'POST':
-
+        
         if selected_dataset:
             # Redirige a la vista preprocess_dataset con los parámetros incluidos en la URL
             return redirect('preprocess_dataset', selected_dataset=selected_dataset)
         
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        try:
-            selected_dataset = request.GET.get('dataset')
-            relative_path = request.GET.get('relativePath')
-            raw_preview = pm.load_csv_as_raw_string(f'data/{relative_path}', selected_dataset, num_rows=10)
-            return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
-        except FileNotFoundError as e:
-            return JsonResponse({'error': str(e)}, status=500)
+
+        action = request.POST.get('action')
+        logger.info(f"Action: {action}")
+
+        if action == 'preview_csv':
+            try:
+                selected_dataset = request.POST.get('dataset')
+                relative_path = request.POST.get('relativePath')
+                raw_preview = pm.load_csv_as_raw_string(f'data/{relative_path}', selected_dataset, num_rows=10)
+                return JsonResponse({'raw_preview_html': '<pre>' + raw_preview + '</pre>'})
+            except FileNotFoundError as e:
+                return JsonResponse({'error': str(e)}, status=500)
+            
+        # elif action == 'delete_file':
+        #     logger.info("deleting file...")
+        #     try:
+        #         file_name = request.POST.get('file_name')
+        #         pm.delete_object(folder_path=pm.path, filename=file_name, extension=file_name.split('.')[-1])
+        #         return JsonResponse({'message': 'File deleted successfully'})
+        #     except Exception as e:
+        #         return JsonResponse({'error': str(e)}, status=500)
 
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset

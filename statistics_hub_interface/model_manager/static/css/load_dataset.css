@@ -39,6 +39,57 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     border-radius: 5px;
 }
+.file-explorer ul {
+    list-style-type: none;
+    padding-left: 20px;
+    position: relative;
+}
+.file-explorer ul:before {
+    content: '';
+    border-left: 2px solid #ccc;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 10px;
+    height: 100%;
+}
+.file-explorer li {
+    margin: 0;
+    padding: 10px 5px;
+    position: relative;
+}
+.file-explorer li:before {
+    content: '';
+    border-top: 2px solid #ccc;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: auto;
+    width: 10px;
+    height: 0;
+}
+.file-explorer li:after {
+    content: '';
+    border-left: 2px solid #ccc;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -10px;
+    height: 100%;
+}
+.file-explorer li:last-child:after {
+    height: 20px;
+}
+.file-explorer .folder-view > li:before, 
+.file-explorer .folder-view > li:after {
+    border: 0;
+}
+.file-explorer .folder-view > li {
+    padding-left: 10px;
+}
+.file-explorer .nested {
+    margin-left: 20px;
+}
 .file-explorer h3 {
     color: #333;
     margin-bottom: 15px;

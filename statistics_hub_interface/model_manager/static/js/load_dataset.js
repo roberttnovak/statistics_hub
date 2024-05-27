@@ -3,28 +3,7 @@ $(document).ready(function() {
     var selectedDataset = null;
     var selectedPath = null;
 
-    $('.folder-name').on('click', function() {
-        $(this).siblings('ul').toggle();
-        $(this).children('.fas').toggleClass('fa-folder fa-folder-open');
-    });
-    
-    $('.file').on('click', function(event) {
-        event.stopPropagation();  // Prevenir la propagación para no desencadenar eventos de carpetas padre
-        var fileInfo = gatherFileInfo($(this));
-        
-        // Eliminar la clase de todos los archivos para remover la selección anterior
-        $('.file').removeClass('file-selected');
-        // Añadir la clase al archivo actual para marcarlo como seleccionado
-        $(this).addClass('file-selected');
-    
-        selectedDataset = fileInfo.dataset;  // Guardar el dataset seleccionado globalmente
-        selectedPath = fileInfo.relativePath; // Guardar la ruta relativa seleccionada globalmente
-        console.log("Selected Dataset:", selectedDataset); // Debugging para ver el dataset seleccionado
-        console.log("Selected Path:", selectedPath); // Debugging para ver la ruta relativa seleccionada
-    
-        loadCsvPreview(fileInfo.dataset, fileInfo.relativePath);
-    });
-
+    // Function to gather file info (dataset and relative path)
     function gatherFileInfo($fileElement) {
         var pathComponents = [];
         $fileElement.parentsUntil('.folder-view', 'li').each(function() {
@@ -38,35 +17,7 @@ $(document).ready(function() {
         return { dataset: dataset, relativePath: relativePath };
     }
 
-    function loadDataset(dataset) {
-        var options = {};
-        $('#load-dataset-options input, #load-dataset-options select').each(function() {
-            var key = $(this).attr('id').replace('-input', '');
-            var value = $(this).val();
-            options[key] = value;
-        });
-    
-        var queryParams = $.param(options);
-    
-        window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
-    }
-
-    $('#add-document-btn').click(function() {
-        window.open('/upload_file/', '_blank');
-    });
-
-    $('#load-dataset-btn').click(function() {
-        if (!selectedDataset ) {
-            alert("Please select a dataset.");
-            return;
-        }
-    
-        var options = gatherOptions();
-        var queryParams = $.param(options);
-        var fullPath = selectedPath ? selectedPath + '/' + selectedDataset : selectedDataset;
-        window.location.href = '/preprocess_dataset/' + encodeURIComponent(fullPath) + '?' + queryParams;
-    });
-
+    // Function to gather options from form inputs
     function gatherOptions() {
         var options = {};
         $('#load-dataset-options input, #load-dataset-options select').each(function() {
@@ -77,22 +28,55 @@ $(document).ready(function() {
         return options;
     }
 
+    // Function to load dataset
+    function loadDataset(dataset) {
+        var options = gatherOptions();
+        var queryParams = $.param(options);
+        window.location.href = '/preprocess_dataset/' + encodeURIComponent(dataset) + '?' + queryParams;
+    }
 
-    // Activar los tooltips de Bootstrap
-    $('[data-toggle="tooltip"]').tooltip();
+    // Handle folder click event to toggle visibility of child elements
+    $('.folder-name').on('click', function() {
+        $(this).siblings('ul').toggle();
+        $(this).children('.fas').toggleClass('fa-folder fa-folder-open');
+    });
 
-    // Botón para mostrar/ocultar las opciones de CSV
-    // $('#toggle-options-btn').click(function() {
-    //     $('#load-dataset-options').toggle();
-    //     // Cambia el ícono del ojo de abierto a cerrado y viceversa
-    //     $(this).find('i').toggleClass('far fa-eye far fa-eye-slash');
-    //     // Actualiza el tooltip en función del estado del ícono
-    //     var newTitle = $(this).find('i').hasClass('fa-eye') ? "Click to toggle visibility of import options" : "Click to hide import options";
-    //     $(this).attr('data-original-title', newTitle).tooltip('show');
-    // });
+    // Handle file click event to select the file and load its preview
+    $('.file').on('click', function(event) {
+        event.stopPropagation();  // Prevent propagation to avoid triggering parent folder events
+        var fileInfo = gatherFileInfo($(this));
+        
+        // Remove selection from all files and add to the clicked one
+        $('.file').removeClass('file-selected');
+        $(this).addClass('file-selected');
+    
+        selectedDataset = fileInfo.dataset;  // Save the selected dataset globally
+        selectedPath = fileInfo.relativePath; // Save the selected relative path globally
+        console.log("Selected Dataset:", selectedDataset); // Debugging to see the selected dataset
+        console.log("Selected Path:", selectedPath); // Debugging to see the selected relative path
+    
+        loadCsvPreview(fileInfo.dataset, fileInfo.relativePath);
+    });
 
+    // Handle dataset load button click
+    $('#load-dataset-btn').click(function() {
+        if (!selectedDataset) {
+            alert("Please select a dataset.");
+            return;
+        }
+    
+        var options = gatherOptions();
+        var queryParams = $.param(options);
+        var fullPath = selectedPath ? selectedPath + '/' + selectedDataset : selectedDataset;
+        window.location.href = '/preprocess_dataset/' + encodeURIComponent(fullPath) + '?' + queryParams;
+    });
 
-    // Handle folder creation
+    // Handle document upload button click
+    $('#add-document-btn').click(function() {
+        window.open('/upload_file/', '_blank');
+    });
+
+    // Handle folder creation form submission
     $('#create-folder-form').on('submit', function(event) {
         event.preventDefault();
         var folderName = $('#folder-name-input').val();
@@ -118,57 +102,7 @@ $(document).ready(function() {
         }
     });
 
-    // Handle file upload
-    // $('#upload-form').on('submit', function(event) {
-    //     event.preventDefault();
-    //     var formData = new FormData(this);
-    //     formData.append('action', 'preview_csv');
-    //     $.ajax({
-    //         url: '/load_dataset/',
-    //         type: 'POST',
-    //         headers: {
-    //             'X-Requested-With': 'XMLHttpRequest',
-    //             'X-CSRFToken': csrftoken
-    //         },
-    //         data: formData,
-    //         processData: false,
-    //         contentType: false,
-    //         success: function(response) {
-    //             alert('File uploaded successfully!');
-    //         },
-    //         error: function(error) {
-    //             console.error("Error uploading file: ", error);
-    //         }
-    //     });
-    // });
-
-    // Ocultar elementos específicos al hacer clic en la pestaña "Upload File"
-    $('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').hide(); // Ocultar el botón "Load Dataset"
-        $('#fileTypeTabs').hide(); // Ocultar las pestañas de csv, xlsx, etc.
-        $('#csv-options').hide(); // Ocultar las opciones de CSV
-        $('#excel-options').hide(); // Ocultar las opciones de Excel
-        $('#sav-options').hide(); // Ocultar las opciones de SAV
-        $('#json-options').hide(); // Ocultar las opciones de JSON
-    });
-
-    // Mostrar todo de nuevo al cambiar a otra pestaña
-    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').show(); // Mostrar el botón "Load Dataset"
-        $('#fileTypeTabs').show(); // Mostrar las pestañas de csv, xlsx, etc.
-        $('#csv-options').show(); // Mostrar las opciones de CSV
-        $('#excel-options').show(); // Mostrar las opciones de Excel
-        $('#sav-options').show(); // Mostrar las opciones de SAV
-        $('#json-options').show(); // Mostrar las opciones de JSON
-    });
-
-
-    $('#toggle-explanation-btn').click(function() {
-        $('#explanation-section').toggle();
-        var buttonText = $('#explanation-section').is(':visible') ? 'Hide Instructions' : 'Show Instructions';
-        $(this).html('<i class="fas fa-info-circle"></i> ' + buttonText);
-    });
-
+    // Handle file deletion
     $('.delete-file').on('click', function() {
         var fileName = $(this).data('file');
         $.ajax({
@@ -180,7 +114,7 @@ $(document).ready(function() {
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             success: function(response) {
-                location.reload();  // Recargar la página para actualizar la vista
+                location.reload();  // Reload the page to update the view
             },
             error: function(response) {
                 alert('Error deleting file');
@@ -188,6 +122,7 @@ $(document).ready(function() {
         });
     });
 
+    // Handle CSV preview button click
     $('#preview-csv-rows-btn').on('click', function() {
         if (!selectedDataset) {
             alert("Please select a dataset.");
@@ -223,5 +158,35 @@ $(document).ready(function() {
                 }
             });
         }
-    });    
+    });
+
+    // Handle tab visibility changes for upload section
+    $('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').hide(); // Hide the "Load Dataset" button
+        $('#fileTypeTabs').hide(); // Hide file type tabs (csv, xlsx, etc.)
+        $('#csv-options').hide(); // Hide CSV options
+        $('#excel-options').hide(); // Hide Excel options
+        $('#sav-options').hide(); // Hide SAV options
+        $('#json-options').hide(); // Hide JSON options
+    });
+
+    // Show all options when switching to other tabs
+    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
+        $('#load-dataset-btn').show(); // Show the "Load Dataset" button
+        $('#fileTypeTabs').show(); // Show file type tabs (csv, xlsx, etc.)
+        $('#csv-options').show(); // Show CSV options
+        $('#excel-options').show(); // Show Excel options
+        $('#sav-options').show(); // Show SAV options
+        $('#json-options').show(); // Show JSON options
+    });
+
+    // Handle the toggle button for the explanation section
+    $('#toggle-explanation-btn').click(function() {
+        $('#explanation-section').toggle();
+        var buttonText = $('#explanation-section').is(':visible') ? 'Hide Instructions' : 'Show Instructions';
+        $(this).html('<i class="fas fa-info-circle"></i> ' + buttonText);
+    });
+
+    // Activate Bootstrap tooltips
+    $('[data-toggle="tooltip"]').tooltip();
 });

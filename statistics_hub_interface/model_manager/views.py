@@ -400,9 +400,23 @@ def load_dataset(request):
                 file_name_splitting = file_name.split('.')
                 file_name = file_name_splitting[0]
                 extension = file_name_splitting[-1]
-                folder_path = os.path.normpath(os.path.join(pm.path,relative_path))
+                folder_path = os.path.normpath(os.path.join(pm.path, relative_path))
                 pm.delete_object(folder_path=folder_path, filename=file_name, extension=extension)
                 return JsonResponse({'message': 'File deleted successfully'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+            
+        elif action == 'delete_folder':
+            try:
+                relative_path = request.POST.get('relativePath')
+                logger.info(f"pm.path: {pm.path}, relative_path: {relative_path}")
+                folder_path = os.path.normpath(os.path.join(pm.path, relative_path))
+                logger.info(f"folder_path: {folder_path}")
+                if os.path.exists(folder_path) and os.path.isdir(folder_path):
+                    os.rmdir(folder_path)  # Borra la carpeta si está vacía
+                    return JsonResponse({'message': 'Folder deleted successfully'})
+                else:
+                    return JsonResponse({'error': 'Folder not found or is not empty'}, status=400)
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
             
@@ -426,7 +440,6 @@ def load_dataset(request):
                 return JsonResponse({'message': 'Folder created successfully'})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
-
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
     return render(request, 'model_manager/load_dataset.html', {'datasets_with_structure': datasets_with_structure})

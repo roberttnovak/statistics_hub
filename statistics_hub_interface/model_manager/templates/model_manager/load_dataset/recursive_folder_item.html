@@ -12,6 +12,9 @@
                 <button class="btn btn-outline-secondary btn-sm ml-2 add-file" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-file-medical"></i> File
                 </button>
+                <button class="btn btn-danger btn-sm ml-2 delete-folder" data-folder="{{ name }}" data-action="delete_folder">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
             </div>
             <div class="create-folder-input mt-2 d-none">
                 <input type="text" class="form-control mb-2 folder-name-input" placeholder="Enter folder name">
@@ -37,6 +40,9 @@
                 </button>
                 <button class="btn btn-outline-secondary btn-sm ml-2 add-file" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-file-medical"></i> File
+                </button>
+                <button class="btn btn-danger btn-sm ml-2 delete-folder" data-folder="{{ name }}" data-action="delete_folder">
+                    <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </div>
             <div class="create-folder-input mt-2 d-none">

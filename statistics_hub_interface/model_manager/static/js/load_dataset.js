@@ -4,15 +4,15 @@ $(document).ready(function() {
     var selectedPath = null;
 
     // Function to gather file info (dataset and relative path)
-    function gatherFileInfo($fileElement) {
+    function gatherFileInfo($element) {
         var pathComponents = [];
-        $fileElement.parentsUntil('.folder-view', 'li').each(function() {
-            var directory = $(this).children('span.folder-name').text().trim();
+        $element.parentsUntil('.folder-view', 'li').each(function() {
+            var directory = $(this).children('span.folder-name').first().text().trim();
             if (directory) {
                 pathComponents.unshift(directory);
             }
         });
-        var dataset = $fileElement.find('span').data('dataset');
+        var dataset = $element.data('dataset') || $element.text().trim();
         var relativePath = pathComponents.join('/');
         return { dataset: dataset, relativePath: relativePath };
     }
@@ -180,6 +180,36 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Handle delete folder button click
+    $(document).on('click', '.delete-folder', function() {
+        var $folderElement = $(this).closest('li').children('.folder-name');
+        var fileInfo = gatherFileInfo($folderElement);
+        
+        if (confirm("Are you sure you want to delete this folder?")) {
+            $.ajax({
+                type: 'POST',
+                url: '/load_dataset/',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    'action': 'delete_folder',
+                    'folder_name': fileInfo.dataset,
+                    'relativePath': fileInfo.relativePath
+                },
+                success: function(response) {
+                    alert("Folder deleted successfully");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        }
+    });
+
 
     // Handle folder creation form submission inside file explorer
     document.querySelectorAll(".add-folder").forEach(button => {

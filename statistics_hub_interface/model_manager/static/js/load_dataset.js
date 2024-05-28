@@ -270,6 +270,64 @@ $(document).ready(function() {
         });
     });
 
+    $('.file-explorer > .add-folder').on('click', function() {
+        const createFolderInput = $(this).siblings('.create-folder-input');
+        const addFileButton = $(this).siblings('.add-file');
+        const addFolderButton = $(this);
+    
+        if (createFolderInput.hasClass('d-none')) {
+            createFolderInput.removeClass('d-none');
+            addFileButton.addClass('d-none');
+            addFolderButton.addClass('d-none');
+        } else {
+            createFolderInput.addClass('d-none');
+            addFileButton.removeClass('d-none');
+            addFolderButton.removeClass('d-none');
+        }
+    });
+
+    // Manejador para cancelar la creación en el root
+    $('.file-explorer > .create-folder-input .cancel-folder').on('click', function() {
+        const createFolderInput = $(this).closest('.create-folder-input');
+        const addFileButton = $(this).closest('.file-explorer').find('.add-file');
+        const addFolderButton = $(this).closest('.file-explorer').find('.add-folder');
+    
+        createFolderInput.addClass('d-none');
+        addFileButton.removeClass('d-none');
+        addFolderButton.removeClass('d-none');
+    });
+
+    // Manejador para enviar la creación de carpeta en el root
+    $('.file-explorer > .create-folder-input .submit-folder').on('click', function() {
+        const input = $(this).siblings('.folder-name-input');
+        const folderName = input.val();
+        const path = $(this).data('path');
+
+        if (folderName.trim()) {
+            $.ajax({
+                url: '/load_dataset/',
+                type: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    action: 'create_folder',
+                    folder_name: folderName,
+                    relativePath: path
+                },
+                success: function(response) {
+                    alert('Folder created successfully!');
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Error creating folder: ", error);
+                    alert('An error occurred while creating the folder.');
+                }
+            });
+        }
+    });
+
     // Handle tab visibility changes for upload section
     $('#upload-tab').on('shown.bs.tab', function() {
         $('#load-dataset-btn').hide(); // Hide the "Load Dataset" button

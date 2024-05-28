@@ -39,6 +39,12 @@ $(document).ready(function() {
     $('.folder-name').on('click', function() {
         $(this).siblings('ul').toggle();
         $(this).children('.fas').toggleClass('fa-folder fa-folder-open');
+        $(this).siblings('.folder-actions').toggleClass('d-none');
+    
+        // Update the selectedPath to the path of the clicked folder
+        var fileInfo = gatherFileInfo($(this).closest('li'));
+        selectedPath = fileInfo.relativePath;
+        console.log("Updated Path:", selectedPath); // Debugging to see the updated path
     });
 
     // Handle file click event to select the file and load its preview
@@ -173,6 +179,65 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+    // Handle folder creation form submission inside file explorer
+    document.querySelectorAll(".add-folder").forEach(button => {
+        button.addEventListener("click", function() {
+            const folderActions = this.closest("li").querySelector(".folder-actions");
+            const createFolderInput = this.closest("li").querySelector(".create-folder-input");
+            
+            if (createFolderInput.classList.contains("d-none")) {
+                createFolderInput.classList.remove("d-none");
+                folderActions.classList.add("d-none");
+            } else {
+                createFolderInput.classList.add("d-none");
+                folderActions.classList.remove("d-none");
+            }
+        });
+    });
+
+    document.querySelectorAll(".submit-folder").forEach(button => {
+        button.addEventListener("click", function() {
+            const input = this.closest("li").querySelector(".folder-name-input");
+            const folderName = input.value;
+            const path = this.getAttribute("data-path");
+    
+            if (folderName.trim()) {
+                $.ajax({
+                    url: '/load_dataset/',
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        action: 'create_folder',
+                        folder_name: folderName,
+                        relativePath: selectedPath ? selectedPath + '/' + path : path
+                    },
+                    success: function(response) {
+                        alert('Folder created successfully!');
+                        location.reload();  // Reload the page to reflect changes
+                    },
+                    error: function(error) {
+                        console.error("Error creating folder: ", error);
+                        alert('An error occurred while creating the folder.');
+                    }
+                });
+            }
+        });
+    });
+
+    // Handle cancel button click to hide input and show folder/file actions
+    document.querySelectorAll(".cancel-folder").forEach(button => {
+        button.addEventListener("click", function() {
+            const folderActions = this.closest("li").querySelector(".folder-actions");
+            const createFolderInput = this.closest("li").querySelector(".create-folder-input");
+
+            createFolderInput.classList.add("d-none");
+            folderActions.classList.remove("d-none");
+        });
     });
 
     // Handle tab visibility changes for upload section

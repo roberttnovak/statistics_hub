@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
@@ -394,22 +394,36 @@ def load_dataset(request):
                 return JsonResponse({'error': str(e)}, status=500)
             
         elif action == 'delete_file':
-            logger.info("deleting file...")
-            logger.info(f"request.POST: {request.POST}")
             try:
                 file_name = request.POST.get('file_name')
-                logger.info(f"file_name: {file_name}")
                 relative_path = request.POST.get('relativePath')
-                logger.info(f"Relative Path: {relative_path}")
                 file_name_splitting = file_name.split('.')
                 file_name = file_name_splitting[0]
                 extension = file_name_splitting[-1]
                 folder_path = os.path.normpath(os.path.join(pm.path,relative_path))
-                logger.info(f"file_name: {file_name}")
-                logger.info(f"extension: {extension}")
-                logger.info(f"folder_path: {folder_path}")
                 pm.delete_object(folder_path=folder_path, filename=file_name, extension=extension)
                 return JsonResponse({'message': 'File deleted successfully'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+            
+        elif action == 'create_folder':
+            try:
+                folder_name = request.POST.get('folder_name')
+                relative_path = request.POST.get('relativePath')
+
+                logger.info(f"pm.path: {pm.path}, folder_name: {folder_name}, relative_path: {relative_path}")
+
+                # Asegurarse de que relative_path no comience con una barra
+                relative_path = str(PurePath(relative_path).relative_to('/')) if relative_path.startswith('/') else relative_path
+                
+                base_path = Path(pm.path).resolve()
+                folder_path = base_path / relative_path / folder_name
+
+                logger.info(f"folder_path: {folder_path}")
+
+                folder_path.mkdir(parents=True, exist_ok=True)
+
+                return JsonResponse({'message': 'Folder created successfully'})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
 

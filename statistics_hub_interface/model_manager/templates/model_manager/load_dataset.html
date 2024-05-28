@@ -36,13 +36,14 @@
 
         <div class="tab-content">
             <!-- Explorador de Archivos -->
+            <!-- Explorador de Archivos -->
             <div class="tab-pane fade show active" id="file-explorer-tab" role="tabpanel" aria-labelledby="explorer-tab">
                 <div class="file-explorer">
                     <ul class="folder-view">
                         {% for name, contents in datasets_with_structure.items %}
                             {% include 'model_manager/load_dataset/recursive_folder_item.html' with name=name contents=contents %}
                         {% endfor %}
-                    </ul>                    
+                    </ul>                
                 </div>
             </div>
             

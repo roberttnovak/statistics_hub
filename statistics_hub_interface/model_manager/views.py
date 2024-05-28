@@ -393,6 +393,21 @@ def load_dataset(request):
             except FileNotFoundError as e:
                 return JsonResponse({'error': str(e)}, status=500)
             
+        elif action == 'upload_files':
+            try:
+                uploaded_files = request.FILES.getlist('files')
+                relative_path = request.POST.get('relativePath')
+                logger.info(f"uploaded_files: {uploaded_files}")
+                logger.info(f"relative_path: {relative_path}")
+                for file in uploaded_files:
+                    fs = FileSystemStorage(location=pm.path)
+                    fs.save(file.name, file)
+                return JsonResponse({'message': 'Files uploaded successfully'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+        
+
+            
         elif action == 'delete_file':
             try:
                 file_name = request.POST.get('file_name')

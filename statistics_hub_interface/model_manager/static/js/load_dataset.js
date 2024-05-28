@@ -328,6 +328,44 @@ $(document).ready(function() {
         }
     });
 
+    // Handle opening the file
+    $('.file-explorer').on('click', '.add-file', function() {
+        selectedPath = $(this).data('path');
+        $(this).siblings('.upload-files-input').click();
+    });
+
+    // Handle file upload
+    $('.file-explorer').on('change', '.upload-files-input', function() {
+        var files = this.files;
+        var formData = new FormData();
+        formData.append('relativePath', selectedPath);
+        formData.append('action', 'upload_files');
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('Files uploaded successfully!');
+                location.reload();
+            },
+            error: function(error) {
+                console.error("Error uploading files: ", error);
+                alert('An error occurred while uploading the files.');
+            }
+        });
+    });
+
     // Handle tab visibility changes for upload section
     $('#upload-tab').on('shown.bs.tab', function() {
         $('#load-dataset-btn').hide(); // Hide the "Load Dataset" button

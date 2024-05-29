@@ -9,6 +9,7 @@
                 <button class="btn btn-outline-secondary btn-sm add-folder" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-folder-plus"></i> Folder
                 </button>
+                <input type="file" class="d-none upload-files-input" data-path="{{ relative_path }}/{{ name }}" multiple>
                 <button class="btn btn-outline-secondary btn-sm ml-2 add-file" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-file-medical"></i> File
                 </button>
@@ -21,10 +22,16 @@
                 <button class="btn btn-primary btn-sm submit-folder" data-path="{{ relative_path }}/{{ name }}">Create</button>
                 <button class="btn btn-secondary btn-sm cancel-folder">Cancel</button>
             </div>
+            <ul>
+                {% for subname, subcontents in contents.items %}
+                    {% include 'model_manager/load_dataset/recursive_folder_item.html' with name=subname contents=subcontents relative_path=relative_path%}
+                {% endfor %}
+            </ul>
         {% elif contents|length == 0 %}
             <span class="file d-flex align-items-center">
                 <i class="fas fa-file-alt mr-2"></i>
-                <span data-dataset="{{ name }}" class="flex-grow-1">{{ name }}</span>
+                <span data-dataset="{{ name }}" data-relative-path="{{ relative_path }}/{{ name }}" class="flex-grow-1">{{ name }}</span>
+                <input type="file" class="d-none upload-files-input" data-path="{{ relative_path }}/{{ name }}" multiple>
                 <button class="btn btn-danger btn-sm delete-file" data-file="{{ name }}" data-action="delete_file">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -38,6 +45,7 @@
                 <button class="btn btn-outline-secondary btn-sm add-folder" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-folder-plus"></i> Folder
                 </button>
+                <input type="file" class="d-none upload-files-input" data-path="{{ relative_path }}/{{ name }}" multiple>
                 <button class="btn btn-outline-secondary btn-sm ml-2 add-file" data-path="{{ relative_path }}/{{ name }}">
                     <i class="fas fa-file-medical"></i> File
                 </button>

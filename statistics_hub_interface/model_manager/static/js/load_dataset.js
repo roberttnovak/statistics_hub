@@ -330,21 +330,40 @@ $(document).ready(function() {
 
     // Handle opening the file
     $('.file-explorer').on('click', '.add-file', function() {
-        selectedPath = $(this).data('path');
-        $(this).siblings('.upload-files-input').click();
-    });
+        var inputFile = $(this).siblings('.upload-files-input');
+        var dataPath = $(this).data('path');
+        inputFile.attr('data-path', dataPath);
+        inputFile.click();
+    });    
 
     // Handle file upload
     $('.file-explorer').on('change', '.upload-files-input', function() {
         var files = this.files;
         var formData = new FormData();
-        formData.append('relativePath', selectedPath);
+        var dataPath = $(this).attr('data-path');  // Usar attr en lugar de data
+        
+        // Concatenar selectedPath y dataPath, asegurando que no haya duplicados de carpeta
+        var fullPath = selectedPath ? selectedPath + '/' + dataPath : dataPath;
+    
+        // Limpiar el fullPath para evitar duplicados innecesarios
+        fullPath = fullPath.replace(/\/{2,}/g, '/');  // Reemplaza múltiples barras con una sola
+    
+        // Remover barra inicial si existe
+        if (fullPath.startsWith('/')) {
+            fullPath = fullPath.substring(1);
+        }
+    
+        console.log("dataPath:", dataPath); // Debugging to see the data path
+        console.log("selectedPath:", selectedPath); // Debugging to see the selected path
+        console.log("fullPath:", fullPath); // Debugging to see the full path
+    
+        formData.append('relativePath', fullPath);
         formData.append('action', 'upload_files');
-
+    
         for (var i = 0; i < files.length; i++) {
             formData.append('files', files[i]);
         }
-
+    
         $.ajax({
             url: '',
             type: 'POST',

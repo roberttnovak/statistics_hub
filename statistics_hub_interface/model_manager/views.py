@@ -399,8 +399,10 @@ def load_dataset(request):
                 relative_path = request.POST.get('relativePath')
                 logger.info(f"uploaded_files: {uploaded_files}")
                 logger.info(f"relative_path: {relative_path}")
+                path_to_save = os.path.normpath(os.path.join(pm.path, relative_path))
+                logger.info(f"path_to_save: {path_to_save}")
                 for file in uploaded_files:
-                    fs = FileSystemStorage(location=pm.path)
+                    fs = FileSystemStorage(location=path_to_save)
                     fs.save(file.name, file)
                 return JsonResponse({'message': 'Files uploaded successfully'})
             except Exception as e:

@@ -10,13 +10,36 @@ import logging
 
 from OwnLog import log_exceptions, log_function_args
 
-def test_database_connection(
-        ssh_host, ssh_port, ssh_user, ssh_password,
-        db_server, db_user, db_password, database
-    ):
+def test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password):
     """
-    Tests the SSH and database connections using the provided credentials.
-    
+    Tests the SSH connection using the provided credentials.
+
+    Parameters:
+    - ssh_host (str): The hostname or IP address of the SSH server.
+    - ssh_port (int): The port number of the SSH server.
+    - ssh_user (str): The username to use for the SSH connection.
+    - ssh_password (str): The password to use for the SSH connection.
+
+    Returns:
+    - bool: True if the SSH connection is successful, False otherwise.
+    """
+    try:
+        with sshtunnel.SSHTunnelForwarder(
+                (ssh_host, ssh_port),
+                ssh_username=ssh_user,
+                ssh_password=ssh_password,
+                remote_bind_address=('localhost', 22)
+        ) as tunnel:
+            return True
+    except Exception as e:
+        print(f"SSH connection failed: {e}")
+        return False
+
+def test_database_connection_via_ssh(ssh_host, ssh_port, ssh_user, ssh_password,
+                                     db_server, db_user, db_password, database):
+    """
+    Tests the database connection through an SSH tunnel using the provided credentials.
+
     Parameters:
     - ssh_host (str): The hostname or IP address of the SSH server.
     - ssh_port (int): The port number of the SSH server.
@@ -26,9 +49,9 @@ def test_database_connection(
     - db_user (str): The username to use for the database connection.
     - db_password (str): The password to use for the database connection.
     - database (str): The name of the database to connect to.
-    
+
     Returns:
-    - bool: True if both the SSH and database connections are successful, False otherwise.
+    - bool: True if the database connection through SSH is successful, False otherwise.
     """
     try:
         with sshtunnel.SSHTunnelForwarder(
@@ -47,7 +70,33 @@ def test_database_connection(
             conn.close()
             return True
     except Exception as e:
-        print(f"Connection to database failed: {e}")
+        print(f"Connection to database through SSH failed: {e}")
+        return False
+
+def test_database_connection(db_server, db_user, db_password, database):
+    """
+    Tests the direct database connection using the provided credentials.
+
+    Parameters:
+    - db_server (str): The hostname or IP address of the database server.
+    - db_user (str): The username to use for the database connection.
+    - db_password (str): The password to use for the database connection.
+    - database (str): The name of the database to connect to.
+
+    Returns:
+    - bool: True if the database connection is successful, False otherwise.
+    """
+    try:
+        conn = pymysql.connect(
+            host=db_server, 
+            user=db_user, 
+            passwd=db_password, 
+            db=database
+        )
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Direct connection to database failed: {e}")
         return False
 
 
@@ -303,3 +352,120 @@ def data_importer(automatic_importation: bool,
         logger.info('Data import process completed.')
     
     return df
+
+#TODO: Delete previous function of ssh because this are the new functions
+def get_data(query, db_user, db_password, database, db_server='127.0.0.1', ssh_host=None, ssh_port=None, ssh_user=None, ssh_password=None, **kwargs):
+    """
+    Fetch data from a MySQL database, optionally through an SSH tunnel.
+
+    Parameters:
+    query (str): SQL query to execute.
+    db_user (str): Username for database access.
+    db_password (str): Password for database access.
+    database (str): Name of the database to query.
+    db_server (str, optional): Address of the database server. Defaults to '127.0.0.1' (local).
+    ssh_host (str, optional): Address of the SSH server for tunneling. Defaults to None.
+    ssh_port (int, optional): Port of the SSH server for tunneling. Defaults to None.
+    ssh_user (str, optional): Username for SSH access. Defaults to None.
+    ssh_password (str, optional): Password for SSH access. Defaults to None.
+
+    Returns:
+    DataFrame: A pandas DataFrame containing the query results, or None in case of an error.
+    """
+    tunnel = None
+    try:
+        if ssh_host and ssh_port and ssh_user and ssh_password:
+            # Establish an SSH tunnel
+            tunnel = sshtunnel.SSHTunnelForwarder(
+                (ssh_host, ssh_port),
+                ssh_username=ssh_user,
+                ssh_password=ssh_password,
+                remote_bind_address=(db_server, 3306)
+            )
+            tunnel.start()
+            conn_params = {
+                'host': '127.0.0.1',
+                'port': tunnel.local_bind_port,
+                'user': db_user,
+                'passwd': db_password,
+                'db': database
+            }
+        else:
+            # Direct connection to the database
+            conn_params = {
+                'host': db_server,
+                'user': db_user,
+                'passwd': db_password,
+                'db': database
+            }
+
+        # Establishing the database connection
+        with pymysql.connect(**conn_params) as _db:
+            with _db.cursor() as _cursor:
+                data = pd.read_sql(query, _db)
+                return data
+
+    except Exception as e:
+        print(f"Exception in get_data: {e}")
+        return None
+    finally:
+        if tunnel:
+            tunnel.close()
+
+
+def write_data(
+    dataframe,
+    table_name,
+    db_user,
+    db_password,
+    database,
+    db_server='127.0.0.1',
+    if_exists='fail',
+    ssh_host=None,
+    ssh_port=None,
+    ssh_user=None,
+    ssh_password=None,
+    **kwargs
+    ):
+    """
+    Write data to a MySQL database table, optionally through an SSH tunnel.
+
+    Parameters:
+    dataframe (DataFrame): pandas DataFrame containing the data to write.
+    table_name (str): Name of the database table to write to.
+    db_user (str): Username for database access.
+    db_password (str): Password for database access.
+    database (str): Name of the database.
+    db_server (str, optional): Address of the database server. Defaults to '127.0.0.1'.
+    if_exists (str, optional): Behavior when the table already exists. Defaults to 'fail'.
+    ssh_host (str, optional): Address of the SSH server for tunneling. Defaults to None.
+    ssh_port (int, optional): Port of the SSH server for tunneling. Defaults to None.
+    ssh_user (str, optional): Username for SSH access. Defaults to None.
+    ssh_password (str, optional): Password for SSH access. Defaults to None.
+    """
+    try:
+
+        if ssh_host and ssh_port and ssh_user and ssh_password:
+            # Establish an SSH tunnel
+            tunnel = sshtunnel.SSHTunnelForwarder(
+                (ssh_host, ssh_port),
+                ssh_username=ssh_user,
+                ssh_password=ssh_password,
+                remote_bind_address=(db_server, 3306)
+            )
+            tunnel.start()
+            connection_string = f"mysql+pymysql://{db_user}:{db_password}@127.0.0.1:{tunnel.local_bind_port}/{database}"
+        else:
+            # Direct connection string
+            connection_string = f"mysql+pymysql://{db_user}:{db_password}@{db_server}/{database}"
+            tunnel = False
+
+        # Create SQLAlchemy engine and write the DataFrame to the SQL table
+        engine = create_engine(connection_string)
+        dataframe.to_sql(table_name, engine, if_exists=if_exists, index=False)
+
+    except Exception as e:
+        print(f"Exception in write_data: {e}")
+    finally:
+        if tunnel:
+            tunnel.close()

@@ -385,6 +385,42 @@ $(document).ready(function() {
         });
     });
 
+
+    $('#test-connection-ssh-btn').on('click', function() {
+        var ssh_host = $('#ssh_host').val();
+        var ssh_port = $('#ssh_port').val();
+        var ssh_user = $('#ssh_user').val();
+        var ssh_password = $('#ssh_password').val();
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {
+                action: 'test_connection',
+                ssh_host: ssh_host,
+                ssh_port: ssh_port,
+                ssh_user: ssh_user,
+                ssh_password: ssh_password
+            },
+            success: function(data) {
+                var resultDiv = $('#connection-result');
+                if (data.success) {
+                    resultDiv.html('<div class="alert alert-success">' + data.message + '</div>');
+                } else {
+                    resultDiv.html('<div class="alert alert-danger">' + data.message + '</div>');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                var resultDiv = $('#connection-result');
+                resultDiv.html('<div class="alert alert-danger">An error occurred while testing the connection.</div>');
+            }
+        });
+    });
+
     $('#fileManagementTabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href"); // Obtener el ID de la pestaña activa
         

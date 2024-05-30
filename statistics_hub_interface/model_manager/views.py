@@ -21,7 +21,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 sys.path.append(str(Path("../src")))
 from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
-from sql_utils import test_database_connection
+from sql_utils import test_database_connection, test_ssh_connection
 from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager
 from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
@@ -457,6 +457,26 @@ def load_dataset(request):
                 return JsonResponse({'message': 'Folder created successfully'})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
+            
+        elif action == 'test_connection':
+            ssh_host = request.POST.get('ssh_host')
+            ssh_port = int(request.POST.get('ssh_port'))
+            ssh_user = request.POST.get('ssh_user')
+            ssh_password = request.POST.get('ssh_password')
+            db_server = request.POST.get('db_server')
+            db_user = request.POST.get('db_user')
+            db_password = request.POST.get('db_password')
+            database = request.POST.get('database')
+            logger.info(f"ssh_host: {ssh_host}, ssh_port: {ssh_port}, ssh_user: {ssh_user}, ssh_password: {ssh_password}")
+            ssh_success = test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password)
+
+            logger.info(f"ssh_success: {ssh_success}")
+
+            if ssh_success:
+                return JsonResponse({'success': True, 'message': 'Connection successful!'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Connection failed!'})
+
 
     # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
     return render(request, 'model_manager/load_dataset.html', {'datasets_with_structure': datasets_with_structure})

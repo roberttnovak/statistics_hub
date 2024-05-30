@@ -38,231 +38,8 @@
                 <a class="nav-link" id="influxdb-tab" data-toggle="tab" href="#influxdb-tab" role="tab" aria-controls="influxdb-tab" aria-selected="false">InfluxDB</a>
             </li>
         </ul>
-        <div id = "file-explorer-options">
-            <div class="tab-content">
-                <!-- Explorador de Archivos -->
-                <div class="tab-pane fade show active" id="file-explorer-tab" role="tabpanel" aria-labelledby="explorer-tab">
-                    <div class="file-explorer">
-                        <ul class="folder-view">
-                            {% for name, contents in datasets_with_structure.items %}
-                                {% include 'model_manager/load_dataset/recursive_folder_item.html' with name=name contents=contents relative_path="" %}
-                            {% endfor %}
-                        </ul>
-                        <div class="create-folder-input mt-2 d-none">
-                            <input type="text" class="form-control mb-2 folder-name-input" placeholder="Enter folder name">
-                            <button class="btn btn-primary btn-sm submit-folder" data-path="">Create</button>
-                            <button class="btn btn-secondary btn-sm cancel-folder">Cancel</button>
-                        </div>
-                        <input type="file" class="d-none upload-files-input" multiple>
-                        <button class="btn btn-outline-secondary btn-sm add-folder" data-path="">
-                            <i class="fas fa-folder-plus"></i> Folder
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm ml-2 add-file" data-path="">
-                            <i class="fas fa-file-medical"></i> File
-                        </button>
-                    </div>
-                </div>
-            </div>            
 
-            <br>
-
-            <ul class="nav nav-tabs" id="fileTypeTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="csv-tab" data-toggle="tab" href="#csv-options" role="tab" aria-controls="csv-options" aria-selected="true">csv</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel-options" role="tab" aria-controls="excel-options" aria-selected="false">xlsx</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="sav-tab" data-toggle="tab" href="#sav-options" role="tab" aria-controls="sav-options" aria-selected="false">sav</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="json-tab" data-toggle="tab" href="#json-options" role="tab" aria-controls="json-options" aria-selected="false">json</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <!-- Opciones de CSV -->
-                <div class="tab-pane fade show active" id="csv-options" role="tabpanel" aria-labelledby="csv-tab">
-                    <!-- Opciones para cargar el Dataset -->
-                    <br>
-                    <div id="load-dataset-options" class="mb-3" >
-                        <div class="form-group">
-                            <label for="separator-input">Delimiter (sep):</label>
-                            <small class="form-text text-muted">Delimiter to use. If `None`, will try to automatically detect.</small>
-                            <input type="text" class="form-control" id="separator-input" placeholder="E.g ," value=",">
-                            <br>
-                            <label for="header-input">Header Row (header):</label>
-                            <small class="form-text text-muted">Row to use as header. Use `None` if there is no header row.</small>
-                            <input type="text" class="form-control" id="header-input" placeholder="E.g., 0, None">
-                            <br>
-                            <label for="usecols-input">Use Columns (usecols):</label>
-                            <small class="form-text text-muted">Subset of columns to read.</small>
-                            <input type="text" class="form-control" id="usecols-input" placeholder="E.g., '0,1,2'">
-                            <br>
-                            <label for="dtype-input">Data Type (dtype):</label>
-                            <small class="form-text text-muted">Data type(s) for the data or columns. E.g., {'a': np.float64, 'b': np.int32}</small>
-                            <input type="text" class="form-control" id="dtype-input" placeholder="E.g., {'a': 'float64', 'b': 'int32'}">
-                            <br>
-                            <label for="parse-dates-input">Parse Dates (parse_dates):</label>
-                            <small class="form-text text-muted">Columns to parse as dates.</small>
-                            <input type="text" class="form-control" id="parse-dates-input" placeholder="E.g., [1, 2], ['date']">
-                            <br>
-                            <label for="index-col-input">Index Column (index_col):</label>
-                            <small class="form-text text-muted">Column(s) to use as the row labels of the DataFrame.</small>
-                            <input type="text" class="form-control" id="index-col-input" placeholder="E.g., 0, None">
-                            <br>
-                            <label for="skiprows-input">Skip Rows (skiprows):</label>
-                            <small class="form-text text-muted">Line numbers to skip (0-indexed) or number of lines to skip at the start of the file.</small>
-                            <input type="text" class="form-control" id="skiprows-input" placeholder="E.g., 0, [1, 3]">
-                            <br>
-                            <label for="na-filter-input">NA Filter (na_filter):</label>
-                            <small class="form-text text-muted">Detect missing values (default is True).</small>
-                            <select class="form-control" id="na-filter-input">
-                                <option value="True">True</option>
-                                <option value="False">False</option>
-                            </select>
-                            <br>
-                            <label for="keep-default-na-input">Keep default NA (keep_default_na):</label>
-                            <small class="form-text text-muted">Whether or not to include the default NaN values when parsing the data. By default the following values are interpreted as NaN: “ “, “#N/A”, “#N/A N/A”, “#NA”, “-1.#IND”, “-1.#QNAN”, “-NaN”, “-nan”, “1.#IND”, “1.#QNAN”, “<NA>”, “N/A”, “NA”, “NULL”, “NaN”, “None”, “n/a”, “nan”, “null “.</small>
-                            <select class="form-control" id="keep-default-na-input">
-                                <option value="True">True</option>
-                                <option value="False">False</option>
-                            </select>
-                            <br>
-                            <label for="na-values-input">NA Values (na_values):</label>
-                            <small class="form-text text-muted">Additional strings to recognize as NA/NaN. To add multiples nulls pass a list. If dict passed, specific per-column NA values.</small>
-                            <input type="text" class="form-control" id="na-values-input" placeholder="E.g., 'NULL', 'N/A', ['NULL','N/A']">
-                            <br>
-                            <label for="chunksize-input">Chunk Size (chunksize):</label>
-                            <small class="form-text text-muted">Number of rows per chunk. Useful for large files.</small>
-                            <input type="text" class="form-control" id="chunksize-input" placeholder="E.g., 1000">
-                            <br>
-                            <label for="compression-input">Compression (compression):</label>
-                            <small class="form-text text-muted">For on-the-fly decompression of on-disk data.</small>
-                            <input type="text" class="form-control" id="compression-input" placeholder="E.g., 'infer', 'gzip'">
-                            <br>
-                            <label for="thousands-input">Thousands Separator (thousands):</label>
-                            <small class="form-text text-muted">Character to recognize as thousand separator.</small>
-                            <input type="text" class="form-control" id="thousands-input" placeholder="E.g., ','">
-                            <br>
-                            <label for="decimal-input">Decimal Separator (decimal):</label>
-                            <small class="form-text text-muted">Character to recognize as decimal point.</small>
-                            <input type="text" class="form-control" id="decimal-input" placeholder="E.g., '.'">
-                            <br>
-                            <label for="lineterminator-input">Line Terminator (lineterminator):</label>
-                            <small class="form-text text-muted">Character to break lines on.</small>
-                            <input type="text" class="form-control" id="lineterminator-input" placeholder="E.g., '\\n'">
-                            <br>
-                            <label for="quotechar-input">Quote Character (quotechar):</label>
-                            <small class="form-text text-muted">Character used to denote start and end of a quoted item.</small>
-                            <input type="text" class="form-control" id="quotechar-input" placeholder="E.g.," >
-                            <br>
-                            <label for="quoting-input">Quoting (quoting):</label>
-                            <small class="form-text text-muted">Control field quoting behavior.</small>
-                            <input type="text" class="form-control" id="quoting-input" placeholder="E.g., 0 (csv.QUOTE_MINIMAL)">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button id="preview-csv-rows-btn" class="btn btn-info my-3">
-                            <i class="fas fa-table"></i> Preview First Rows
-                        </button>
-                    </div>
-                    <!-- Raw preview of csv -->
-                    <h5 id="csv-raw-preview-header" style="display: none;">Preview of First Rows</h5>
-                    <div id="csv-raw-preview" class="mb-3" style="display: none;">
-                        <!-- Aquí se mostrará la vista previa en bruto del CSV -->
-                    </div>
-                </div>
-
-                <!-- Opciones de Excel -->
-                <div class="tab-pane fade" id="excel-options" role="tabpanel" aria-labelledby="excel-tab">
-                    NO FUNCTIONAL: PENDING TO CONNECT BACKEND AND FRONTEND 
-                    <br>
-                    <div id="load-dataset-options" class="mb-3">
-                        <div class="form-group">
-                            <label for="sheet-name-input">Sheet Name (sheet_name):</label>
-                            <small class="form-text text-muted">Name of the sheet to read. Default is 0.</small>
-                            <input type="text" class="form-control" id="sheet-name-input" placeholder="E.g., 'Sheet1', 0">
-                            <br>
-                            <label for="header-input-excel">Header Row (header):</label>
-                            <small class="form-text text-muted">Row to use as header. Use `None` if there is no header row.</small>
-                            <input type="text" class="form-control" id="header-input-excel" placeholder="E.g., 0, None">
-                            <br>
-                            <label for="usecols-input-excel">Use Columns (usecols):</label>
-                            <small class="form-text text-muted">Subset of columns to read.</small>
-                            <input type="text" class="form-control" id="usecols-input-excel" placeholder="E.g., 'A:C' or [0, 1, 2]">
-                            <br>
-                            <label for="dtype-input-excel">Data Type (dtype):</label>
-                            <small class="form-text text-muted">Data type(s) for the data or columns. E.g., {'a': np.float64, 'b': np.int32}</small>
-                            <input type="text" class="form-control" id="dtype-input-excel" placeholder="E.g., {'a': 'float64', 'b': 'int32'}">
-                            <br>
-                            <label for="parse-dates-input-excel">Parse Dates (parse_dates):</label>
-                            <small class="form-text text-muted">Columns to parse as dates.</small>
-                            <input type="text" class="form-control" id="parse-dates-input-excel" placeholder="E.g., [1, 2], ['date']">
-                            <br>
-                            <label for="index-col-input-excel">Index Column (index_col):</label>
-                            <small class="form-text text-muted">Column(s) to use as the row labels of the DataFrame.</small>
-                            <input type="text" class="form-control" id="index-col-input-excel" placeholder="E.g., 0, None">
-                            <br>
-                            <label for="skiprows-input-excel">Skip Rows (skiprows):</label>
-                            <small class="form-text text-muted">Line numbers to skip (0-indexed) or number of lines to skip at the start of the file.</small>
-                            <input type="text" class="form-control" id="skiprows-input-excel" placeholder="E.g., 0, [1, 3]">
-                            <br>
-                            <label for="na-filter-input-excel">NA Filter (na_filter):</label>
-                            <small class="form-text text-muted">Detect missing values (default is True).</small>
-                            <select class="form-control" id="na-filter-input-excel">
-                                <option value="True">True</option>
-                                <option value="False">False</option>
-                            </select>
-                            <br>
-                            <label for="keep-default-na-input-excel">Keep default NA (keep_default_na):</label>
-                            <small class="form-text text-muted">Whether or not to include the default NaN values when parsing the data. By default the following values are interpreted as NaN: “ “, “#N/A”, “#N/A N/A”, “#NA”, “-1.#IND”, “-1.#QNAN”, “-NaN”, “-nan”, “1.#IND”, “1.#QNAN”, “<NA>”, “N/A”, “NA”, “NULL”, “NaN”, “None”, “n/a”, “nan”, “null “.</small>
-                            <select class="form-control" id="keep-default-na-input-excel">
-                                <option value="True">True</option>
-                                <option value="False">False</option>
-                            </select>
-                            <br>
-                            <label for="na-values-input-excel">NA Values (na_values):</label>
-                            <small class="form-text text-muted">Additional strings to recognize as NA/NaN. To add multiples nulls pass a list. If dict passed, specific per-column NA values.</small>
-                            <input type="text" class="form-control" id="na-values-input-excel" placeholder="E.g., 'NULL', 'N/A', ['NULL','N/A']">
-                            <br>
-                            <label for="chunksize-input-excel">Chunk Size (chunksize):</label>
-                            <small class="form-text text-muted">Number of rows per chunk. Useful for large files.</small>
-                            <input type="text" class="form-control" id="chunksize-input-excel" placeholder="E.g., 1000">
-                            <br>
-                            <label for="skipfooter-input-excel">Skip Footer (skipfooter):</label>
-                            <small class="form-text text-muted">Number of lines to skip at the bottom of the file.</small>
-                            <input type="text" class="form-control" id="skipfooter-input-excel" placeholder="E.g., 1">
-                            <br>
-                            <label for="converters-input-excel">Converters (converters):</label>
-                            <small class="form-text text-muted">Dict of functions for converting values in certain columns. Keys can either be integers or column labels.</small>
-                            <input type="text" class="form-control" id="converters-input-excel" placeholder="E.g., {'col_name': func}">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button id="preview-excel-rows-btn" class="btn btn-info my-3">
-                            <i class="fas fa-table"></i> Preview First Rows
-                        </button>
-                    </div>
-                    <!-- Raw preview of excel -->
-                    <h5 id="excel-raw-preview-header" style="display: none;">Preview of First Rows</h5>
-                    <div id="excel-raw-preview" class="mb-3" style="display: none;">
-                        <!-- Aquí se mostrará la vista previa en bruto del Excel -->
-                    </div>
-                </div>
-
-                <!-- Opciones de SAV -->
-                <div class="tab-pane fade" id="sav-options" role="tabpanel" aria-labelledby="sav-tab">
-                    NO FUNCTIONAL: PENDING TO CONNECT BACKEND AND FRONTEND 
-                </div>
-
-                <!-- Opciones de JSON -->
-                <div class="tab-pane fade" id="json-options" role="tabpanel" aria-labelledby="json-tab">
-                    NO FUNCTIONAL: PENDING TO CONNECT BACKEND AND FRONTEND 
-                </div>
-            </div>
-        </div>
+        {% include 'model_manager/load_dataset/file_explorer_options.html'%}
 
         <div class="tab-pane fade" id="mysql-file-tab" role="tabpanel" aria-labelledby="mysql-tab">
             <br>
@@ -270,13 +47,17 @@
                 {% csrf_token %}
                 <div class="mysql-section">
                     <p>
-                        <strong>SSH Connection:</strong> Use this section to configure the SSH tunnel settings if you need to connect to your database through an SSH server. This is useful for secure remote connections.
+
+                        First, fill in the SSH Connection details and test the connection. Then, complete the Database Connection section and test it. Finally, click Connect to establish the database connection.
                     </p>
                     <button type="button" class="mysql-section-title" data-toggle="collapse" data-target="#ssh-connection" aria-expanded="true" aria-controls="ssh-connection">
                         SSH Connection
                         <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                     </button>
                     <div id="ssh-connection" class="mysql-section-content collapse">
+                        <p>
+                            <strong>SSH Connection:</strong> Use this section to configure the SSH tunnel settings if you need to connect to your database through an SSH server. This is useful for secure remote connections.
+                        </p>
                         <div class="form-group">
                             <label for="ssh_host">SSH Host:</label>
                             <small class="form-text text-muted">Address of the SSH server for tunneling.</small>
@@ -297,18 +78,20 @@
                             <small class="form-text text-muted">Password for SSH access.</small>
                             <input type="password" class="form-control" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="{{ default_values.ssh_password }}" required>
                         </div>
+                        <button type="button" class="btn btn-secondary" id="test-connection-ssh-btn">Test Connection</button>
+                        <div id="connection-result" class="mt-2"></div>
                     </div>
                 </div>
                 
                 <div class="mysql-section">
-                    <p>
-                        <strong>Database Connection:</strong> Use this section to provide the details necessary to connect directly to your database. This includes the server address, user credentials, and other relevant information.
-                    </p>
                     <button type="button" class="mysql-section-title" data-toggle="collapse" data-target="#db-connection" aria-expanded="false" aria-controls="db-connection">
                         Database Connection
                         <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                     </button>
                     <div id="db-connection" class="mysql-section-content collapse">
+                        <p>
+                            <strong>Database Connection:</strong> Use this section to provide the details necessary to connect directly to your database. This includes the server address, user credentials, and other relevant information.
+                        </p>
                         <div class="form-group">
                             <label for="db_server">Server:</label>
                             <small class="form-text text-muted">The address of the database server. Example: 127.0.0.1</small>
@@ -324,6 +107,7 @@
                             <small class="form-text text-muted">The password associated with the username for accessing the database.</small>
                             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Database Password" value="{{ default_values.db_password }}" required>
                         </div>
+                        <button type="button" class="btn btn-secondary" id="test-connection-database-btn">Test Connection</button>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Connect</button>

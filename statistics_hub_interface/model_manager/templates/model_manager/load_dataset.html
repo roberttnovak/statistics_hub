@@ -254,14 +254,83 @@
 
                 <!-- Opciones de SAV -->
                 <div class="tab-pane fade" id="sav-options" role="tabpanel" aria-labelledby="sav-tab">
-                    Pending to implement inside interface
+                    NO FUNCTIONAL: PENDING TO CONNECT BACKEND AND FRONTEND 
                 </div>
 
                 <!-- Opciones de JSON -->
                 <div class="tab-pane fade" id="json-options" role="tabpanel" aria-labelledby="json-tab">
-                    Pending to implement inside interface
+                    NO FUNCTIONAL: PENDING TO CONNECT BACKEND AND FRONTEND 
                 </div>
             </div>
+        </div>
+
+        <div class="tab-pane fade" id="mysql-file-tab" role="tabpanel" aria-labelledby="mysql-tab">
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mysql-section">
+                    <p>
+                        <strong>SSH Connection:</strong> Use this section to configure the SSH tunnel settings if you need to connect to your database through an SSH server. This is useful for secure remote connections.
+                    </p>
+                    <button type="button" class="mysql-section-title" data-toggle="collapse" data-target="#ssh-connection" aria-expanded="true" aria-controls="ssh-connection">
+                        SSH Connection
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="ssh-connection" class="mysql-section-content collapse">
+                        <div class="form-group">
+                            <label for="ssh_host">SSH Host:</label>
+                            <small class="form-text text-muted">Address of the SSH server for tunneling.</small>
+                            <input type="text" class="form-control" id="ssh_host" name="ssh_host" placeholder="SSH Host" value="{{ default_values.ssh_host }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ssh_port">SSH Port:</label>
+                            <small class="form-text text-muted">Port of the SSH server for tunneling.</small>
+                            <input type="text" class="form-control" id="ssh_port" name="ssh_port" placeholder="SSH Port" value="{{ default_values.ssh_port }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ssh_user">SSH User:</label>
+                            <small class="form-text text-muted">Username for SSH access.</small>
+                            <input type="text" class="form-control" id="ssh_user" name="ssh_user" placeholder="SSH User" value="{{ default_values.ssh_user }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ssh_password">SSH Password:</label>
+                            <small class="form-text text-muted">Password for SSH access.</small>
+                            <input type="password" class="form-control" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="{{ default_values.ssh_password }}" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mysql-section">
+                    <p>
+                        <strong>Database Connection:</strong> Use this section to provide the details necessary to connect directly to your database. This includes the server address, user credentials, and other relevant information.
+                    </p>
+                    <button type="button" class="mysql-section-title" data-toggle="collapse" data-target="#db-connection" aria-expanded="false" aria-controls="db-connection">
+                        Database Connection
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="db-connection" class="mysql-section-content collapse">
+                        <div class="form-group">
+                            <label for="db_server">Server:</label>
+                            <small class="form-text text-muted">The address of the database server. Example: 127.0.0.1</small>
+                            <input type="text" class="form-control" id="db_server" name="db_server" placeholder="Database Server" value="{{ default_values.db_server }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_user">User:</label>
+                            <small class="form-text text-muted">The username used to access the database.</small>
+                            <input type="text" class="form-control" id="db_user" name="db_user" placeholder="Database User" value="{{ default_values.db_user }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_password">Password:</label>
+                            <small class="form-text text-muted">The password associated with the username for accessing the database.</small>
+                            <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Database Password" value="{{ default_values.db_password }}" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Connect</button>
+                <div class="message {{ connection_successful|yesno:"success,fail" }}">
+                    {{ message }}
+                </div>
+            </form>
         </div>
         
         <br>

@@ -390,8 +390,10 @@ $(document).ready(function() {
         
         if (target === "#file-explorer-tab") {
             $('#file-explorer-options').show();
+            $('#mysql-file-tab').hide();
         } else {
             $('#file-explorer-options').hide();
+            $('#mysql-file-tab').show();
         }
     });
 
@@ -404,4 +406,10 @@ $(document).ready(function() {
 
     // Activate Bootstrap tooltips
     $('[data-toggle="tooltip"]').tooltip();
+
+    $('.mysql-section-title').on('click', function() {
+        $(this).next('.mysql-section-content').toggleClass('active');
+        $(this).find('.toggle-icon i').toggleClass('fa-chevron-down fa-chevron-up');
+    });
+    
 });

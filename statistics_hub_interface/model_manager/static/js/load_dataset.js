@@ -385,24 +385,14 @@ $(document).ready(function() {
         });
     });
 
-    // Handle tab visibility changes for upload section
-    $('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').hide(); // Hide the "Load Dataset" button
-        $('#fileTypeTabs').hide(); // Hide file type tabs (csv, xlsx, etc.)
-        $('#csv-options').hide(); // Hide CSV options
-        $('#excel-options').hide(); // Hide Excel options
-        $('#sav-options').hide(); // Hide SAV options
-        $('#json-options').hide(); // Hide JSON options
-    });
-
-    // Show all options when switching to other tabs
-    $('a[data-toggle="tab"]').not('#upload-tab').on('shown.bs.tab', function() {
-        $('#load-dataset-btn').show(); // Show the "Load Dataset" button
-        $('#fileTypeTabs').show(); // Show file type tabs (csv, xlsx, etc.)
-        $('#csv-options').show(); // Show CSV options
-        $('#excel-options').show(); // Show Excel options
-        $('#sav-options').show(); // Show SAV options
-        $('#json-options').show(); // Show JSON options
+    $('#fileManagementTabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href"); // Obtener el ID de la pestaña activa
+        
+        if (target === "#file-explorer-tab") {
+            $('#file-explorer-options').show();
+        } else {
+            $('#file-explorer-options').hide();
+        }
     });
 
     // Handle the toggle button for the explanation section

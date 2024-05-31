@@ -399,14 +399,14 @@ $(document).ready(function() {
                 'X-CSRFToken': csrftoken
             },
             data: {
-                action: 'test_connection',
-                ssh_host: ssh_host,
-                ssh_port: ssh_port,
-                ssh_user: ssh_user,
-                ssh_password: ssh_password
+                'action': 'test_connection_ssh',
+                'ssh_host': ssh_host,
+                'ssh_port': ssh_port,
+                'ssh_user': ssh_user,
+                'ssh_password': ssh_password
             },
             success: function(data) {
-                var resultDiv = $('#connection-result');
+                var resultDiv = $('#connection-ssh-result');
                 if (data.success) {
                     resultDiv.html('<div class="alert alert-success">' + data.message + '</div>');
                 } else {
@@ -415,7 +415,57 @@ $(document).ready(function() {
             },
             error: function(error) {
                 console.error('Error:', error);
-                var resultDiv = $('#connection-result');
+                var resultDiv = $('#connection-ssh-result');
+                resultDiv.html('<div class="alert alert-danger">An error occurred while testing the connection.</div>');
+            }
+        });
+    });
+
+    $('#test-connection-database-btn').on('click', function() {
+        var ssh_host = $('#ssh_host').val();
+        var ssh_port = $('#ssh_port').val();
+        var ssh_user = $('#ssh_user').val();
+        var ssh_password = $('#ssh_password').val();
+        var db_server = $('#db_server').val();
+        var db_user = $('#db_user').val();
+        var db_password = $('#db_password').val();
+
+        console.log("SSH Host:", ssh_host);
+        console.log("SSH Port:", ssh_port);
+        console.log("SSH User:", ssh_user);
+        console.log("SSH Password:",  ssh_password);
+        console.log("DB Server:", db_server);
+        console.log("DB User:", db_user);
+        console.log("DB Password:", db_password);
+
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {
+                action: 'test_connection_ssh_and_database',
+                'ssh_host': ssh_host,
+                'ssh_port': ssh_port,
+                'ssh_user': ssh_user,
+                'ssh_password': ssh_password,
+                'db_server': db_server,
+                'db_user': db_user,
+                'db_password': db_password
+            },
+            success: function(data) {
+                var resultDiv = $('#connection-db-result');
+                if (data.success) {
+                    resultDiv.html('<div class="alert alert-success">' + data.message + '</div>');
+                } else {
+                    resultDiv.html('<div class="alert alert-danger">' + data.message + '</div>');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                var resultDiv = $('#connection-db-result');
                 resultDiv.html('<div class="alert alert-danger">An error occurred while testing the connection.</div>');
             }
         });

@@ -79,7 +79,7 @@
                             <input type="password" class="form-control" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="{{ default_values.ssh_password }}" required>
                         </div>
                         <button type="button" class="btn btn-secondary" id="test-connection-ssh-btn">Test Connection</button>
-                        <div id="connection-result" class="mt-2"></div>
+                        <div id="connection-ssh-result" class="mt-2"></div>
                     </div>
                 </div>
                 
@@ -108,6 +108,7 @@
                             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Database Password" value="{{ default_values.db_password }}" required>
                         </div>
                         <button type="button" class="btn btn-secondary" id="test-connection-database-btn">Test Connection</button>
+                        <div id="connection-db-result" class="mt-2"></div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Connect</button>

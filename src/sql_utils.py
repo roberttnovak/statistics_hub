@@ -36,7 +36,7 @@ def test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password):
         return False
 
 def test_database_connection_via_ssh(ssh_host, ssh_port, ssh_user, ssh_password,
-                                     db_server, db_user, db_password, database):
+                                     db_server, db_user, db_password):
     """
     Tests the database connection through an SSH tunnel using the provided credentials.
 
@@ -48,10 +48,9 @@ def test_database_connection_via_ssh(ssh_host, ssh_port, ssh_user, ssh_password,
     - db_server (str): The hostname or IP address of the database server.
     - db_user (str): The username to use for the database connection.
     - db_password (str): The password to use for the database connection.
-    - database (str): The name of the database to connect to.
 
     Returns:
-    - bool: True if the database connection through SSH is successful, False otherwise.
+    - bool: True if the SSH connection is successful, False otherwise.
     """
     try:
         with sshtunnel.SSHTunnelForwarder(
@@ -60,17 +59,10 @@ def test_database_connection_via_ssh(ssh_host, ssh_port, ssh_user, ssh_password,
                 ssh_password=ssh_password,
                 remote_bind_address=(db_server, 3306)
         ) as tunnel:
-            conn = pymysql.connect(
-                host='127.0.0.1', 
-                user=db_user, 
-                passwd=db_password, 
-                db=database, 
-                port=tunnel.local_bind_port
-            )
-            conn.close()
+            tunnel.start()  # Inicia el túnel SSH
             return True
     except Exception as e:
-        print(f"Connection to database through SSH failed: {e}")
+        print(f"SSH connection failed: {e}")
         return False
 
 def test_database_connection(db_server, db_user, db_password, database):
@@ -408,6 +400,59 @@ def get_data(query, db_user, db_password, database, db_server='127.0.0.1', ssh_h
     except Exception as e:
         print(f"Exception in get_data: {e}")
         return None
+    finally:
+        if tunnel:
+            tunnel.close()
+
+def list_databases(db_server, db_user, db_password, ssh_host=None, ssh_port=None, ssh_user=None, ssh_password=None):
+    """
+    Lists all databases using the provided credentials, optionally through an SSH tunnel.
+
+    Parameters:
+    - db_server (str): The hostname or IP address of the database server.
+    - db_user (str): The username to use for the database connection.
+    - db_password (str): The password to use for the database connection.
+    - ssh_host (str, optional): The hostname or IP address of the SSH server for tunneling.
+    - ssh_port (int, optional): The port number of the SSH server for tunneling.
+    - ssh_user (str, optional): The username to use for the SSH connection.
+    - ssh_password (str, optional): The password to use for the SSH connection.
+
+    Returns:
+    - list: A list of database names.
+    """
+    tunnel = None
+    try:
+        if ssh_host and ssh_port and ssh_user and ssh_password:
+            tunnel = sshtunnel.SSHTunnelForwarder(
+                (ssh_host, ssh_port),
+                ssh_username=ssh_user,
+                ssh_password=ssh_password,
+                remote_bind_address=(db_server, 3306)
+            )
+            tunnel.start()
+            conn_params = {
+                'host': '127.0.0.1',
+                'port': tunnel.local_bind_port,
+                'user': db_user,
+                'passwd': db_password
+            }
+        else:
+            conn_params = {
+                'host': db_server,
+                'user': db_user,
+                'passwd': db_password
+            }
+
+        conn = pymysql.connect(**conn_params)
+        cursor = conn.cursor()
+        cursor.execute("SHOW DATABASES")
+        databases = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return [db[0] for db in databases]
+    except Exception as e:
+        print(f"Failed to list databases: {e}")
+        return []
     finally:
         if tunnel:
             tunnel.close()

@@ -21,7 +21,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 sys.path.append(str(Path("../src")))
 from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
-from sql_utils import test_database_connection, test_ssh_connection
+from sql_utils import test_database_connection, test_ssh_connection, test_database_connection_via_ssh
 from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager
 from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
@@ -458,21 +458,50 @@ def load_dataset(request):
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
             
-        elif action == 'test_connection':
-            ssh_host = request.POST.get('ssh_host')
-            ssh_port = int(request.POST.get('ssh_port'))
-            ssh_user = request.POST.get('ssh_user')
-            ssh_password = request.POST.get('ssh_password')
-            db_server = request.POST.get('db_server')
-            db_user = request.POST.get('db_user')
-            db_password = request.POST.get('db_password')
-            database = request.POST.get('database')
-            logger.info(f"ssh_host: {ssh_host}, ssh_port: {ssh_port}, ssh_user: {ssh_user}, ssh_password: {ssh_password}")
-            ssh_success = test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password)
+        elif action == 'test_connection_ssh':
+
+            try:
+                ssh_host = request.POST.get('ssh_host')
+                ssh_port = int(request.POST.get('ssh_port'))
+                ssh_user = request.POST.get('ssh_user')
+                ssh_password = request.POST.get('ssh_password')
+                ssh_success = test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password)
+            except:
+                ssh_success = False
 
             logger.info(f"ssh_success: {ssh_success}")
 
             if ssh_success:
+                return JsonResponse({'success': True, 'message': 'Connection successful!'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Connection failed!'})
+            
+        elif action == 'test_connection_ssh_and_database':
+            try:
+                ssh_host = request.POST.get('ssh_host')
+                ssh_port = int(request.POST.get('ssh_port'))
+                ssh_user = request.POST.get('ssh_user')
+                ssh_password = request.POST.get('ssh_password')
+                db_server = request.POST.get('db_server')
+                db_user = request.POST.get('db_user')
+                db_password = request.POST.get('db_password')
+                logger.info(f"ssh_host: {ssh_host}, ssh_port: {ssh_port}, ssh_user: {ssh_user}, ssh_password: {ssh_password}")
+                logger.info(f"db_server: {db_server}, db_user: {db_user}, db_password: {db_password}")
+                ssh_and_db_success = test_database_connection_via_ssh(
+                    ssh_host = ssh_host, 
+                    ssh_port = ssh_port, 
+                    ssh_user = ssh_user, 
+                    ssh_password = ssh_password,
+                    db_server = db_server,
+                    db_user = db_user,
+                    db_password = db_password
+                    )
+            except:
+                ssh_and_db_success = False
+
+            logger.info(f"ssh_and_db_success: {ssh_and_db_success}")
+
+            if ssh_and_db_success:
                 return JsonResponse({'success': True, 'message': 'Connection successful!'})
             else:
                 return JsonResponse({'success': False, 'message': 'Connection failed!'})
@@ -509,32 +538,60 @@ def preprocess_dataset(request, selected_dataset):
             'lineterminator': 'lineterminator',
             'quotechar': 'quotechar',
             'quoting': 'quoting'
-        }  
-        read_csv_params = {}
+        }
+        params_excel_names_mapping = {
+            'sheet-name': 'sheet_name',
+            'header': 'header',
+            'usecols': 'usecols',
+            'dtype': 'dtype',
+            'parse-dates': 'parse_dates',
+            'index-col': 'index_col',
+            'skiprows': 'skiprows',
+            'na-values': 'na_values',
+            'keep-default-na': 'keep_default_na',
+            'na-filter': 'na_filter',
+            'chunksize': 'chunksize',
+            'skipfooter': 'skipfooter',
+            'converters': 'converters'
+        }
+
+        if selected_dataset.endswith('.csv'):
+            read_params_mapping = params_csv_names_mapping
+        elif selected_dataset.endswith('.xlsx'):
+            read_params_mapping = params_excel_names_mapping
+        else:
+            return None, "Unsupported file type"
+
+        read_params = {}
         for key, value in params.items():
             if value:  # Only included parameters with a value (this implies that user specified a value for that parameter)
-                mapped_key = params_csv_names_mapping.get(key)  
-                if mapped_key: 
-                    if mapped_key in ['usecols', 'dtype', 'parse_dates']:
+                mapped_key = read_params_mapping.get(key)
+                if mapped_key:
+                    if mapped_key in ['usecols', 'dtype', 'parse_dates', 'converters']:
                         try:
-                            read_csv_params[mapped_key] = eval(value)
+                            read_params[mapped_key] = eval(value)
                         except SyntaxError:
                             continue  # Ignora el error de eval, opcionalmente puedes registrar este error
                     elif mapped_key == 'na_filter':
-                        read_csv_params[mapped_key] = value == 'True'
-                    elif mapped_key in ['header', 'skiprows', 'index_col', 'quoting'] and value.isdigit() and value not in ["None","none"]:
-                        read_csv_params[mapped_key] = int(value)
+                        read_params[mapped_key] = value == 'True'
+                    elif mapped_key in ['header', 'skiprows', 'index_col', 'skipfooter'] and value.isdigit() and value not in ["None","none"]:
+                        read_params[mapped_key] = int(value)
                     elif value in ["None","none"]:
-                        read_csv_params[mapped_key] = None
+                        read_params[mapped_key] = None
                     elif (value[0]=="[" and value[-1]=="]") or value in ["True","False","true","false"]:
-                        read_csv_params[mapped_key] = eval(value)
+                        read_params[mapped_key] = eval(value)
                     else:
-                        read_csv_params[mapped_key] = value
+                        read_params[mapped_key] = value
                 else:
                     continue
+
         try:
-            logger.info(f"Loading dataset {selected_dataset} with params: {read_csv_params}")
-            df = pm.load_dataset(selected_dataset.split(".")[0], csv_params=read_csv_params)
+            logger.info(f"Loading dataset {selected_dataset} with params: {read_params}")
+            if selected_dataset.endswith('.csv'):
+                df = pm.load_dataset(selected_dataset.split(".")[0], csv_params=read_params)
+                
+            elif selected_dataset.endswith('.xlsx'):
+                df = pm.load_dataset(selected_dataset.split(".")[0], excel_params=read_params)
             return df, None
         except Exception as e:
             return None, str(e)

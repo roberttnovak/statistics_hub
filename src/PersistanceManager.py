@@ -763,7 +763,7 @@ class PersistenceManager:
 
 
 
-    def load_object(self, folder_path, filename, extension, csv_params=None):
+    def load_object(self, folder_path, filename, extension, csv_params=None, xlsx_params=None):
         """
         Loads an object from disk based on the provided folder path, filename, and extension.
         The method supports multiple file formats defined in the constant SUPPORTED_EXTENSIONS.
@@ -778,6 +778,8 @@ class PersistenceManager:
             The file extension indicating the format of the object file.
         csv_params : dict, optional
             Additional parameters to read csv files. Same as pd.read_csv parameters
+        xlsx_params : dict, optional
+            Additional parameters to read xlsx files. Same as pd.read_excel parameters
 
         Returns:
         --------
@@ -818,6 +820,8 @@ class PersistenceManager:
         elif extension == 'json':
             with open(full_path, 'r') as f:
                 obj = json.load(f)
+        elif extension == 'xlsx':
+            obj = pd.read_excel(full_path, **xlsx_params) if xlsx_params else pd.read_excel(full_path)
         elif extension == 'csv':
             obj = pd.read_csv(full_path, **csv_params) if csv_params else pd.read_csv(full_path)
         else:

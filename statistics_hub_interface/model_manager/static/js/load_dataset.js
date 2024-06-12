@@ -76,6 +76,15 @@ $(document).ready(function() {
         window.location.href = '/preprocess_dataset/' + encodeURIComponent(fullPath) + '?' + queryParams;
     });
 
+    // Handle dataset load button click
+    $('#train-model-btn').click(function() {
+        if (!selectedDataset) {
+            alert("Please select a dataset.");
+            return;
+        }
+        $('#selected_dataset').val(selectedDataset);
+        $('#train-form').submit(); // Envía el formulario
+    });
     // Handle document upload button click
     $('#add-document-btn').click(function() {
         window.open('/upload_file/', '_blank');

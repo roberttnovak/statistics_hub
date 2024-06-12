@@ -60,6 +60,8 @@ class PersistenceManager:
         self.folder_name_range_train = folder_name_range_train
         self.folder_name_time_execution = folder_name_time_execution
         self.folder_datasets = folder_datasets
+        #TODO: Add in documentation if works
+        self.creds_path = os.path.normpath(os.path.join(self.base_path, 'creds'))
         
         # Use folder_datasets if it's not None, else construct the path with other components
         if folder_datasets is not None:

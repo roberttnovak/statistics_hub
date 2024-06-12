@@ -1,54 +1,137 @@
-{% extends 'model_manager/base.html' %}
+{% load static %}
 
 {% block extra_styles %}
 <style>
     body {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100vh;
         margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: url("{% static 'images/login-background-2.webp' %}") no-repeat center center fixed; 
+        background-size: cover;
+    }
+    header, footer {
+        width: 100%;
+        text-align: center;
+        background-color: rgba(0, 123, 255, 0.9);
+        color: white;
+        padding: 20px 0;
+    }
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .subtitle {
+        font-size: 16px;
+        font-weight: normal;
+    }
+    .footer-text {
+        font-size: 14px;
+        color: #f4f4f9;
+    }
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
     }
     form {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 300px; /* Ancho fijo para el formulario */
-        background-color: rgba(255, 255, 255, 0.8);
+        width: 300px;
+        background-color: white;
         border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+    .form-container::before {
+        content: '\f007'; /* Código del icono de usuario en FontAwesome */
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        font-size: 40px; /* Reducido el tamaño del icono */
+        color: #007BFF;
+        background-color: white;
+        border-radius: 50%;
+        padding: 10px;
+        position: absolute;
+        top: -30px; /* Ajustado para que no tape el texto */
+        width: 35px; /* Reducido el tamaño del contenedor */
+        height: 35px; /* Reducido el tamaño del contenedor */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     .section {
         width: 100%;
     }
     .section-title {
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         font-weight: bold;
-        color: #45a049;
+        color: #007BFF;
     }
     .field-group {
         display: flex;
-        flex-direction: column; /* Cambio a columna para mejor disposición en móviles */
+        flex-direction: column;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
+        position: relative;
     }
     .field-group input {
-        width: 100%; /* Ajuste para ocupar todo el ancho */
-        padding: 8px;
+        width: 100%;
+        padding: 10px;
+        padding-left: 40px;
         border-radius: 4px;
         border: 1px solid #ccc;
+    }
+    .field-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+    .field-icon {
+        position: absolute;
+        left: 10px;
+        top: 35px;
+        color: #007BFF;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007BFF;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    button:hover {
+        background-color: #0056b3;
     }
     .message {
         text-align: center;
         margin-top: 20px;
+        color: red;
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<header>
+    <div class="logo">Statistics Hub</div>
+    <div class="subtitle">Your Gateway to Data Science and Statistics</div>
+</header>
+
 <div class="content-wrapper">
     <form method="post" action="{% url 'login' %}" class="form-container"> 
         {% csrf_token %}
@@ -56,10 +139,12 @@
             <div class="section-title">User Login</div>
             <div class="field-group">
                 <label for="id_username">Username:</label>
+                <i class="fa fa-user field-icon"></i> <!-- Icono de usuario -->
                 <input type="text" id="id_username" name="username" placeholder="Username" required>
             </div>
             <div class="field-group">
                 <label for="id_password">Password:</label>
+                <i class="fa fa-lock field-icon"></i> <!-- Icono de contraseña -->
                 <input type="password" id="id_password" name="password" placeholder="Password" required>
             </div>
             <button type="submit">Login</button>
@@ -71,6 +156,13 @@
         </div>
     </form>
 </div>
+
+<footer>
+    <div class="footer-text">© 2024 Statistics Hub.</div>
+</footer>
+
+<!-- Incluir FontAwesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block extra_scripts %}

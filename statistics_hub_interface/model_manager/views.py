@@ -21,7 +21,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 sys.path.append(str(Path("../src")))
 from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
 from PersistanceManager import PersistenceManager
-from sql_utils import test_database_connection, test_ssh_connection, test_database_connection_via_ssh
+from sql_utils import list_databases, test_database_connection, test_ssh_connection, test_database_connection_via_ssh
 from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager
 from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
@@ -368,10 +368,14 @@ def model_evaluation_all_models(request):
 
 @login_required
 def load_dataset(request):
+    # Initialisations
     user = request.user
     pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
     datasets_with_structure = pm.list_datasets_with_structure()
     selected_dataset = None
+
+    # with open(os.path.normpath(os.path.join(pm.creds_path, "sql.json")), 'r') as file:
+    #     default_values_creds = json.load(file)
 
     if request.method == 'POST':
         
@@ -407,8 +411,6 @@ def load_dataset(request):
                 return JsonResponse({'message': 'Files uploaded successfully'})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
-        
-
             
         elif action == 'delete_file':
             try:
@@ -442,8 +444,6 @@ def load_dataset(request):
                 folder_name = request.POST.get('folder_name')
                 relative_path = request.POST.get('relativePath')
 
-                logger.info(f"pm.path: {pm.path}, folder_name: {folder_name}, relative_path: {relative_path}")
-
                 # Asegurarse de que relative_path no comience con una barra
                 relative_path = str(PurePath(relative_path).relative_to('/')) if relative_path.startswith('/') else relative_path
                 
@@ -465,6 +465,16 @@ def load_dataset(request):
                 ssh_port = int(request.POST.get('ssh_port'))
                 ssh_user = request.POST.get('ssh_user')
                 ssh_password = request.POST.get('ssh_password')
+                # changes = {
+                #     'ssh_host': ssh_host,
+                #     'ssh_port': ssh_port,
+                #     'ssh_user': ssh_user,
+                #     'ssh_password': ssh_password,
+                #     'db_server': db_server,
+                #     'db_user': db_user,
+                #     'db_password': db_password
+                # }
+                # modify_json_values(os.path.normpath(os.path.join(pm.creds_path, "sql.json")), changes)
                 ssh_success = test_ssh_connection(ssh_host, ssh_port, ssh_user, ssh_password)
             except:
                 ssh_success = False
@@ -485,8 +495,21 @@ def load_dataset(request):
                 db_server = request.POST.get('db_server')
                 db_user = request.POST.get('db_user')
                 db_password = request.POST.get('db_password')
-                logger.info(f"ssh_host: {ssh_host}, ssh_port: {ssh_port}, ssh_user: {ssh_user}, ssh_password: {ssh_password}")
-                logger.info(f"db_server: {db_server}, db_user: {db_user}, db_password: {db_password}")
+                logger.info(
+                    f"ssh_host: {ssh_host}, ssh_port: {ssh_port}, ssh_user: {ssh_user}, ssh_password: {ssh_password}, db_server: {db_server}, db_user: {db_user}, db_password: {db_password}"
+                )
+                # changes = {
+                #     'ssh_host': ssh_host,
+                #     'ssh_port': ssh_port,
+                #     'ssh_user': ssh_user,
+                #     'ssh_password': ssh_password,
+                #     'db_server': db_server,
+                #     'db_user': db_user,
+                #     'db_password': db_password
+                # }
+                # modify_json_values(os.path.normpath(os.path.join(pm.creds_path, "sql.json")), changes)
+                # with open(os.path.normpath(os.path.join(pm.creds_path, "sql.json")), 'r') as file:
+                #     default_values_creds = json.load(file)
                 ssh_and_db_success = test_database_connection_via_ssh(
                     ssh_host = ssh_host, 
                     ssh_port = ssh_port, 
@@ -496,6 +519,16 @@ def load_dataset(request):
                     db_user = db_user,
                     db_password = db_password
                     )
+                databases = list_databases(
+                    db_server = db_server,
+                    db_user = db_user,
+                    db_password = db_password,
+                    ssh_host = ssh_host,
+                    ssh_port = ssh_port,
+                    ssh_user = ssh_user,
+                    ssh_password = ssh_password
+                )
+                logger.info(databases)
             except:
                 ssh_and_db_success = False
 
@@ -506,9 +539,12 @@ def load_dataset(request):
             else:
                 return JsonResponse({'success': False, 'message': 'Connection failed!'})
 
+    context = {
+        'datasets_with_structure': datasets_with_structure,
+        # 'default_values_creds': default_values_creds,
+    }
 
-    # Renderiza la plantilla si no es una solicitud POST o si no se seleccionó un dataset
-    return render(request, 'model_manager/load_dataset.html', {'datasets_with_structure': datasets_with_structure})
+    return render(request, 'model_manager/load_dataset.html', context)
 
 # preprocess_dataset backend logic
 @login_required

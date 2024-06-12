@@ -58,25 +58,25 @@
                         <p>
                             <strong>SSH Connection:</strong> Use this section to configure the SSH tunnel settings if you need to connect to your database through an SSH server. This is useful for secure remote connections.
                         </p>
-                        <div class="form-group">
+                        <div id="ssh-connection-fields" class="form-group">
                             <label for="ssh_host">SSH Host:</label>
                             <small class="form-text text-muted">Address of the SSH server for tunneling.</small>
-                            <input type="text" class="form-control" id="ssh_host" name="ssh_host" placeholder="SSH Host" value="{{ default_values.ssh_host }}" required>
+                            <input type="text" class="form-control ssh-input" id="ssh_host" name="ssh_host" placeholder="SSH Host" value="{{ default_values_creds.ssh_host }}" required>
                         </div>
                         <div class="form-group">
                             <label for="ssh_port">SSH Port:</label>
                             <small class="form-text text-muted">Port of the SSH server for tunneling.</small>
-                            <input type="text" class="form-control" id="ssh_port" name="ssh_port" placeholder="SSH Port" value="{{ default_values.ssh_port }}" required>
+                            <input type="text" class="form-control ssh-input" id="ssh_port" name="ssh_port" placeholder="SSH Port" value="{{ default_values_creds.ssh_port }}" required>
                         </div>
                         <div class="form-group">
                             <label for="ssh_user">SSH User:</label>
                             <small class="form-text text-muted">Username for SSH access.</small>
-                            <input type="text" class="form-control" id="ssh_user" name="ssh_user" placeholder="SSH User" value="{{ default_values.ssh_user }}" required>
+                            <input type="text" class="form-control ssh-input" id="ssh_user" name="ssh_user" placeholder="SSH User" value="{{ default_values_creds.ssh_user }}" required>
                         </div>
                         <div class="form-group">
                             <label for="ssh_password">SSH Password:</label>
                             <small class="form-text text-muted">Password for SSH access.</small>
-                            <input type="password" class="form-control" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="{{ default_values.ssh_password }}" required>
+                            <input type="password" class="form-control ssh-input" id="ssh_password" name="ssh_password" placeholder="SSH Password" value="{{ default_values_creds.ssh_password }}" required>
                         </div>
                         <button type="button" class="btn btn-secondary" id="test-connection-ssh-btn">Test Connection</button>
                         <div id="connection-ssh-result" class="mt-2"></div>
@@ -91,27 +91,27 @@
                     <div id="db-connection" class="mysql-section-content collapse">
                         <p>
                             <strong>Database Connection:</strong> Use this section to provide the details necessary to connect directly to your database. This includes the server address, user credentials, and other relevant information.
+                            Note that to test the connection, you must first establish the SSH connection (pending to implement local database if scale. It is resource-intensive).
                         </p>
-                        <div class="form-group">
+                        <div id="db-connection-fields" class="form-group">
                             <label for="db_server">Server:</label>
                             <small class="form-text text-muted">The address of the database server. Example: 127.0.0.1</small>
-                            <input type="text" class="form-control" id="db_server" name="db_server" placeholder="Database Server" value="{{ default_values.db_server }}" required>
+                            <input type="text" class="form-control db-input" id="db_server" name="db_server" placeholder="Database Server" value="{{ default_values_creds.db_server }}" required>
                         </div>
                         <div class="form-group">
                             <label for="db_user">User:</label>
                             <small class="form-text text-muted">The username used to access the database.</small>
-                            <input type="text" class="form-control" id="db_user" name="db_user" placeholder="Database User" value="{{ default_values.db_user }}" required>
+                            <input type="text" class="form-control db-input" id="db_user" name="db_user" placeholder="Database User" value="{{ default_values_creds.db_user }}" required>
                         </div>
                         <div class="form-group">
                             <label for="db_password">Password:</label>
                             <small class="form-text text-muted">The password associated with the username for accessing the database.</small>
-                            <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Database Password" value="{{ default_values.db_password }}" required>
+                            <input type="password" class="form-control db-input" id="db_password" name="db_password" placeholder="Database Password" value="{{ default_values_creds.db_password }}" required>
                         </div>
                         <button type="button" class="btn btn-secondary" id="test-connection-database-btn">Test Connection</button>
                         <div id="connection-db-result" class="mt-2"></div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Connect</button>
                 <div class="message {{ connection_successful|yesno:"success,fail" }}">
                     {{ message }}
                 </div>

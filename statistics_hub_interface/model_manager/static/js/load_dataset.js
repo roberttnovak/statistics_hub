@@ -483,6 +483,21 @@ $(document).ready(function() {
         }
     });
 
+    $('.ssh-input').keypress(function(event) {
+        if (event.which === 13) {  // Check if the key pressed is "Enter"
+            event.preventDefault();  // Prevent the default form submission
+            $('#test-connection-ssh-btn').click();  // Trigger click on "Test Connection" button for SSH
+        }
+    });
+
+    // Detect "Enter" keypress in Database Connection fields
+    $('.db-input').keypress(function(event) {
+        if (event.which === 13) {  // Check if the key pressed is "Enter"
+            event.preventDefault();  // Prevent the default form submission
+            $('#test-connection-database-btn').click();  // Trigger click on "Test Connection" button for Database
+        }
+    });
+
     // Handle the toggle button for the explanation section
     $('#toggle-explanation-btn').click(function() {
         $('#explanation-section').toggle();

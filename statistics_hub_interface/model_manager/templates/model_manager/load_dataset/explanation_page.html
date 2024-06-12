@@ -2,11 +2,27 @@
     <h4 class="alert-heading">How to Use This Page</h4>
     <p>Follow these steps to manage your datasets:</p>
     <ul>
-        <li>Navigate through the "File Explorer" tab to browse existing datasets. Click on folders to expand and view their contents.</li>
-        <li>Use the "Upload File" tab to add new datasets. You can upload files or create new folders to organize your datasets.</li>
-        <li>Select a dataset to preview its content in the preview section.</li>
-        <li>Configure the import options for CSV files using the options provided in the "CSV Options" tab.</li>
-        <li>Click "Load Dataset" to load and preprocess the selected dataset with the specified options.</li>
+        <li>
+            <strong>File Explorer:</strong> Use this tab to browse existing datasets.
+            <ul>
+                <li>Upload datasets from your computer.</li>
+                <li>Delete previously uploaded datasets.</li>
+                <li>Create folders to organize your datasets into various hierarchical levels.</li>
+                <li>Select the dataset you want to load by clicking on it.</li>
+            </ul>
+        </li>
+        
+        <li>
+            <strong>Import Options:</strong> Configure import options for CSV files and preview the first row to adjust parameters. Similar options are available for XLSX, TAB, and JSON files.
+        </li>
+        <li>
+            <strong>MySQL:</strong> Use this tab to connect to a MySQL database and load datasets from it.
+        </li>
+        <li>
+            <strong>InfluxDB:</strong> Use this tab to connect to an InfluxDB database and load datasets from it.
+        </li>
+        <li>Click "Prepare Dataset" to load the selected dataset, perform exploratory data analysis, and preprocess it with the specified options.</li>
+        <li>Click "Load Train" to load the training dataset and initiate the training process with the specified options. </li>
     </ul>
     <hr>
     <p class="mb-0">Make sure to configure the options correctly before loading the dataset to ensure proper data preprocessing.</p>

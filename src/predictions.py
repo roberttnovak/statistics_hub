@@ -928,6 +928,7 @@ def create_model_machine_learning_algorithm(
     model = MultiOutputRegressor(base_model)
     model.fit(df_train_X, df_train_Y)
 
+
     # Metadata: combining default arguments with provided arguments
     all_args = get_all_args(RegressorClass.__init__)
     metadata = {**all_args, **machine_learning_model_args}
@@ -937,6 +938,7 @@ def create_model_machine_learning_algorithm(
         logger.info(f"{model_sklearn_name}: Saving to directory ...")
     if path_to_save_model is not None:
 
+    
         preprocessed_data = {
             "df_train_X": df_train_X,
             "df_train_Y": df_train_Y,
@@ -945,6 +947,7 @@ def create_model_machine_learning_algorithm(
             "df_train": df_train,
             "df_test": df_test
         }
+
 
         persist_model_to_disk_structure(
             path_to_save_model = path_to_save_model,

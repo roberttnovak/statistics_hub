@@ -118,7 +118,7 @@ def model_evaluation_time_execution(request, model, training_range, execution_ti
         folder_name_time_execution=folder_name_time_execution
     )
 
-    parameters = pm.load_dataset(file_name = "parameters")
+    parameters = pm.load_dataset(file_name = "parameters", csv_params={"sep": ";"})
     # Replace \n to '<br>' to see new line in html table 
     parameters = parameters.replace(to_replace=r'\n', value='<br>', regex=True)
 
@@ -373,6 +373,22 @@ def load_dataset(request):
     pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
     datasets_with_structure = pm.list_datasets_with_structure()
     selected_dataset = None
+
+    action = request.POST.get('action')
+
+    if action == 'train_model':
+        selected_dataset = request.POST.get('selected_dataset')
+        if not selected_dataset:
+            messages.error(request, "No dataset selected.")
+            return redirect('load_dataset')  
+        if '..' in selected_dataset or '/' in selected_dataset:
+            raise ValueError("Invalid filename.")
+        tenant_data_dir = os.path.join(settings.BASE_DIR, 'tenants', request.user.username)
+        data_source_path = os.path.join(tenant_data_dir, 'data_source.json')
+        os.makedirs(tenant_data_dir, exist_ok=True)
+        with open(data_source_path, 'w') as file:
+            json.dump({'selected_file': selected_dataset}, file)
+        return redirect('model_selection')
 
     # with open(os.path.normpath(os.path.join(pm.creds_path, "sql.json")), 'r') as file:
     #     default_values_creds = json.load(file)

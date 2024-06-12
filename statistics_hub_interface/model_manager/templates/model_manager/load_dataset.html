@@ -118,8 +118,16 @@
             </form>
         </div>
         
-        <br>
-        <button id="load-dataset-btn" class="btn btn-primary">Load Dataset</button>
+        <form id="train-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="selected_dataset" name="selected_dataset" value="">
+            <button type="button" id="load-dataset-btn" class="btn btn-primary" style="margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Load and preprocess the dataset for EDA.">
+                <i class="fas fa-chart-line"></i> Prepare Dataset
+            </button>
+            <button type="submit" name="action" value="train_model" id="train-model-btn" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Use the preprocessed data to train your machine learning model.">
+                <i class="fas fa-robot"></i> Train Model
+            </button>
+        </form>
 
         <!-- Vista previa del Dataset -->
         <div id="dataset-preview" class="mb-3" style="display: none;">

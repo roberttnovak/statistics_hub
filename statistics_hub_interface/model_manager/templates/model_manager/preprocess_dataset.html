@@ -318,10 +318,6 @@
     </div>
 
     <div class="form-section" id="table-preview-view">
-        <ul>
-            <li> #ToDo: Continuar con la carga "perezosa" de los datos y manetener la estética de los Datatables. 
-                 Actualmente se muestran solo las primeras 1000 filas. </li>
-        </ul>
         {{ df_html|safe }}
     </div>
 
@@ -588,6 +584,8 @@
 
 <script>
     $(document).ready(function() {
+
+
     // Auxiliar funtions related with ajax
 
     // Build AJAX url. This page is build with a lot of parameters related to importing dataset. This parameters

@@ -141,13 +141,15 @@ def handle_outliers(df: pd.DataFrame, cols: list) -> pd.DataFrame:
 def resample_data(df: pd.DataFrame, 
                   resample_freq: str = '60S', 
                   aggregation_func: Callable = np.mean,
+                  groupby_cols: Optional[List[str]] = ['id_device', 'id_sensor', 'id_variable'],
+                  target_col: str = 'value',
                   logger: logging.Logger = None) -> pd.DataFrame:
     """
     Resamples the time series data in the DataFrame to a uniform frequency.
     
     The DataFrame is expected to have a 'timestamp' column, which is used as the index for 
-    resampling. The data is grouped by 'id_device', 'id_sensor', and 'id_variable', and 
-    the specified aggregation function is applied to compute the resampled values.
+    resampling. The data is optionally grouped by specified columns, and the specified 
+    aggregation function is applied to compute the resampled values.
     
     Parameters
     ----------
@@ -157,6 +159,11 @@ def resample_data(df: pd.DataFrame,
         The frequency for resampling the data (default is '60S' for 60 seconds).
     aggregation_func : Callable, optional
         The aggregation function to apply when resampling (default is mean).
+    groupby_cols : list, optional
+        A list of column names to group by for resampling. Default is ['id_device', 'id_sensor', 'id_variable'].
+        If None, no groupby will be applied.
+    target_col : str, optional
+        The name of the column to resample and aggregate. Default is 'value'.
     logger : logging.Logger, optional
         A logger instance to log events during the execution of the function.
         If None (default), no logging will occur.
@@ -164,15 +171,6 @@ def resample_data(df: pd.DataFrame,
     -------
     pd.DataFrame
         The resampled DataFrame.
-
-    Explanation
-    -----------
-    Consider a DataFrame with timestamps every 30 seconds. Resampling with a frequency of '60S' 
-    (60 seconds) will aggregate these entries into 1-minute intervals. For instance, if the original 
-    data has timestamps at 10:00:00, 10:00:30, and 10:01:00 with values 10, 15, and 20 respectively, 
-    the resampling process will create two new rows: one for the interval 10:00:00 - 10:00:59, 
-    and another for 10:01:00 - 10:01:59. Using the mean aggregation, the value for the first interval 
-    will be the average of 10 and 15, and the value for the second interval will be 20.
     """
 
     if logger:
@@ -187,17 +185,19 @@ def resample_data(df: pd.DataFrame,
     df.set_index("timestamp", inplace=True)
 
     # Sort values by timestamp before grouping and resampling
-    df.sort_values(by='timestamp', inplace=True)    
+    df.sort_values(by='timestamp', inplace=True)
 
-    df_resampled = df.groupby(['id_device', 'id_sensor', 'id_variable'])["value"] \
-                     .resample(resample_freq) \
-                     .apply(aggregation_func) \
-                     .reset_index() \
-                     .sort_values(by='timestamp')
+    if groupby_cols:
+        df_resampled = df.groupby(groupby_cols)[target_col] \
+                         .resample(resample_freq) \
+                         .apply(aggregation_func) \
+                         .reset_index() \
+                         .sort_values(by='timestamp')
+    else:
+        df_resampled = df.resample(resample_freq).apply({target_col: aggregation_func}).reset_index()
     
     if logger:
         logger.info('Resampling completed.')    
-    
     return df_resampled
 
 
@@ -205,6 +205,8 @@ def resample_data(df: pd.DataFrame,
 @log_function_args
 def interpolate_data(df: pd.DataFrame, 
                      method: str = 'linear', 
+                     groupby_cols: Optional[List[str]] = ['id_device', 'id_sensor', 'id_variable'],
+                     target_col: str = 'value',
                      logger: logging.Logger = None) -> pd.DataFrame:
     """
     Interpolates missing values in the time series data using specified interpolation method.
@@ -219,6 +221,11 @@ def interpolate_data(df: pd.DataFrame,
         The method of interpolation to use. Default is 'linear'. Other options include 
         'index', 'pad', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', etc., as per 
         the options available in pandas.DataFrame.interpolate method.
+    groupby_cols : list, optional
+        A list of column names to group by for interpolation. Default is ['id_device', 'id_sensor', 'id_variable'].
+        If None, no groupby will be applied.
+    target_col : str, optional
+        The name of the column to interpolate. Default is 'value'.
     logger : logging.Logger, optional
         A logger instance to log events during the execution of the function.
         If None (default), no logging will occur.
@@ -247,9 +254,14 @@ def interpolate_data(df: pd.DataFrame,
 
     df_interpolated = df.copy()
     df_interpolated.set_index('timestamp', inplace=True)
-    df_interpolated = df_interpolated.groupby(['id_device', 'id_sensor', 'id_variable'])['value'] \
-                                     .apply(lambda group: group.interpolate(method=method)) \
-                                     .reset_index()
+    
+    if groupby_cols:
+        df_interpolated = df_interpolated.groupby(groupby_cols)[target_col] \
+                                         .apply(lambda group: group.interpolate(method=method)) \
+                                         .reset_index()
+    else:
+        df_interpolated[target_col] = df_interpolated[target_col].interpolate(method=method).values
+        df_interpolated.reset_index(inplace=True)
     
     if logger:
         logger.info('Interpolation completed.')
@@ -262,7 +274,9 @@ def process_time_series_data(df: pd.DataFrame,
                              resample_freq: str = '60S', 
                              aggregation_func: Callable = np.mean,
                              method: str = 'linear',
-                             outlier_cols: list = None,
+                             outlier_cols: Optional[List[str]] = None,
+                             groupby_cols: Optional[List[str]] = ['id_device', 'id_sensor', 'id_variable'],
+                             target_col: str = 'value',
                              logger: logging.Logger = None) -> pd.DataFrame:
     """
     Processes time series data by resampling to a uniform frequency and interpolating missing values.
@@ -285,6 +299,11 @@ def process_time_series_data(df: pd.DataFrame,
         A list of column names in the DataFrame where outliers should be handled.
         If provided, the `handle_outliers` function will be called to handle outliers 
         in these specified columns. If None (default), no outlier handling will occur.
+    groupby_cols : list, optional
+        A list of column names to group by for interpolation. Default is ['id_device', 'id_sensor', 'id_variable'].
+        If None, no groupby will be applied.
+    target_col : str, optional
+        The name of the column to resample and interpolate. Default is 'value'.
     logger : logging.Logger, optional
         A logger instance to log events during the execution of the function.
         If None (default), no logging will occur.
@@ -302,10 +321,14 @@ def process_time_series_data(df: pd.DataFrame,
     df_resampled = resample_data(df=df, 
                                  resample_freq = resample_freq, 
                                  aggregation_func = aggregation_func, 
+                                 groupby_cols = groupby_cols,
+                                 target_col = target_col,
                                  logger= logger)
     
     df_processed = interpolate_data(df = df_resampled,
                                     method=method,
+                                    groupby_cols=groupby_cols,
+                                    target_col=target_col,
                                     logger=logger)
     
     return df_processed

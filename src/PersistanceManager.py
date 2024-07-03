@@ -703,7 +703,7 @@ class PersistenceManager:
         # Delete the file
         os.remove(full_path)
         
-    def load_csv_as_raw_string(self, folder_path, filename, num_rows=None):
+    def load_csv_as_raw_string(self, folder_path, filename, num_rows=None, encoding='utf-8'):
         """
         Loads a CSV file as a raw string from the specified directory, with an option to limit
         the number of rows read.
@@ -720,6 +720,8 @@ class PersistenceManager:
             The name of the CSV file. The '.csv' extension is optional and will be added if not present.
         num_rows : int, optional
             The number of rows to read from the CSV file. If None (default), all rows are read.
+        encoding : str, optional
+            The encoding of the CSV file. Default is 'utf-8'.
 
         Returns:
         --------
@@ -750,14 +752,14 @@ class PersistenceManager:
 
         # Read the CSV file as a raw string
         try:
-            with open(csv_file_path, 'r') as file:
+            with open(csv_file_path, 'r', encoding=encoding) as file:
                 if num_rows is not None:
                     raw_string = ''.join([next(file) for _ in range(num_rows)])
                 else:
                     raw_string = file.read()
         except StopIteration:
             # Handle the case where the file has fewer rows than num_rows
-            with open(csv_file_path, 'r') as file:
+            with open(csv_file_path, 'r', encoding=encoding) as file:
                 raw_string = file.read()
 
         return raw_string
@@ -1311,7 +1313,11 @@ class PersistenceManager:
         # Check and convert datetime columns
         if utc:
             for col in datetime_columns:
-                preprocessed_data[col] = pd.to_datetime(preprocessed_data[col]).dt.tz_convert('UTC')
+                #TODO: Mejorar esta implementación, pensarlo mejor y tal
+                try:
+                    preprocessed_data[col] = pd.to_datetime(preprocessed_data[col]).dt.tz_convert('UTC')
+                except: 
+                    pass
 
         return preprocessed_data
 

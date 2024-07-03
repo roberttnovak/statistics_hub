@@ -1,1040 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
 {% load static %}
-{% load plotly_dash %}
 
-{% block head %}
-<style>
-    body {
-        background-color: #ffffff; 
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDA and Preprocess Dataset</title>
+    <link rel="stylesheet" href="{% static 'css/preprocess_dataset.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
 
-    .dash-container {
-        width: 100%;    /* Ocupa todo el ancho del contenedor */
-        height: 500px;  /* Altura fija, pero puedes ajustarla según tus necesidades */
-    }
+<body>
+    <div class="container mt-5">
+        <h2>Manage Datasets</h2>
+        <br>
 
-    .form-section, #eda-view, #preprocessing-view {
-        margin-top: 20px;
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-    }
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="datasetManagementTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="eda-tab" data-toggle="tab" href="#eda-tab-content" role="tab" aria-controls="eda-tab-content" aria-selected="true">EDA</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="preprocess-tab" data-toggle="tab" href="#preprocess-tab-content" role="tab" aria-controls="preprocess-tab-content" aria-selected="false">Preprocess Dataset</a>
+            </li>
+        </ul>
 
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .form-group input, 
-
-    .form-group select {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-    }
-
-    .form-group button, .view-selector button {
-        background-color: #4CAF50; /* Green */
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .form-group button:hover, .view-selector button:hover {
-        background-color: #45a049;
-    }
-
-    .view-selector {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    #table-preview-view, #eda-view, #preprocessing-view {
-        display: none;
-    }
-
-    .explanation {
-        margin-top: 20px;
-        background-color: #fff; /* Fondo blanco para resaltar */
-        border-left: 5px solid #4CAF50; /* Borde izquierdo para resaltar */
-        padding: 15px;
-        font-style: normal; /* Eliminar estilo itálico */
-        color: #333; /* Color de texto más oscuro para mejorar la legibilidad */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave para dar profundidad */
-        border-radius: 5px; /* Bordes redondeados */
-    }
-
-    .btn-help {
-        background-color: #4CAF50; /* Verde */
-        color: white;
-        padding: 8px 16px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    
-    .btn-help:hover {
-        background-color: #45a049;
-    }
-
-    .btn-help {
-        background-color: #FFD700; /* Color dorado para el botón de ayuda */
-        color: black;
-        padding: 8px 16px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .btn-help:hover {
-        background-color: #FFC107; /* Un dorado más claro al pasar el ratón por encima */
-    }
-    
-    .btn-help i {
-        margin-right: 5px; /* Espacio entre el ícono y el texto */
-    }
-
-    button.add-filter-btn {
-        background-color: #007BFF; /* Color de fondo, cambia según prefieras */
-        color: white; /* Color del texto */
-        padding: 5px 10px; /* Reduciendo el espaciado interno para un botón más pequeño */
-        font-size: 12px; /* Reduciendo el tamaño de la fuente */
-        border: none; /* Sin borde */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cambiar cursor a mano */
-        transition: background-color 0.3s; /* Animación al cambiar de color */
-    }
-    
-    button.add-filter-btn:hover {
-        background-color: #0056b3; /* Color al pasar el cursor, más oscuro que el color de fondo */
-    }
-
-    button.analyze-btn {
-        background-color: #228B22; /* Color de fondo: un tono de azul oscuro/morado */
-        color: white; /* Color del texto */
-        padding: 10px 20px; /* Espaciado interno */
-        font-size: 14px; /* Tamaño de la fuente */
-        border: none; /* Sin borde */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cambiar cursor a mano */
-        transition: background-color 0.3s; /* Animación al cambiar de color */
-    }
-    
-    button.analyze-btn:hover {
-        background-color: #32CD32; /* Color más claro para el hover */
-    }
-
-    .view-toggle {
-        display: flex;
-        justify-content: center; /* Centra los elementos horizontalmente */
-        align-items: center; /* Centra los elementos verticalmente */
-        gap: 10px; /* Espacio entre los botones */
-    }
-    
-    .common-controls-box {
-        background-color: #f7f7f7; /* Color de fondo suave */
-        border: 1px solid #d3d3d3; /* Borde sutil */
-        border-radius: 10px; /* Esquinas redondeadas */
-        padding: 20px; /* Espaciado interno */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
-        margin-bottom: 20px; /* Espacio debajo del contenedor */
-    }
-
-    .center-button-container {
-        display: flex;
-        justify-content: center; /* Centra horizontalmente */
-        align-items: center; /* Centra verticalmente si es necesario */
-    }
-
-
-    .green-button {
-        background-color: #4CAF50; /* Verde */
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .small-grey-button {
-        background-color: #808080; /* Azul */
-        color: white;
-        padding: 8px 12px; /* Padding más pequeño */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-        border-radius: 5px;
-        cursor: pointer;
-        margin-bottom: 10px;
-    }
-
-    .small-blue-button {
-        background-color: #007bff; /* Azul */
-        color: white;
-        padding: 4px 6px; /* Padding más pequeño */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-        border-radius: 5px;
-        cursor: pointer;
-        margin-bottom: 10px;
-    }
-    .sortable-ghost {
-        background-color: #f0f0f0;
-        border: 1px dashed #666;
-    }
-
-    /* Estilos para la lista */
-    #selected-order {
-        list-style-type: none; /* Eliminar puntos de la lista */
-        padding: 0;
-    }
-    
-    /* Estilos para cada elemento de la lista */
-    #selected-order .list-group-item {
-        cursor: grab; /* Cursor tipo 'agarrar' para indicar que se puede mover */
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 5px; /* Espacio entre elementos */
-        background-color: #f8f9fa;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    /* Cambiar el cursor al arrastrar */
-    #selected-order .list-group-item:active {
-        cursor: grabbing;
-    }
-    
-    
-    /* Estilos para el elemento arrastrado */
-    .sortable-ghost {
-        background-color: #e9ecef;
-        border: 1px dashed #666;
-    }
-
-    .delete-column {
-        background-color: #FF0000; /* Color rojo para el botón */
-        color: white; /* Texto blanco para contraste */
-        border: none; /* Sin borde para un aspecto más limpio */
-        padding: 5px 10px; /* Espaciado interno para que no sea muy grande */
-        border-radius: 4px; /* Bordes redondeados */
-        cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
-        font-size: 12px; /* Tamaño de fuente reducido para un botón más pequeño */
-    }
-    
-    /* Estilo para cambiar el color al pasar el ratón por encima */
-    .delete-column:hover {
-        back
-        ground-color: #e60000; /* Un tono de rojo más oscuro al pasar el ratón */
-    }
-
-    
-</style>
-<!-- Añadir jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<!-- Añadir DataTables CSS y JS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
-
-<!-- Añadir Flatpickr CSS y JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-<!-- Añadir Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-<!-- Includa SortableJS library for order columns interface when is becessary -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"></script>
-
-{% endblock %}
-
-{% block content %}
-
-<!-- The form below is used to provide a CSRF token for AJAX POST requests in Django, which prevents 
-    Cross-Site Request Forgery. The form itself is hidden as it's only needed for its CSRF token value, 
-    not for actual user input. -->
-<form id="csrf-form" method="post" style="display: none;">
-    {% csrf_token %}
-</form>
-
-<div class="container">
-    <!-- common control parameters box about dataset-->
-    <div class="common-controls-box">
-        <!-- Selection of temporal column -->
-        <H1> Data parameters configuration </H1>
-        <div class="form-group">
-            <label for="timestamp-column">Select temporal column:</label>
-            <select id="timestamp-column" name="timestamp_column" class="form-control">
-                <option value="">--Select temporal column--</option>
-                {% for column in columns %}
-                <option value="{{ column }}">{{ column }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Data range filter -->
-        <div class="form-group" id="date-range-container" style="display: none;">
-            <label for="date-range" id="date-range-label">
-                Select Date Range:
-            </label>
-            <input type="text" id="date-range" name="date_range" class="date-range-selector">
-        </div>
-
-        <!-- Add filters to dataset -->
-        <div class="form-group" id="filters-container" style="display: none;">
-            <label for="dynamic-filters">Filters:</label>
-            <div id="dynamic-filters">
-                <!-- Los filtros se añadirán aquí dinámicamente -->
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="eda-tab-content" role="tabpanel" aria-labelledby="eda-tab">
+                <br>
+                <!-- Contenido de la pestaña EDA -->
+                {% if dtale_url %}
+                    <iframe src="{{ dtale_url }}" width="100%" height="600px"></iframe>
+                {% else %}
+                    <p>Error loading dataset. Check importations parameters</p>
+                {% endif %}
             </div>
-            <button type="button" class="add-filter-btn" id="add-filter">
-                <i class="fas fa-plus"></i> Add Filter
-            </button>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" id="apply-button" class="btn apply-btn">Apply</button>
-        </div>
-    </div>
-
-    <div class="view-selector">
-        <button id="show-table-preview">Table Preview</button>
-        <button id="show-eda-view">EDA</button>
-        <button id="show-preprocessing-view">Preprocessing</button>
-    </div>
-
-    <div class="form-section" id="table-preview-view">
-        {{ df_html|safe }}
-    </div>
-
-    <div class="form-section" id="eda-view" style="display:none;">
-
-         
-        <div class="view-toggle">
-            <button id="show-eda-table-view" class="small-grey-button">Table View</button>
-            <button id="show-eda-figures-view" class="small-grey-button">Figures View</button>
-        </div>
-
-        <div id="eda-results" style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <!-- Contenedor para DataTable -->
-            <div id="datatable-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
-                <div style="display: flex; justify-content: center;">
-                    <!-- Contenedor para el botón y las opciones 'Variables to analyze' -->
-                    <div style="margin-right: 10px;">
-                        <button id="toggleColumnsEDAOptions" class="small-blue-button">Variables to analyze</button>
-                        <div id="ColumnsEDAOptions" class="form-group" style="display: none;">
-                            {% for column in columns %}
-                            <div class="checkbox" style="display: flex; justify-content: space-between; align-items: center;">
-                                <input type="checkbox" name="eda_columns" value="{{ column }}" style="">
-                                <label for="{{ column }}" style="flex-grow: 1; text-align: right;">{{ column }}</label>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <!-- Contenedor para el botón y las opciones 'Group By Columns' -->
-                    <div>
-                        <button id="toggleColumnsEDAGroupByOptions" class="small-blue-button">Group By Columns</button>
-                        <div id="ColumnsEDAGroupByOptions" class="form-group" style="display: none;">
-                            {% for column in columns %}
-                            <div class="checkbox" style="display: flex; justify-content: space-between; align-items: center;">
-                                <input type="checkbox" name="eda_groupby_columns" value="{{ column }}" style="">
-                                <label for="{{ column }}" style="flex-grow: 1; text-align: right;">{{ column }}</label>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="center-button-container">
-                    <button id="analyze-eda-button" class="green-button">Analyze</button>
-                </div>
-
-                {{eda_results_html|safe}}
-            </div>
-
-            <!-- Contenedor para figuras de Plotly -->
-            <div id="plotly-eda-container" class="eda-view-section" style="width: 60%; margin: auto; display: none;">
-                <!-- Menú desplegable para seleccionar la visualización -->
+            <div class="tab-pane fade" id="preprocess-tab-content" role="tabpanel" aria-labelledby="preprocess-tab">
+                <br>
                 <div class="form-group">
-                    <label for="visualization-type">Choose Visualization:</label>
-                    <select id="visualization-type" class="form-control">
-                        <option value="" disabled selected>Select Visualization</option>
-                        <option value="treemap">Treemap</option>
-                        <!-- ... -->
+                    <button type="button" id="help-button" class="btn-help">
+                        <i class="fas fa-lightbulb"></i> Help
+                    </button>
+                </div>
+        
+                <div class="explanation" id="explanation-preprocessing-section" style="display:none;">
+                    <h2>Time Series Data Cleaning Process</h2>
+                    <p>This form facilitates the cleaning and preprocessing of time series data. The process involves the following steps:</p>
+                    <ul>
+                        <li><strong>Resampling:</strong> Adjusts the frequency of data points in your time series to ensure uniform time intervals. This step helps in normalizing the data frequency for further analysis.
+                        <li><strong>Aggregation:</strong> Summarizes data points over the new time intervals. Depending on the chosen time unit, two cases may arise:
+                            <ul>
+                                <li>If the new time unit is finer, missing observations will be filled in the next step.</li>
+                                <li>If the new time unit is coarser, multiple original time points are aggregated into one. In this case, you have to choose aggregation functions like mean, sum, max, or min</li>
+                            </ul>
+                        <li><strong>Interpolation:</strong> Fills in missing values in your time series, which might be introduced during resampling or due to missing observations. </li>
+                    </ul>
+                    <p>By selecting the appropriate options below, you can customize how your time series data is processed to best suit your analysis needs.</p>
+                    
+                    <div class="example-section">
+                        <h3>Example Scenario</h3>
+                        <p>Imagine a beacon that records temperature data every 30 seconds. Occasionally, data points are missed, and for optimization, you need to change the interval to 1 minute. Here's an example of how the data would be processed:</p>
+                        <h4>Original Data:</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Temperature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2024-01-01 10:00:00</td><td>22.0</td></tr>
+                                <tr><td>2024-01-01 10:00:30</td><td>NaN</td></tr>
+                                <tr><td>2024-01-01 10:01:00</td><td>23.0</td></tr>
+                                <tr><td>2024-01-01 10:01:30</td><td>NaN</td></tr>
+                                <tr><td>2024-01-01 10:02:00</td><td>NaN</td></tr>
+                                <tr><td>2024-01-01 10:02:30</td><td>NaN</td></tr>
+                                <tr><td>2024-01-01 10:03:00</td><td>22.5</td></tr>
+                                <tr><td>2024-01-01 10:03:30</td><td>23.0</td></tr>
+                            </tbody>
+                        </table>
+                        <p>↓ <strong>Resampling (Frequency: 1 Minute)</strong></p>
+                        <h4>Resampled Data:</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Temperature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2024-01-01 10:00:00</td><td>22.00</td></tr>
+                                <tr><td>2024-01-01 10:01:00</td><td>23.00</td></tr>
+                                <tr><td>2024-01-01 10:02:00</td><td>NaN</td></tr>
+                                <tr><td>2024-01-01 10:03:00</td><td>22.75</td></tr>
+                            </tbody>
+                        </table>
+                        <p>↓ <strong>Interpolation (Method: Linear)</strong></p>
+                        <h4>Interpolated Data:</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Temperature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2024-01-01 10:00:00</td><td>22.000</td></tr>
+                                <tr><td>2024-01-01 10:01:00</td><td>23.000</td></tr>
+                                <tr><td>2024-01-01 10:02:00</td><td>22.875</td></tr>
+                                <tr><td>2024-01-01 10:03:00</td><td>22.750</td></tr>
+                            </tbody>
+                        </table>
+                        <p>After choosing a linear interpolation method, the processed time series data is shown above.</p>
+                        <img src="{% static 'images/example-preprocessed-data.png' %}" alt="Preprocessing Time Series Example" class="img-fluid">
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <label for="timestamp-col">Timestamp Column:</label>
+                    <small class="form-text text-muted">Select the column that contains timestamp data for resampling, aggregation and interpolation.</small>
+                    <select id="timestamp-col" name="timestamp_col" class="form-control">
+                        {% for column in df_columns %}
+                            <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                
-            
-                <!-- Controles específicos para el Treemap -->
-                <div id="treemap-controls" style="display: none;">
-                    <div class="form-group">
-                        <label>Path Columns:</label>
-                        <small class="form-text text-muted">Select columns to define the hierarchical structure of the treemap. The order is important.</small>
-                    
-                        <!-- Lista desplegable única para seleccionar columnas -->
-                        <select id="column-selector" class="form-control mb-2">
-                            <option value="" disabled selected>Select a column</option>
-                            {% for column in columns %}
-                            <option value="{{ column }}">{{ column }}</option>
-                            {% endfor %}
-                        </select>
-                    
-                        <!-- Área para mostrar y administrar el orden de las columnas seleccionadas -->
-                        <ul id="selected-order" class="list-group"></ul>
-                    </div>
-                    
-                    
-            
-                    <div class="form-group">
-                        <label for="value-col">Value Column (optional):</label>
-                        <small class="form-text text-muted">Choose the column for which statistics will be calculated (e.g., mean, median, quartiles). If none is selected, occurrences will be counted.</small>
-                        <select id="value-col" class="form-control">
-                            <option value="" selected>Select column (optional)</option>
-                            {% for column in columns %}
-                            <option value="{{ column }}">{{ column }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="summary-metric">Summary Metric:</label>
-                        <small class="form-text text-muted">Select the summary metric to determine the size of each node in the treemap. This metric will be calculated based on the selected value column.</small>
-                        <select id="summary-metric" class="form-control">
-                            <option value="count">Count</option>
-                            <option value="Q1">Q1 (25th percentile)</option>
-                            <option value="median">Median</option>
-                            <option value="Q3">Q3 (75th percentile)</option>
-                            <option value="percentile_90">90th percentile</option>
-                            <option value="percentile_99">99th percentile</option>
-                            <option value="mean">Mean</option>
-                            <option value="std">Standard Deviation</option>
-                            <option value="min">Min</option>
-                            <option value="max">Max</option>
-                        </select>
-                    </div>
-            
+
+                <div class="form-group">
+                    <label for="resample-freq">Resample Frequency:</label>
+                    <small class="form-text text-muted">Specify the frequency for resampling the data. For example, '60S' means resampling every 60 seconds. This ensures uniform time intervals for the dataset.</small>
+                    <input type="text" id="resample-freq" name="resample_freq" class="form-control" placeholder="e.g., 60S">
+                </div>
+        
+                <!-- Opción para la función de agregación -->
+                <div class="form-group">
+                    <label for="aggregation-func">Aggregation Function:</label>
+                    <small class="form-text text-muted">Choose the function to aggregate the resampled data points. Options include mean, sum, max, or min. This determines how multiple data points within the same time interval are summarized.</small>
+                    <select id="aggregation-func" name="aggregation_func" class="form-control">
+                        <option value="mean">Mean</option>
+                        <option value="sum">Sum</option>
+                        <option value="max">Max</option>
+                        <option value="min">Min</option>
+                        <!-- Puedes añadir más opciones según sea necesario -->
+                    </select>
                 </div>
 
-                <div class="center-button-container">
-                    <button id="visualise-eda-button" class="green-button">Visualise</button>
+                <div class="form-group">
+                    <label for="interpolation-method">Interpolation Method:</label>
+                    <small class="form-text text-muted">Select the method to fill in missing data points after resampling. Different methods estimate missing values in various ways, such as linear, cubic, or nearest neighbor interpolation.</small>
+                    <select id="interpolation-method" name="interpolation_method" class="form-control">
+                        <option value="local median" title="Fills missing data points by calculating the median of surrounding values within a specified range, ensuring a locally representative and robust substitution for each missing value.">Local Median</option>
+                        <option value="linear" title="Linear interpolation.">Linear</option>
+                        <option value="time" title="Linear interpolation on the time axis.">Time</option>
+                        <option value="index" title="Linear interpolation using the index as an axis.">Index</option>
+                        <option value="pad" title="Forward fill values.">Pad / ffill</option>
+                        <option value="nearest" title="Use the nearest value.">Nearest</option>
+                        <option value="zero" title="Fill with zeros.">Zero</option>
+                        <option value="slinear" title="Stair-step linear interpolation.">Slinear</option>
+                        <option value="quadratic" title="Quadratic interpolation.">Quadratic</option>
+                        <option value="cubic" title="Cubic interpolation.">Cubic</option>
+                        <option value="spline" title="Spline interpolation of a specified order.">Spline</option>
+                        <option value="barycentric" title="Barycentric interpolation.">Barycentric</option>
+                        <option value="polynomial" title="Polynomial interpolation of a specified degree.">Polynomial</option>
+                        <option value="krogh" title="Krogh interpolation.">Krogh</option>
+                        <option value="piecewise_polynomial" title="Piecewise polynomial interpolation.">Piecewise Polynomial</option>
+                        <option value="pchip" title="PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation.">PCHIP</option>
+                        <option value="akima" title="Akima interpolation.">Akima</option>
+                        <option value="from_derivatives" title="Interpolation based on derivatives.">From Derivatives</option>
+                    </select>
                 </div>
-            
-                <!-- Contenedor para el gráfico Plotly ya generado -->
-                <div id="plotly-chart-container">
-                    {{ eda_plot_html|safe }}
-                </div>  
+
+                {% comment %} <div class="form-group">
+                    <label for="outlier-cols">Outlier Columns:</label>
+                    <small class="form-text text-muted">Specify the columns for which outliers should be handled. Outliers in these columns will be processed to ensure data consistency.</small>
+                    <input type="text" id="outlier-cols" name="outlier_cols" class="form-control" placeholder="e.g., value, temperature">
+                </div> {% endcomment %}
+
+                <div class="form-group">
+                    <label for="groupby-cols">Group By Columns:</label>
+                    <small class="form-text text-muted">Specify the columns by which the data should be grouped before resampling and interpolation. This allows for group-specific processing of the time series data.</small>
+                    <input type="text" id="groupby-cols" name="groupby_cols" class="form-control" placeholder="e.g., id_device, id_sensor, id_variable">
+                </div>
+
+                <div class="form-group">
+                    <label for="target-col">Target Column:</label>
+                    <small class="form-text text-muted">Specify the target column to resample and interpolate. This is the column whose values will be processed during the resampling and interpolation steps.</small>
+                    <input type="text" id="target-col" name="target_col" class="form-control" placeholder="e.g., value">
+                </div>
+
+                <button type="button" id="load-dataset-btn" class="btn btn-primary" style="margin-right: 10px;" data-toggle="tooltip" data-placement="top" title="Load and preprocess the dataset for EDA.">
+                    <i class="fas fa-chart-line"></i> Prepare Dataset
+                </button>
+
             </div>
         </div>
     </div>
-    <div class="form-section" id="preprocessing-view" style="display:none;">
-        <div class="form-group">
-            <button type="button" id="help-button" class="btn-help">
-                <i class="fas fa-lightbulb"></i> Help
-            </button>
-        </div>
-
-        <div class="explanation" id="explanation-preprocessing-section" style="display:none;">
-            <h2>Time Series Data Cleaning Process</h2>
-            <p>This form facilitates the cleaning and preprocessing of time series data. The process involves the following steps:</p>
-            <ul>
-                <li><strong>Resampling:</strong> Adjusts the frequency of data points in your time series (e.g., from 30-second intervals to 1-minute intervals). This step helps in normalizing the data frequency for further analysis.</li>
-                <li><strong>Aggregation:</strong> After resampling, data points are aggregated over the new time intervals using functions like mean, sum, max, or min. This step is essential for summarizing the data in a meaningful way.</li>
-                <li><strong>Interpolation:</strong> This step fills in missing values in your time series. Different methods like linear, quadratic, or cubic interpolation can be used depending on how you wish to estimate these gaps.</li>
-            </ul>
-            <p>By selecting the appropriate options below, you can customize how your time series data is processed to best suit your analysis needs.</p>
-        
-            <!-- Example Section -->
-            <div class="example-section">
-                <h3>Example Scenario</h3>
-                <p>Imagine you have temperature data recorded every 30 seconds. However, you need to analyze the data at a 1-minute frequency. Additionally, some data points are missing.</p>
-                <p><strong>Step 1 - Resampling:</strong> You choose to resample the data to a 1-minute frequency. This means if you originally had readings at 10:00:00, 10:00:30, and 10:01:00, they will now be grouped into intervals like 10:00:00 - 10:00:59, 10:01:00 - 10:01:59, etc.</p>
-                <p><strong>Step 2 - Aggregation:</strong> For each 1-minute interval, you decide to use the mean (average) of the data points. If the readings were 22°C and 23°C in the 10:00:00 - 10:00:59 interval, the aggregated value for this minute will be 22.5°C.</p>
-                <p><strong>Step 3 - Interpolation:</strong> For any minute where data is missing, you choose a linear interpolation method. If there's no reading at 10:02:00, but the readings at 10:01:00 and 10:03:00 are 22.5°C and 23°C respectively, the interpolated value for 10:02:00 would be estimated as 22.75°C.</p>
-            </div>
-
-            <div>
-                <h3>Time Series Data Cleaning Process - Step by Step</h3>
-                <p><strong>Original Data:</strong></p>
-                <table border="1">
-                    <tr>
-                        <th>timestamp</th>
-                        <th>temperature</th>
-                    </tr>
-                    <tr><td>2023-01-01 10:00:00</td><td>22.0</td></tr>
-                    <tr><td>2023-01-01 10:00:30</td><td>NaN</td></tr>
-                    <tr><td>2023-01-01 10:01:00</td><td>23.0</td></tr>
-                    <tr><td>2023-01-01 10:01:30</td><td>NaN</td></tr>
-                    <tr><td>2023-01-01 10:02:00</td><td>NaN</td></tr>
-                    <tr><td>2023-01-01 10:02:30</td><td>NaN</td></tr>
-                    <tr><td>2023-01-01 10:03:00</td><td>22.5</td></tr>
-                    <tr><td>2023-01-01 10:03:30</td><td>23.0</td></tr>
-                </table>
-            
-                <p>↓ <strong>Resampling (Frequency: 1 Minute)</strong></p>
-                <p><strong>Resampled Data:</strong></p>
-                <table border="1">
-                    <tr>
-                        <th>timestamp</th>
-                        <th>temperature</th>
-                    </tr>
-                    <tr><td>2023-01-01 10:00:00</td><td>22.00</td></tr>
-                    <tr><td>2023-01-01 10:01:00</td><td>23.00</td></tr>
-                    <tr><td>2023-01-01 10:02:00</td><td>NaN</td></tr>
-                    <tr><td>2023-01-01 10:03:00</td><td>22.75</td></tr>
-                </table>
-            
-                <p>↓ <strong>Interpolation (Method: Linear)</strong></p>
-                <p><strong>Interpolated Data:</strong></p>
-                <table border="1">
-                    <tr>
-                        <th>timestamp</th>
-                        <th>temperature</th>
-                    </tr>
-                    <tr><td>2023-01-01 10:00:00</td><td>22.000</td></tr>
-                    <tr><td>2023-01-01 10:01:00</td><td>23.000</td></tr>
-                    <tr><td>2023-01-01 10:02:00</td><td>22.875</td></tr>
-                    <tr><td>2023-01-01 10:03:00</td><td>22.750</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <br><br>
-        <div class="form-group">
-            <label for="resample-freq">Resample Frequency:</label>
-            <input type="text" id="resample-freq" name="resample_freq" class="form-control" placeholder="e.g., 60S">
-        </div>
-
-        <!-- Opción para la función de agregación -->
-        <div class="form-group">
-            <label for="aggregation-func">Aggregation Function:</label>
-            <select id="aggregation-func" name="aggregation_func" class="form-control">
-                <option value="mean">Mean</option>
-                <option value="sum">Sum</option>
-                <option value="max">Max</option>
-                <option value="min">Min</option>
-                <!-- Puedes añadir más opciones según sea necesario -->
-            </select>
-        </div>
-
-        <!-- Opción para el método de interpolación -->
-        <div class="form-group">
-            <label for="interpolation-method">Interpolation Method:</label>
-            <select id="interpolation-method" name="interpolation_method" class="form-control">
-                <option value="local median" title=" fills missing data points by calculating the median of surrounding values within a specified range, ensuring a locally representative and robust substitution for each missing value.">local median</option>
-                <option value="linear" title="Linear interpolation.">Linear</option>
-                <option value="time" title="Linear interpolation on the time axis.">Time</option>
-                <option value="index" title="Linear interpolation using the index as an axis.">Index</option>
-                <option value="pad" title="Forward fill values.">Pad / ffill</option>
-                <option value="nearest" title="Use the nearest value.">Nearest</option>
-                <option value="zero" title="Fill with zeros.">Zero</option>
-                <option value="slinear" title="Stair-step linear interpolation.">Slinear</option>
-                <option value="quadratic" title="Quadratic interpolation.">Quadratic</option>
-                <option value="cubic" title="Cubic interpolation.">Cubic</option>
-                <option value="spline" title="Spline interpolation of a specified order.">Spline</option>
-                <option value="barycentric" title="Barycentric interpolation.">Barycentric</option>
-                <option value="polynomial" title="Polynomial interpolation of a specified degree.">Polynomial</option>
-                <option value="krogh" title="Krogh interpolation.">Krogh</option>
-                <option value="piecewise_polynomial" title="Piecewise polynomial interpolation.">Piecewise Polynomial</option>
-                <option value="pchip" title="PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation.">PCHIP</option>
-                <option value="akima" title="Akima interpolation.">Akima</option>
-                <option value="from_derivatives" title="Interpolation based on derivatives.">From Derivatives</option>
-            </select>
-        </div>
-
-        <!-- Opciones para agrupar columnas -->
-        <div class="form-group">
-            <label>Group By Columns:</label>
-            {% for column in columns %}
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="groupby_columns" value="{{ column }}"> {{ column }}
-                </label>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Botón de Envío -->
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Process Data</button>
-        </div>
-
-        <div style='padding-bottom: 100.0%;'>
-            {% plotly_app name="Dashboard1" %}
-        </div>
-
-        <div id="plotly-preprocessing">
-            {{ preprocessing_plot_html|safe }}
-        </div>  
-    </div>
-</div>
-
-<script>
-    $(document).ready(function() {
-
-
-    // Auxiliar funtions related with ajax
-
-    // Build AJAX url. This page is build with a lot of parameters related to importing dataset. This parameters
-    // are included in URL /preprcoess_dataset/param1/param2/.../paramn. This function is to build url 
-        function buildAjaxUrl() {
-            var pathArray = window.location.pathname.split('/').filter(function(e) { return e; });
-            var ajaxUrlBase = '/preprocess_dataset/';
-            return ajaxUrlBase + pathArray.slice(1).join('/') + '/';
-        }
-
-        // Updates the date range picker's label and boundaries based on the dataset's minimum and maximum dates from the response object.
-        function ComputeDataRangeDataSet(response) {
-            $('#date-range-label').text(`Select Date Range (In dataset: ${response.min_date_dataset} to ${response.max_date_dataset}):`);
-            flatpickrInstance.set("defaultDate", [response.min_date_dataset, response.max_date_dataset]);
-            flatpickrInstance.set("minDate", response.min_date_dataset);
-            flatpickrInstance.set("maxDate", response.max_date_dataset);
-        }
-
-
-        $('#timestamp-column').change(function() {
-            toggleFormElements(); 
-            var selectedTimestampColumn = $(this).val();
-            
-            // Show message of loading dataset
-            $('#date-range-label').text('Loading date range...');
-            
-            var ajaxUrl = buildAjaxUrl();
-            
-            $.ajax({
-                url: ajaxUrl,
-                type: 'GET',
-                data: {
-                    'action': 'fetch_min_max_dates_from_dataset', // Asegúrate de tener una coma aquí
-                    'timestamp_column': selectedTimestampColumn
-                },
-                success: function(response) {
-                    console.log("Temporal column selected, response:", response);
-                    ComputeDataRangeDataSet(response);
-                },
-                error: function(xhr, status, error) {
-                    // Manejar posibles errores aquí
-                    console.error("Error en la solicitud AJAX:", error);
-                    // Restablecer el texto si hay un error
-                    $('#date-range-label').text('Select Date Range: (Error computing range from dataset)');
-                }
-            });
-        });
-
-        // Behaviour functions
-        function addFilter() {
-            // Container for new filter
-            var filterContainer = $('<div class="filter-container" style="margin-bottom: 10px;"></div>');
-            
-            // Create and add the drop-down to select column
-            var selectColumn = $('<select class="form-control filter-column-select"><option value="">--Select categorical column--</option></select>');
-            {% for column in columns %}
-            selectColumn.append($('<option>').attr('value', '{{ column }}').text('{{ column }}'));
-            {% endfor %}
-            filterContainer.append(selectColumn);
-            
-            // Add a container for category checkboxes (will be filled dynamically)
-            var categoryCheckboxes = $('<div class="category-checkboxes" style="display: flex; flex-wrap: wrap; margin-top: 10px;"></div>');
-            filterContainer.append(categoryCheckboxes);
-        
-            // Add a delete button to the filter
-            var deleteButton = $('<button type="button" class="delete-filter-btn">Delete</button>')
-            .css({
-                "background-color": "#ff4d4d", // Rojo
-                "color": "white",
-                "border": "none",
-                "padding": "5px 10px",
-                "margin-left": "10px",
-                "border-radius": "4px",
-                "cursor": "pointer"
-            });
-        
-            // Add hover effect to the delete button
-            deleteButton.hover(
-                function() {
-                    $(this).css("background-color", "#ff3333"); 
-                }, 
-                function() {
-                    $(this).css("background-color", "#ff4d4d"); 
-                }
-            );
-            filterContainer.append(deleteButton);
-            
-            // Add the filter to the DOM
-            $('#dynamic-filters').append(filterContainer);
-        }
-
-        $('#add-filter').click(addFilter);
-
-        // Add checkbox with to select for filters
-        $(document).on('change', '.filter-column-select', function() {
-            var selectedColumn = $(this).val();
-            var categoryCheckboxesContainer = $(this).next('.category-checkboxes');
-            categoryCheckboxesContainer.empty();
-        
-            // Utilizar la función existente para construir la URL de la solicitud AJAX
-            var ajaxUrl = buildAjaxUrl();
-        
-            // Enviar la solicitud AJAX para obtener las categorías únicas de la columna seleccionada
-            $.ajax({
-                url: ajaxUrl,
-                type: 'GET',
-                data: {
-                    'action': 'get_uniques_categories_from_filters',
-                    'column_name': selectedColumn
-                },
-                success: function(response) {
-                    if (response.categories) {
-                        // Si la respuesta contiene categorías, crear checkboxes para ellas
-                        response.categories.forEach(function(category) {
-                            var checkbox = $('<div><label><input type="checkbox" value="' + category + '"> ' + category + '</label></div>');
-                            categoryCheckboxesContainer.append(checkbox);
-                        });
-                    } else if (response.error) {
-                        // Manejar el caso en que se devuelva un error
-                        console.error("Error al obtener categorías:", response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-
-            // Agregar 'name' a los checkboxes basado en el nombre de la columna
-            var checkboxName = 'filter_' + selectedColumn;
-            response.categories.forEach(function(category) {
-                var checkbox = $('<div><label><input type="checkbox" name="' + checkboxName + '" value="' + category + '"> ' + category + '</label></div>');
-                categoryCheckboxesContainer.append(checkbox);
-            });
-        });
-
-        $('#apply-button').click(function(event) {
-            event.preventDefault();
-        
-            var timestampColumn = $('#timestamp-column').val();
-            var dateRange = $('#date-range').val();
-            var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
-        
-            var ajaxUrl = buildAjaxUrl();
-        
-            $.ajax({
-                url: ajaxUrl,
-                type: 'POST',
-                data: {
-                    'action': "update_dataset",
-                    'timestamp_column': timestampColumn,
-                    'date_range': dateRange,
-                    'filters_data': filtersData,
-                    'analyze': true
-                },
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
-                },
-                success: function(response) {
-                    $('#table-preview-view').html(response.df_html);
-                    initializeDataTable();
-                    $('#eda-results-table').html(response.eda_results_html);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-        });
-
-        $('#analyze-eda-button').click(function(event) {
-            event.preventDefault();
-        
-            var timestampColumn = $('#timestamp-column').val();
-            var dateRange = $('#date-range').val();
-            var filtersData = JSON.stringify(collectFilterData()); // Convertir a JSON
-        
-            var edaColumns = JSON.stringify(getSelectedCheckboxValues('eda_columns'));
-            var edaGroupByColumns = JSON.stringify(getSelectedCheckboxValues('eda_groupby_columns'));
-            console.log("edacolumns:",edaColumns)
-            console.log("edaGroupByColumns:",edaGroupByColumns)
-        
-            var ajaxUrl = buildAjaxUrl();
-        
-            // Incluir los valores de los checkboxes en la data del AJAX
-            var dataToSend = {
-                'action': "update_table_eda",
-                'timestamp_column': timestampColumn,
-                'date_range': dateRange,
-                'filters_data': filtersData,
-                'analyze': true,
-                'eda_columns': edaColumns,
-                'eda_groupby_columns': edaGroupByColumns
-            };
-        
-            $.ajax({
-                url: ajaxUrl,
-                type: 'POST',
-                data: dataToSend,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
-                },
-                success: function(response) {
-                    $('#eda-results-table').html(response.eda_results_html);
-                    initializeDataTable("eda-results-table");
-                    $('#plotly-chart-container').html(response.eda_plot_html);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-        });
-
-        $('#visualise-eda-button').click(function() {
-            // Recoger los datos del formulario
-            var visualizationType = $('#visualization-type').val();
-            var pathColumns = $('#column-selector').val();
-            var valueColumn = $('#value-col').val();
-            var summaryMetric = $('#summary-metric').val();
-            var ajaxUrl = buildAjaxUrl();
-
-            var orderedColumns = [];
-            $('#selected-order li').each(function() {
-                var columnName = $(this).find('.column-name').text().trim();
-                orderedColumns.push(columnName);
-            });
-        
-            
-
-            // Crear el objeto de datos para enviar
-            var dataToSend = {
-                'action':'update_plot_eda',
-                'visualization_type': visualizationType,
-                'path_columns': JSON.stringify(orderedColumns),
-                'value_column': valueColumn,
-                'summary_metric': summaryMetric
-            };
-    
-            $.ajax({
-                url: ajaxUrl, 
-                type: 'POST',
-                data: dataToSend,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", $('#csrf-form [name=csrfmiddlewaretoken]').val());
-                },
-                success: function(response) {
-                    $('#plotly-chart-container').html(response.eda_plot_html);
-                    
-                },
-                error: function(xhr, status, error) {
-                    // Manejar errores aquí
-                    console.error("Error en la solicitud AJAX:", error);
-                }
-            });
-        });
-
-        function getSelectedCheckboxValues(name) {
-            var checkboxes = $(`input[name="${name}"]:checked`);
-            var values = [];
-            checkboxes.each(function() {
-                values.push(this.value);
-            });
-            return values;
-        }
-
-
-        function collectSelectedCategories() {
-            var filters = {};
-        
-            $('.filter-container').each(function() {
-                var columnName = $(this).find('.filter-column-select').val();
-                if (columnName) {
-                    var selectedCategories = [];
-                    $(this).find('.category-checkboxes input:checked').each(function() {
-                        selectedCategories.push($(this).val());
-                    });
-                    if (selectedCategories.length > 0) {
-                        filters[columnName] = selectedCategories;
-                    }
-                }
-            });
-        
-            return filters;
-        }
-
-        function collectFilterData() {
-            var filters = {}; 
-            $('.filter-container').each(function() {
-                var columnName = $(this).find('.filter-column-select').val(); 
-                var selectedValues = $(this).find('input[type="checkbox"]:checked').map(function() {
-                    return $(this).val();
-                }).get(); 
-        
-                if (columnName && selectedValues.length > 0) {
-                    filters[columnName] = selectedValues; 
-                }
-            });
-            return filters; 
-        }
-
-
-        // Visualisations functions
-
-        // Show hide elements depending of some conditions
-        function toggleFormElements() {
-            var selectedColumn = $('#timestamp-column').val();
-            if (selectedColumn) {
-                $('#date-range-container').show();
-                $('#filters-container').show();
-            } else {
-                $('#date-range-container').hide();
-                $('#filters-container').hide();
-            }
-        }
-
-        toggleFormElements();
-
-        // Calendar format to apply range dates filters
-        var flatpickrInstance = $(".date-range-selector").flatpickr({
-            mode: "range",
-            dateFormat: "Y-m-d",
-            defaultDate: ["{{ min_date_dataset }}", "{{ max_date_dataset }}"],
-            onChange: function(selectedDates, dateStr, instance) {
-                // Enviar solicitud AJAX cuando el usuario cambia el rango de fechas
-                sendAjaxRequestWithDates(dateStr);
-            }
-        });
-
-        // Functions to manage view of buttons
-
-        $('#show-table-preview').click(function() {
-            $('#table-preview-view').show();
-            $('#eda-view, #preprocessing-view').hide();
-            initializeDataTable("data-table-preview"); // Asegurarse de que DataTable se inicializa correctamente
-        });
-
-        $('#show-eda-view').click(function() {
-            $('#eda-view').show();
-            $('#table-preview-view, #preprocessing-view').hide();
-            toggleEdaElements(); // Ajustar la visibilidad de los elementos de EDA
-        });
-
-        $('#show-preprocessing-view').click(function() {
-            $('#preprocessing-view').show();
-            $('#table-preview-view, #eda-view').hide();
-        });
-
-        // Dataset Preview functions
-        function initializeDataTable(tableId) {
-            // Verificar si la tabla ya está inicializada como DataTable
-            if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
-                // Destruir la instancia existente si ya está inicializada
-                $(`#${tableId}`).DataTable().destroy();
-            }
-            // Inicializar DataTable
-            $(`#${tableId}`).DataTable({
-
-            });
-        }
-
-        // EDA functions 
-        function toggleColumnsEDAOptions() {
-            var container = document.getElementById('ColumnsEDAOptions');
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        }
-        document.getElementById('toggleColumnsEDAOptions').addEventListener('click', toggleColumnsEDAOptions);
-
-        function toggleColumnsEDAGroupByOptions() {
-            var container = document.getElementById('ColumnsEDAGroupByOptions');
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        }
-        document.getElementById('toggleColumnsEDAGroupByOptions').addEventListener('click', toggleColumnsEDAGroupByOptions);
-
-        // Función para mostrar la vista de tabla en EDA
-        function showEdaTableView() {
-            $('#plotly-eda-container').hide(); // Oculta todas las secciones
-            $('#datatable-eda-container').show(); // Muestra solo la sección de la tabla
-        }
-
-        // Función para mostrar la vista de figuras en EDA
-        function showEdaFiguresView() {
-            $('#datatable-eda-container').hide(); // Oculta todas las secciones
-            $('#plotly-eda-container').show(); // Muestra solo la sección de figuras
-        }
-
-        // Evento clic para el botón de vista de tabla en EDA
-        $('#show-eda-table-view').click(function() {
-            showEdaTableView();
-        });
-
-        // Evento clic para el botón de vista de figuras en EDA
-        $('#show-eda-figures-view').click(function() {
-            showEdaFiguresView();
-        });
-
-        // Evento para que se muestre la interfaz de las opciones de configuración de cada plotly
-        $('#visualization-type').change(function() {
-            var selectedVisualization = $(this).val();
-            if (selectedVisualization === "treemap") {
-                $('#treemap-controls').show();
-            } else {
-                $('#treemap-controls').hide();
-            }
-        });
-
-        $('#column-selector').change(function() {
-            const selectedColumn = $(this).val();
-            if (selectedColumn) {
-                $('#selected-order').append(
-                    `<li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="column-name">${selectedColumn}</span>
-                        <button class="btn btn-danger btn-sm delete-column">X</button>
-                    </li>`
-                );
-                $(this).val('');
-            }
-        });
-    
-        $('#selected-order').on('click', '.delete-column', function() {
-            $(this).parent().remove();
-        });
-    
-        Sortable.create(document.getElementById('selected-order'), {
-            animation: 150,
-            ghostClass: "sortable-ghost",
-        });
-    
-        // Inicializar SortableJS en la lista
-        var el = document.getElementById('selected-order');
-        Sortable.create(el, {
-            animation: 150, // ms, tiempo de animación para reordenar
-            ghostClass: "sortable-ghost", // Clase aplicada al elemento mientras se arrastra
-            onEnd: function (/**Event*/evt) {
-                // Puedes manejar eventos después de reordenar aquí si es necesario
-            },
-        });
-    
-
-        // Preprocessing functions
-        $("#help-button").click(function() {
-            $("#explanation-preprocessing-section").toggle();
-        });
-    });
-</script>
-
-{% endblock %}
+</body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/preprocess_dataset.js' %}"></script>
+</html>

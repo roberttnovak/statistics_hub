@@ -26,6 +26,7 @@ from own_utils import convert_string_to_python_data_type, filter_dataframe_by_co
 from ConfigManager import ConfigManager
 from predictions import load_evaluation_data_for_models, process_model_machine_learning, run_time_series_prediction_pipeline, evaluate_model
 from eda import summary_statistics, summary_statistics_numerical
+import dtale
 
 logger = logging.getLogger(__name__) 
 
@@ -563,14 +564,261 @@ def load_dataset(request):
     return render(request, 'model_manager/load_dataset.html', context)
 
 # preprocess_dataset backend logic
+# @login_required
+# def preprocess_dataset(request, selected_dataset):
+#     user = request.user
+
+#     # Funciones auxiliares definidas dentro de preprocess_dataset
+#     def load_data():
+#         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
+#         # Get params from previous view (view of where dataset is selected)
+#         params = request.GET 
+#         params_csv_names_mapping = {
+#             'separator': 'sep',
+#             'header': 'header',
+#             'usecols': 'usecols',
+#             'dtype': 'dtype',
+#             'parse-dates': 'parse_dates',
+#             'index-col': 'index_col',
+#             'skiprows': 'skiprows',
+#             'na-values': 'na_values',
+#             'keep-default-na': 'keep_default_na',
+#             'na-filter': 'na_filter',
+#             'chunksize': 'chunksize',
+#             'compression': 'compression',
+#             'thousands': 'thousands',
+#             'decimal': 'decimal',
+#             'lineterminator': 'lineterminator',
+#             'quotechar': 'quotechar',
+#             'quoting': 'quoting'
+#         }
+#         params_excel_names_mapping = {
+#             'sheet-name': 'sheet_name',
+#             'header': 'header',
+#             'usecols': 'usecols',
+#             'dtype': 'dtype',
+#             'parse-dates': 'parse_dates',
+#             'index-col': 'index_col',
+#             'skiprows': 'skiprows',
+#             'na-values': 'na_values',
+#             'keep-default-na': 'keep_default_na',
+#             'na-filter': 'na_filter',
+#             'chunksize': 'chunksize',
+#             'skipfooter': 'skipfooter',
+#             'converters': 'converters'
+#         }
+
+#         if selected_dataset.endswith('.csv'):
+#             read_params_mapping = params_csv_names_mapping
+#         elif selected_dataset.endswith('.xlsx'):
+#             read_params_mapping = params_excel_names_mapping
+#         else:
+#             return None, "Unsupported file type"
+
+#         read_params = {}
+#         for key, value in params.items():
+#             if value:  # Only included parameters with a value (this implies that user specified a value for that parameter)
+#                 mapped_key = read_params_mapping.get(key)
+#                 if mapped_key:
+#                     if mapped_key in ['usecols', 'dtype', 'parse_dates', 'converters']:
+#                         try:
+#                             read_params[mapped_key] = eval(value)
+#                         except SyntaxError:
+#                             continue  # Ignora el error de eval, opcionalmente puedes registrar este error
+#                     elif mapped_key == 'na_filter':
+#                         read_params[mapped_key] = value == 'True'
+#                     elif mapped_key in ['header', 'skiprows', 'index_col', 'skipfooter'] and value.isdigit() and value not in ["None","none"]:
+#                         read_params[mapped_key] = int(value)
+#                     elif value in ["None","none"]:
+#                         read_params[mapped_key] = None
+#                     elif (value[0]=="[" and value[-1]=="]") or value in ["True","False","true","false"]:
+#                         read_params[mapped_key] = eval(value)
+#                     else:
+#                         read_params[mapped_key] = value
+#                 else:
+#                     continue
+
+#         try:
+#             # logger.info(f"Loading dataset {selected_dataset} with params: {read_params}")
+#             if selected_dataset.endswith('.csv'):
+#                 df = pm.load_dataset(selected_dataset.split(".")[0], csv_params=read_params)
+                
+#             elif selected_dataset.endswith('.xlsx'):
+#                 df = pm.load_dataset(selected_dataset.split(".")[0], excel_params=read_params)
+#             return df, None
+#         except Exception as e:
+#             return None, str(e)
+
+#     def generate_html(df, id_table, n_first_rows_to_show=100):
+#         html = df.head(n_first_rows_to_show).to_html(classes='table table-striped')
+#         html_with_id = html.replace('<table', f'<table id="{id_table}"', 1)
+
+#         return html_with_id
+
+#     def get_min_max_dates_from_dataset(df, timestamp_column):
+#         if timestamp_column in df.columns and not df[timestamp_column].empty:
+#             # Convertir la columna a datetime, si no está ya en ese formato
+#             df[timestamp_column] = pd.to_datetime(df[timestamp_column], errors='coerce')
+
+#             # Calcula la fecha mínima y máxima, omitiendo valores NaT generados por 'coerce'
+#             min_date = df[timestamp_column].min()
+#             max_date = df[timestamp_column].max()
+
+#             # Formatear las fechas mínima y máxima, si no son NaT (not a time)
+#             if pd.notnull(min_date) and pd.notnull(max_date):
+#                 min_date = min_date.strftime("%Y-%m-%d")
+#                 max_date = max_date.strftime("%Y-%m-%d")
+#                 return min_date, max_date
+#             else:
+#                 return None, None
+#         else:
+#             return None, None
+    
+#     df, error = load_data()
+#     # d = dtale.show(df)
+#     # dtale_url = d._main_url
+#     # logger.info(f"dtale_url: {dtale_url}")
+#     # return redirect(dtale_url)
+#     df_filtered = df.copy()
+
+#     fig_eda = go.Figure()
+#     eda_plot_html = py.plot(fig_eda, output_type='div')
+
+#     fig_preprocessing = go.Figure()
+#     preprocessing_plot_html = py.plot(fig_preprocessing, output_type='div')
+
+#     eda_results = pd.DataFrame({}) #summary_statistics(df,["id_device"])
+
+#     context = {
+#         # 'active_view': active_view,
+#         'selected_dataset': selected_dataset,
+#         'eda_results_html' : generate_html(eda_results, id_table = 'eda-results-table'),
+#         'eda_plot_html' : eda_plot_html,
+#         "preprocessing_plot_html": preprocessing_plot_html
+#     }
+
+
+
+#     if not error:
+#         columns = df.columns.tolist()
+#         timestamp_column = request.POST.get('timestamp_column')
+#         date_range_user = request.POST.get('date_range')
+#         if date_range_user:
+#             min_date_user, max_date_user = date_range_user.split(" to ")
+#             df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+#         else:
+#             min_date_user, max_date_user = None, None
+#         min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column) if timestamp_column else (None, None)
+#         context.update({"df_html": generate_html(df_filtered, id_table = 'data-table-preview'), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
+#         # context = handle_eda(df,context)
+
+#     else:
+#         context.update({"error": error})
+
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+
+#         if request.POST.get('action') == 'update_dataset':
+#             timestamp_column = request.POST.get('timestamp_column')
+#             date_range_user = request.POST.get('date_range')
+#             filters_data_json = request.POST.get('filters_data')
+
+#             if date_range_user:
+#                 min_date_user, max_date_user = date_range_user.split(" to ")
+#                 df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+
+#             if filters_data_json:
+#                 try:
+#                     filters_data = json.loads(filters_data_json)
+#                     df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
+                    
+#                 except json.JSONDecodeError:
+#                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
+#                     print("Error al decodificar los datos de los filtros")
+
+
+#             context.update(
+#                 {
+#                     "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
+#                 }
+#             )
+#             response_data = context
+#             return JsonResponse(response_data)
+        
+#         if request.POST.get('action') == 'update_table_eda':
+#             timestamp_column = request.POST.get('timestamp_column')
+#             date_range_user = request.POST.get('date_range')
+#             filters_data_json = request.POST.get('filters_data')
+#             eda_columns = json.loads(request.POST.get('eda_columns'))
+#             eda_groupby_columns = json.loads(request.POST.get('eda_groupby_columns'))
+
+#             if date_range_user:
+#                 min_date_user, max_date_user = date_range_user.split(" to ")
+#                 df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
+
+#             if filters_data_json:
+#                 try:
+#                     filters_data = json.loads(filters_data_json)
+#                     df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
+                    
+#                 except json.JSONDecodeError:
+#                     # Manejar el caso en que los datos de los filtros no sean un JSON válido
+#                     print("Error al decodificar los datos de los filtros")
+#             eda_results = summary_statistics(df = df_filtered, variables = eda_columns, groupby = eda_groupby_columns)
+#             fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
+#             eda_plot_html = py.plot(fig_eda, output_type='div')
+
+#             context.update(
+#                 {
+#                     "eda_results_html": generate_html(eda_results, id_table = 'eda-results-table'),
+#                     "eda_plot_html": eda_plot_html,
+#                     "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
+#                 }
+#             )
+#             response_data = context
+#             return JsonResponse(response_data)
+
+#         if request.POST.get('action') == 'update_plot_eda':
+#             visualization_type = request.POST.get('visualization_type')
+#             path_cols = json.loads(request.POST.get('path_columns')) # ['id_device','id_sensor'] #request.POST.getlist('path_columns')  
+#             value_col = request.POST.get('value_column')
+#             summary_metric = request.POST.get('summary_metric')
+#             if visualization_type == 'treemap':
+#                 fig_eda = create_treeplot(df=df, path_cols=path_cols, value_col=value_col, summary_metric=summary_metric)
+#                 eda_plot_html = py.plot(fig_eda, output_type='div')
+#                 context.update({
+#                     "eda_plot_html": eda_plot_html
+#                 })
+#             response_data = context
+#             return JsonResponse(response_data)
+
+#         if request.GET.get('action') == 'fetch_min_max_dates_from_dataset':
+#             timestamp_column = request.GET.get('timestamp_column')  
+#             if timestamp_column:
+#                 min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column)
+#                 context.update({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
+#                 return JsonResponse(context)
+#             else:
+#                 return JsonResponse({'error': 'Columna de timestamp no especificada'}, status=400)
+        
+#         # Verificar si la solicitud AJAX es para obtener categorías únicas
+#         if request.GET.get('action') == 'get_uniques_categories_from_filters':
+#             column_name = request.GET.get('column_name')
+#             if column_name and column_name in df.columns:
+#                 unique_categories = df[column_name].dropna().unique().tolist()
+#                 return JsonResponse({'categories': unique_categories})
+#             else:
+#                 return JsonResponse({'error': 'Columna no especificada o no encontrada'}, status=400)
+
+        
+
+#     return render(request, 'model_manager/preprocess_dataset.html', context)
+
 @login_required
 def preprocess_dataset(request, selected_dataset):
     user = request.user
 
-    # Funciones auxiliares definidas dentro de preprocess_dataset
     def load_data():
         pm = PersistenceManager(base_path=f"tenants/{user}", folder_datasets="data")
-        # Get params from previous view (view of where dataset is selected)
         params = request.GET 
         params_csv_names_mapping = {
             'separator': 'sep',
@@ -616,14 +864,14 @@ def preprocess_dataset(request, selected_dataset):
 
         read_params = {}
         for key, value in params.items():
-            if value:  # Only included parameters with a value (this implies that user specified a value for that parameter)
+            if value: 
                 mapped_key = read_params_mapping.get(key)
                 if mapped_key:
                     if mapped_key in ['usecols', 'dtype', 'parse_dates', 'converters']:
                         try:
                             read_params[mapped_key] = eval(value)
                         except SyntaxError:
-                            continue  # Ignora el error de eval, opcionalmente puedes registrar este error
+                            continue  
                     elif mapped_key == 'na_filter':
                         read_params[mapped_key] = value == 'True'
                     elif mapped_key in ['header', 'skiprows', 'index_col', 'skipfooter'] and value.isdigit() and value not in ["None","none"]:
@@ -638,175 +886,22 @@ def preprocess_dataset(request, selected_dataset):
                     continue
 
         try:
-            logger.info(f"Loading dataset {selected_dataset} with params: {read_params}")
             if selected_dataset.endswith('.csv'):
                 df = pm.load_dataset(selected_dataset.split(".")[0], csv_params=read_params)
-                
             elif selected_dataset.endswith('.xlsx'):
                 df = pm.load_dataset(selected_dataset.split(".")[0], excel_params=read_params)
             return df, None
         except Exception as e:
             return None, str(e)
-
-    def generate_html(df, id_table, n_first_rows_to_show=100):
-        html = df.head(n_first_rows_to_show).to_html(classes='table table-striped')
-        html_with_id = html.replace('<table', f'<table id="{id_table}"', 1)
-
-        return html_with_id
-
-    def get_min_max_dates_from_dataset(df, timestamp_column):
-        if timestamp_column in df.columns and not df[timestamp_column].empty:
-            # Convertir la columna a datetime, si no está ya en ese formato
-            df[timestamp_column] = pd.to_datetime(df[timestamp_column], errors='coerce')
-
-            # Calcula la fecha mínima y máxima, omitiendo valores NaT generados por 'coerce'
-            min_date = df[timestamp_column].min()
-            max_date = df[timestamp_column].max()
-
-            # Formatear las fechas mínima y máxima, si no son NaT (not a time)
-            if pd.notnull(min_date) and pd.notnull(max_date):
-                min_date = min_date.strftime("%Y-%m-%d")
-                max_date = max_date.strftime("%Y-%m-%d")
-                return min_date, max_date
-            else:
-                return None, None
-        else:
-            return None, None
     
     df, error = load_data()
-    df_filtered = df.copy()
-
-    fig_eda = go.Figure()
-    eda_plot_html = py.plot(fig_eda, output_type='div')
-
-    fig_preprocessing = go.Figure()
-    preprocessing_plot_html = py.plot(fig_preprocessing, output_type='div')
-
-    eda_results = pd.DataFrame({}) #summary_statistics(df,["id_device"])
-
-    context = {
-        # 'active_view': active_view,
-        'selected_dataset': selected_dataset,
-        'eda_results_html' : generate_html(eda_results, id_table = 'eda-results-table'),
-        'eda_plot_html' : eda_plot_html,
-        "preprocessing_plot_html": preprocessing_plot_html
-    }
-
-
-
-    if not error:
-        columns = df.columns.tolist()
-        timestamp_column = request.POST.get('timestamp_column')
-        date_range_user = request.POST.get('date_range')
-        if date_range_user:
-            min_date_user, max_date_user = date_range_user.split(" to ")
-            df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
-        else:
-            min_date_user, max_date_user = None, None
-        min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column) if timestamp_column else (None, None)
-        context.update({"df_html": generate_html(df_filtered, id_table = 'data-table-preview'), "columns": columns, "min_date_dataset":min_date_dataset, "max_date_dataset":max_date_dataset})
-        # context = handle_eda(df,context)
-
+    if df is not None:
+        d = dtale.show(df)
+        dtale_url = d._main_url
     else:
-        context.update({"error": error})
-
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-
-        if request.POST.get('action') == 'update_dataset':
-            timestamp_column = request.POST.get('timestamp_column')
-            date_range_user = request.POST.get('date_range')
-            filters_data_json = request.POST.get('filters_data')
-
-            if date_range_user:
-                min_date_user, max_date_user = date_range_user.split(" to ")
-                df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
-
-            if filters_data_json:
-                try:
-                    filters_data = json.loads(filters_data_json)
-                    df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
-                    
-                except json.JSONDecodeError:
-                    # Manejar el caso en que los datos de los filtros no sean un JSON válido
-                    print("Error al decodificar los datos de los filtros")
-
-
-            context.update(
-                {
-                    "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
-                }
-            )
-            response_data = context
-            return JsonResponse(response_data)
-        
-        if request.POST.get('action') == 'update_table_eda':
-            timestamp_column = request.POST.get('timestamp_column')
-            date_range_user = request.POST.get('date_range')
-            filters_data_json = request.POST.get('filters_data')
-            eda_columns = json.loads(request.POST.get('eda_columns'))
-            eda_groupby_columns = json.loads(request.POST.get('eda_groupby_columns'))
-
-            if date_range_user:
-                min_date_user, max_date_user = date_range_user.split(" to ")
-                df_filtered = df_filtered[((df_filtered[timestamp_column] > min_date_user) & (df_filtered[timestamp_column] < max_date_user))]
-
-            if filters_data_json:
-                try:
-                    filters_data = json.loads(filters_data_json)
-                    df_filtered = filter_dataframe_by_column_values(df_filtered, filters_data)
-                    
-                except json.JSONDecodeError:
-                    # Manejar el caso en que los datos de los filtros no sean un JSON válido
-                    print("Error al decodificar los datos de los filtros")
-            eda_results = summary_statistics(df = df_filtered, variables = eda_columns, groupby = eda_groupby_columns)
-            fig_eda = create_interactive_boxplot(df_filtered, 'id_variable', 'id_device', 'value')
-            eda_plot_html = py.plot(fig_eda, output_type='div')
-
-            context.update(
-                {
-                    "eda_results_html": generate_html(eda_results, id_table = 'eda-results-table'),
-                    "eda_plot_html": eda_plot_html,
-                    "df_html": generate_html(df_filtered, id_table = 'data-table-preview')
-                }
-            )
-            response_data = context
-            return JsonResponse(response_data)
-
-        if request.POST.get('action') == 'update_plot_eda':
-            visualization_type = request.POST.get('visualization_type')
-            path_cols = json.loads(request.POST.get('path_columns')) # ['id_device','id_sensor'] #request.POST.getlist('path_columns')  
-            value_col = request.POST.get('value_column')
-            summary_metric = request.POST.get('summary_metric')
-            if visualization_type == 'treemap':
-                fig_eda = create_treeplot(df=df, path_cols=path_cols, value_col=value_col, summary_metric=summary_metric)
-                eda_plot_html = py.plot(fig_eda, output_type='div')
-                context.update({
-                    "eda_plot_html": eda_plot_html
-                })
-            response_data = context
-            return JsonResponse(response_data)
-
-        if request.GET.get('action') == 'fetch_min_max_dates_from_dataset':
-            timestamp_column = request.GET.get('timestamp_column')  
-            if timestamp_column:
-                min_date_dataset, max_date_dataset = get_min_max_dates_from_dataset(df, timestamp_column)
-                context.update({'min_date_dataset': min_date_dataset, 'max_date_dataset': max_date_dataset})
-                return JsonResponse(context)
-            else:
-                return JsonResponse({'error': 'Columna de timestamp no especificada'}, status=400)
-        
-        # Verificar si la solicitud AJAX es para obtener categorías únicas
-        if request.GET.get('action') == 'get_uniques_categories_from_filters':
-            column_name = request.GET.get('column_name')
-            if column_name and column_name in df.columns:
-                unique_categories = df[column_name].dropna().unique().tolist()
-                return JsonResponse({'categories': unique_categories})
-            else:
-                return JsonResponse({'error': 'Columna no especificada o no encontrada'}, status=400)
-
-        
-
-    return render(request, 'model_manager/preprocess_dataset.html', context)
+        dtale_url = None
+    
+    return render(request, 'model_manager/preprocess_dataset.html', {'dtale_url': dtale_url, 'df_columns': df.columns.tolist()})
 
 @login_required
 def get_models_list(request):

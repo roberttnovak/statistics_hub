@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+import time
 from pathlib import Path 
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -588,13 +589,13 @@ def preprocess_machine_learning_algorithm(
         lead_columns: List[str],
         fit: bool = True,
         transformers_order: List[str] = None,
-        preprocess_scaler_instance: 'PreprocessScaler' = None
+        measure_time: bool = False
 ) -> Dict[str, Dict]:
     """
     Preprocesses a DataFrame based on specified transformations for machine learning.
 
-    The function encapsulates the instantiation and application of various data transformations including column selection,
-    scaling, lag and lead feature creation.
+    This function encapsulates the instantiation and application of various data transformations 
+    including column selection, scaling, lag and lead feature creation, with optional timing of each step.
 
     Parameters
     ----------
@@ -618,11 +619,13 @@ def preprocess_machine_learning_algorithm(
         Specifies the order of transformations, by default None which results in a predefined order.
     preprocess_scaler_instance : PreprocessScaler, optional
         An instance of PreprocessScaler to be used for scaling, by default None which creates a new instance.
+    measure_time : bool, optional
+        Whether to measure the time taken for each preprocessing step, by default False.
 
     Returns
     -------
     Dict[str, Dict]
-        Dictionary containing the order, DataFrame, and transformer instance for each preprocessing step.
+        Dictionary containing the order, DataFrame, transformer instance, and optionally time for each step.
     """
     # Preserve input DataFrame
     df = df.copy()
@@ -651,47 +654,30 @@ def preprocess_machine_learning_algorithm(
     # Organizing transformers in the specified order
     transformers_in_order = [transformers_dict[name] for name in transformers_order]
 
-    # Creating pipeline
-    pipeline = make_pipeline(*transformers_in_order)
+    # Initialize preprocess dictionary
+    preprocess = {}
 
-    # Processing DataFrame
-    df_processed = pipeline.fit_transform(df)
+    # Processing DataFrame step by step with timing
+    df_processed = df
+    for transformer_name in transformers_order:
+        transformer_instance = transformers_dict[transformer_name]
 
-    # Organizing the output
-    # preprocess = {
-    #     name: {
-    #         "order": order_dict[name],
-    #         "df": getattr(transformers_dict[name], 'df_preprocessed', None),
-    #         "transformer": transformers_dict[name]
-    #     }
-    #     for name in transformers_order
-    # }
-    preprocess = {
-        "preprocess_columns": {
-            "order": order_dict["preprocess_columns"], 
-            "df": preprocess_columns_instance.df_preprocessed,
-            "transformer": preprocess_columns_instance
-        },
-        "preprocess_lags": {
-            "order": order_dict["preprocess_lags"], 
-            "df": preprocess_lags_instance.df_preprocessed,
-            "transformer": preprocess_lags_instance
-        },      
-        "preprocess_leads": {
-            "order": order_dict["preprocess_leads"], 
-            "df": preprocess_leads_instance.df_preprocessed,
-            "transformer": preprocess_leads_instance
-        },
-        "preprocess_scaler": {
-            "order": order_dict["preprocess_scaler"], 
-            "df": preprocess_scaler_instance.df_preprocessed,
-            "transformer": preprocess_scaler_instance
+        start_time = time.time() if measure_time else None
+        df_processed = transformer_instance.fit_transform(df_processed)
+        end_time = time.time() if measure_time else None
+
+        # Collect the results
+        preprocess[transformer_name] = {
+            "order": order_dict[transformer_name],
+            "df": getattr(transformer_instance, 'df_preprocessed', None),
+            "transformer": transformer_instance
         }
-    }
+        if measure_time:
+            preprocess[transformer_name]["execution_time_in_seconds"] = end_time - start_time
 
     return preprocess
 
-
+#TODO: Revisar la lógica de las diferencias entre Y_name_features y lead_columns
 def create_model_machine_learning_algorithm(
         tidy_data,
         ini_train,

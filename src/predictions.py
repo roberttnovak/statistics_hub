@@ -711,7 +711,6 @@ def create_model_machine_learning_algorithm(
         ini_train,
         fin_train,
         fin_test,
-        id_device,
         model_sklearn_name,
         X_name_features,
         Y_name_features,
@@ -721,7 +720,6 @@ def create_model_machine_learning_algorithm(
         lead_columns,
         scale_in_preprocessing=True,
         name_time_column="timestamp",
-        name_id_sensor_column="id_device",
         save_preprocessing=True,
         path_to_save_model=None,
         folder_name_model=None,
@@ -744,8 +742,6 @@ def create_model_machine_learning_algorithm(
         The end date for the training data.
     fin_test : str
         The end date for the testing data.
-    id_device : str
-        The identifier for the device.
     model_sklearn_name : str
         Name of the scikit-learn model to train (e.g., "SVR").
     X_name_features : list
@@ -764,8 +760,6 @@ def create_model_machine_learning_algorithm(
         Whether to scale the data during preprocessing. Default is True.
     name_time_column : str, optional
         Name of the time column. Default is "timestamp".
-    name_id_sensor_column : str, optional
-        Name of the sensor ID column. Default is "id_device".
     save_preprocessing : bool, optional
         Whether to save the preprocessing steps. Default is True.
     path_to_save_model : str, optional
@@ -821,7 +815,7 @@ def create_model_machine_learning_algorithm(
     pm.remove_flag("training-done")
 
     pm.save_preprocessed_data(
-        preprocessed_data=tidy_data[ tidy_data[name_id_sensor_column] == id_device ], 
+        preprocessed_data=tidy_data, 
         folder_name_preprocessed_data=folder_name_preprocessed_data,
         name = "tidy_data"
     )
@@ -884,8 +878,6 @@ def create_model_machine_learning_algorithm(
             and the preprocessed target data frame.
         """
         df=df.copy()
-        #Filter id_device
-        df = df[df[name_id_sensor_column] == id_device].reset_index(drop=True)
 
         preprocessing = preprocess_machine_learning_algorithm(
             df=df,

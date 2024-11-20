@@ -104,7 +104,8 @@ def get_train_test(
     ini_train,
     fin_train,
     fin_test,
-    name_time_column="timestamp"
+    name_time_column="timestamp",
+    localize_tz = None
     ):
     """
     Splits the DataFrame df into a training set and a test set based on the provided dates.
@@ -115,16 +116,18 @@ def get_train_test(
         fin_train (str): Final date of the training set in the format 'YYYY-MM-DD'.
         fin_test (str): Final date of the test set in the format 'YYYY-MM-DD'.
         name_time_column (str, optional): Name of the column containing the dates. Defaults to "timestamp".
+        localize_tz (str, optional): Timezone to localize the timestamps. If None, removes timezone information. 
+                                     Example: "UTC" or "Europe/Madrid". Defaults to None.
 
     Returns:
         dict: A dictionary containing two DataFrames: df_train and df_test, corresponding to the training and test sets respectively.
 
     Examples:
         >>> df = pd.DataFrame({
-        ...     "timestamp": pd.date_range(start="2020-01-01", periods=10),
+        ...     "timestamp": pd.date_range(start="2020-01-01", periods=10, tz="UTC"),
         ...     "value": range(10)
         ... })
-        >>> result = get_train_test(df, "2020-01-01", "2020-01-05", "2020-01-10")
+        >>> result = get_train_test(df, "2020-01-01", "2020-01-05", "2020-01-10", localize_tz=None)
         >>> print(result['df_train'])
            timestamp  value
         0 2020-01-01      0
@@ -139,11 +142,36 @@ def get_train_test(
         2 2020-01-08      7
         3 2020-01-09      8
         4 2020-01-10      9
+        >>> result = get_train_test(df, "2020-01-01", "2020-01-05", "2020-01-10", localize_tz="Europe/Madrid")
+        >>> print(result['df_train'].head())
+           timestamp  value
+        0 2020-01-01 01:00:00+01:00      0
+        1 2020-01-02 01:00:00+01:00      1
+
+    Raises:
+        ValueError: If ini_train, fin_train, or fin_test are not ordered as ini_train < fin_train < fin_test.
     """
+
+    # Create a copy of the DataFrame to avoid modifying the original
+    df = df.copy()
+
     # Ensure date strings are converted to datetime objects
+    df[name_time_column] = pd.to_datetime(df[name_time_column])
     ini_train = pd.to_datetime(ini_train)
     fin_train = pd.to_datetime(fin_train)
     fin_test = pd.to_datetime(fin_test)
+
+    # Handle timezone localization
+    if localize_tz:
+        df[name_time_column] = df[name_time_column].dt.tz_localize(localize_tz, ambiguous='NaT', nonexistent='NaT')
+        ini_train = ini_train.tz_localize(localize_tz, ambiguous='NaT', nonexistent='NaT')
+        fin_train = fin_train.tz_localize(localize_tz, ambiguous='NaT', nonexistent='NaT')
+        fin_test = fin_test.tz_localize(localize_tz, ambiguous='NaT', nonexistent='NaT')
+    else:
+        df[name_time_column] = df[name_time_column].dt.tz_localize(None)
+        ini_train = ini_train.tz_localize(None)
+        fin_train = fin_train.tz_localize(None)
+        fin_test = fin_test.tz_localize(None)
 
     # Error handling for date range
     if not (ini_train < fin_train < fin_test):

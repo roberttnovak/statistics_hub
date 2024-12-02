@@ -1,4 +1,5 @@
 import os
+import uuid
 import warnings
 import json
 import pandas as pd
@@ -70,6 +71,62 @@ class PersistenceManager:
             path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
             filtered_path_components = [component for component in path_components if component is not None]
             self.path = os.path.normpath(os.path.join(*filtered_path_components))
+
+    def _update_path(self):
+        """
+        Recalculates the path based on the current attributes.
+        """
+        if self.folder_datasets is not None:
+            self.path = (
+                os.path.normpath(os.path.join(self.base_path, self.folder_datasets))
+                if self.base_path is not None
+                else self.folder_datasets
+            )
+        else:
+            path_components = [
+                self.base_path,
+                self.folder_name_model,
+                self.folder_name_range_train,
+                self.folder_name_time_execution,
+            ]
+            filtered_path_components = [component for component in path_components if component is not None]
+            self.path = os.path.normpath(os.path.join(*filtered_path_components)) if filtered_path_components else None
+
+    def set_base_path(self, base_path: str):
+        """
+        Sets a new base path and updates the path accordingly.
+        """
+        self.base_path = os.path.normpath(base_path) if base_path else None
+        self.creds_path = os.path.normpath(os.path.join(self.base_path, 'creds')) if self.base_path else None
+        self._update_path()
+
+    def set_folder_name_model(self, folder_name_model: str):
+        """
+        Sets a new folder name for the model and updates the path accordingly.
+        """
+        self.folder_name_model = folder_name_model
+        self._update_path()
+
+    def set_folder_name_range_train(self, folder_name_range_train: str):
+        """
+        Sets a new folder name for the training range and updates the path accordingly.
+        """
+        self.folder_name_range_train = folder_name_range_train
+        self._update_path()
+
+    def set_folder_name_time_execution(self, folder_name_time_execution: str):
+        """
+        Sets a new folder name for the execution time and updates the path accordingly.
+        """
+        self.folder_name_time_execution = folder_name_time_execution
+        self._update_path()
+
+    def set_folder_datasets(self, folder_datasets: str):
+        """
+        Sets a new folder for datasets and updates the path accordingly.
+        """
+        self.folder_datasets = folder_datasets
+        self._update_path()
 
     def get_available_models(self, folder_name_predictions="predictions", include_predictions_only=False):
         """
@@ -595,7 +652,7 @@ class PersistenceManager:
         return os.path.normpath(path)
 
     
-    def save_object(self, obj, file_name, overwrite=False, extension='joblib', sub_folder=None):
+    def save_object(self, obj, file_name, overwrite=False, extension='joblib', sub_folder=None, rename_if_exists=False):
         """
         Saves an object to disk. The method supports extensions defined in PersistenceManager.SUPPORTED_EXTENSIONS
         depending on the provided extension.
@@ -612,6 +669,8 @@ class PersistenceManager:
             The extension method to use when saving defined in PersistenceManager.SUPPORTED_EXTENSIONS
         sub_folder : str, optional (default: None)
             Sub-folder under the specified path where the object will be saved.
+        rename_if_exists: bool, optional (default: False)
+            If True, the path corresponding to execution_time will be modified to avoid overwriting or not saving the object. 
 
         Returns:
         --------
@@ -629,6 +688,7 @@ class PersistenceManager:
         >>> pm.save_object(obj=some_object, file_name='object_name', overwrite=True, extension='joblib', sub_folder = 'sub_folder')
         """
 
+        # Validate the file extension against the list of supported extensions
         if extension not in SUPPORTED_EXTENSIONS:
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
 
@@ -637,9 +697,17 @@ class PersistenceManager:
         self.ensure_path(os.path.dirname(file_path),create = True)
 
         # Check if the file already exists and the overwrite flag
-        if os.path.exists(file_path) and not overwrite:
+        if os.path.exists(file_path) and not overwrite and not rename_if_exists:
             warnings.warn(f"{file_path} exists. The object will not be overwritten")
             return
+        elif overwrite and not rename_if_exists:
+            warnings.warn(f"{file_path} exists. The object will be overwritten")
+        elif rename_if_exists:
+            folder_name_time_execution = f"{self.folder_name_time_execution}-{str(uuid.uuid4())}" 
+            self.set_folder_name_time_execution(folder_name_time_execution)
+            file_path = self.build_path(sub_folder = sub_folder, file_name=file_name, extension=extension)
+            self.ensure_path(os.path.dirname(file_path),create = True)
+
         
         # Save the object to disk using the specified serialization method
         if extension == 'joblib': 

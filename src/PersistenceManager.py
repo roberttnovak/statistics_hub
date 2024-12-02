@@ -8,6 +8,7 @@ import pickle
 
 from own_utils import list_directories_by_depth
 import plotly.io as pio
+from pathlib import Path
 
 # ToDo: Create more functions for validating inputs like validate_string_input
 # ToDo: Cuadrar save_predictions con save_preprocessed_data
@@ -23,7 +24,14 @@ class PersistenceManager:
     scalers, preprocessed data, metadata, predictions and others
     """
 
-    def __init__(self, base_path: str = None, folder_name_model: str = None, folder_name_range_train: str = None, folder_name_time_execution: str = None, folder_datasets: str = None):
+    def __init__(
+            self, 
+            base_path: str = None, 
+            folder_name_model: str = None, 
+            folder_name_range_train: str = None, 
+            folder_name_time_execution: str = None, 
+            folder_datasets: str = None,
+        ):
         """
         Initializes the PersistenceManager with the provided base path, model name, training range, 
         execution time, and an optional datasets folder. The path for saving and loading objects 
@@ -170,7 +178,7 @@ class PersistenceManager:
         except FileNotFoundError:
             return []
 
-
+    #TODO: Creo que deprecated, revisar. 
     def get_training_ranges_for_model(self, model_name):
         """
         Given a model name, scans the corresponding directory and returns a list of training ranges available for the model.
@@ -365,6 +373,18 @@ class PersistenceManager:
                 range_path = os.path.join(self.base_path, model, range_)
                 execution_times[model][range_] = list_directories_by_depth(range_path, max_depth=1, list_only_last_level=True)
         return execution_times
+    
+    def list_all_execution_times_flat(self):
+        """
+        Lists all execution times for each model and training range as a flat list.
+
+        Returns:
+        --------
+        list
+            A flat list of all execution times.
+        """
+        execution_times = list_directories_by_depth(self.base_path, max_depth=3, list_only_last_level=True)
+        return [Path(execution_time).name for execution_time in execution_times]
     
     def list_evaluations(self, sub_folder="evaluations"):
         """
@@ -1005,7 +1025,7 @@ class PersistenceManager:
         return os.path.exists(flag_file_path)
 
 
-    def save_model(self, model, name="model", overwrite=False, extension="joblib"):
+    def save_model(self, model, name="model", overwrite=False, extension="joblib", **kwargs):
         """
         Saves a machine learning model to disk using joblib. The model is saved 
         in a directory structure based on the attributes initialized in the 
@@ -1032,6 +1052,8 @@ class PersistenceManager:
               overwritten.
         extension : str, optional (default: 'joblib')
             The serialization method to use. 
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1055,7 +1077,7 @@ class PersistenceManager:
 
         """
         # Save the model object to disk using the save_object method
-        self.save_object(obj=model, file_name=name, overwrite=overwrite, extension=extension)
+        self.save_object(obj=model, file_name=name, overwrite=overwrite, extension=extension, **kwargs)
 
 
 
@@ -1109,7 +1131,7 @@ class PersistenceManager:
         return model
 
     def save_scaler(self, scaler, folder_name_preprocessed_data="preprocessed-data-to-use-in-model",
-                     name='scaler', overwrite=False, extension="joblib"):
+                     name='scaler', overwrite=False, extension="joblib", **kwargs):
         """
         Saves a scaler object to disk using joblib. The scaler is saved in a 
         directory structure based on the attributes initialized in the 
@@ -1130,6 +1152,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         extension : str, optional (default: joblib)
             The serialization method to use. 
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1155,7 +1179,7 @@ class PersistenceManager:
 
         """
         # Save the model object to disk using the save_object method
-        self.save_object(obj=scaler, sub_folder=folder_name_preprocessed_data, file_name=name, overwrite=overwrite, extension=extension)
+        self.save_object(obj=scaler, sub_folder=folder_name_preprocessed_data, file_name=name, overwrite=overwrite, extension=extension, **kwargs)
 
         
     def load_scaler(self, name="scaler", folder_name_preprocessed_data="preprocessed-data-to-use-in-model", extension="joblib"):
@@ -1208,7 +1232,7 @@ class PersistenceManager:
         return scaler
 
 
-    def save_metadata(self, metadata, name='metadata', overwrite=False):
+    def save_metadata(self, metadata, name='metadata', overwrite=False, **kwargs):
         """
         Saves metadata to disk using json. The metadata is saved in a directory 
         structure based on the attributes initialized in the PersistenceManager 
@@ -1227,6 +1251,8 @@ class PersistenceManager:
             the name used when loading the metadata using `load_metadata`.
         overwrite : bool, optional (default: False)
             Whether to overwrite the file if it already exists.
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1253,7 +1279,7 @@ class PersistenceManager:
 
         """
         # Save the metadata object to disk using the save_object method
-        self.save_object(obj=metadata, file_name=name, overwrite=overwrite, extension='json')
+        self.save_object(obj=metadata, file_name=name, overwrite=overwrite, extension='json',**kwargs)
 
     
     def load_metadata(self, name="metadata", extension = 'json'):
@@ -1307,7 +1333,7 @@ class PersistenceManager:
 
     def save_preprocessed_data(self, preprocessed_data, name, 
                                folder_name_preprocessed_data="preprocessed-data-to-use-in-model", 
-                               overwrite=False, extension = 'csv'):
+                               overwrite=False, extension = 'csv', **kwargs):
         """
         Saves preprocessed data to disk in CSV format. The data is saved in a 
         directory structure based on the attributes initialized in the 
@@ -1326,6 +1352,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         extension : str, optional (default: 'csv')
             The file extension to use when saving the preprocessed data.
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1338,7 +1366,7 @@ class PersistenceManager:
 
         """
 
-        self.save_object(obj = preprocessed_data, sub_folder = folder_name_preprocessed_data, file_name=name, overwrite=overwrite, extension=extension)
+        self.save_object(obj = preprocessed_data, sub_folder = folder_name_preprocessed_data, file_name=name, overwrite=overwrite, extension=extension,**kwargs)
 
     def load_preprocessed_data(self, name, folder_name_preprocessed_data="preprocessed-data-to-use-in-model",
                                extension='csv', datetime_columns=[], utc=True):
@@ -1391,7 +1419,7 @@ class PersistenceManager:
 
 
     def save_predictions(self, predictions, name, folder_name_predictions="predictions", 
-                         overwrite=False, extension = 'csv'):
+                         overwrite=False, extension = 'csv', **kwargs):
         """
         Saves predictions data to disk in CSV format. The data is saved in a 
         directory structure based on the attributes initialized in the 
@@ -1410,6 +1438,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         extension : str, optional (default: 'csv')
             The file extension to use when saving the predictions data.
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1421,7 +1451,7 @@ class PersistenceManager:
         >>> pm.save_predictions(predictions_df, 'custom_predictions_name')
 
         """
-        self.save_object(obj = predictions, file_name=name, sub_folder = folder_name_predictions, overwrite=overwrite, extension=extension)
+        self.save_object(obj = predictions, file_name=name, sub_folder = folder_name_predictions, overwrite=overwrite, extension=extension, **kwargs)
 
     def load_predictions(self, name, folder_name_predictions="predictions",
                          extension='csv', datetime_columns=[], utc=True):
@@ -1469,7 +1499,7 @@ class PersistenceManager:
 
     def save_evaluation_data(self, evaluation_data, name, 
                                folder_name_evaluation="evaluations", 
-                               overwrite=False, extension = 'csv'):
+                               overwrite=False, extension = 'csv', **kwargs):
         """
         Saves evaluation data of a model to disk in CSV format. The data is saved in a 
         directory structure based on the attributes initialized in the 
@@ -1488,6 +1518,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         extension : str, optional (default: 'csv')
             The file extension to use when saving the preprocessed data.
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1499,7 +1531,7 @@ class PersistenceManager:
         >>> pm.save_preprocessed_data(evaluation_data_df, name='custom_preprocessed_data_name')
 
         """
-        self.save_object(obj = evaluation_data, sub_folder = folder_name_evaluation, file_name=name, overwrite=overwrite, extension=extension)
+        self.save_object(obj = evaluation_data, sub_folder = folder_name_evaluation, file_name=name, overwrite=overwrite, extension=extension, **kwargs)
 
     def load_evaluation_data(self, name, folder_name_evaluation_data="evaluations",
                                extension='csv', datetime_columns=[], utc=True):
@@ -1546,7 +1578,7 @@ class PersistenceManager:
 
         return evaluation_data
     
-    def save_dataset(self, df, file_name, overwrite=False, extension='csv'):
+    def save_dataset(self, df, file_name, overwrite=False, extension='csv', **kwargs):
         """
         Saves a dataset (pandas DataFrame) using the save_object method.
 
@@ -1560,6 +1592,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         extension : str, optional (default: 'csv')
             The file extension/format to use for saving the dataset.
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1574,7 +1608,7 @@ class PersistenceManager:
             raise ValueError(f"Unsupported extension '{extension}' for datasets.")
 
         # Use the save_object method to save the dataset
-        self.save_object(df, file_name, overwrite=overwrite, extension=extension, sub_folder=self.folder_datasets)
+        self.save_object(df, file_name, overwrite=overwrite, extension=extension, sub_folder=self.folder_datasets, **kwargs)
 
     def load_dataset(self, file_name, extension='csv', csv_params = None):
         """
@@ -1611,7 +1645,7 @@ class PersistenceManager:
 
     
     def save_plotly_visualization(self, visualization, name, folder_name_visualizations="visualizations", 
-                                overwrite=False, format='html'):
+                                overwrite=False, format='html',**kargs):
         """
         Saves a Plotly visualization to disk in the specified format. The visualization is saved 
         in a directory structure based on the attributes initialized in the PersistenceManager instance. 
@@ -1630,6 +1664,8 @@ class PersistenceManager:
             Whether to overwrite the file if it already exists.
         format : str, optional (default: 'html')
             The format in which to save the visualization ('html' or 'json').
+        kwargs : dict
+            Additional keyword arguments.
 
         Returns:
         --------
@@ -1828,7 +1864,8 @@ def persist_model_to_disk_structure(
     scaler,
     folder_name_preprocessed_data=None,
     preprocessed_data=None,
-    additional_persistable_objects_to_save=None
+    additional_persistable_objects_to_save=None,
+    **kwargs_save_object
 ):
     """
     Saves the model structure and associated objects to disk.
@@ -1855,6 +1892,8 @@ def persist_model_to_disk_structure(
         Dictionary with preprocessed data to save. Keys are file names and values are the corresponding data.
     additional_persistable_objects_to_save : list, optional
         List of additional PersistableItem objects to save.
+    kwargs_save_object : dict
+        Additional keyword arguments to pass to the save_object method.
 
     File and Folder Structure:
     -------------------------
@@ -1897,9 +1936,9 @@ def persist_model_to_disk_structure(
         folder_name_time_execution = folder_name_time_execution
     )
 
-    pm.save_model(model)
-    pm.save_metadata(metadata)
-    pm.save_scaler(scaler)
+    pm.save_model(model, **kwargs_save_object)
+    pm.save_metadata(metadata, **kwargs_save_object)
+    pm.save_scaler(scaler, **kwargs_save_object)
 
     pm.create_flag("training-done")
 

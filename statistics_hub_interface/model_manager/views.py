@@ -20,7 +20,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
  
 sys.path.append(str(Path("../src")))
 from visualisations import create_interactive_boxplot, create_interactive_plot, create_treeplot, plot_box_time_series, plot_weight_evolution
-from PersistanceManager import PersistenceManager
+from PersistenceManager import PersistenceManager
 from sql_utils import list_databases, test_database_connection, test_ssh_connection, test_database_connection_via_ssh
 from own_utils import convert_string_to_python_data_type, filter_dataframe_by_column_values, load_json, modify_json_values, update_deep_nested_dict_value
 from ConfigManager import ConfigManager

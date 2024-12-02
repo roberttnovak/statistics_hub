@@ -16,7 +16,7 @@ from typing import Union, Tuple, List, Dict, Optional
 import numpy as np
 from ConfigManager import ConfigManager
 from OwnLog import OwnLogger
-from PersistanceManager import PersistenceManager, persist_model_to_disk_structure
+from PersistenceManager import PersistenceManager, persist_model_to_disk_structure
 from cleaning import prepare_dataframe_from_db, process_time_series_data
 from own_utils import get_all_args, get_deepest_keys_values, load_json
 from sql_utils import data_importer

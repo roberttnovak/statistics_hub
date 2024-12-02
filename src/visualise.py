@@ -3,7 +3,7 @@ from dash import dcc, html
 import plotly.graph_objects as go
 import pandas as pd
 import os
-from PersistanceManager import PersistenceManager
+from PersistenceManager import PersistenceManager
 
 #ToDo: ACtualizar esto en algún momento con testeos.ipynb
 

@@ -18,7 +18,7 @@ from ConfigManager import ConfigManager
 from OwnLog import OwnLogger
 from PersistenceManager import PersistenceManager, persist_model_to_disk_structure
 from cleaning import prepare_dataframe_from_db, process_time_series_data
-from own_utils import get_all_args, get_deepest_keys_values, load_json
+from own_utils import flatten_nested_dict, get_all_args, get_deepest_keys_values, load_json
 from sql_utils import data_importer
 
 #ToDo: Acordarse de meter las funciones de que cada vez que se llaman a las funciones que tienen flags
@@ -298,8 +298,8 @@ class PreprocessColumns(BaseEstimator, TransformerMixin):
         - X_name_features: Names of the input features.
         - Y_name_features: Names of the target features.
         """
-        self.X_name_features = [X_name_features] if isinstance(X_name_features, str) else X_name_features
-        self.Y_name_features = [Y_name_features] if isinstance(Y_name_features, str) else Y_name_features
+        self.X_name_features = [X_name_features] if isinstance(X_name_features, str) else (X_name_features or [])
+        self.Y_name_features = [Y_name_features] if isinstance(Y_name_features, str) else (Y_name_features or [])
 
     def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None) -> 'PreprocessColumns':
         """
@@ -706,6 +706,8 @@ def preprocess_machine_learning_algorithm(
     return preprocess
 
 #TODO: Revisar la lógica de las diferencias entre Y_name_features y lead_columns
+#TODO: Para el tiempo de ejecución, está desglosado en preprocess_machine_learning_algorithm al máximo, pero, de momento, estoy
+# guardando solo el acumulado. En algún momento agregar esa lógica. 
 def create_model_machine_learning_algorithm(
         tidy_data,
         ini_train,
@@ -721,12 +723,16 @@ def create_model_machine_learning_algorithm(
         scale_in_preprocessing=True,
         name_time_column="timestamp",
         save_preprocessing=True,
+        save_parameters_csv = False,
         path_to_save_model=None,
         folder_name_model=None,
         folder_name_time_execution="execution-time-no-defined",
         folder_name_preprocessed_data="preprocessed-data-to-use-in-model",
         machine_learning_model_args=None,
+        measure_time=False, 
+        metadata_preprocessing = None,
         logger: logging.Logger = None,
+        kwargs_save_object: Dict = {},
         **kwargs
 ):
     """
@@ -772,6 +778,14 @@ def create_model_machine_learning_algorithm(
         Name of the folder for preprocessed data to be used in the model. Default is "preprocessed-data-to-use-in-model".
     machine_learning_model_args : dict, optional
         Dictionary of arguments for the machine learning model. Default is None.
+    measure_time : bool, optional
+        Whether to measure the time taken for each preprocessing step. Default is False.
+    metadata_preprocessing : dict, optional
+        Dictionary containing metadata for preprocessing. Default is None.
+    logger : logging.Logger, optional
+        Logger object for logging information. Default is None.
+    kwargs_save_object : dict, optional
+        Additional arguments for saving objects associated with de model. 
     kwargs : dict
         Additional arguments for the machine learning model.
 
@@ -808,17 +822,20 @@ def create_model_machine_learning_algorithm(
         base_path=path_to_save_model,
         folder_name_model = folder_name_model,
         folder_name_range_train=folder_name_range_train,
-        folder_name_time_execution=folder_name_time_execution
+        folder_name_time_execution=folder_name_time_execution,
+        rename_if_exists = True
     )
 
 
     pm.remove_flag("training-done")
 
-    pm.save_preprocessed_data(
-        preprocessed_data=tidy_data, 
-        folder_name_preprocessed_data=folder_name_preprocessed_data,
-        name = "tidy_data"
-    )
+    #TODO: Borrar este save_preprocessed_data pq ya se hace en otro lado. PRimero comporbar que no se rompe nada
+    # pm.save_preprocessed_data(
+    #     preprocessed_data=tidy_data, 
+    #     folder_name_preprocessed_data=folder_name_preprocessed_data,
+    #     name = "tidy_data",
+    #     **kwargs_save_object
+    # )
 
     # --- Auxiliary Functions ---
     # The following auxiliary functions are encapsulated to ensure the code's modularity and readability.
@@ -886,12 +903,14 @@ def create_model_machine_learning_algorithm(
             n_lags=n_lags,
             n_leads=n_leads,
             lag_columns=lag_columns,
-            lead_columns=lead_columns
+            lead_columns=lead_columns,
+            measure_time=measure_time
         )
         df_last_step = get_last_df_step_preprocessed(preprocessing)
         df_X = get_df_X(df_last_step, X_name_features=X_name_features, Y_name_features=Y_name_features)
         df_Y = get_df_Y(df_last_step, Y_name_features=Y_name_features)
-        return preprocessing, df_X, df_Y
+        execution_times = {transformer : values.get("execution_time_in_seconds", None) for transformer, values in preprocessing.items()}
+        return preprocessing, df_X, df_Y, execution_times
 
     # Log preprocessing info
     if logger:
@@ -906,16 +925,29 @@ def create_model_machine_learning_algorithm(
         name_time_column=name_time_column
     ).values()
 
-    df_train = df_train[ df_train[name_id_sensor_column]==id_device].reset_index(drop=True)
-    df_test = df_test[ df_test[name_id_sensor_column]==id_device].reset_index(drop=True)
-
     # Use kwargs if machine_learning_model_args is None
     machine_learning_model_args = kwargs if machine_learning_model_args is None else machine_learning_model_args
 
     # Preprocessing
-    preprocessing_train, df_train_X, df_train_Y = preprocess_data(df_train, X_name_features, Y_name_features, n_lags, n_leads, lag_columns, lead_columns)
-    preprocessing_test, df_test_X, df_test_Y = preprocess_data(df_test, X_name_features, Y_name_features, n_lags, n_leads, lag_columns, lead_columns)
-    
+    # Dictionary to store the preprocessing time for each step
+    execution_times = {}
+
+    start_time = time.time()
+    preprocessing_train, df_train_X, df_train_Y, execution_times_train = preprocess_data(df_train, X_name_features, Y_name_features, n_lags, n_leads, lag_columns, lead_columns)
+    end_time = time.time()
+    execution_times["execution_times"] = {}
+    execution_times["execution_times"]["preprocessing_train"] = {}
+    execution_times["execution_times"]["preprocessing_train"]["total"] = end_time - start_time
+    execution_times["execution_times"]["preprocessing_train"]["details"] = execution_times_train
+
+    start_time = time.time()
+    preprocessing_test, df_test_X, df_test_Y, execution_times_test = preprocess_data(df_test, X_name_features, Y_name_features, n_lags, n_leads, lag_columns, lead_columns)
+    end_time = time.time()
+    execution_times["execution_times"] = {}
+    execution_times["execution_times"]["preprocessing_test"] = {}
+    execution_times["execution_times"]["preprocessing_test"]["total"] = end_time - start_time
+    execution_times["execution_times"]["preprocessing_test"]["details"] = execution_times_test
+
     if scale_in_preprocessing:
         scaler = preprocessing_train["preprocess_scaler"]["transformer"]
     else: 
@@ -932,12 +964,18 @@ def create_model_machine_learning_algorithm(
 
     base_model = RegressorClass(**machine_learning_model_args)
     model = MultiOutputRegressor(base_model)
+
+    start_time = time.time()
     model.fit(df_train_X, df_train_Y)
+    end_time = time.time()
+    execution_times["execution_times"]["training"] = end_time - start_time
 
 
     # Metadata: combining default arguments with provided arguments
-    all_args = get_all_args(RegressorClass.__init__)
-    metadata = {**all_args, **machine_learning_model_args}
+    #1st, check if exist previous metadata
+    # pm.load_metadata()
+    all_args_by_default = get_all_args(RegressorClass.__init__)
+    metadata = {**all_args_by_default, **args_and_values_of_function, **execution_times, **metadata_preprocessing}
 
     # Optional: save the model
     if logger:
@@ -951,8 +989,18 @@ def create_model_machine_learning_algorithm(
             "df_test_X": df_test_X,
             "df_test_Y": df_test_Y,
             "df_train": df_train,
-            "df_test": df_test
+            "df_test": df_test,
+            "tidy_data": tidy_data
         }
+
+        df_parameters_with_master_info = get_df_of_paramaters_executed_in_model(
+        model_name = folder_name_model,
+        metadata = metadata,
+        config_path = "../config",
+        model_base_path = path_to_save_model, 
+        folder_name_range_train =  folder_name_range_train,
+        folder_name_time_execution = folder_name_time_execution,
+        )
 
 
         persist_model_to_disk_structure(
@@ -961,20 +1009,13 @@ def create_model_machine_learning_algorithm(
             folder_name_range_train = folder_name_range_train,
             folder_name_time_execution = folder_name_time_execution,
             model = model,
-            metadata = args_and_values_of_function,
+            metadata = metadata,
             scaler = scaler,
+            df_parameters =  df_parameters_with_master_info,
             folder_name_preprocessed_data = folder_name_preprocessed_data if save_preprocessing else None,
             preprocessed_data = preprocessed_data,
-            additional_persistable_objects_to_save=None
-        )
-
-        get_df_of_paramaters_executed_in_model(
-        model_name = folder_name_model, 
-        config_path = "../config",
-        model_base_path = path_to_save_model, 
-        folder_name_range_train =  folder_name_range_train,
-        folder_name_time_execution = folder_name_time_execution,
-        save = True
+            additional_persistable_objects_to_save=None,
+            **kwargs_save_object
         )
 
     return {
@@ -983,7 +1024,8 @@ def create_model_machine_learning_algorithm(
         "preprocessing_test": preprocessing_test,
         "df_train_X": df_train_X,
         "df_test_X": df_test_X,
-        "scaler": scaler
+        "scaler": scaler,
+        "execution_times": execution_times     
     }
 
 def get_df_predictions(y_pred_inverse_transform,
@@ -1209,7 +1251,7 @@ def process_model_machine_learning(
             predictions = df_predictions_train,
             folder_name_predictions = folder_name_predictions,
             name = "predictions-train",
-            overwrite = overwrite_predictions
+            overwrite = overwrite_predictions,
         )
         pm.save_predictions(
             predictions = df_predictions_test,
@@ -1567,24 +1609,28 @@ def run_time_series_prediction_pipeline(
 
     return model_machine_learning
 
+#TODO: ¿Mover al PersistenceManager? Quizás tenga que readaptar alguna cosa para la concurrencia
 def get_df_of_paramaters_executed_in_model(
         model_name, 
         config_path, 
         model_base_path, 
         folder_name_range_train, 
         folder_name_time_execution,
-        save = False
+        metadata,
+        save = False,
+        **kwargs_save_object
     ):
     """
-    Prepares and merges metadata, including classification, legible names, and descriptions of parameters,
+    Prepares and merges metadata, including classification, legible names, and descriptions of parameters (master information),
     for a specific machine learning model using configuration files and persistence manager data.
     
     Parameters:
     - model_name: str, the name of the machine learning model (e.g., "SVR").
-    - config_path: str, the path to the configuration directory.
+    - config_path: str, the path to the configuration directory (master information).
     - model_base_path: str, the path to the base directory where model data is stored.
     - folder_name_range_train: str, the name of the folder within the model_base_path that contains training range data.
     - folder_name_time_execution: str, the name of the folder within the model_base_path that contains execution time data.
+    - metadata: dict, a dictionary containing metadata information about the model.
     - save: bool, whether to save the resulting DataFrame to disk.
 
     Returns:
@@ -1664,22 +1710,40 @@ def get_df_of_paramaters_executed_in_model(
         folder_name_time_execution = folder_name_time_execution
     )
 
-    metadata = pm.load_metadata()
-
     machine_learning_model_args = metadata.get("machine_learning_model_args", {})
 
     # Update metadata with machine learning model arguments
     metadata.update(machine_learning_model_args)
-    df_values_of_model = pd.DataFrame([[k, v] for k, v in metadata.items()], columns=["parameter", "value"])
 
-    # Merge parameters dataframe with values dataframe to get initialization information for each parameter of the model
-    df_initialisation_of_parameters_of_model = df_parameters.merge(df_values_of_model, how="inner", on="parameter")
+    # Metadata related to preprocessing
+    metadata_preprocessing = metadata.get("metadata_preprocessing", {})
+    df_metadata_preprocessing = pd.DataFrame(list(metadata_preprocessing.items()), columns=['parameter', 'value'])
+    df_metadata_preprocessing["parameter"] = "preprocessing_" + df_metadata_preprocessing["parameter"]
 
+    # Metadata related to time preprocessing 
+    metadata_execution_times = metadata.get("execution_times", {})
+    metadata_execution_times_flatten = flatten_nested_dict(metadata_execution_times)
+    df_metadata_execution_times = pd.DataFrame(list(metadata_execution_times_flatten.items()), columns=['parameter', 'value'])
+    df_metadata_execution_times["parameter"] = "execution_times_" + df_metadata_execution_times["parameter"]
+
+    # Merge all information of model 
+    df_values_of_model = pd.DataFrame(
+        [[k, v] for k, v in metadata.items() if k not in ["metadata_preprocessing", "execution_times"]],
+        columns=["parameter", "value"]
+    )
+
+    # df_values_of_model = pd.concat([df_values_of_model,df_metadata_preprocessing,df_metadata_execution_times], axis=0)
+
+    # Merge parameters dataframe with values dataframe to get initialization information for each parameter of the model and descriptions
+    df_initialisation_of_parameters_of_model = df_parameters.merge(df_values_of_model, how="inner", left_on="parameter", right_on="parameter")
     df_initialisation_of_parameters_of_model = df_initialisation_of_parameters_of_model[["legible_parameter","description","value"]]\
     .rename(columns={"legible_parameter": "parameter"})
 
+    #TODO: Meter la description de cada parameter de lo nuevo del metadata 
+    df_initialisation_of_parameters_of_model = pd.concat([df_initialisation_of_parameters_of_model,df_metadata_preprocessing,df_metadata_execution_times], axis=0)
+
     if save:
-        pm.save_dataset(df_initialisation_of_parameters_of_model, "parameters")
+        pm.save_dataset(df_initialisation_of_parameters_of_model, "parameters", **kwargs_save_object)
 
 
     return df_initialisation_of_parameters_of_model

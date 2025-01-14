@@ -64,4 +64,12 @@ statistics_hub_interface/testeo*
 # ToDo: Rearrage properly in another moment
 .vscode/launch.json
 
+# ignore logs of django 
 django_info.log
+
+# PRovisional files inside gitignore, remove in another moment
+src/top3_bottom3.csv
+src/top_5.csv
+src/test.xlsx
+src/df_improvement_of_mae.csv
+src/paper/*

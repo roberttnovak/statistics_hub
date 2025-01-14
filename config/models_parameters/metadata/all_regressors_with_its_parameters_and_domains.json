@@ -1,0 +1,3877 @@
+{
+    "ARDRegression": {
+        "alpha_1": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "alpha_2": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "compute_score": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "lambda_1": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "lambda_2": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "threshold_lambda": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "AdaBoostRegressor": {
+        "base_estimator": {
+            "domain": [
+                null
+            ],
+            "type": "categorical"
+        },
+        "estimator": {
+            "domain": [
+                null
+            ],
+            "type": "categorical"
+        },
+        "learning_rate": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "loss": {
+            "domain": [
+                "linear",
+                "square",
+                "exponential"
+            ],
+            "type": "categorical"
+        },
+        "n_estimators": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "BaggingRegressor": {
+        "base_estimator": {
+            "domain": [
+                null
+            ],
+            "type": "categorical"
+        },
+        "bootstrap": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "bootstrap_features": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "estimator": {
+            "domain": [
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_features": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "max_samples": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "n_estimators": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1
+            ],
+            "type": "categorical"
+        },
+        "oob_score": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "BayesianRidge": {
+        "alpha_1": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "alpha_2": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "alpha_init": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "compute_score": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "lambda_1": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "lambda_2": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "lambda_init": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "tol": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "CCA": {
+        "copy": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_components": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "scale": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "DecisionTreeRegressor": {
+        "ccp_alpha": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "criterion": {
+            "domain": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error",
+                "poisson"
+            ],
+            "type": "categorical"
+        },
+        "max_depth": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_features": {
+            "domain": [
+                "auto",
+                "sqrt",
+                "log2",
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_impurity_decrease": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_split": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_weight_fraction_leaf": {
+            "domain": [
+                0.0,
+                0.5
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "splitter": {
+            "domain": [
+                "best",
+                "random"
+            ],
+            "type": "categorical"
+        }
+    },
+    "DummyRegressor": {
+        "constant": {
+            "domain": [
+                null,
+                "any_numeric_value"
+            ],
+            "type": "categorical_or_numeric"
+        },
+        "quantile": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "strategy": {
+            "domain": [
+                "mean",
+                "median",
+                "constant"
+            ],
+            "type": "categorical"
+        }
+    },
+    "ElasticNet": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "l1_ratio": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "ElasticNetCV": {
+        "alphas": {
+            "domain": [
+                null,
+                "array_like_of_floats"
+            ],
+            "type": "categorical_or_array"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross_validation_generator"
+            ],
+            "type": "categorical"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "l1_ratio": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                "int"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "ExtraTreeRegressor": {
+        "ccp_alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "criterion": {
+            "domain": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error",
+                "poisson"
+            ],
+            "type": "categorical"
+        },
+        "max_depth": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_features": {
+            "domain": [
+                "auto",
+                "sqrt",
+                "log2",
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_impurity_decrease": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_split": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_weight_fraction_leaf": {
+            "domain": [
+                0.0,
+                0.5
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "splitter": {
+            "domain": [
+                "best",
+                "random"
+            ],
+            "type": "categorical"
+        }
+    },
+    "ExtraTreesRegressor": {
+        "bootstrap": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "ccp_alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "criterion": {
+            "domain": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error",
+                "poisson"
+            ],
+            "type": "categorical"
+        },
+        "max_depth": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_features": {
+            "domain": [
+                "auto",
+                "sqrt",
+                "log2",
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_samples": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "min_impurity_decrease": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_split": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_weight_fraction_leaf": {
+            "domain": [
+                0.0,
+                0.5
+            ],
+            "type": "interval"
+        },
+        "n_estimators": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                "int"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "oob_score": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "GammaRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "solver": {
+            "domain": [
+                "lbfgs",
+                "newton-cholesky"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "GaussianProcessRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X_train": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "kernel": {
+            "domain": [
+                null,
+                "callable",
+                "RBF",
+                "Matern",
+                "DotProduct"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "n_restarts_optimizer": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_targets": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "normalize_y": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "optimizer": {
+            "domain": [
+                "fmin_l_bfgs_b",
+                "callable",
+                null
+            ],
+            "type": "categorical_or_callable"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "GradientBoostingRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "ccp_alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "criterion": {
+            "domain": [
+                "friedman_mse",
+                "squared_error"
+            ],
+            "type": "categorical"
+        },
+        "init": {
+            "domain": [
+                null,
+                "callable",
+                "zero"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "learning_rate": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "loss": {
+            "domain": [
+                "squared_error",
+                "absolute_error",
+                "huber",
+                "quantile"
+            ],
+            "type": "categorical"
+        },
+        "max_depth": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_features": {
+            "domain": [
+                "auto",
+                "sqrt",
+                "log2",
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "min_impurity_decrease": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_split": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_weight_fraction_leaf": {
+            "domain": [
+                0.0,
+                0.5
+            ],
+            "type": "interval"
+        },
+        "n_estimators": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_iter_no_change": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "subsample": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "validation_fraction": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "HistGradientBoostingRegressor": {
+        "categorical_features": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "early_stopping": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "interaction_cst": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "l2_regularization": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "learning_rate": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "loss": {
+            "domain": [
+                "squared_error",
+                "absolute_error",
+                "poisson"
+            ],
+            "type": "categorical"
+        },
+        "max_bins": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_depth": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "monotonic_cst": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "n_iter_no_change": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "quantile": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "scoring": {
+            "domain": [
+                null,
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "validation_fraction": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "HuberRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "epsilon": {
+            "domain": [
+                1.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "IsotonicRegression": {
+        "increasing": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "out_of_bounds": {
+            "domain": [
+                "nan",
+                "clip",
+                "raise"
+            ],
+            "type": "categorical"
+        },
+        "y_max": {
+            "domain": [
+                null,
+                "-inf",
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "y_min": {
+            "domain": [
+                null,
+                "-inf",
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        }
+    },
+    "KNeighborsRegressor": {
+        "algorithm": {
+            "domain": [
+                "auto",
+                "ball_tree",
+                "kd_tree",
+                "brute"
+            ],
+            "type": "categorical"
+        },
+        "leaf_size": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "metric": {
+            "domain": [
+                "minkowski",
+                "euclidean",
+                "manhattan",
+                "chebyshev"
+            ],
+            "type": "categorical"
+        },
+        "metric_params": {
+            "domain": [
+                null,
+                "dict"
+            ],
+            "type": "categorical_or_dict"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "n_neighbors": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "p": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "weights": {
+            "domain": [
+                "uniform",
+                "distance",
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        }
+    },
+    "KernelRidge": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "coef0": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "degree": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "gamma": {
+            "domain": [
+                null,
+                0.0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "kernel": {
+            "domain": [
+                "linear",
+                "poly",
+                "rbf",
+                "sigmoid",
+                "precomputed",
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "kernel_params": {
+            "domain": [
+                null,
+                "dict"
+            ],
+            "type": "categorical_or_dict"
+        }
+    },
+    "Lars": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_path": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "jitter": {
+            "domain": [
+                null,
+                0.0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "n_nonzero_coefs": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false,
+                "deprecated"
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "LarsCV": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false,
+                "deprecated"
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "Lasso": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "LassoCV": {
+        "alphas": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "LassoLars": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_path": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "jitter": {
+            "domain": [
+                null,
+                0.0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false,
+                "deprecated"
+            ],
+            "type": "categorical"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "LassoLarsCV": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false,
+                "deprecated"
+            ],
+            "type": "categorical"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "LassoLarsIC": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "criterion": {
+            "domain": [
+                "aic",
+                "bic"
+            ],
+            "type": "categorical"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "noise_variance": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false,
+                "deprecated"
+            ],
+            "type": "categorical"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "LinearRegression": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "LinearSVR": {
+        "C": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "dual": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "epsilon": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "intercept_scaling": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "loss": {
+            "domain": [
+                "epsilon_insensitive",
+                "squared_epsilon_insensitive"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "MLPRegressor": {
+        "activation": {
+            "domain": [
+                "identity",
+                "logistic",
+                "tanh",
+                "relu"
+            ],
+            "type": "categorical"
+        },
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "batch_size": {
+            "domain": [
+                "auto",
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "beta_1": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "beta_2": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "early_stopping": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "epsilon": {
+            "domain": [
+                1e-08,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "hidden_layer_sizes": {
+            "domain": [
+                "tuple of ints"
+            ],
+            "type": "array"
+        },
+        "learning_rate": {
+            "domain": [
+                "constant",
+                "invscaling",
+                "adaptive"
+            ],
+            "type": "categorical"
+        },
+        "learning_rate_init": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_fun": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "momentum": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "n_iter_no_change": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "nesterovs_momentum": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "power_t": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "shuffle": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "solver": {
+            "domain": [
+                "lbfgs",
+                "sgd",
+                "adam"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "validation_fraction": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "MultiTaskElasticNet": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "l1_ratio": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "MultiTaskElasticNetCV": {
+        "alphas": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "l1_ratio": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "MultiTaskLasso": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "MultiTaskLassoCV": {
+        "alphas": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "eps": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_alphas": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "selection": {
+            "domain": [
+                "cyclic",
+                "random"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "NuSVR": {
+        "C": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "cache_size": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "coef0": {
+            "domain": [
+                -1.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "degree": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "gamma": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "kernel": {
+            "domain": [
+                "linear",
+                "poly",
+                "rbf",
+                "sigmoid",
+                "precomputed"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                -1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "nu": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "shrinking": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "OrthogonalMatchingPursuit": {
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "n_nonzero_coefs": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "precompute": {
+            "domain": [
+                true,
+                false,
+                "auto"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "OrthogonalMatchingPursuitCV": {
+        "copy": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "normalize": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "PLSCanonical": {
+        "algorithm": {
+            "domain": [
+                "nipals",
+                "svd"
+            ],
+            "type": "categorical"
+        },
+        "copy": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_components": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "scale": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "PLSRegression": {
+        "copy": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_components": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "scale": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "PassiveAggressiveRegressor": {
+        "C": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "average": {
+            "domain": [
+                true,
+                false,
+                "int"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "early_stopping": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "epsilon": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "loss": {
+            "domain": [
+                "hinge",
+                "squared_hinge"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_iter_no_change": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "shuffle": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "validation_fraction": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "PoissonRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "solver": {
+            "domain": [
+                "auto",
+                "lbfgs"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "QuantileRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "quantile": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "solver": {
+            "domain": [
+                "highs-ds",
+                "highs-ipm",
+                "highs"
+            ],
+            "type": "categorical"
+        },
+        "solver_options": {
+            "domain": [
+                null,
+                "dict"
+            ],
+            "type": "categorical_or_dict"
+        }
+    },
+    "RANSACRegressor": {
+        "estimator": {
+            "domain": [
+                null,
+                "BaseEstimator"
+            ],
+            "type": "categorical_or_instance"
+        },
+        "is_data_valid": {
+            "domain": [
+                null,
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "is_model_valid": {
+            "domain": [
+                null,
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "loss": {
+            "domain": [
+                "absolute_error",
+                "squared_error"
+            ],
+            "type": "categorical"
+        },
+        "max_skips": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "max_trials": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples": {
+            "domain": [
+                null,
+                "int",
+                "float"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "residual_threshold": {
+            "domain": [
+                null,
+                0.0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "stop_n_inliers": {
+            "domain": [
+                null,
+                "int"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "stop_probability": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "stop_score": {
+            "domain": [
+                null,
+                "float"
+            ],
+            "type": "categorical_or_interval"
+        }
+    },
+    "RadiusNeighborsRegressor": {
+        "algorithm": {
+            "domain": [
+                "auto",
+                "ball_tree",
+                "kd_tree",
+                "brute"
+            ],
+            "type": "categorical"
+        },
+        "leaf_size": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "metric": {
+            "domain": [
+                "minkowski",
+                "euclidean",
+                "manhattan",
+                "chebyshev",
+                "haversine"
+            ],
+            "type": "categorical"
+        },
+        "metric_params": {
+            "domain": [
+                null,
+                "dict"
+            ],
+            "type": "categorical_or_dict"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "p": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "radius": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "weights": {
+            "domain": [
+                "uniform",
+                "distance"
+            ],
+            "type": "categorical"
+        }
+    },
+    "RandomForestRegressor": {
+        "bootstrap": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "ccp_alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "criterion": {
+            "domain": [
+                "squared_error",
+                "absolute_error",
+                "poisson"
+            ],
+            "type": "categorical"
+        },
+        "max_depth": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "max_features": {
+            "domain": [
+                "auto",
+                "sqrt",
+                "log2",
+                null
+            ],
+            "type": "categorical"
+        },
+        "max_leaf_nodes": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "max_samples": {
+            "domain": [
+                null,
+                0.0,
+                1.0
+            ],
+            "type": "categorical_or_interval"
+        },
+        "min_impurity_decrease": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_leaf": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_samples_split": {
+            "domain": [
+                2,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "min_weight_fraction_leaf": {
+            "domain": [
+                0.0,
+                0.5
+            ],
+            "type": "interval"
+        },
+        "n_estimators": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "oob_score": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "Ridge": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                null,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "positive": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "solver": {
+            "domain": [
+                "auto",
+                "svd",
+                "cholesky",
+                "lsqr",
+                "sparse_cg",
+                "sag",
+                "saga",
+                "lbfgs"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "RidgeCV": {
+        "alpha_per_target": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "alphas": {
+            "domain": [
+                null,
+                "array-like"
+            ],
+            "type": "categorical_or_array"
+        },
+        "cv": {
+            "domain": [
+                null,
+                "int",
+                "cross-validation generator",
+                "iterable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "gcv_mode": {
+            "domain": [
+                "auto",
+                "svd",
+                "eigen"
+            ],
+            "type": "categorical"
+        },
+        "scoring": {
+            "domain": [
+                null,
+                "str",
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "store_cv_values": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "SGDRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "average": {
+            "domain": [
+                true,
+                false,
+                "int"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "early_stopping": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "epsilon": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "eta0": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "l1_ratio": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "learning_rate": {
+            "domain": [
+                "constant",
+                "optimal",
+                "invscaling",
+                "adaptive"
+            ],
+            "type": "categorical"
+        },
+        "loss": {
+            "domain": [
+                "squared_error",
+                "huber",
+                "epsilon_insensitive",
+                "squared_epsilon_insensitive"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_iter_no_change": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "penalty": {
+            "domain": [
+                "l2",
+                "l1",
+                "elasticnet"
+            ],
+            "type": "categorical"
+        },
+        "power_t": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "shuffle": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "validation_fraction": {
+            "domain": [
+                0.0,
+                1.0
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    },
+    "SVR": {
+        "C": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "cache_size": {
+            "domain": [
+                1.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "coef0": {
+            "domain": [
+                -1.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "degree": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "epsilon": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "gamma": {
+            "domain": [
+                "scale",
+                "auto",
+                "float"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "kernel": {
+            "domain": [
+                "linear",
+                "poly",
+                "rbf",
+                "sigmoid",
+                "precomputed"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                -1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "shrinking": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "TheilSenRegressor": {
+        "copy_X": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "max_subpopulation": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "n_jobs": {
+            "domain": [
+                null,
+                -1,
+                1,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "n_subsamples": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "random_state": {
+            "domain": [
+                null,
+                0,
+                "inf"
+            ],
+            "type": "categorical_or_interval"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        }
+    },
+    "TransformedTargetRegressor": {
+        "check_inverse": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "func": {
+            "domain": [
+                null,
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "inverse_func": {
+            "domain": [
+                null,
+                "callable"
+            ],
+            "type": "categorical_or_callable"
+        },
+        "regressor": {
+            "domain": [
+                "estimator instance"
+            ],
+            "type": "categorical"
+        },
+        "transformer": {
+            "domain": [
+                null,
+                "estimator instance"
+            ],
+            "type": "categorical"
+        }
+    },
+    "TweedieRegressor": {
+        "alpha": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "fit_intercept": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        },
+        "link": {
+            "domain": [
+                "auto",
+                "identity",
+                "log"
+            ],
+            "type": "categorical"
+        },
+        "max_iter": {
+            "domain": [
+                1,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "power": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "solver": {
+            "domain": [
+                "lbfgs",
+                "newton-cholesky"
+            ],
+            "type": "categorical"
+        },
+        "tol": {
+            "domain": [
+                0.0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "verbose": {
+            "domain": [
+                0,
+                "inf"
+            ],
+            "type": "interval"
+        },
+        "warm_start": {
+            "domain": [
+                true,
+                false
+            ],
+            "type": "categorical"
+        }
+    }
+}

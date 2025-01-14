@@ -14,10 +14,38 @@ Validation (CV) or other model selection processes. By having structured
 domains, it becomes easier to design automated tuning strategies that cover 
 relevant search spaces efficiently, without relying on manual parameter tuning.
 
-Given the rapidly evolving nature of scikit-learn, it's important to note that 
-this script is based on scikit-learn version 1.3.2, and the domains may need to 
-be updated for future versions. Users should verify compatibility with newer 
-versions of scikit-learn if necessary.
+### Structure of the JSON
+
+The generated JSON is a nested dictionary where each top-level key represents a 
+regressor from scikit-learn, and each regressor has a set of hyperparameters. 
+Each hyperparameter is represented as a dictionary containing the following keys:
+
+- **"domain"**: The possible values or range for the hyperparameter.
+  - For intervals, the values are specified as a two-element list.
+  - For categorical values, the values are specified as a list of possible options.
+
+- **"type"**: The type of domain provided for the hyperparameter.
+  - **"interval"**: The domain is a continuous range between two values. 
+    - For example: `"domain": [0, "inf"]` means the value can be any number 
+      between 0 and infinity.
+  - **"categorical"**: The domain is a discrete set of possible values.
+    - For example: `"domain": [True, False]` means the hyperparameter can take 
+      only the values `True` or `False`.
+
+### Special Considerations
+
+- **Infinity Values**: The script uses strings to represent infinity due to 
+  JSON limitations. The following strings are used:
+  - **"inf"**: Positive infinity.
+  - **"-inf"**: Negative infinity.
+  - Example: `"domain": [0, "inf"]` represents a range from 0 to infinity.
+
+- **Random State and Seeds**: Hyperparameters related to random states or seeds 
+  are usually specified with an interval starting from 0 to positive infinity:
+  - Example: `"domain": [0, "inf"]`.
+
+- **Null Values**: When a hyperparameter can accept a `None` value, it is 
+  represented as `null` in the JSON, following the JSON standard.
 
 Generated on: 2024-02-15
 Version: Scikit-learn 1.3.2

@@ -31,6 +31,7 @@ class PersistenceManager:
             folder_name_range_train: str = None, 
             folder_name_time_execution: str = None, 
             folder_datasets: str = None,
+            rename_if_exists: bool = False
         ):
         """
         Initializes the PersistenceManager with the provided base path, model name, training range, 
@@ -49,7 +50,9 @@ class PersistenceManager:
             The time taken for executing some process, possibly training the model, represented as a string.
         folder_datasets : str, optional (default: None)
             The folder where datasets are stored. If specified, self.path is set to base_path/folder_datasets.
-
+        rename_if_exists : bool, optional (default: False)
+            If True, the path corresponding to execution_time will be modified to avoid overwriting if 
+            exists a previous folder with folder_name_model/folder_name_range_train/folder_name_time_execution.
         Examples:
         ---------
         >>> pm = PersistenceManager(
@@ -72,13 +75,12 @@ class PersistenceManager:
         self.creds_path = os.path.normpath(os.path.join(self.base_path, 'creds'))
         
         # Use folder_datasets if it's not None, else construct the path with other components
-        if folder_datasets is not None:
-            self.path = os.path.normpath(os.path.join(base_path, folder_datasets)) if base_path is not None else folder_datasets
-        else:
-            # Construct the path excluding None values from other components
-            path_components = [base_path, folder_name_model, folder_name_range_train, folder_name_time_execution]
-            filtered_path_components = [component for component in path_components if component is not None]
-            self.path = os.path.normpath(os.path.join(*filtered_path_components))
+        self._update_path()
+        
+        # Check if the path folder_name_model/folder_name_range_train/folder_name_time_execution exists and rename if exists
+        if rename_if_exists and os.path.exists(self.path):
+            warnings.warn(f"Path {self.path} exists and rename_if_exists={rename_if_exists}. The path will be modified to avoid overwriting.")
+            self.change_hierarchy()
 
     def _update_path(self):
         """
@@ -554,6 +556,23 @@ class PersistenceManager:
         # Call internal function with base_path
         return walk_directory(self.base_path)
 
+    def exists_hierarchy_path(self):
+        """
+        Checks if the model hierarchy exists in the base directory.
+
+        Returns:
+        --------
+        bool
+            True if the model hierarchy exists, False otherwise.
+        """
+        return os.path.exists(self.path)
+    
+    def change_hierarchy(self):
+        if self.exists_hierarchy_path():
+            unique_id = str(uuid.uuid4())
+            folder_name_time_execution = f"{self.folder_name_time_execution}-{unique_id}"
+            self.set_folder_name_time_execution(folder_name_time_execution)
+            
 
     def validate_string_input(self,*args):
         """
@@ -712,22 +731,26 @@ class PersistenceManager:
         if extension not in SUPPORTED_EXTENSIONS:
             raise ValueError(f"Unsupported extension '{extension}'. Supported extensions are {', '.join(SUPPORTED_EXTENSIONS)}.")
 
+        
 
         file_path = self.build_path(sub_folder = sub_folder, file_name=file_name, extension=extension)
+
         self.ensure_path(os.path.dirname(file_path),create = True)
 
+        
         # Check if the file already exists and the overwrite flag
-        if os.path.exists(file_path) and not overwrite and not rename_if_exists:
+        if not os.path.exists(file_path):
+            # If the file does not exist, continue with the rest of the function
+            pass
+        elif not overwrite and not rename_if_exists:
             warnings.warn(f"{file_path} exists. The object will not be overwritten")
             return
-        elif overwrite and not rename_if_exists:
+        elif overwrite:
             warnings.warn(f"{file_path} exists. The object will be overwritten")
         elif rename_if_exists:
-            folder_name_time_execution = f"{self.folder_name_time_execution}-{str(uuid.uuid4())}" 
-            self.set_folder_name_time_execution(folder_name_time_execution)
-            file_path = self.build_path(sub_folder = sub_folder, file_name=file_name, extension=extension)
-            self.ensure_path(os.path.dirname(file_path),create = True)
-
+            self.change_hierarchy()
+            file_path = self.build_path(sub_folder=sub_folder, file_name=file_name, extension=extension)
+            self.ensure_path(os.path.dirname(file_path), create=True)
         
         # Save the object to disk using the specified serialization method
         if extension == 'joblib': 
@@ -1641,8 +1664,43 @@ class PersistenceManager:
 
         # Use the load_object method to load the dataset
         return self.load_object(self.path, file_name, extension, csv_params = csv_params)
+    
+    #TODO: Terminar de migrar el save_parameters de predictions aquí para mayor consistencia
+    def save_parameters(self, df_parameters, name="parameters", 
+                               overwrite=False, extension = 'csv', **kwargs):
+        """
+        Saves parameters used in a model to disk in CSV format. The data is saved in a 
+        directory structure based on the attributes initialized in the 
+        PersistenceManager instance. The directory structure is as follows:
+        <folder_name_model>/<folder_name_range_train>/<folder_name_time_execution>/<folder_name_evaluation_data>.
 
+        Parameters:
+        -----------
+        df_parameters : pd.DataFrame
+            The evaluation data of the model to save.
+        name : str
+            The name of the file (without extension)
+        overwrite : bool, optional (default: False)
+            Whether to overwrite the file if it already exists.
+        extension : str, optional (default: 'csv')
+            The file extension to use when saving the preprocessed data.
+        kwargs : dict
+            Additional keyword arguments.
 
+        Returns:
+        --------
+        None
+
+        Examples:
+        ---------
+        >>> pm = PersistenceManager('model_name', 'train_range', 'execution_time')
+        >>> pm.save_preprocessed_data(df_parameters, name='parameters')
+
+        """
+        
+        self.save_object(obj = df_parameters, file_name=name, overwrite=overwrite, extension=extension, **kwargs)
+
+    #TODO: Hacer el load_parameters
     
     def save_plotly_visualization(self, visualization, name, folder_name_visualizations="visualizations", 
                                 overwrite=False, format='html',**kargs):
@@ -1862,6 +1920,7 @@ def persist_model_to_disk_structure(
     model,
     metadata,
     scaler,
+    df_parameters,
     folder_name_preprocessed_data=None,
     preprocessed_data=None,
     additional_persistable_objects_to_save=None,
@@ -1886,6 +1945,8 @@ def persist_model_to_disk_structure(
         Metadata associated with the model.
     scaler : object
         Data scaling object.
+    df_parameters : pd.DataFrame
+        Parameters used in the model.
     folder_name_preprocessed_data : str, optional
         Name of the folder for the preprocessed data. If not provided, no preprocessed data will be saved.
     preprocessed_data : dict, optional
@@ -1939,13 +2000,19 @@ def persist_model_to_disk_structure(
     pm.save_model(model, **kwargs_save_object)
     pm.save_metadata(metadata, **kwargs_save_object)
     pm.save_scaler(scaler, **kwargs_save_object)
+    pm.save_parameters(df_parameters=df_parameters,**kwargs_save_object)
 
     pm.create_flag("training-done")
 
     # Save each preprocessed data item
     if folder_name_preprocessed_data:
         for name, data in preprocessed_data.items():
-            pm.save_preprocessed_data(preprocessed_data=data, folder_name_preprocessed_data=folder_name_preprocessed_data, name=name)
+            pm.save_preprocessed_data(
+                preprocessed_data=data, 
+                folder_name_preprocessed_data=folder_name_preprocessed_data, 
+                name=name,
+                **kwargs_save_object
+            )
 
     pm.create_flag("preprocessing-done")
 

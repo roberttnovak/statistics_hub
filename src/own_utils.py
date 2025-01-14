@@ -671,3 +671,46 @@ def convert_string_to_python_data_type(value: str, data_type: str):
     else:
         raise ValueError(f"Unsupported data type: {data_type}")
 
+def flatten_nested_dict(nested_dict, sep="_"):
+    """
+    Flattens a nested dictionary into a single-level dictionary with keys joined by a separator.
+
+    This function takes a dictionary with potentially nested structures and converts it into a flat
+    dictionary where nested keys are joined by a specified separator.
+
+    Parameters:
+    - nested_dict (dict): The nested dictionary to be flattened.
+                          It can contain nested dictionaries as values.
+    - sep (str): The separator to use for joining nested keys. Default is '_'.
+
+    Returns:
+    - dict: A flattened dictionary with keys at a single level and nested keys joined by the separator.
+
+    Example:
+    >>> nested_dict = {
+            'preprocessing_test': {
+                'total': 0.0550534725189209,
+                'details': {
+                    'preprocess_columns': 0.0,
+                    'preprocess_scaler': 0.021122217178344727,
+                    'preprocess_lags': 0.02893233299255371,
+                    'preprocess_leads': 0.004001617431640625
+                }
+            },
+            'training': 0.39763569831848145
+        }
+    >>> flatten_nested_dict(nested_dict)
+    {
+        'preprocessing_test_total': 0.0550534725189209,
+        'preprocessing_test_details_preprocess_columns': 0.0,
+        'preprocessing_test_details_preprocess_scaler': 0.021122217178344727,
+        'preprocessing_test_details_preprocess_lags': 0.02893233299255371,
+        'preprocessing_test_details_preprocess_leads': 0.004001617431640625,
+        'training': 0.39763569831848145
+    }
+    """
+    return {
+        f"{parent_key}{sep}{k}" if parent_key else k: v
+        for parent_key, sub_dict in nested_dict.items()
+        for k, v in (flatten_nested_dict(sub_dict, sep) if isinstance(sub_dict, dict) else {parent_key: sub_dict}).items()
+    }

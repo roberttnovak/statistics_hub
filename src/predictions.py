@@ -1,4 +1,5 @@
 import datetime
+from itertools import product
 import json
 import logging
 import os
@@ -17,8 +18,8 @@ import numpy as np
 from ConfigManager import ConfigManager
 from OwnLog import OwnLogger
 from PersistenceManager import PersistenceManager, persist_model_to_disk_structure
-from cleaning import prepare_dataframe_from_db, process_time_series_data
-from own_utils import flatten_nested_dict, get_all_args, get_deepest_keys_values, load_json
+from cleaning import prepare_dataframe_from_db, preprocess_and_standardize_dataframe, process_time_series_data
+from own_utils import execute_concurrently, flatten_nested_dict, get_all_args, get_deepest_keys_values, load_json
 from sql_utils import data_importer
 
 #ToDo: Acordarse de meter las funciones de que cada vez que se llaman a las funciones que tienen flags
@@ -1814,3 +1815,226 @@ def load_evaluation_data_for_models(user):
         df_parameters = pd.DataFrame()
 
     return {"df_evaluations":df_evaluations, "df_parameters":df_parameters}
+
+def create_cv_hyperparameters_model(
+        df, 
+        hyperparameters_preprocessing,
+        hyperparameters_model_space,
+        hyperparameters_specific_regressor_args,
+):
+    """
+    Generate and execute cross-validation experiments with optimized hyperparameter combinations.
+
+    This function dynamically generates all possible combinations of generic parameters and model-specific
+    hyperparameters for a set of machine learning experiments. It then executes the experiments concurrently
+    using the generated hyperparameter configurations.
+
+    Parameters:
+    ----------
+    df : pd.DataFrame
+            The raw dataframe containing the time-series data to be preprocessed and used for the cross-validation pipeline.
+
+    hyperparameter_model_space : dict
+            A dictionary defining the generic parameters and their possible values.
+            These parameters are common across all models and include:
+            - `ini_train` (list of str): List of start dates for training periods.
+            - `fin_train` (list of str): List of end dates for training periods.
+            - `fin_test` (list of str): List of end dates for testing periods.
+            - `model_sklearn_name` (list of str): List of model names from scikit-learn to evaluate.
+            - `n_lags` (list of int): Number of lag features to include in the models.
+            - `n_leads` (list of int): Number of lead features to include in the models.
+            - `X_name_features` (list of list of str): Feature subsets to include as predictors in the models.
+            Other parameters can also be included as required.
+
+    hyperparameters_specific_regressor_args : dict
+            A dictionary mapping each `model_sklearn_name` to its corresponding hyperparameter domains.
+            Each model's domain is defined as a dictionary of hyperparameter names and their possible values. 
+            Example:
+            {
+            "ARDRegression": {
+                    "max_iter": [200, 300],
+                    "tol": [0.001, 0.01],
+                    "alpha_1": [1e-06, 1e-05],
+            },
+            "Ridge": {
+                    "alpha": [0.1, 1.0, 10.0],
+                    "solver": ["auto", "svd"]
+            }
+            }
+
+    Returns:
+    -------
+    None
+        The function does not return any value. Instead, it generates the hyperparameter combinations and
+        executes the experiments concurrently by passing the configurations to the `create_model_machine_learning_algorithm`
+        function which manage all persistently with folder structure.
+
+    Workflow:
+    ---------
+    #TODO: Add an explanation/workflow diagram to illustrate the steps in the function.
+
+    Example Usage:
+    --------------
+    hyperparameter_model_space = {
+        "ini_train": ["2023-04-18", "2023-05-01"],
+        "fin_train": ["2023-04-25", "2023-05-08"],
+        "fin_test": ["2023-04-27", "2023-05-10"],
+        "model_sklearn_name": ["Ridge", "ARDRegression"],
+        "n_lags": [1, 5],
+        "n_leads": [5, 10],
+        "X_name_features": [["feature1", "feature2"], ["feature3", "feature4"]],
+    }
+
+    model_specific_args = {
+            "Ridge": {
+            "alpha": [0.1, 1.0],
+            "solver": ["auto", "svd"]
+            },
+            "ARDRegression": {
+            "max_iter": [200],
+            "tol": [0.001],
+            }
+    }
+
+    create_cv_hyperparameters_model(hyperparameter_model_space, model_specific_args) 
+    """
+    def create_dataframe_combinations(df,parameter_space):
+            """
+            Generate preprocessed dataframes based on combinations of preprocessing parameters.
+
+            This function dynamically generates all possible combinations of preprocessing parameters
+            specified in the `parameter_space` dictionary, applies the preprocessing to the given dataframe,
+            and returns a list of resulting preprocessed dataframes.
+
+            Parameters:
+            ----------
+            df : pd.DataFrame
+                    The raw dataframe containing the time-series data to be preprocessed.
+            parameter_space : dict
+                    A dictionary defining the preprocessing parameters and their possible values.
+                    The keys in the dictionary represent parameter names, and the values are lists of possible
+                    values for those parameters. The expected keys include:
+                    - `df` (pd.DataFrame): The raw dataframe to be preprocessed. It should be included in the
+                    `parameter_space` dictionary under the key `"df"`.
+                    - `resample_freq` (list of str): Frequencies for resampling the time-series data.
+                    - `aggregation_func` (list of str): Aggregation functions to apply during resampling.
+                    - `interpolation_method` (list of str): Methods to use for interpolating missing values.
+                    - `target_variable` (list of str): Names of the columns to set as the target variable.
+                    - `pivot` (list of bool): Whether to apply a pivot operation.
+                    - `pivot_index` (list of list of str): Columns to use as the index in the pivot table.
+                    - `pivot_columns` (list of list of str): Columns to use as the columns in the pivot table.
+                    - `pivot_values` (list of list of str): Columns to use as the values in the pivot table.
+                    - `subset_cols` (list of list of str): Columns to subset the dataframe to.
+                    - `target_column_name` (list of str): New names for the target variable column.
+
+            Returns:
+            -------
+            list
+                    A list of preprocessed dataframes, each generated using a unique combination of the parameters.
+
+            Example Usage:
+            --------------
+            parameter_space = {
+                    "df": raw_df, 
+                    "resample_freq": ["60S", "30S"],
+                    "aggregation_func": ["mean", "median"],
+                    "interpolation_method": ["linear", "quadratic"],
+                    "target_variable": ["00-eco2"],
+                    "pivot": [True, False],
+                    "pivot_index": [["timestamp", "id_device"]],
+                    "pivot_columns": [["id_variable"]],
+                    "pivot_values": [["value"]],
+                    "subset_cols": [["timestamp", "id_device", "id_variable", "value"]],
+                    "target_column_name": ["y"]
+            }
+            preprocessed_dataframes = create_dataframe_combinations(parameter_space)
+            for df in preprocessed_dataframes:
+                    print(df)
+            """
+            keys, values = zip(*parameter_space.items())
+
+            return [
+                    preprocess_and_standardize_dataframe(
+                        df=df,  
+                        resample_freq=params["resample_freq"],
+                        aggregation_func=params["aggregation_func"],
+                        interpolation_method=params["interpolation_method"],
+                        target_variable=params.get("target_variable"),
+                        outlier_cols=params.get("outlier_cols"),
+                        pivot=params["pivot"],
+                        pivot_index=params.get("pivot_index"),
+                        pivot_columns=params.get("pivot_columns"),
+                        pivot_values=params.get("pivot_values"),
+                        subset_cols=params.get("subset_cols"),
+                        target_column_name=params.get("target_column_name"),
+                    )
+                    for combination in product(*values)
+                    for params in [dict(zip(keys, combination))]
+                ]
+
+
+    def generate_hyperparameters_machine_learning(parameter_space, model_specific_args, metadata_preprocessing):
+        """
+        Generate unique hyperparameter combinations for machine learning experiments.
+
+        This function combines generic parameters and model-specific hyperparameters into dictionaries
+        representing all possible configurations.
+
+        Parameters:
+        ----------
+        parameter_space : dict
+                Generic parameters shared across all models, such as training/testing periods, feature configurations,
+                and model names (`model_sklearn_name`).
+
+        model_specific_args : dict
+                Hyperparameter domains for each model, mapped by `model_sklearn_name`.
+
+        metadata_preprocessing : list
+                List of metadata dictionaries corresponding to the preprocessing steps applied to each dataframe.
+
+        Returns:
+        -------
+        list
+                A list of dictionaries, where each dictionary contains a unique combination of:
+                - Generic parameters (`parameter_space`).
+                - Model-specific hyperparameters (`model_specific_args`).
+                - Preprocessing metadata (`metadata_preprocessing`).
+        """
+        generic_keys, generic_values = zip(*((k, v) for k, v in parameter_space.items() if k != "model_sklearn_name"))
+        model_names = parameter_space.get("model_sklearn_name", [])
+
+        return [
+            {
+                **dict(zip(generic_keys, generic_comb)),
+                "model_sklearn_name": model,
+                "metadata_preprocessing": metadata,
+                "machine_learning_model_args": dict(zip(model_args_keys, model_args_comb))
+            }
+            for generic_comb, metadata in zip(product(*generic_values), metadata_preprocessing)
+            for model in model_names
+            for model_args_keys, model_args_values in [(list(model_specific_args[model].keys()), list(model_specific_args[model].values()))]
+            for model_args_comb in product(*model_args_values)
+        ]
+    
+    dfs_preprocessed_and_metadata = create_dataframe_combinations(
+        df=df, 
+        parameter_space =hyperparameters_preprocessing
+        )
+    
+    dfs_preprocessed = [df["df_resampled_interpolated"] for df in dfs_preprocessed_and_metadata]
+    metadata_preprocessing = [df["metadata_preprocessing"] for df in dfs_preprocessed_and_metadata]
+    
+    hyperparameters_model_space["tidy_data"] = dfs_preprocessed
+
+    hyperparameters = generate_hyperparameters_machine_learning(
+    parameter_space=hyperparameters_model_space, 
+    model_specific_args=hyperparameters_specific_regressor_args, 
+    metadata_preprocessing=metadata_preprocessing
+    )
+    
+    return execute_concurrently(
+        create_model_machine_learning_algorithm,
+        hyperparameters,
+        executor_type='process',
+        max_workers=os.cpu_count()  # Use all available CPUs
+        )

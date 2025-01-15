@@ -437,3 +437,140 @@ def interpolate_mv_local_median(XData, BandwithD, BandwithH):
 
     return X
 
+def preprocess_and_standardize_dataframe(
+    df: pd.DataFrame,
+    resample_freq: str,
+    aggregation_func: str,
+    interpolation_method: str,
+    target_variable: str,
+    outlier_cols: list = None,
+    pivot: bool = False,
+    pivot_index: list = None,
+    pivot_columns: list = None,
+    pivot_values: list = None,
+    subset_cols: list = None,
+    target_column_name: str = "y",
+) -> pd.DataFrame:
+    """
+    Preprocess and standardize a dataframe for cross-validation.
+
+    This function processes time-series data by resampling, aggregating, and interpolating missing values.
+    Optionally, it applies a pivot operation to reshape the dataframe into a standardized format.
+    The target variable can be renamed, and metadata regarding preprocessing is returned for traceability.
+
+    Parameters:
+    ----------
+    df : pd.DataFrame
+        The dataframe to preprocess and standardize.
+    resample_freq : str
+        Frequency for resampling the time-series data, following Pandas offset aliases (e.g., '60S', '1H', '1D').
+    aggregation_func : str
+        Aggregation function to apply during resampling (e.g., 'mean', 'sum', 'min', 'max').
+    interpolation_method : str
+        Method to use for interpolating missing values (e.g., 'linear', 'nearest', 'spline').
+    target_variable : str
+        The name of the column to set as the target variable.
+    outlier_cols : list, optional
+        List of columns to apply outlier handling. If None, no outlier handling is applied (default is None).
+    pivot : bool, optional
+        Whether to apply a pivot operation to the dataframe (default is False).
+    pivot_index : list, optional
+        Columns to use as the index in the pivot table (required if `pivot=True`).
+    pivot_columns : list, optional
+        Columns to use as the columns in the pivot table (required if `pivot=True`).
+    pivot_values : list, optional
+        Columns to use as the values in the pivot table (required if `pivot=True`).
+    subset_cols : list, optional
+        List of columns to subset from the dataframe before pivoting (default is None, no subsetting applied).
+    target_column_name : str, optional
+        The new name for the target variable column in the standardized dataframe (default is "y").
+
+    Returns:
+    -------
+    dict
+        A dictionary containing:
+        - 'df_resampled_interpolated' (pd.DataFrame): The preprocessed and standardized dataframe ready for further analysis or modeling.
+        - 'metadata_preprocessing' (dict): Metadata describing the preprocessing steps, including resampling frequency, aggregation function, 
+          interpolation method, and outlier-handling columns.
+
+    Raises:
+    ------
+    ValueError
+        If `pivot=True` but `pivot_index`, `pivot_columns`, or `pivot_values` are not provided.
+
+    Example:
+    --------
+    ```python
+    df_preprocessed = preprocess_and_standardize_dataframe(
+        df=my_df,
+        resample_freq="60S",
+        aggregation_func="mean",
+        interpolation_method="linear",
+        target_variable="00-eco2",
+        outlier_cols=["value", "sensor_reading"],
+        pivot=True,
+        pivot_index=["timestamp", "id_device"],
+        pivot_columns=["id_variable"],
+        pivot_values=["value"],
+        subset_cols=["timestamp", "id_device", "id_variable", "value"]
+    )
+
+    # Access preprocessed dataframe
+    df_processed = df_preprocessed["df_resampled_interpolated"]
+
+    # Access metadata on preprocessing steps
+    metadata = df_preprocessed["metadata_preprocessing"]
+    ```
+
+    Notes:
+    ------
+    - The pivot operation can be useful for transforming long-format data into a wide format for machine learning models.
+    - Handling of outliers can be customized by specifying the columns where outlier handling should be applied.
+    - The metadata returned in `metadata_preprocessing` can be useful for debugging and tracking the preprocessing steps applied.
+    - Ensure that the target variable exists in the dataframe before renaming it with `target_column_name`.
+    """
+
+    # Process time-series data: resample, aggregate, and interpolate
+    df_resampled_interpolated = process_time_series_data(
+        df=df,
+        resample_freq=resample_freq,
+        aggregation_func=aggregation_func,
+        method=interpolation_method,
+        outlier_cols=outlier_cols,
+    )
+
+    # Apply pivot operation if required
+    if pivot:
+        if not pivot_index or not pivot_columns or not pivot_values:
+            raise ValueError("`pivot_index`, `pivot_columns`, and `pivot_values` must be provided if `pivot=True`.")
+        
+        df_resampled_interpolated = pd.pivot_table(
+            df_resampled_interpolated.reset_index()[subset_cols],
+            index=pivot_index,
+            columns=pivot_columns,
+            values=pivot_values
+        ).reset_index()
+
+        # Flatten column hierarchy if created by pivot_table
+        df_resampled_interpolated.columns = [
+            col[0] if col[-1] == '' else col[-1]
+            for col in df_resampled_interpolated.columns.to_flat_index()
+        ]
+
+    # Rename target variable column if specified
+    if target_variable:
+        df_resampled_interpolated.rename(columns={target_variable: target_column_name}, inplace=True)
+
+    metadata_preprocessing = {
+    "resample_freq": resample_freq,
+    "aggregation_func": aggregation_func,
+    "interpolation_method": interpolation_method,
+    "outlier_cols": outlier_cols,
+    }
+
+    output ={
+        "df_resampled_interpolated": df_resampled_interpolated,
+        "metadata_preprocessing": metadata_preprocessing
+    }
+
+    return output

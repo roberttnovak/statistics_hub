@@ -138,18 +138,26 @@ def get_data_api_time(_objectid,_channelid,_init,_end):
 #                 save_mysql(sensors[s],'temperatura', r['data'][i], 'ºC', r['time'][i], cal_sWEA[0])
         
 
-def execute_concurrently(func, args_list):
+def execute_concurrently(func, args_list, executor_type='thread', max_workers=None):
     """
     Executes a function concurrently with different sets of arguments.
-    
+
+    This function allows running a given function concurrently with different keyword arguments, using either
+    a ThreadPoolExecutor or a ProcessPoolExecutor. It can also manage the number of concurrent tasks to optimize resource usage.
+
     Parameters:
     func (callable): A callable object (e.g., function) to be executed.
     args_list (list): A list of dictionaries, where each dictionary contains 
                       the keyword arguments for the function.
-    
+    executor_type (str): The type of executor to use. Options are:
+                        - 'thread': Use ThreadPoolExecutor (default).
+                        - 'process': Use ProcessPoolExecutor for CPU-bound tasks.
+    max_workers (int, optional): The maximum number of threads or processes to use concurrently.
+                                 If None, the default is determined automatically based on system resources.
+
     Returns:
     list: A list of results from the function.
-    
+
     Example:
     >>> def add(x, y):
     ...     return x + y
@@ -157,33 +165,72 @@ def execute_concurrently(func, args_list):
     >>> args_list = [{'x': 5, 'y': 3}, {'x': 10, 'y': 7}]
     >>> execute_concurrently(add, args_list)
     [8, 17]
+
+    Example with custom number of workers:
+    >>> def multiply(x, y):
+    ...     return x * y
+    ...
+    >>> args_list = [{'x': 2, 'y': 3}, {'x': 4, 'y': 5}, {'x': 6, 'y': 7}]
+    >>> execute_concurrently(multiply, args_list, max_workers=2)
+    [6, 20, 42]
+
+    Example using ProcessPoolExecutor:
+    >>> def calculate_square(n):
+    ...     return n * n
+    ...
+    >>> args_list = [{'n': i} for i in range(5)]
+    >>> execute_concurrently(calculate_square, args_list, executor_type='process')
+    [0, 1, 4, 9, 16]
+
+    Notes:
+    - If your tasks involve I/O-bound operations (e.g., network requests, file I/O), use 'thread'.
+    - For CPU-bound tasks (e.g., heavy computations), use 'process' to avoid GIL limitations.
+    - Use max_workers to control resource usage. Setting it too high can overwhelm your system.
+    - If max_workers is not specified, it will be automatically set based on system resources:
+        * For 'thread': Default is 5 times the number of CPUs.
+        * For 'process': Default is equal to the number of CPUs.
     """
-    
+
     # Initialize an empty list to store the results
     results = []
-    
-    # Create a ThreadPoolExecutor to manage the concurrent execution of the function
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        
-        # Create a list to store the Future objects returned by executor.submit,
-        # and map each Future to its corresponding arguments
+
+    # Automatically set max_workers based on the executor type and system resources if not specified
+    if max_workers is None:
+        if executor_type == 'thread':
+            max_workers = os.cpu_count() * 5  # For I/O-bound tasks, use 5 times the number of CPUs
+        elif executor_type == 'process':
+            max_workers = os.cpu_count()  # For CPU-bound tasks, use the number of available CPUs
+
+    # Choose the appropriate executor based on the executor_type parameter
+    if executor_type == 'thread':
+        Executor = concurrent.futures.ThreadPoolExecutor
+    elif executor_type == 'process':
+        Executor = concurrent.futures.ProcessPoolExecutor
+    else:
+        # Raise an error if an invalid executor_type is provided
+        raise ValueError("executor_type must be 'thread' or 'process'")
+
+    # Create the executor and submit tasks for concurrent execution
+    with Executor(max_workers=max_workers) as executor:
+        # Submit each function call with its corresponding arguments
         futures = {executor.submit(func, **args): args for args in args_list}
-        
-        # Iterate through the Future objects as they complete
+
+        # Process each completed future as it finishes
         for future in concurrent.futures.as_completed(futures):
             args = futures[future]
             try:
-                # Get the result of the completed function and print a success message
+                # Get the result of the completed task
                 result = future.result()
                 print(f"Task with args {args} processed successfully.")
                 results.append(result)
             except Exception as exc:
-                # If an exception occurs during execution, print an error message
+                # Handle any exceptions that occurred during task execution
                 print(f"Task with args {args} generated an exception: {exc}")
                 results.append(exc)
-    
-    # Return the list of results
+
+    # Return the list of results from all executed tasks
     return results
+
 
 
 def list_directories_by_depth(path, max_depth=3, list_only_last_level=True, include_files=False, specific_folder_last_level=None):

@@ -1816,6 +1816,102 @@ def load_evaluation_data_for_models(user):
 
     return {"df_evaluations":df_evaluations, "df_parameters":df_parameters}
 
+def generate_cv_grid_regressor_sklearn(
+    hyperparameter_dict,
+    distribution="uniform",
+    distribution_per_param=None,
+    max_length_numerical=10,
+    max_length_categorical=5,
+    param_lengths=None,
+    custom_limits=None,
+    seed=42,
+    selected_params=None,
+    forced_types=None
+):
+    """
+    Generate a grid of hyperparameter values for Cross Validation (CV) based on the given domains.
+
+    Parameters
+    ----------
+    hyperparameter_dict : dict
+        Dictionary containing the hyperparameters and their domains for the specified regressor.
+    distribution : str, optional
+        Default distribution to use for generating numerical values. Options are "uniform" or "log".
+        Default is "uniform".
+    distribution_per_param : dict, optional
+        Dictionary specifying the distribution for specific hyperparameters.
+        Example: {"alpha": "log", "max_iter": "uniform"}.
+    max_length_numerical : int, optional
+        Maximum number of values to generate for numerical parameters if `param_lengths` is not provided.
+        Default is 10.
+    max_length_categorical : int, optional
+        Maximum number of values to generate for categorical parameters if `param_lengths` is not provided.
+        Default is 5.
+    param_lengths : dict, optional
+        Dictionary specifying the maximum number of values to generate for specific hyperparameters.
+    custom_limits : dict, optional
+        Dictionary specifying custom min and max values for specific hyperparameters with infinite ranges.
+        Example: {"alpha": [1e-6, 1e6], "max_iter": [1, 1000]}.
+    seed : int, optional
+        Random seed for reproducibility. Default is 42.
+    selected_params : list, optional
+        List of hyperparameter names to include in the grid. If None, all parameters are included.
+    forced_types : dict, optional
+        Dictionary specifying the forced type for specific hyperparameters.
+        Example: {"max_iter": int, "n_estimators": int}.
+
+    Returns
+    -------
+    dict
+        A dictionary with hyperparameter names as keys and lists of generated values as values.
+    """
+    np.random.seed(seed)
+
+    cv_grid = {}
+
+    for param, details in hyperparameter_dict.items():
+        if selected_params and param not in selected_params:
+            continue
+
+        domain = details["domain"]
+        param_type = details["type"]
+        length = param_lengths.get(param, max_length_numerical if param_type == "interval" else max_length_categorical)
+        param_distribution = distribution_per_param.get(param, distribution) if distribution_per_param else distribution
+
+        if param_type == "interval":
+            start, end = domain
+            if param in custom_limits:
+                start, end = custom_limits[param]
+            if start == "-inf":
+                start = 1e-6
+            if end == "inf":
+                end = 1e6
+            values = np.linspace(float(start), float(end), length).tolist() if param_distribution == "uniform" else np.logspace(np.log10(float(start) + 1e-6), np.log10(float(end)), length).tolist()
+        elif param_type == "categorical":
+            values = domain[:length]
+        elif param_type == "categorical_or_interval":
+            if all(isinstance(x, (int, float)) for x in domain):
+                start, end = domain
+                if param in custom_limits:
+                    start, end = custom_limits[param]
+                values = np.linspace(float(start), float(end), length).tolist() if param_distribution == "uniform" else np.logspace(np.log10(float(start) + 1e-6), np.log10(float(end)), length).tolist()
+            else:
+                values = domain[:length]
+        else:
+            raise ValueError(f"Unsupported parameter type: {param_type}")
+
+        # Apply forced type if specified
+        if forced_types and param in forced_types:
+            target_type = forced_types[param]
+            try:
+                values = [target_type(value) for value in values]
+            except (ValueError, TypeError) as e:
+                raise ValueError(f"Could not convert values for {param} to {target_type}: {e}")
+
+        cv_grid[param] = values
+
+    return cv_grid
+
 def create_cv_hyperparameters_model(
         df, 
         hyperparameters_preprocessing,

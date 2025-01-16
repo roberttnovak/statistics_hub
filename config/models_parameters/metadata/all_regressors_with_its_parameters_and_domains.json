@@ -5,84 +5,96 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "alpha_2": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "compute_score": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "lambda_1": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "lambda_2": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "threshold_lambda": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "tol": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         }
     },
     "AdaBoostRegressor": {
@@ -90,20 +102,22 @@
             "domain": [
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "estimator": {
             "domain": [
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "object"
         },
         "learning_rate": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "loss": {
             "domain": [
@@ -111,21 +125,24 @@
                 "square",
                 "exponential"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{linear, square, exponential}"
         },
         "n_estimators": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         }
     },
     "BaggingRegressor": {
@@ -133,48 +150,54 @@
             "domain": [
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "bootstrap": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "bootstrap_features": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "estimator": {
             "domain": [
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "object"
         },
         "max_features": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "max_samples": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "n_estimators": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -182,35 +205,40 @@
                 -1,
                 1
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "int"
         },
         "oob_score": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "BayesianRidge": {
@@ -219,91 +247,104 @@
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "alpha_2": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "alpha_init": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "compute_score": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "lambda_1": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "lambda_2": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "lambda_init": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "tol": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         }
     },
     "CCA": {
@@ -312,35 +353,40 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_components": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "scale": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         }
     },
     "DecisionTreeRegressor": {
@@ -349,7 +395,8 @@
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "non-negative float"
         },
         "criterion": {
             "domain": [
@@ -358,14 +405,16 @@
                 "absolute_error",
                 "poisson"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, friedman_mse, absolute_error, poisson}"
         },
         "max_depth": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_features": {
             "domain": [
@@ -374,56 +423,64 @@
                 "log2",
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "int, float or {sqrt, log2}"
         },
         "max_leaf_nodes": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "min_impurity_decrease": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_samples_split": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_weight_fraction_leaf": {
             "domain": [
                 0.0,
                 0.5
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "splitter": {
             "domain": [
                 "best",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{best, random}"
         }
     },
     "DummyRegressor": {
@@ -432,14 +489,16 @@
                 null,
                 "any_numeric_value"
             ],
-            "type": "categorical_or_numeric"
+            "domain_type": "categorical_or_numeric",
+            "data_type": "int or float or array-like of shape (n_outputs,)"
         },
         "quantile": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float in [0.0, 1.0]"
         },
         "strategy": {
             "domain": [
@@ -447,7 +506,8 @@
                 "median",
                 "constant"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{mean, median, quantile, constant}"
         }
     },
     "ElasticNet": {
@@ -456,42 +516,48 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "l1_ratio": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -499,35 +565,40 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or array-like of shape (n_features, n_features), default=False"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "ElasticNetCV": {
@@ -536,14 +607,16 @@
                 null,
                 "array_like_of_floats"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -551,42 +624,48 @@
                 "int",
                 "cross_validation_generator"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "int, cross-validation generator or iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "l1_ratio": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or list of float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -594,14 +673,16 @@
                 -1,
                 "int"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -609,35 +690,40 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "auto, bool or array-like of shape (n_features, n_features)"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "ExtraTreeRegressor": {
@@ -646,7 +732,8 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "non-negative float"
         },
         "criterion": {
             "domain": [
@@ -655,14 +742,16 @@
                 "absolute_error",
                 "poisson"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, friedman_mse, absolute_error, poisson}, default=squared_error"
         },
         "max_depth": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_features": {
             "domain": [
@@ -671,56 +760,64 @@
                 "log2",
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "int, float, {sqrt, log2} or None"
         },
         "max_leaf_nodes": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "min_impurity_decrease": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_samples_split": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_weight_fraction_leaf": {
             "domain": [
                 0.0,
                 0.5
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "splitter": {
             "domain": [
                 "best",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{random, best}"
         }
     },
     "ExtraTreesRegressor": {
@@ -729,14 +826,16 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "ccp_alpha": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "non-negative float"
         },
         "criterion": {
             "domain": [
@@ -745,14 +844,16 @@
                 "absolute_error",
                 "poisson"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
         },
         "max_depth": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_features": {
             "domain": [
@@ -761,56 +862,64 @@
                 "log2",
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{sqrt, log2, None}, int or float"
         },
         "max_leaf_nodes": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_samples": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_impurity_decrease": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_samples_split": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_weight_fraction_leaf": {
             "domain": [
                 0.0,
                 0.5
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "n_estimators": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -818,35 +927,40 @@
                 -1,
                 "int"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "oob_score": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or callable"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "GammaRegressor": {
@@ -855,49 +969,56 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "solver": {
             "domain": [
                 "lbfgs",
                 "newton-cholesky"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{lbfgs, newton-cholesky}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "GaussianProcessRegressor": {
@@ -906,14 +1027,16 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or ndarray of shape (n_samples,)"
         },
         "copy_X_train": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "kernel": {
             "domain": [
@@ -923,28 +1046,32 @@
                 "Matern",
                 "DotProduct"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "kernel instance"
         },
         "n_restarts_optimizer": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_targets": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "normalize_y": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "optimizer": {
             "domain": [
@@ -952,14 +1079,16 @@
                 "callable",
                 null
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "fmin_l_bfgs_b, callable or None"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         }
     },
     "GradientBoostingRegressor": {
@@ -968,21 +1097,24 @@
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "ccp_alpha": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "non-negative float"
         },
         "criterion": {
             "domain": [
                 "friedman_mse",
                 "squared_error"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{friedman_mse, squared_error}"
         },
         "init": {
             "domain": [
@@ -990,14 +1122,16 @@
                 "callable",
                 "zero"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "estimator or zero"
         },
         "learning_rate": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "loss": {
             "domain": [
@@ -1006,14 +1140,16 @@
                 "huber",
                 "quantile"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, absolute_error, huber, quantile}, default=squared_error"
         },
         "max_depth": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or None"
         },
         "max_features": {
             "domain": [
@@ -1022,7 +1158,8 @@
                 "log2",
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{sqrt, log2}, int or float"
         },
         "max_leaf_nodes": {
             "domain": [
@@ -1030,42 +1167,48 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "min_impurity_decrease": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_samples_split": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_weight_fraction_leaf": {
             "domain": [
                 0.0,
                 0.5
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "n_estimators": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_iter_no_change": {
             "domain": [
@@ -1073,49 +1216,56 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "subsample": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "validation_fraction": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "HistGradientBoostingRegressor": {
@@ -1124,35 +1274,40 @@
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like of {bool, int, str} of shape (n_features) or shape (n_categorical_features,)"
         },
         "early_stopping": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "auto or bool"
         },
         "interaction_cst": {
             "domain": [
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "{pairwise, no_interactions} or sequence of lists/tuples/sets of int"
         },
         "l2_regularization": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "learning_rate": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "loss": {
             "domain": [
@@ -1160,14 +1315,16 @@
                 "absolute_error",
                 "poisson"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, absolute_error, gamma, poisson, quantile}, default=squared_error"
         },
         "max_bins": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_depth": {
             "domain": [
@@ -1175,14 +1332,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int or None"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_leaf_nodes": {
             "domain": [
@@ -1190,21 +1349,24 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int or None"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "monotonic_cst": {
             "domain": [
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like of int of shape (n_features) or dict"
         },
         "n_iter_no_change": {
             "domain": [
@@ -1212,56 +1374,64 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "quantile": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "random_state": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int, RandomState instance or None"
         },
         "scoring": {
             "domain": [
                 null,
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "str or callable or None"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "validation_fraction": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "HuberRegressor": {
@@ -1270,42 +1440,48 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "epsilon": {
             "domain": [
                 1.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "IsotonicRegression": {
@@ -1315,7 +1491,8 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or auto"
         },
         "out_of_bounds": {
             "domain": [
@@ -1323,7 +1500,8 @@
                 "clip",
                 "raise"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{nan, clip, raise}"
         },
         "y_max": {
             "domain": [
@@ -1331,7 +1509,8 @@
                 "-inf",
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         },
         "y_min": {
             "domain": [
@@ -1339,7 +1518,8 @@
                 "-inf",
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         }
     },
     "KNeighborsRegressor": {
@@ -1350,14 +1530,16 @@
                 "kd_tree",
                 "brute"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{auto, ball_tree, kd_tree, brute}"
         },
         "leaf_size": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "metric": {
             "domain": [
@@ -1366,14 +1548,16 @@
                 "manhattan",
                 "chebyshev"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str, DistanceMetric object or callable"
         },
         "metric_params": {
             "domain": [
                 null,
                 "dict"
             ],
-            "type": "categorical_or_dict"
+            "domain_type": "categorical_or_dict",
+            "data_type": "dict"
         },
         "n_jobs": {
             "domain": [
@@ -1382,21 +1566,24 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "n_neighbors": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "p": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "weights": {
             "domain": [
@@ -1404,7 +1591,8 @@
                 "distance",
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "{uniform, distance}, callable or None"
         }
     },
     "KernelRidge": {
@@ -1413,21 +1601,24 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or array-like of shape (n_targets,)"
         },
         "coef0": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "degree": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "gamma": {
             "domain": [
@@ -1435,7 +1626,8 @@
                 0.0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         },
         "kernel": {
             "domain": [
@@ -1446,14 +1638,16 @@
                 "precomputed",
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "str or callable"
         },
         "kernel_params": {
             "domain": [
                 null,
                 "dict"
             ],
-            "type": "categorical_or_dict"
+            "domain_type": "categorical_or_dict",
+            "data_type": "dict"
         }
     },
     "Lars": {
@@ -1462,28 +1656,32 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_path": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "jitter": {
             "domain": [
@@ -1491,14 +1689,16 @@
                 0.0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         },
         "n_nonzero_coefs": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "normalize": {
             "domain": [
@@ -1506,7 +1706,7 @@
                 false,
                 "deprecated"
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "precompute": {
             "domain": [
@@ -1514,7 +1714,8 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool, auto or array-like "
         },
         "random_state": {
             "domain": [
@@ -1522,14 +1723,16 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "LarsCV": {
@@ -1538,7 +1741,8 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -1547,35 +1751,40 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or an iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -1584,7 +1793,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int or None"
         },
         "normalize": {
             "domain": [
@@ -1592,7 +1802,7 @@
                 false,
                 "deprecated"
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "precompute": {
             "domain": [
@@ -1600,14 +1810,16 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool, auto or array-like "
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "Lasso": {
@@ -1616,35 +1828,40 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -1652,7 +1869,8 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or array-like of shape (n_features, n_features), default=False"
         },
         "random_state": {
             "domain": [
@@ -1660,28 +1878,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "LassoCV": {
@@ -1690,14 +1912,16 @@
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -1706,35 +1930,40 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -1743,14 +1972,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -1758,7 +1989,8 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "auto, bool or array-like of shape (n_features, n_features)"
         },
         "random_state": {
             "domain": [
@@ -1766,28 +1998,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "LassoLars": {
@@ -1796,35 +2032,40 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_path": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "jitter": {
             "domain": [
@@ -1832,14 +2073,16 @@
                 0.0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "normalize": {
             "domain": [
@@ -1847,14 +2090,15 @@
                 false,
                 "deprecated"
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -1862,7 +2106,8 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool, auto or array-like"
         },
         "random_state": {
             "domain": [
@@ -1870,14 +2115,16 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "LassoLarsCV": {
@@ -1886,7 +2133,8 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -1895,35 +2143,40 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or an iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -1932,7 +2185,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int or None"
         },
         "normalize": {
             "domain": [
@@ -1940,14 +2194,15 @@
                 false,
                 "deprecated"
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -1955,14 +2210,16 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or auto "
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "LassoLarsIC": {
@@ -1971,42 +2228,48 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "criterion": {
             "domain": [
                 "aic",
                 "bic"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{aic, bic}"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "noise_variance": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "normalize": {
             "domain": [
@@ -2014,14 +2277,15 @@
                 false,
                 "deprecated"
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "precompute": {
             "domain": [
@@ -2029,14 +2293,16 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool, auto or array-like"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "LinearRegression": {
@@ -2045,14 +2311,16 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "n_jobs": {
             "domain": [
@@ -2061,14 +2329,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "LinearSVR": {
@@ -2077,49 +2347,56 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "dual": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "auto or bool"
         },
         "epsilon": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "intercept_scaling": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "loss": {
             "domain": [
                 "epsilon_insensitive",
                 "squared_epsilon_insensitive"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{epsilon_insensitive, squared_epsilon_insensitive}, default=epsilon_insensitive"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2127,21 +2404,24 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance or None"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         }
     },
     "MLPRegressor": {
@@ -2152,14 +2432,16 @@
                 "tanh",
                 "relu"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{identity, logistic, tanh, relu}"
         },
         "alpha": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "batch_size": {
             "domain": [
@@ -2167,41 +2449,47 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "beta_1": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "beta_2": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "early_stopping": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "epsilon": {
             "domain": [
                 1e-08,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "hidden_layer_sizes": {
             "domain": [
                 "tuple of ints"
             ],
-            "type": "array"
+            "domain_type": "array",
+            "data_type": "array-like of shape(n_layers - 2,)"
         },
         "learning_rate": {
             "domain": [
@@ -2209,56 +2497,64 @@
                 "invscaling",
                 "adaptive"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{constant, invscaling, adaptive}"
         },
         "learning_rate_init": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "max_fun": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "momentum": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "n_iter_no_change": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "nesterovs_momentum": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "power_t": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "random_state": {
             "domain": [
@@ -2266,14 +2562,16 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "shuffle": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "solver": {
             "domain": [
@@ -2281,35 +2579,40 @@
                 "sgd",
                 "adam"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{lbfgs, sgd, adam}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "validation_fraction": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "MultiTaskElasticNet": {
@@ -2318,35 +2621,40 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "l1_ratio": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2354,28 +2662,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "MultiTaskElasticNetCV": {
@@ -2384,14 +2696,16 @@
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -2400,42 +2714,48 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "l1_ratio": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or list of float"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -2444,7 +2764,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2452,28 +2773,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "MultiTaskLasso": {
@@ -2482,28 +2807,32 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2511,28 +2840,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "MultiTaskLassoCV": {
@@ -2541,14 +2874,16 @@
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -2557,35 +2892,40 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or iterable"
         },
         "eps": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_alphas": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -2594,7 +2934,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2602,28 +2943,32 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "selection": {
             "domain": [
                 "cyclic",
                 "random"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{cyclic, random}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "NuSVR": {
@@ -2632,35 +2977,40 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "cache_size": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "coef0": {
             "domain": [
                 -1.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "degree": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "gamma": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "{scale, auto} or float"
         },
         "kernel": {
             "domain": [
@@ -2670,42 +3020,48 @@
                 "sigmoid",
                 "precomputed"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
         },
         "max_iter": {
             "domain": [
                 -1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "nu": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "shrinking": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         }
     },
     "OrthogonalMatchingPursuit": {
@@ -2714,21 +3070,23 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "n_nonzero_coefs": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "normalize": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "precompute": {
             "domain": [
@@ -2736,14 +3094,16 @@
                 false,
                 "auto"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "auto or bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         }
     },
     "OrthogonalMatchingPursuitCV": {
@@ -2752,7 +3112,8 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "cv": {
             "domain": [
@@ -2761,21 +3122,24 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or iterable"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -2784,21 +3148,23 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "normalize": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool or int"
         }
     },
     "PLSCanonical": {
@@ -2807,42 +3173,48 @@
                 "nipals",
                 "svd"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{nipals, svd}"
         },
         "copy": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_components": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "scale": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         }
     },
     "PLSRegression": {
@@ -2851,35 +3223,40 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_components": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "scale": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         }
     },
     "PassiveAggressiveRegressor": {
@@ -2888,7 +3265,8 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "average": {
             "domain": [
@@ -2896,49 +3274,56 @@
                 false,
                 "int"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "bool or int"
         },
         "early_stopping": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "epsilon": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "loss": {
             "domain": [
                 "hinge",
                 "squared_hinge"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_iter_no_change": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -2946,42 +3331,48 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "shuffle": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or None"
         },
         "validation_fraction": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "PoissonRegressor": {
@@ -2990,49 +3381,56 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "solver": {
             "domain": [
                 "auto",
                 "lbfgs"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{lbfgs, newton-cholesky}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "QuantileRegressor": {
@@ -3041,21 +3439,24 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "quantile": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "solver": {
             "domain": [
@@ -3063,14 +3464,16 @@
                 "highs-ipm",
                 "highs"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{highs-ds, highs-ipm, highs, interior-point, revised simplex}"
         },
         "solver_options": {
             "domain": [
                 null,
                 "dict"
             ],
-            "type": "categorical_or_dict"
+            "domain_type": "categorical_or_dict",
+            "data_type": "dict"
         }
     },
     "RANSACRegressor": {
@@ -3079,28 +3482,32 @@
                 null,
                 "BaseEstimator"
             ],
-            "type": "categorical_or_instance"
+            "domain_type": "categorical_or_instance",
+            "data_type": "object"
         },
         "is_data_valid": {
             "domain": [
                 null,
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "callable"
         },
         "is_model_valid": {
             "domain": [
                 null,
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "callable"
         },
         "loss": {
             "domain": [
                 "absolute_error",
                 "squared_error"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str, callable"
         },
         "max_skips": {
             "domain": [
@@ -3108,14 +3515,16 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "max_trials": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "min_samples": {
             "domain": [
@@ -3123,7 +3532,8 @@
                 "int",
                 "float"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int (>= 1) or float ([0, 1])"
         },
         "random_state": {
             "domain": [
@@ -3131,7 +3541,8 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "residual_threshold": {
             "domain": [
@@ -3139,28 +3550,32 @@
                 0.0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         },
         "stop_n_inliers": {
             "domain": [
                 null,
                 "int"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "stop_probability": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float in range [0, 1]"
         },
         "stop_score": {
             "domain": [
                 null,
                 "float"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "float"
         }
     },
     "RadiusNeighborsRegressor": {
@@ -3171,14 +3586,16 @@
                 "kd_tree",
                 "brute"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{auto, ball_tree, kd_tree, brute}"
         },
         "leaf_size": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "metric": {
             "domain": [
@@ -3188,14 +3605,16 @@
                 "chebyshev",
                 "haversine"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str or callable"
         },
         "metric_params": {
             "domain": [
                 null,
                 "dict"
             ],
-            "type": "categorical_or_dict"
+            "domain_type": "categorical_or_dict",
+            "data_type": "dict"
         },
         "n_jobs": {
             "domain": [
@@ -3204,28 +3623,32 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "p": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "radius": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "weights": {
             "domain": [
                 "uniform",
                 "distance"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{uniform, distance}, callable or None"
         }
     },
     "RandomForestRegressor": {
@@ -3234,14 +3657,16 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "ccp_alpha": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "non-negative float"
         },
         "criterion": {
             "domain": [
@@ -3249,7 +3674,8 @@
                 "absolute_error",
                 "poisson"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
         },
         "max_depth": {
             "domain": [
@@ -3257,7 +3683,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "max_features": {
             "domain": [
@@ -3266,7 +3693,8 @@
                 "log2",
                 null
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{sqrt, log2, None}, int or float"
         },
         "max_leaf_nodes": {
             "domain": [
@@ -3274,7 +3702,8 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "max_samples": {
             "domain": [
@@ -3282,42 +3711,48 @@
                 0.0,
                 1.0
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int or float"
         },
         "min_impurity_decrease": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "min_samples_leaf": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_samples_split": {
             "domain": [
                 2,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int or float"
         },
         "min_weight_fraction_leaf": {
             "domain": [
                 0.0,
                 0.5
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "n_estimators": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -3326,14 +3761,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "oob_score": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool or callable"
         },
         "random_state": {
             "domain": [
@@ -3341,21 +3778,24 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance or None"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "Ridge": {
@@ -3364,21 +3804,24 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "{float, ndarray of shape (n_targets,)}"
         },
         "copy_X": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
@@ -3386,14 +3829,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "positive": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "random_state": {
             "domain": [
@@ -3401,7 +3846,8 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "solver": {
             "domain": [
@@ -3414,14 +3860,16 @@
                 "saga",
                 "lbfgs"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{auto, svd, cholesky, lsqr, sparse_cg, sag, saga, lbfgs}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         }
     },
     "RidgeCV": {
@@ -3430,14 +3878,16 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "alphas": {
             "domain": [
                 null,
                 "array-like"
             ],
-            "type": "categorical_or_array"
+            "domain_type": "categorical_or_array",
+            "data_type": "array-like of shape (n_alphas,)"
         },
         "cv": {
             "domain": [
@@ -3446,14 +3896,16 @@
                 "cross-validation generator",
                 "iterable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "int, cross-validation generator or an iterable"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "gcv_mode": {
             "domain": [
@@ -3461,7 +3913,8 @@
                 "svd",
                 "eigen"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{auto, svd, eigen}"
         },
         "scoring": {
             "domain": [
@@ -3469,14 +3922,16 @@
                 "str",
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "str, callable"
         },
         "store_cv_values": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "SGDRegressor": {
@@ -3485,7 +3940,8 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "average": {
             "domain": [
@@ -3493,42 +3949,48 @@
                 false,
                 "int"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "bool or int"
         },
         "early_stopping": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "epsilon": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "eta0": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "l1_ratio": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "learning_rate": {
             "domain": [
@@ -3537,7 +3999,8 @@
                 "invscaling",
                 "adaptive"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str"
         },
         "loss": {
             "domain": [
@@ -3546,21 +4009,24 @@
                 "epsilon_insensitive",
                 "squared_epsilon_insensitive"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "str"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_iter_no_change": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "penalty": {
             "domain": [
@@ -3568,14 +4034,16 @@
                 "l1",
                 "elasticnet"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{l2, l1, elasticnet, None}"
         },
         "power_t": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "random_state": {
             "domain": [
@@ -3583,42 +4051,48 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance"
         },
         "shuffle": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float or None"
         },
         "validation_fraction": {
             "domain": [
                 0.0,
                 1.0
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     },
     "SVR": {
@@ -3627,35 +4101,40 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "cache_size": {
             "domain": [
                 1.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "coef0": {
             "domain": [
                 -1.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "degree": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "epsilon": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "gamma": {
             "domain": [
@@ -3663,7 +4142,8 @@
                 "auto",
                 "float"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "{scale, auto} or float"
         },
         "kernel": {
             "domain": [
@@ -3673,35 +4153,40 @@
                 "sigmoid",
                 "precomputed"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
         },
         "max_iter": {
             "domain": [
                 -1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "shrinking": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         }
     },
     "TheilSenRegressor": {
@@ -3710,28 +4195,32 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "max_subpopulation": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "n_jobs": {
             "domain": [
@@ -3740,14 +4229,16 @@
                 1,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int"
         },
         "n_subsamples": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "random_state": {
             "domain": [
@@ -3755,21 +4246,24 @@
                 0,
                 "inf"
             ],
-            "type": "categorical_or_interval"
+            "domain_type": "categorical_or_interval",
+            "data_type": "int, RandomState instance or None"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "bool"
         }
     },
     "TransformedTargetRegressor": {
@@ -3778,34 +4272,39 @@
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "func": {
             "domain": [
                 null,
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "function"
         },
         "inverse_func": {
             "domain": [
                 null,
                 "callable"
             ],
-            "type": "categorical_or_callable"
+            "domain_type": "categorical_or_callable",
+            "data_type": "function"
         },
         "regressor": {
             "domain": [
                 "estimator instance"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "object"
         },
         "transformer": {
             "domain": [
                 null,
                 "estimator instance"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "object"
         }
     },
     "TweedieRegressor": {
@@ -3814,14 +4313,16 @@
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "fit_intercept": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         },
         "link": {
             "domain": [
@@ -3829,49 +4330,56 @@
                 "identity",
                 "log"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{auto, identity, log}"
         },
         "max_iter": {
             "domain": [
                 1,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "power": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "solver": {
             "domain": [
                 "lbfgs",
                 "newton-cholesky"
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "{lbfgs, newton-cholesky}"
         },
         "tol": {
             "domain": [
                 0.0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "float"
         },
         "verbose": {
             "domain": [
                 0,
                 "inf"
             ],
-            "type": "interval"
+            "domain_type": "interval",
+            "data_type": "int"
         },
         "warm_start": {
             "domain": [
                 true,
                 false
             ],
-            "type": "categorical"
+            "domain_type": "categorical",
+            "data_type": "bool"
         }
     }
 }

@@ -1911,6 +1911,30 @@ class PersistenceManager:
     #     with open(os.path.join(full_path_model, 'training-done.txt'), 'w') as file:
     #         file.write('Training completed successfully.\n')
 
+def get_file_sizes(directory):
+    """
+    Recursively get the size of all files in a directory.
+
+    Parameters:
+    -----------
+    directory : str
+        Path to the directory.
+
+    Returns:
+    --------
+    dict
+        A dictionary with file paths as keys and their sizes in bytes as values.
+    """
+    file_sizes = {}
+    for dirpath, _, filenames in os.walk(directory):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            try:
+                file_sizes[fp] = os.path.getsize(fp)
+            except FileNotFoundError:
+                # Handle cases where the file might be deleted or inaccessible
+                file_sizes[fp] = None
+    return file_sizes
 
 def persist_model_to_disk_structure(
     path_to_save_model,
@@ -1968,7 +1992,7 @@ def persist_model_to_disk_structure(
         │   │   │       ├── scaler (file)
         │   │   │       ├── preprocessed data (if provided)
         │   │   │       └── additional files (if any)
-        │   │   │   ├── training-done.txt (file)  # New line
+        │   │   │   ├── training-done.txt (file)
 
     Description:
     ------------
@@ -1976,12 +2000,12 @@ def persist_model_to_disk_structure(
     at the specified location. It handles directory creation and saving of relevant objects
     (model, metadata, scaler, and preprocessed data). Preprocessed data and additional objects
     are saved only if provided.
-    
+
     A file named `training-done.txt` is created in the `folder_name_time_execution` directory 
     as a flag to indicate that the model training has been completed successfully. This can be 
     useful for other processes or systems that may be monitoring the model training process, 
     to know when the training and saving tasks have been completed.
-    
+
     Error handling is performed to ensure that any issues encountered during the persistence 
     process are captured and logged, providing easier debugging and ensuring the integrity of 
     the saved data.
@@ -1991,37 +2015,42 @@ def persist_model_to_disk_structure(
     additional_persistable_objects_to_save = additional_persistable_objects_to_save or []
 
     pm = PersistenceManager(
-        base_path = path_to_save_model,
-        folder_name_model = folder_name_model, 
-        folder_name_range_train = folder_name_range_train, 
-        folder_name_time_execution = folder_name_time_execution
+        base_path=path_to_save_model,
+        folder_name_model=folder_name_model,
+        folder_name_range_train=folder_name_range_train,
+        folder_name_time_execution=folder_name_time_execution
     )
 
+    # Save objects
     pm.save_model(model, **kwargs_save_object)
     pm.save_metadata(metadata, **kwargs_save_object)
     pm.save_scaler(scaler, **kwargs_save_object)
-    pm.save_parameters(df_parameters=df_parameters,**kwargs_save_object)
-
+    pm.save_parameters(df_parameters=df_parameters, **kwargs_save_object)
     pm.create_flag("training-done")
 
     # Save each preprocessed data item
     if folder_name_preprocessed_data:
         for name, data in preprocessed_data.items():
             pm.save_preprocessed_data(
-                preprocessed_data=data, 
-                folder_name_preprocessed_data=folder_name_preprocessed_data, 
+                preprocessed_data=data,
+                folder_name_preprocessed_data=folder_name_preprocessed_data,
                 name=name,
                 **kwargs_save_object
             )
 
     pm.create_flag("preprocessing-done")
 
+    # Calculate the size of all files recursively
+    root_path = pm.path
+    metadata["persistence_size"] = {
+        "files": get_file_sizes(root_path)
+    }
+
+    # Save updated metadata with sizes
+    pm.save_metadata(metadata, **{**kwargs_save_object, 'overwrite': True})
+
     # Save any additional persistable objects
     #ToDo update this part of function
     # for obj in additional_persistable_objects_to_save:
     #     obj.save()
 
-    # # ToDo: Next part of code is obsolete. Review with testing if can I remove or not 
-    # Create training-done.txt to indicate training completion
-    # with open(os.path.join(pm.path, 'training-done.txt'), 'w') as file:
-    #     file.write('Training completed successfully.\n')

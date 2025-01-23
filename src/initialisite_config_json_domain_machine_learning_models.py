@@ -54,6 +54,7 @@ Version: Scikit-learn 1.3.2
 
 # Hyperparameter domains for regressors in scikit-learn
 from ConfigManager import ConfigManager
+from predictions import recommend_distribution_and_range
 
 
 all_regressors_with_its_parameters_and_domains = {
@@ -2237,13 +2238,21 @@ all_sklearn_regressors_with_all_info = config_manager.load_config(
 )
 
 # Add data type to all_regressors_with_its_parameters_and_domains
-for model in all_sklearn_regressors_with_all_info.keys():
-    if model in all_regressors_with_its_parameters_and_domains:
-        for dic in all_sklearn_regressors_with_all_info[model]["parameters_info"]:
+for regressor in all_sklearn_regressors_with_all_info.keys():
+    if regressor in all_regressors_with_its_parameters_and_domains:
+        for dic in all_sklearn_regressors_with_all_info[regressor]["parameters_info"]:
             parameter = dic["parameter"]
             data_type = dic["data_type"]
-            if parameter in all_regressors_with_its_parameters_and_domains[model]:
-                all_regressors_with_its_parameters_and_domains[model][parameter]["data_type"] = data_type
+            recommended_distribution_and_range = recommend_distribution_and_range(
+                regressor_name=regressor,
+                param_name=parameter,
+                domain=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain"],
+                domain_type=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain_type"]
+            )
+            if parameter in all_regressors_with_its_parameters_and_domains[regressor]:
+                all_regressors_with_its_parameters_and_domains[regressor][parameter]["data_type"] = data_type
+                all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_distribution"] = recommended_distribution_and_range["recommended_distribution"]
+                all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_range"] = recommended_distribution_and_range["recommended_range"]
 
 # Save sklearn details (version and date of doc scrapping)
 config_manager.save_config(

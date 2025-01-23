@@ -731,7 +731,7 @@ def create_model_machine_learning_algorithm(
         folder_name_preprocessed_data="preprocessed-data-to-use-in-model",
         machine_learning_model_args=None,
         measure_time=False, 
-        metadata_preprocessing = None,
+        metadata_preprocessing = {},
         logger: logging.Logger = None,
         kwargs_save_object: Dict = {},
         **kwargs
@@ -1911,6 +1911,462 @@ def generate_cv_grid_regressor_sklearn(
         cv_grid[param] = values
 
     return cv_grid
+
+def recommend_distribution_and_range(regressor_name, param_name, domain, domain_type):
+    """
+    Recommends a distribution and range for a given parameter of a scikit-learn regressor.
+
+    This function analyzes the parameter name, its domain, and type to provide:
+      - A recommended sampling distribution for hyperparameter tuning (e.g., "uniform", "log", "categorical").
+      - A range or set of values tailored to the parameter's usage context.
+      
+    While `regressor_name` is currently unused, it is included to allow future customization 
+    for specific regressors. For example, certain parameters might have slightly different 
+    ranges depending on the regressor.
+
+    Parameters
+    ----------
+    regressor_name : str
+        The name of the regressor (e.g., "RandomForestRegressor", "SVR"). 
+        Currently unused but reserved for future enhancements.
+    param_name : str
+        The name of the parameter (e.g., "alpha", "n_estimators", "learning_rate").
+    domain : list
+        The allowed domain of the parameter. Typically a two-element list for intervals 
+        (e.g., `[0.0, "inf"]`) or a list of discrete values for categorical parameters 
+        (e.g., `["auto", "sqrt", "log2", None]`).
+    domain_type : str
+        The type of domain, indicating how the parameter values are structured:
+        - "interval": Numeric range, potentially unbounded (e.g., `[0.0, "inf"]`).
+        - "categorical": Discrete choices (e.g., `[True, False]`, `["linear", "poly"]`).
+        - Other combinations like "categorical_or_interval", "categorical_or_callable".
+
+    Returns
+    -------
+    dict
+        A dictionary with the following keys:
+        - recommended_distribution : str
+            The suggested sampling distribution:
+            - "uniform": Uniform sampling over a range.
+            - "log": Logarithmic sampling for parameters spanning multiple orders of magnitude.
+            - "categorical": Sampling from a set of discrete values.
+            - "none": Exclude this parameter from tuning.
+        - recommended_range : list
+            The recommended range or set of values to sample. For "interval" domains, 
+            this will be a numeric range (e.g., `[1e-6, 1e3]`). For "categorical" domains, 
+            it will be the list of discrete values.
+
+    Notes
+    -----
+    - This function uses heuristics based on common parameter names and usage patterns 
+      in scikit-learn regressors. It is opinionated and should be adapted for specific needs.
+    - Parameters like `random_state`, `verbose`, and `n_jobs` are typically excluded from 
+      tuning and assigned a distribution of "none".
+    - The inclusion of `regressor_name` allows for future customization or regressor-specific 
+      overrides, but it is currently unused in the logic.
+
+    Examples
+    --------
+    >>> recommend_distribution_and_range("RandomForestRegressor", "n_estimators", [1, "inf"], "interval")
+    ('uniform', [50, 300])
+
+    >>> recommend_distribution_and_range("SVR", "C", [0.0, "inf"], "interval")
+    ('log', [1e-3, 1e3])
+
+    >>> recommend_distribution_and_range("GradientBoostingRegressor", "learning_rate", [0.0, "inf"], "interval")
+    ('log', [1e-4, 1.0])
+
+    >>> recommend_distribution_and_range("RandomForestRegressor", "bootstrap", [True, False], "categorical")
+    ('categorical', [True, False])
+
+    OTHER IMPORTANT NOTES:
+    1) Many parameters like 'random_state', 'verbose', 'n_jobs', etc. are typically NOT tuned,
+       so we often mark them as "none" or provide a minimal range/option.
+    2) Boolean or categorical parameters are assigned a "categorical" distribution with their discrete domain.
+    3) The numeric ranges here are only heuristics. You can widen or narrow them depending on real use-cases.
+    4) If the domain includes special values like None or "auto", you might exclude them or keep them as possible
+       categorical choices, depending on your pipeline.
+    5) If you see repeated logic for certain param patterns (e.g. "alpha", "lambda", "C", etc.), it's intentional
+       because these typically benefit from a log-scale search with a specific range.
+    6) For interval-based parameters in [0,1], "uniform" sampling is common. For thresholds or tolerances, "log" is common.
+    """
+
+    # Default distribution and range if we cannot match any specific pattern:
+    recommended_distribution = "uniform"
+    recommended_range = [0.0, 1.0]  # generic fallback
+
+    result = {
+    "recommended_distribution": recommended_distribution,  
+    "recommended_range": recommended_range
+    }
+
+    # Extract potential numeric start/end for convenience
+    # domain often looks like [something, "inf"] or [0.0, 1.0]. 
+    if isinstance(domain, list) and len(domain) == 2:
+        start, end = domain
+    else:
+        start, end = None, None
+
+    # Helper to check if domain boundary is infinite
+    def is_inf(x):
+        return (isinstance(x, str) and (x.lower() == "inf" or x.lower() == "-inf"))
+
+    # Convert param name to lowercase for matching
+    p_lower = param_name.lower()
+
+    # -------------------------------------------------------------------------
+    #                 CATEGORICAL OR BOOLEAN PARAMETERS
+    # -------------------------------------------------------------------------
+    # If the domain type is "categorical" or "categorical_or_X" and the domain is a list of discrete values:
+    #  -> We do not create a numeric range. We'll keep them as "categorical" if we truly want to tune them.
+    # If the domain is boolean, we also keep it as "categorical" with [True, False].
+    # -------------------------------------------------------------------------
+    if domain_type.startswith("categorical"):
+        # Some parameters that are purely boolean or small sets of discrete choices:
+        # Example: "fit_intercept", "positive", "warm_start", "bootstrap", "oob_score", etc.
+        # We keep them as "categorical" if they are booleans or small enumerations.
+
+        # If you do NOT want to tune these at all, you could set:
+        # recommended_distribution = "none"
+        # recommended_range = []
+        # But here we'll keep them in "categorical" for demonstration.
+        result["recommended_distribution"] = "categorical"
+        result["recommended_range"] = domain
+        # We do not do any special numeric logic here. 
+        # Return now if we consider all "categorical*" done:
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 EXCLUDING SOME PARAMETERS
+    # -------------------------------------------------------------------------
+    # random_state / verbose / n_jobs / copy_X / n_jobs / etc. are typically not tuned.
+    # Mark them as "none" to exclude from search if domain_type is interval or something else.
+    # -------------------------------------------------------------------------
+    exclude_params = {
+        "random_state",  # usually fix or ignore
+        "verbose",       # typically not tuned
+        "n_jobs",        # typically a resource choice
+        "nthread",       # not present here, but common in xgboost
+        "thread_count",  # not present here, but example
+        "copy_x",        # parameter rarely tuned
+        "copy_x_train",  # parameter rarely tuned
+        "check_inverse"  # for TransformedTargetRegressor
+    }
+    if p_lower in exclude_params:
+        result["recommended_distribution"] = "none"
+        result["recommended_range"] = []
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 LOG-SCALE FOR CERTAIN REGULARIZATION / LR
+    # -------------------------------------------------------------------------
+    # Many regularization params (alpha, lambda, C) or learning rates often
+    # need log-scale sampling in a typical range. We do partial overrides below.
+    # -------------------------------------------------------------------------
+    if ("alpha" in p_lower or "lambda" in p_lower) and domain_type == "interval":
+        # e.g. alpha, alpha_1, alpha_2, lambda_1, lambda_2, ccp_alpha, threshold_lambda, ...
+        recommended_distribution = "log"
+        # For ccp_alpha (used in trees) we pick a smaller upper bound:
+        if "ccp_alpha" in p_lower:
+            recommended_range = [1e-7, 1.0]
+        elif "threshold_lambda" in p_lower:
+            # ARD or Bayesian parameters
+            recommended_range = [1e-7, 1e3]
+        else:
+            recommended_range = [1e-7, 1e3]
+
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+
+        return result
+
+    if p_lower == "c" and domain_type == "interval":
+        # Typical for SVM-based regressors
+        recommended_distribution = "log"
+        recommended_range = [1e-3, 1e3]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "gamma" in p_lower and domain_type == "interval":
+        # For SVM or Kernel-based
+        recommended_distribution = "log"
+        # If domain is [0.0, inf], let's pick a typical range
+        recommended_range = [1e-4, 1e1]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "learning_rate" in p_lower and domain_type == "interval":
+        # Used in gradient boosting, MLP, or similar
+        recommended_distribution = "log"
+        recommended_range = [1e-4, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "eta0" in p_lower and domain_type == "interval":
+        # This is the initial learning rate in SGD
+        recommended_distribution = "log"
+        recommended_range = [1e-5, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 ITERATIONS-RELATED PARAMETERS
+    # -------------------------------------------------------------------------
+    # Common iteration parameters: max_iter, n_iter, n_estimators, etc.
+    # Typically uniform search in a moderate range (e.g. [50, 300] for n_estimators).
+    # -------------------------------------------------------------------------
+    if any(x in p_lower for x in ["max_iter", "n_iter"]) and domain_type == "interval":
+        # For robust usage, let's propose up to 2000
+        recommended_distribution = "uniform"
+        # If the domain is [1, inf], we pick [50, 1000] or [50, 2000] 
+        recommended_range = [50, 1000]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "n_estimators" in p_lower and domain_type == "interval":
+        recommended_distribution = "uniform"
+        recommended_range = [50, 300]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "max_depth" in p_lower and domain_type == "interval":
+        # Usually small range for tree-based methods
+        recommended_distribution = "uniform"
+        recommended_range = [1, 30]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "max_bins" in p_lower and domain_type == "interval":
+        # HistGradientBoosting typically allows a wide range. 
+        # We'll use [32, 255] as an example.
+        recommended_distribution = "uniform"
+        recommended_range = [32, 255]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 SAMPLING-RELATED PARAMETERS
+    # -------------------------------------------------------------------------
+    # For min_samples_split, min_samples_leaf, etc. we often do a small integer range (uniform).
+    # For fraction-based parameters (like subsample, min_weight_fraction_leaf, etc.),
+    # we do uniform in [0.0, 1.0], sometimes narrower.
+    # -------------------------------------------------------------------------
+    if "min_samples_split" in p_lower and domain_type == "interval":
+        recommended_distribution = "uniform"
+        # if the domain is [2, inf], let's define up to 50
+        recommended_range = [2, 50]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "min_samples_leaf" in p_lower and domain_type == "interval":
+        recommended_distribution = "uniform"
+        recommended_range = [1, 20]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "min_weight_fraction_leaf" in p_lower and domain_type == "interval":
+        # Usually [0.0, 0.5]
+        recommended_distribution = "uniform"
+        recommended_range = [0.0, 0.5]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "subsample" in p_lower and domain_type == "interval":
+        # Typically [0.5, 1.0] for GBDT
+        recommended_distribution = "uniform"
+        recommended_range = [0.5, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "validation_fraction" in p_lower and domain_type == "interval":
+        # Usually in [0.0, 0.3]
+        recommended_distribution = "uniform"
+        recommended_range = [0.1, 0.3]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "max_samples" in p_lower and domain_type == "interval":
+        # For Bagging or similar, typical usage is (0.5,1.0]
+        recommended_distribution = "uniform"
+        recommended_range = [0.5, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+    # -------------------------------------------------------------------------
+    #                 TOLERANCE AND EPSILON
+    # -------------------------------------------------------------------------
+    # Many parameters called "tol" or "epsilon" are best explored in log-scale.
+    # -------------------------------------------------------------------------
+    if p_lower == "tol" and domain_type == "interval":
+        recommended_distribution = "log"
+        recommended_range = [1e-6, 1e-2]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "epsilon" in p_lower and domain_type == "interval":
+        # For SVR, sometimes a log-scale in [1e-4, 1.0], 
+        # for Huber or similar, might differ if domain is [1.0, inf].
+        # We'll unify an approach:
+        recommended_distribution = "log"
+        recommended_range = [1e-4, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if p_lower == "eps" and domain_type == "interval":
+        # LassoCV or LarsCV often has eps in the sense of "small regularization".
+        recommended_distribution = "log"
+        recommended_range = [1e-6, 1e-1]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 DISTANCE / NEIGHBORS / RADIUS
+    # -------------------------------------------------------------------------
+    if "n_neighbors" in p_lower and domain_type == "interval":
+        recommended_distribution = "uniform"
+        recommended_range = [1, 50]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "leaf_size" in p_lower and domain_type == "interval":
+        # For KNeighbors or RadiusNeighbors
+        recommended_distribution = "uniform"
+        recommended_range = [20, 50]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if "radius" in p_lower and domain_type == "interval":
+        # For RadiusNeighborsRegressor
+        recommended_distribution = "log"
+        recommended_range = [1e-3, 10.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if p_lower == "p" and domain_type == "interval":
+        # Minkowski power parameter (KNeighbors). Typically in [1, 2]
+        recommended_distribution = "uniform"
+        recommended_range = [1, 2]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 MLP-SPECIFIC (momentum, beta_1, beta_2, power_t, etc.)
+    # -------------------------------------------------------------------------
+    if p_lower == "momentum" and domain_type == "interval":
+        # Typically in [0,1], so let's keep it uniform
+        recommended_distribution = "uniform"
+        recommended_range = [0.0, 0.99]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if p_lower in ("beta_1", "beta_2") and domain_type == "interval":
+        # Usually in [0,1]. 
+        recommended_distribution = "uniform"
+        recommended_range = [0.8, 0.999]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if p_lower == "power_t" and domain_type == "interval":
+        # For SGD. Typically in log scale if domain is large, or uniform if small.
+        recommended_distribution = "log"
+        recommended_range = [1e-3, 1.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    if p_lower == "max_fun" and domain_type == "interval":
+        # MLP: rarely tuned, but if we do, let's keep uniform in [1000, 50000]
+        recommended_distribution = "uniform"
+        recommended_range = [1000, 50000]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 TWEEDIE / POWER
+    # -------------------------------------------------------------------------
+    if p_lower == "power" and domain_type == "interval":
+        # For TweedieRegressor, typical in [0,2]. 
+        recommended_distribution = "uniform"
+        recommended_range = [0.0, 2.0]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 SMALL FRACTION / QUANTILE
+    # -------------------------------------------------------------------------
+    if p_lower == "quantile" and domain_type == "interval":
+        # Typically [0.0,1.0], but let's restrict to [0.05, 0.95]
+        recommended_distribution = "uniform"
+        recommended_range = [0.05, 0.95]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 N_COMPONENTS (PLS, PCA-likes)
+    # -------------------------------------------------------------------------
+    if "n_components" in p_lower and domain_type == "interval":
+        # For PLS, CCA, etc. Usually from 1 up to some moderate value
+        recommended_distribution = "uniform"
+        recommended_range = [1, 20]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    # -------------------------------------------------------------------------
+    #                 FALLBACK FOR ANY INTERVAL WE DID NOT COVER
+    # -------------------------------------------------------------------------
+    if domain_type == "interval":
+        # If we reached here, we have an interval parameter we haven't specifically matched.
+        # We try to see if it is in [0,1], we keep "uniform".
+        # If it's [1, inf], we do [1, 50]. If it's [0, inf], fallback to [1e-6, 1e2].
+        # Adjust as you see fit.
+        recommended_distribution = "uniform"
+        # If start is numeric and end is numeric, keep them if they look bounded
+        if isinstance(start, (int, float)) and isinstance(end, (int, float)):
+            if start >= 0 and end <= 1:
+                # e.g. [0.0, 0.5], keep it
+                recommended_range = [start, end]
+            else:
+                # Could be [1, 100], or something in general
+                recommended_range = [start, min(end, 50) if not is_inf(end) else 50]
+        else:
+            # If we see 'inf', let's pick [1e-3, 1e2]
+            recommended_range = [1e-3, 1e2]
+
+    else:
+        # If domain_type is something else, we keep "none" by default, or just keep domain
+        recommended_distribution = "none"
+        recommended_range = []
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
+
+    return result
 
 def create_cv_hyperparameters_model(
         df, 

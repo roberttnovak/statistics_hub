@@ -19,7 +19,7 @@
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
         "regressor_params": {
-            "max_iter": null,
+            "max_iter": 300,
             "tol": 0.001,
             "alpha_1": 1e-06,
             "alpha_2": 1e-06,
@@ -29,8 +29,7 @@
             "threshold_lambda": 10000,
             "fit_intercept": true,
             "copy_X": true,
-            "verbose": false,
-            "n_iter": null
+            "verbose": false
         },
         "time_serie_args": {
             "name_time_column": "timestamp",
@@ -197,7 +196,7 @@
             "fin_test": "2023-04-26 00:00:00+00:00"
         },
         "regressor_params": {
-            "max_iter": null,
+            "max_iter": 300,
             "tol": 0.001,
             "alpha_1": 1e-06,
             "alpha_2": 1e-06,
@@ -208,8 +207,7 @@
             "compute_score": false,
             "fit_intercept": true,
             "copy_X": true,
-            "verbose": false,
-            "n_iter": null
+            "verbose": false
         },
         "time_serie_args": {
             "name_time_column": "timestamp",
@@ -1645,7 +1643,7 @@
             "loss": "epsilon_insensitive",
             "fit_intercept": true,
             "intercept_scaling": 1.0,
-            "dual": true,
+            "dual": "auto",
             "verbose": 0,
             "random_state": null,
             "max_iter": 1000
@@ -2826,8 +2824,8 @@
             "scoring": null,
             "cv": null,
             "gcv_mode": "auto",
-            "store_cv_values": false,
-            "alpha_per_target": false
+            "alpha_per_target": false,
+            "store_cv_values": null
         },
         "time_serie_args": {
             "name_time_column": "timestamp",

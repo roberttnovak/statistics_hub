@@ -4,8 +4,8 @@
         "parameters_info": [
             {
                 "parameter": "max_iter",
-                "description": "Maximum number of iterations. If None, it corresponds to max_iter=300.\n\nChanged in version 1.3.\n\n",
-                "value_default": "None",
+                "description": "Maximum number of iterations.\n\nChanged in version 1.3.\n\n",
+                "value_default": "300",
                 "data_type": "int"
             },
             {
@@ -67,12 +67,6 @@
                 "description": "Verbose mode when fitting the model.\n",
                 "value_default": "False",
                 "data_type": "bool"
-            },
-            {
-                "parameter": "n_iter",
-                "description": "Maximum number of iterations.\n\nDeprecated since version 1.3: n_iter is deprecated in 1.3 and will be removed in 1.5. Use\nmax_iter instead.\n\n",
-                "value_default": null,
-                "data_type": "int"
             }
         ],
         "references": [
@@ -86,7 +80,7 @@
         "parameters_info": [
             {
                 "parameter": "estimator",
-                "description": "The base estimator from which the boosted ensemble is built.\nIf None, then the base estimator is\nDecisionTreeRegressor initialized with\nmax_depth=3.\n\nNew in version 1.2: base_estimator was renamed to estimator.\n\n",
+                "description": "The base estimator from which the boosted ensemble is built.\nIf None, then the base estimator is\nDecisionTreeRegressor initialized with\nmax_depth=3.\n\nAdded in version 1.2: base_estimator was renamed to estimator.\n\n",
                 "value_default": "None",
                 "data_type": "object"
             },
@@ -126,7 +120,7 @@
         "parameters_info": [
             {
                 "parameter": "estimator",
-                "description": "The base estimator to fit on random subsets of the dataset.\nIf None, then the base estimator is a\nDecisionTreeRegressor.\n\nNew in version 1.2: base_estimator was renamed to estimator.\n\n",
+                "description": "The base estimator to fit on random subsets of the dataset.\nIf None, then the base estimator is a\nDecisionTreeRegressor.\n\nAdded in version 1.2: base_estimator was renamed to estimator.\n\n",
                 "value_default": "None",
                 "data_type": "object"
             },
@@ -200,12 +194,12 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html"
     },
     "BayesianRidge": {
-        "regressor_info": "Bayesian ridge regression.\nFit a Bayesian ridge model. See the Notes section for details on this\nimplementation and the optimization of the regularization parameters\nlambda (precision of the weights) and alpha (precision of the noise).\nRead more in the User Guide.",
+        "regressor_info": "Bayesian ridge regression.\nFit a Bayesian ridge model. See the Notes section for details on this\nimplementation and the optimization of the regularization parameters\nlambda (precision of the weights) and alpha (precision of the noise).\nRead more in the User Guide.\nFor an intuitive visualization of how the sinusoid is approximated by\na polynomial using different pairs of initial values, see\nCurve Fitting with Bayesian Ridge Regression.",
         "parameters_info": [
             {
                 "parameter": "max_iter",
-                "description": "Maximum number of iterations over the complete dataset before\nstopping independently of any early stopping criterion. If None, it\ncorresponds to max_iter=300.\n\nChanged in version 1.3.\n\n",
-                "value_default": "None",
+                "description": "Maximum number of iterations over the complete dataset before\nstopping independently of any early stopping criterion.\n\nChanged in version 1.3.\n\n",
+                "value_default": "300",
                 "data_type": "int"
             },
             {
@@ -240,13 +234,13 @@
             },
             {
                 "parameter": "alpha_init",
-                "description": "Initial value for alpha (precision of the noise).\nIf not set, alpha_init is 1/Var(y).\n\n\nNew in version 0.22.\n\n\n",
+                "description": "Initial value for alpha (precision of the noise).\nIf not set, alpha_init is 1/Var(y).\n\nAdded in version 0.22.\n\n",
                 "value_default": "None",
                 "data_type": "float"
             },
             {
                 "parameter": "lambda_init",
-                "description": "Initial value for lambda (precision of the weights).\nIf not set, lambda_init is 1.\n\n\nNew in version 0.22.\n\n\n",
+                "description": "Initial value for lambda (precision of the weights).\nIf not set, lambda_init is 1.\n\nAdded in version 0.22.\n\n",
                 "value_default": "None",
                 "data_type": "float"
             },
@@ -273,12 +267,6 @@
                 "description": "Verbose mode when fitting the model.\n",
                 "value_default": "False",
                 "data_type": "bool"
-            },
-            {
-                "parameter": "n_iter",
-                "description": "Maximum number of iterations. Should be greater than or equal to 1.\n\nDeprecated since version 1.3: n_iter is deprecated in 1.3 and will be removed in 1.5. Use\nmax_iter instead.\n\n",
-                "value_default": null,
-                "data_type": "int"
             }
         ],
         "references": [
@@ -329,7 +317,7 @@
         "parameters_info": [
             {
                 "parameter": "criterion",
-                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
+                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in the half mean Poisson deviance to find splits.\n\nAdded in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nAdded in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
                 "data_type": "{squared_error, friedman_mse, absolute_error, poisson}"
             },
@@ -341,7 +329,7 @@
             },
             {
                 "parameter": "max_depth",
-                "description": "The maximum depth of the tree. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.\n",
+                "description": "The maximum depth of the tree. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.\nFor an example of how max_depth influences the model, see\nDecision Tree Regression.\n",
                 "value_default": "None",
                 "data_type": "int"
             },
@@ -383,13 +371,13 @@
             },
             {
                 "parameter": "min_impurity_decrease",
-                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nNew in version 0.19.\n\n",
+                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nAdded in version 0.19.\n\n",
                 "value_default": "0.0",
                 "data_type": "float"
             },
             {
                 "parameter": "ccp_alpha",
-                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
+                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details. See\nPost pruning decision trees with cost complexity pruning\nfor an example of such pruning.\n\nAdded in version 0.22.\n\n",
                 "value_default": "0.0",
                 "data_type": "non-negative float"
             }
@@ -450,7 +438,7 @@
             },
             {
                 "parameter": "precompute",
-                "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\n",
+                "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. The Gram matrix can also be passed as argument.\nFor sparse input this option is always False to preserve sparsity.\nCheck an example on how to use a precomputed Gram Matrix in ElasticNet\nfor details.\n",
                 "value_default": "False",
                 "data_type": "bool or array-like of shape (n_features, n_features), default=False"
             },
@@ -602,7 +590,7 @@
         "parameters_info": [
             {
                 "parameter": "criterion",
-                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 0.24: Poisson deviance criterion.\n\n",
+                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\n\nAdded in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nAdded in version 0.24: Poisson deviance criterion.\n\n",
                 "value_default": "squared_error",
                 "data_type": "{squared_error, friedman_mse, absolute_error, poisson}, default=squared_error"
             },
@@ -650,7 +638,7 @@
             },
             {
                 "parameter": "min_impurity_decrease",
-                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nNew in version 0.19.\n\n",
+                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nAdded in version 0.19.\n\n",
                 "value_default": "0.0",
                 "data_type": "float"
             },
@@ -662,7 +650,7 @@
             },
             {
                 "parameter": "ccp_alpha",
-                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
+                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details. See\nPost pruning decision trees with cost complexity pruning\nfor an example of such pruning.\n\nAdded in version 0.22.\n\n",
                 "value_default": "0.0",
                 "data_type": "non-negative float"
             }
@@ -683,7 +671,7 @@
             },
             {
                 "parameter": "criterion",
-                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n",
+                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nAdded in version 0.18: Mean Absolute Error (MAE) criterion.\n\n",
                 "value_default": "squared_error",
                 "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
             },
@@ -725,7 +713,7 @@
             },
             {
                 "parameter": "min_impurity_decrease",
-                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nNew in version 0.19.\n\n",
+                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nAdded in version 0.19.\n\n",
                 "value_default": "0.0",
                 "data_type": "float"
             },
@@ -761,19 +749,19 @@
             },
             {
                 "parameter": "warm_start",
-                "description": "When set to True, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit a whole\nnew forest. See Glossary and\nFitting additional weak-learners for details.\n",
+                "description": "When set to True, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit a whole\nnew forest. See Glossary and\nFitting additional trees for details.\n",
                 "value_default": "False",
                 "data_type": "bool"
             },
             {
                 "parameter": "ccp_alpha",
-                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
+                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details. See\nPost pruning decision trees with cost complexity pruning\nfor an example of such pruning.\n\nAdded in version 0.22.\n\n",
                 "value_default": "0.0",
                 "data_type": "non-negative float"
             },
             {
                 "parameter": "max_samples",
-                "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max_samples * X.shape[0] samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
+                "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max_samples * X.shape[0] samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nAdded in version 0.22.\n\n",
                 "value_default": "None",
                 "data_type": "int or float"
             }
@@ -800,7 +788,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
+                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nAdded in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
                 "data_type": "{lbfgs, newton-cholesky}"
             },
@@ -873,7 +861,7 @@
             },
             {
                 "parameter": "n_targets",
-                "description": "The number of dimensions of the target values. Used to decide the number\nof outputs when sampling from the prior distributions (i.e. calling\nsample_y before fit). This parameter is ignored once\nfit has been called.\n\nNew in version 1.3.\n\n",
+                "description": "The number of dimensions of the target values. Used to decide the number\nof outputs when sampling from the prior distributions (i.e. calling\nsample_y before fit). This parameter is ignored once\nfit has been called.\n\nAdded in version 1.3.\n\n",
                 "value_default": "None",
                 "data_type": "int"
             },
@@ -890,11 +878,11 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html"
     },
     "GradientBoostingRegressor": {
-        "regressor_info": "Gradient Boosting for regression.\nThis estimator builds an additive model in a forward stage-wise fashion; it\nallows for the optimization of arbitrary differentiable loss functions. In\neach stage a regression tree is fit on the negative gradient of the given\nloss function.\nsklearn.ensemble.HistGradientBoostingRegressor is a much faster\nvariant of this algorithm for intermediate datasets (n_samples >= 10_000).\nRead more in the User Guide.",
+        "regressor_info": "Gradient Boosting for regression.\nThis estimator builds an additive model in a forward stage-wise fashion; it\nallows for the optimization of arbitrary differentiable loss functions. In\neach stage a regression tree is fit on the negative gradient of the given\nloss function.\nHistGradientBoostingRegressor is a much faster variant\nof this algorithm for intermediate and large datasets (n_samples >= 10_000) and\nsupports monotonic constraints.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "loss",
-                "description": "Loss function to be optimized. \u2018squared_error\u2019 refers to the squared\nerror for regression. \u2018absolute_error\u2019 refers to the absolute error of\nregression and is a robust loss function. \u2018huber\u2019 is a\ncombination of the two. \u2018quantile\u2019 allows quantile regression (use\nalpha to specify the quantile).\n",
+                "description": "Loss function to be optimized. \u2018squared_error\u2019 refers to the squared\nerror for regression. \u2018absolute_error\u2019 refers to the absolute error of\nregression and is a robust loss function. \u2018huber\u2019 is a\ncombination of the two. \u2018quantile\u2019 allows quantile regression (use\nalpha to specify the quantile).\nSee\nPrediction Intervals for Gradient Boosting Regression\nfor an example that demonstrates quantile regression for creating\nprediction intervals with loss='quantile'.\n",
                 "value_default": "squared_error",
                 "data_type": "{squared_error, absolute_error, huber, quantile}, default=squared_error"
             },
@@ -918,7 +906,7 @@
             },
             {
                 "parameter": "criterion",
-                "description": "The function to measure the quality of a split. Supported criteria are\n\u201cfriedman_mse\u201d for the mean squared error with improvement score by\nFriedman, \u201csquared_error\u201d for mean squared error. The default value of\n\u201cfriedman_mse\u201d is generally the best as it can provide a better\napproximation in some cases.\n\nNew in version 0.18.\n\n",
+                "description": "The function to measure the quality of a split. Supported criteria are\n\u201cfriedman_mse\u201d for the mean squared error with improvement score by\nFriedman, \u201csquared_error\u201d for mean squared error. The default value of\n\u201cfriedman_mse\u201d is generally the best as it can provide a better\napproximation in some cases.\n\nAdded in version 0.18.\n\n",
                 "value_default": "friedman_mse",
                 "data_type": "{friedman_mse, squared_error}"
             },
@@ -948,7 +936,7 @@
             },
             {
                 "parameter": "min_impurity_decrease",
-                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nValues must be in the range [0.0, inf).\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nNew in version 0.19.\n\n",
+                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nValues must be in the range [0.0, inf).\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nAdded in version 0.19.\n\n",
                 "value_default": "0.0",
                 "data_type": "float"
             },
@@ -996,25 +984,25 @@
             },
             {
                 "parameter": "validation_fraction",
-                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Values must be in the range (0.0, 1.0).\nOnly used if n_iter_no_change is set to an integer.\n\nNew in version 0.20.\n\n",
+                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Values must be in the range (0.0, 1.0).\nOnly used if n_iter_no_change is set to an integer.\n\nAdded in version 0.20.\n\n",
                 "value_default": "0.1",
                 "data_type": "float"
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "n_iter_no_change is used to decide if early stopping will be used\nto terminate training when validation score is not improving. By\ndefault it is set to None to disable early stopping. If set to a\nnumber, it will set aside validation_fraction size of the training\ndata as validation and terminate training when validation score is not\nimproving in all of the previous n_iter_no_change numbers of\niterations.\nValues must be in the range [1, inf).\nSee\nEarly stopping in Gradient Boosting.\n\nNew in version 0.20.\n\n",
+                "description": "n_iter_no_change is used to decide if early stopping will be used\nto terminate training when validation score is not improving. By\ndefault it is set to None to disable early stopping. If set to a\nnumber, it will set aside validation_fraction size of the training\ndata as validation and terminate training when validation score is not\nimproving in all of the previous n_iter_no_change numbers of\niterations.\nValues must be in the range [1, inf).\nSee\nEarly stopping in Gradient Boosting.\n\nAdded in version 0.20.\n\n",
                 "value_default": "None",
                 "data_type": "int"
             },
             {
                 "parameter": "tol",
-                "description": "Tolerance for the early stopping. When the loss is not improving\nby at least tol for n_iter_no_change iterations (if set to a\nnumber), the training stops.\nValues must be in the range [0.0, inf).\n\nNew in version 0.20.\n\n",
+                "description": "Tolerance for the early stopping. When the loss is not improving\nby at least tol for n_iter_no_change iterations (if set to a\nnumber), the training stops.\nValues must be in the range [0.0, inf).\n\nAdded in version 0.20.\n\n",
                 "value_default": "1e-4",
                 "data_type": "float"
             },
             {
                 "parameter": "ccp_alpha",
-                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed.\nValues must be in the range [0.0, inf).\nSee Minimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
+                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed.\nValues must be in the range [0.0, inf).\nSee Minimal Cost-Complexity Pruning for details. See\nPost pruning decision trees with cost complexity pruning\nfor an example of such pruning.\n\nAdded in version 0.22.\n\n",
                 "value_default": "0.0",
                 "data_type": "non-negative float"
             }
@@ -1026,7 +1014,7 @@
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html"
     },
     "HistGradientBoostingRegressor": {
-        "regressor_info": "Histogram-based Gradient Boosting Regression Tree.\nThis estimator is much faster than\nGradientBoostingRegressor\nfor big datasets (n_samples >= 10 000).\nThis estimator has native support for missing values (NaNs). During\ntraining, the tree grower learns at each split point whether samples\nwith missing values should go to the left or right child, based on the\npotential gain. When predicting, samples with missing values are\nassigned to the left or right child consequently. If no missing values\nwere encountered for a given feature during training, then samples with\nmissing values are mapped to whichever child has the most samples.\nThis implementation is inspired by\nLightGBM.\nRead more in the User Guide.",
+        "regressor_info": "Histogram-based Gradient Boosting Regression Tree.\nThis estimator is much faster than\nGradientBoostingRegressor\nfor big datasets (n_samples >= 10 000).\nThis estimator has native support for missing values (NaNs). During\ntraining, the tree grower learns at each split point whether samples\nwith missing values should go to the left or right child, based on the\npotential gain. When predicting, samples with missing values are\nassigned to the left or right child consequently. If no missing values\nwere encountered for a given feature during training, then samples with\nmissing values are mapped to whichever child has the most samples.\nSee Features in Histogram Gradient Boosting Trees for a\nusecase example of this feature.\nThis implementation is inspired by\nLightGBM.\nRead more in the User Guide.",
         "parameters_info": [
             {
                 "parameter": "loss",
@@ -1072,7 +1060,7 @@
             },
             {
                 "parameter": "l2_regularization",
-                "description": "The L2 regularization parameter. Use 0 for no regularization (default).\n",
+                "description": "The L2 regularization parameter penalizing leaves with small hessians.\nUse 0 for no regularization (default).\n",
                 "value_default": "0",
                 "data_type": "float"
             },
@@ -1084,19 +1072,19 @@
             },
             {
                 "parameter": "categorical_features",
-                "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\"from_dtype\": dataframe columns with dtype \u201ccategory\u201d are\nconsidered to be categorical features. The input must be an object\nexposing a __dataframe__ method such as pandas or polars\nDataFrames to use this feature.\n\nFor each categorical feature, there must be at most max_bins unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\nRead more in the User Guide.\n\nNew in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n\nChanged in version 1.4: Added \"from_dtype\" option. The default will change to \"from_dtype\" in\nv1.6.\n\n",
+                "description": "Indicates the categorical features.\n\nNone : no feature will be considered categorical.\nboolean array-like : boolean mask indicating categorical features.\ninteger array-like : integer indices indicating categorical\nfeatures.\nstr array-like: names of categorical features (assuming the training\ndata has feature names).\n\"from_dtype\": dataframe columns with dtype \u201ccategory\u201d are\nconsidered to be categorical features. The input must be an object\nexposing a __dataframe__ method such as pandas or polars\nDataFrames to use this feature.\n\nFor each categorical feature, there must be at most max_bins unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\nRead more in the User Guide.\n\nAdded in version 0.24.\n\n\nChanged in version 1.2: Added support for feature names.\n\n\nChanged in version 1.4: Added \"from_dtype\" option.\n\n\nChanged in version 1.6: The default value changed from None to \"from_dtype\".\n\n",
                 "value_default": "None",
                 "data_type": "array-like of {bool, int, str} of shape (n_features) or shape (n_categorical_features,)"
             },
             {
                 "parameter": "monotonic_cst",
-                "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n1: monotonic increase\n0: no constraint\n-1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\nUsing feature names to specify monotonic constraints for a usage example.\nRead more in the User Guide.\n\nNew in version 0.23.\n\n\nChanged in version 1.2: Accept dict of constraints with feature names as keys.\n\n",
+                "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n1: monotonic increase\n0: no constraint\n-1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\nUsing feature names to specify monotonic constraints for a usage example.\nRead more in the User Guide.\n\nAdded in version 0.23.\n\n\nChanged in version 1.2: Accept dict of constraints with feature names as keys.\n\n",
                 "value_default": "None",
                 "data_type": "array-like of int of shape (n_features) or dict"
             },
             {
                 "parameter": "interaction_cst",
-                "description": "Specify interaction constraints, the sets of features which can\ninteract with each other in child node splits.\nEach item specifies the set of feature indices that are allowed\nto interact with each other. If there are more features than\nspecified in these constraints, they are treated as if they were\nspecified as an additional set.\nThe strings \u201cpairwise\u201d and \u201cno_interactions\u201d are shorthands for\nallowing only pairwise or no interactions, respectively.\nFor instance, with 5 features in total, interaction_cst=[{0, 1}]\nis equivalent to interaction_cst=[{0, 1}, {2, 3, 4}],\nand specifies that each branch of a tree will either only split\non features 0 and 1 or only split on features 2, 3 and 4.\n\nNew in version 1.2.\n\n",
+                "description": "Specify interaction constraints, the sets of features which can\ninteract with each other in child node splits.\nEach item specifies the set of feature indices that are allowed\nto interact with each other. If there are more features than\nspecified in these constraints, they are treated as if they were\nspecified as an additional set.\nThe strings \u201cpairwise\u201d and \u201cno_interactions\u201d are shorthands for\nallowing only pairwise or no interactions, respectively.\nFor instance, with 5 features in total, interaction_cst=[{0, 1}]\nis equivalent to interaction_cst=[{0, 1}, {2, 3, 4}],\nand specifies that each branch of a tree will either only split\non features 0 and 1 or only split on features 2, 3 and 4.\n\nAdded in version 1.2.\n\n",
                 "value_default": "None",
                 "data_type": "{pairwise, no_interactions} or sequence of lists/tuples/sets of int"
             },
@@ -1108,13 +1096,13 @@
             },
             {
                 "parameter": "early_stopping",
-                "description": "If \u2018auto\u2019, early stopping is enabled if the sample size is larger than\n10000. If True, early stopping is enabled, otherwise early stopping is\ndisabled.\n\nNew in version 0.23.\n\n",
+                "description": "If \u2018auto\u2019, early stopping is enabled if the sample size is larger than\n10000. If True, early stopping is enabled, otherwise early stopping is\ndisabled.\n\nAdded in version 0.23.\n\n",
                 "value_default": "auto",
                 "data_type": "auto or bool"
             },
             {
                 "parameter": "scoring",
-                "description": "Scoring parameter to use for early stopping. It can be a single\nstring (see The scoring parameter: defining model evaluation rules) or a callable (see\nDefining your scoring strategy from metric functions). If None, the estimator\u2019s default scorer is used. If\nscoring='loss', early stopping is checked w.r.t the loss value.\nOnly used if early stopping is performed.\n",
+                "description": "Scoring parameter to use for early stopping. It can be a single\nstring (see The scoring parameter: defining model evaluation rules) or a callable (see\nCallable scorers). If None, the estimator\u2019s default scorer is used. If\nscoring='loss', early stopping is checked w.r.t the loss value.\nOnly used if early stopping is performed.\n",
                 "value_default": "loss",
                 "data_type": "str or callable or None"
             },
@@ -1138,7 +1126,7 @@
             },
             {
                 "parameter": "verbose",
-                "description": "The verbosity level. If not zero, print some information about the\nfitting process.\n",
+                "description": "The verbosity level. If not zero, print some information about the\nfitting process. 1 prints only summary info, 2 prints info per\niteration.\n",
                 "value_default": "0",
                 "data_type": "int"
             },
@@ -1193,8 +1181,8 @@
             }
         ],
         "references": [
-            "[1]\nPeter J. Huber, Elvezio M. Ronchetti, Robust Statistics\nConcomitant scale estimates, pg 172",
-            "[2]\nArt B. Owen (2006), A robust hybrid of lasso and ridge regression.\nhttps://statweb.stanford.edu/~owen/reports/hhu.pdf"
+            "[1]\nPeter J. Huber, Elvezio M. Ronchetti, Robust Statistics\nConcomitant scale estimates, p. 172",
+            "[2]\nArt B. Owen (2006), A robust hybrid of lasso and ridge regression."
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html"
     },
@@ -1244,7 +1232,7 @@
             },
             {
                 "parameter": "weights",
-                "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\n",
+                "description": "Weight function used in prediction.  Possible values:\n\n\u2018uniform\u2019 : uniform weights.  All points in each neighborhood\nare weighted equally.\n\u2018distance\u2019 : weight points by the inverse of their distance.\nin this case, closer neighbors of a query point will have a\ngreater influence than neighbors which are further away.\n[callable] : a user-defined function which accepts an\narray of distances, and returns an array of the same shape\ncontaining the weights.\n\nUniform weights are used by default.\nSee the following example for a demonstration of the impact of\ndifferent weighting schemes on predictions:\nNearest Neighbors regression.\n",
                 "value_default": "uniform",
                 "data_type": "{uniform, distance}, callable or None"
             },
@@ -1378,13 +1366,13 @@
             },
             {
                 "parameter": "jitter",
-                "description": "Upper bound on a uniform noise parameter to be added to the\ny values, to satisfy the model\u2019s assumption of\none-at-a-time computations. Might help with stability.\n\nNew in version 0.23.\n\n",
+                "description": "Upper bound on a uniform noise parameter to be added to the\ny values, to satisfy the model\u2019s assumption of\none-at-a-time computations. Might help with stability.\n\nAdded in version 0.23.\n\n",
                 "value_default": "None",
                 "data_type": "float"
             },
             {
                 "parameter": "random_state",
-                "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
+                "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nAdded in version 0.23.\n\n",
                 "value_default": "None",
                 "data_type": "int, RandomState instance or None"
             }
@@ -1670,13 +1658,13 @@
             },
             {
                 "parameter": "jitter",
-                "description": "Upper bound on a uniform noise parameter to be added to the\ny values, to satisfy the model\u2019s assumption of\none-at-a-time computations. Might help with stability.\n\nNew in version 0.23.\n\n",
+                "description": "Upper bound on a uniform noise parameter to be added to the\ny values, to satisfy the model\u2019s assumption of\none-at-a-time computations. Might help with stability.\n\nAdded in version 0.23.\n\n",
                 "value_default": "None",
                 "data_type": "float"
             },
             {
                 "parameter": "random_state",
-                "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nNew in version 0.23.\n\n",
+                "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee Glossary. Ignored if jitter is None.\n\nAdded in version 0.23.\n\n",
                 "value_default": "None",
                 "data_type": "int, RandomState instance or None"
             }
@@ -1804,7 +1792,7 @@
             },
             {
                 "parameter": "noise_variance",
-                "description": "The estimated noise variance of the data. If None, an unbiased\nestimate is computed by an OLS model. However, it is only possible\nin the case where n_samples > n_features + fit_intercept.\n\nNew in version 1.1.\n\n",
+                "description": "The estimated noise variance of the data. If None, an unbiased\nestimate is computed by an OLS model. However, it is only possible\nin the case where n_samples > n_features + fit_intercept.\n\nAdded in version 1.1.\n\n",
                 "value_default": "None",
                 "data_type": "float"
             }
@@ -1839,7 +1827,7 @@
             },
             {
                 "parameter": "positive",
-                "description": "When set to True, forces the coefficients to be positive. This\noption is only supported for dense arrays.\n\nNew in version 0.24.\n\n",
+                "description": "When set to True, forces the coefficients to be positive. This\noption is only supported for dense arrays.\n\nAdded in version 0.24.\n\n",
                 "value_default": "False",
                 "data_type": "bool"
             }
@@ -1889,7 +1877,7 @@
             {
                 "parameter": "dual",
                 "description": "Select the algorithm to either solve the dual or primal\noptimization problem. Prefer dual=False when n_samples > n_features.\ndual=\"auto\" will choose the value of the parameter automatically,\nbased on the values of n_samples, n_features and loss. If\nn_samples < n_features and optimizer supports chosen loss,\nthen dual will be set to True, otherwise it will be set to False.\n\nChanged in version 1.3: The \"auto\" option is added in version 1.3 and will be the default\nin version 1.5.\n\n",
-                "value_default": "True",
+                "value_default": "auto",
                 "data_type": "auto or bool"
             },
             {
@@ -1931,7 +1919,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "The solver for weight optimization.\n\n\u2018lbfgs\u2019 is an optimizer in the family of quasi-Newton methods.\n\u2018sgd\u2019 refers to stochastic gradient descent.\n\u2018adam\u2019 refers to a stochastic gradient-based optimizer proposed by\nKingma, Diederik, and Jimmy Ba\n\nNote: The default solver \u2018adam\u2019 works pretty well on relatively\nlarge datasets (with thousands of training samples or more) in terms of\nboth training time and validation score.\nFor small datasets, however, \u2018lbfgs\u2019 can converge faster and perform\nbetter.\n",
+                "description": "The solver for weight optimization.\n\n\u2018lbfgs\u2019 is an optimizer in the family of quasi-Newton methods.\n\u2018sgd\u2019 refers to stochastic gradient descent.\n\u2018adam\u2019 refers to a stochastic gradient-based optimizer proposed by\nKingma, Diederik, and Jimmy Ba\n\nFor a comparison between Adam optimizer and SGD, see\nCompare Stochastic learning strategies for MLPClassifier.\nNote: The default solver \u2018adam\u2019 works pretty well on relatively\nlarge datasets (with thousands of training samples or more) in terms of\nboth training time and validation score.\nFor small datasets, however, \u2018lbfgs\u2019 can converge faster and perform\nbetter.\n",
                 "value_default": "adam",
                 "data_type": "{lbfgs, sgd, adam}"
             },
@@ -2045,13 +2033,13 @@
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "Maximum number of epochs to not meet tol improvement.\nOnly effective when solver=\u2019sgd\u2019 or \u2018adam\u2019.\n\nNew in version 0.20.\n\n",
+                "description": "Maximum number of epochs to not meet tol improvement.\nOnly effective when solver=\u2019sgd\u2019 or \u2018adam\u2019.\n\nAdded in version 0.20.\n\n",
                 "value_default": "10",
                 "data_type": "int"
             },
             {
                 "parameter": "max_fun",
-                "description": "Only used when solver=\u2019lbfgs\u2019. Maximum number of function calls.\nThe solver iterates until convergence (determined by tol), number\nof iterations reaches max_iter, or this number of function calls.\nNote that number of function calls will be greater than or equal to\nthe number of iterations for the MLPRegressor.\n\nNew in version 0.22.\n\n",
+                "description": "Only used when solver=\u2019lbfgs\u2019. Maximum number of function calls.\nThe solver iterates until convergence (determined by tol), number\nof iterations reaches max_iter, or this number of function calls.\nNote that number of function calls will be greater than or equal to\nthe number of iterations for the MLPRegressor.\n\nAdded in version 0.22.\n\n",
                 "value_default": "15000",
                 "data_type": "int"
             }
@@ -2355,13 +2343,13 @@
             },
             {
                 "parameter": "C",
-                "description": "Penalty parameter C of the error term.\n",
+                "description": "Penalty parameter C of the error term. For an intuitive visualization\nof the effects of scaling the regularization parameter C, see\nScaling the regularization parameter for SVCs.\n",
                 "value_default": "1.0",
                 "data_type": "float"
             },
             {
                 "parameter": "kernel",
-                "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
+                "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\nFor an intuitive visualization of different kernel types see\nSee Support Vector Regression (SVR) using linear and non-linear kernels\n",
                 "value_default": "rbf",
                 "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
             },
@@ -2425,7 +2413,7 @@
         "parameters_info": [
             {
                 "parameter": "n_nonzero_coefs",
-                "description": "Desired number of non-zero entries in the solution. If None (by\ndefault) this value is set to 10% of n_features.\n",
+                "description": "Desired number of non-zero entries in the solution. Ignored if tol is set.\nWhen None and tol is also None, this value is either set to 10% of\nn_features or 1, whichever is greater.\n",
                 "value_default": "None",
                 "data_type": "int"
             },
@@ -2542,7 +2530,7 @@
         "parameters_info": [
             {
                 "parameter": "n_components",
-                "description": "Number of components to keep. Should be in [1, min(n_samples,\nn_features, n_targets)].\n",
+                "description": "Number of components to keep. Should be in [1, n_features].\n",
                 "value_default": "2",
                 "data_type": "int"
             },
@@ -2591,31 +2579,31 @@
             },
             {
                 "parameter": "max_iter",
-                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\n\nNew in version 0.19.\n\n",
+                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\n\nAdded in version 0.19.\n\n",
                 "value_default": "1000",
                 "data_type": "int"
             },
             {
                 "parameter": "tol",
-                "description": "The stopping criterion. If it is not None, the iterations will stop\nwhen (loss > previous_loss - tol).\n\nNew in version 0.19.\n\n",
+                "description": "The stopping criterion. If it is not None, the iterations will stop\nwhen (loss > previous_loss - tol).\n\nAdded in version 0.19.\n\n",
                 "value_default": "1e-3",
                 "data_type": "float or None"
             },
             {
                 "parameter": "early_stopping",
-                "description": "Whether to use early stopping to terminate training when validation.\nscore is not improving. If set to True, it will automatically set aside\na fraction of training data as validation and terminate\ntraining when validation score is not improving by at least tol for\nn_iter_no_change consecutive epochs.\n\nNew in version 0.20.\n\n",
+                "description": "Whether to use early stopping to terminate training when validation.\nscore is not improving. If set to True, it will automatically set aside\na fraction of training data as validation and terminate\ntraining when validation score is not improving by at least tol for\nn_iter_no_change consecutive epochs.\n\nAdded in version 0.20.\n\n",
                 "value_default": "False",
                 "data_type": "bool"
             },
             {
                 "parameter": "validation_fraction",
-                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\n\nNew in version 0.20.\n\n",
+                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\n\nAdded in version 0.20.\n\n",
                 "value_default": "0.1",
                 "data_type": "float"
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "Number of iterations with no improvement to wait before early stopping.\n\nNew in version 0.20.\n\n",
+                "description": "Number of iterations with no improvement to wait before early stopping.\n\nAdded in version 0.20.\n\n",
                 "value_default": "5",
                 "data_type": "int"
             },
@@ -2657,7 +2645,7 @@
             },
             {
                 "parameter": "average",
-                "description": "When set to True, computes the averaged SGD weights and stores the\nresult in the coef_ attribute. If set to an int greater than 1,\naveraging will begin once the total number of samples seen reaches\naverage. So average=10 will begin averaging after seeing 10 samples.\n\nNew in version 0.19: parameter average to use weights averaging in SGD.\n\n",
+                "description": "When set to True, computes the averaged SGD weights and stores the\nresult in the coef_ attribute. If set to an int greater than 1,\naveraging will begin once the total number of samples seen reaches\naverage. So average=10 will begin averaging after seeing 10 samples.\n\nAdded in version 0.19: parameter average to use weights averaging in SGD.\n\n",
                 "value_default": "False",
                 "data_type": "bool or int"
             }
@@ -2684,7 +2672,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
+                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nAdded in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
                 "data_type": "{lbfgs, newton-cholesky}"
             },
@@ -2739,7 +2727,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nFrom scipy>=1.6.0, it is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver changed to \"highs\" in version 1.4.\n\n",
+                "description": "Method used by scipy.optimize.linprog to solve the linear\nprogramming formulation.\nIt is recommended to use the highs methods because\nthey are the fastest ones. Solvers \u201chighs-ds\u201d, \u201chighs-ipm\u201d and \u201chighs\u201d\nsupport sparse input data and, in fact, always convert to sparse csc.\nFrom scipy>=1.11.0, \u201cinterior-point\u201d is not available anymore.\n\nChanged in version 1.4: The default of solver changed to \"highs\" in version 1.4.\n\n",
                 "value_default": "highs",
                 "data_type": "{highs-ds, highs-ipm, highs, interior-point, revised simplex}"
             },
@@ -2758,7 +2746,7 @@
         "parameters_info": [
             {
                 "parameter": "estimator",
-                "description": "Base estimator object which implements the following methods:\n\n\nfit(X, y): Fit model to given training data and target values.\nscore(X, y): Returns the mean accuracy on the given test data,\nwhich is used for the stop criterion defined by stop_score.\nAdditionally, the score is used to decide which of two equally\nlarge consensus sets is chosen as the better one.\npredict(X): Returns predicted values using the linear model,\nwhich is used to compute residual error using loss function.\n\n\nIf estimator is None, then\nLinearRegression is used for\ntarget values of dtype float.\nNote that the current implementation only supports regression\nestimators.\n",
+                "description": "Base estimator object which implements the following methods:\n\nfit(X, y): Fit model to given training data and target values.\nscore(X, y): Returns the mean accuracy on the given test data,\nwhich is used for the stop criterion defined by stop_score.\nAdditionally, the score is used to decide which of two equally\nlarge consensus sets is chosen as the better one.\npredict(X): Returns predicted values using the linear model,\nwhich is used to compute residual error using loss function.\n\nIf estimator is None, then\nLinearRegression is used for\ntarget values of dtype float.\nNote that the current implementation only supports regression\nestimators.\n",
                 "value_default": "None",
                 "data_type": "object"
             },
@@ -2794,7 +2782,7 @@
             },
             {
                 "parameter": "max_skips",
-                "description": "Maximum number of iterations that can be skipped due to finding zero\ninliers or invalid data defined by is_data_valid or invalid models\ndefined by is_model_valid.\n\nNew in version 0.19.\n\n",
+                "description": "Maximum number of iterations that can be skipped due to finding zero\ninliers or invalid data defined by is_data_valid or invalid models\ndefined by is_model_valid.\n\nAdded in version 0.19.\n\n",
                 "value_default": "np.inf",
                 "data_type": "int"
             },
@@ -2818,7 +2806,7 @@
             },
             {
                 "parameter": "loss",
-                "description": "String inputs, \u2018absolute_error\u2019 and \u2018squared_error\u2019 are supported which\nfind the absolute error and squared error per sample respectively.\nIf loss is a callable, then it should be a function that takes\ntwo arrays as inputs, the true and predicted value and returns a 1-D\narray with the i-th value of the array corresponding to the loss\non X[i].\nIf the loss on a sample is greater than the residual_threshold,\nthen this sample is classified as an outlier.\n\nNew in version 0.18.\n\n",
+                "description": "String inputs, \u2018absolute_error\u2019 and \u2018squared_error\u2019 are supported which\nfind the absolute error and squared error per sample respectively.\nIf loss is a callable, then it should be a function that takes\ntwo arrays as inputs, the true and predicted value and returns a 1-D\narray with the i-th value of the array corresponding to the loss\non X[i].\nIf the loss on a sample is greater than the residual_threshold,\nthen this sample is classified as an outlier.\n\nAdded in version 0.18.\n\n",
                 "value_default": "absolute_error",
                 "data_type": "str, callable"
             },
@@ -2832,7 +2820,7 @@
         "references": [
             "[1]\nhttps://en.wikipedia.org/wiki/RANSAC",
             "[2]\nhttps://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf",
-            "[3]\nhttp://www.bmva.org/bmvc/2009/Papers/Paper355/Paper355.pdf"
+            "[3]\nhttps://bmva-archive.org.uk/bmvc/2009/Papers/Paper355/Paper355.pdf"
         ],
         "url_scrapped": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html"
     },
@@ -2902,7 +2890,7 @@
             },
             {
                 "parameter": "criterion",
-                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nNew in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nNew in version 1.0: Poisson criterion.\n\n",
+                "description": "The function to measure the quality of a split. Supported criteria\nare \u201csquared_error\u201d for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \u201cfriedman_mse\u201d, which uses\nmean squared error with Friedman\u2019s improvement score for potential\nsplits, \u201cabsolute_error\u201d for the mean absolute error, which minimizes\nthe L1 loss using the median of each terminal node, and \u201cpoisson\u201d which\nuses reduction in Poisson deviance to find splits.\nTraining using \u201cabsolute_error\u201d is significantly slower\nthan when using \u201csquared_error\u201d.\n\nAdded in version 0.18: Mean Absolute Error (MAE) criterion.\n\n\nAdded in version 1.0: Poisson criterion.\n\n",
                 "value_default": "squared_error",
                 "data_type": "{squared_error, absolute_error, friedman_mse, poisson}, default=squared_error"
             },
@@ -2944,7 +2932,7 @@
             },
             {
                 "parameter": "min_impurity_decrease",
-                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nNew in version 0.19.\n\n",
+                "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nThe weighted impurity decrease equation is the following:\nN_t / N * (impurity - N_t_R / N_t * right_impurity\n                    - N_t_L / N_t * left_impurity)\n\n\nwhere N is the total number of samples, N_t is the number of\nsamples at the current node, N_t_L is the number of samples in the\nleft child, and N_t_R is the number of samples in the right child.\nN, N_t, N_t_R and N_t_L all refer to the weighted sum,\nif sample_weight is passed.\n\nAdded in version 0.19.\n\n",
                 "value_default": "0.0",
                 "data_type": "float"
             },
@@ -2980,19 +2968,19 @@
             },
             {
                 "parameter": "warm_start",
-                "description": "When set to True, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit a whole\nnew forest. See Glossary and\nFitting additional weak-learners for details.\n",
+                "description": "When set to True, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit a whole\nnew forest. See Glossary and\nFitting additional trees for details.\n",
                 "value_default": "False",
                 "data_type": "bool"
             },
             {
                 "parameter": "ccp_alpha",
-                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details.\n\nNew in version 0.22.\n\n",
+                "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\nccp_alpha will be chosen. By default, no pruning is performed. See\nMinimal Cost-Complexity Pruning for details. See\nPost pruning decision trees with cost complexity pruning\nfor an example of such pruning.\n\nAdded in version 0.22.\n\n",
                 "value_default": "0.0",
                 "data_type": "non-negative float"
             },
             {
                 "parameter": "max_samples",
-                "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max(round(n_samples * max_samples), 1) samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nNew in version 0.22.\n\n",
+                "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\nIf None (default), then draw X.shape[0] samples.\nIf int, then draw max_samples samples.\nIf float, then draw max(round(n_samples * max_samples), 1) samples. Thus,\nmax_samples should be in the interval (0.0, 1.0].\n\n\nAdded in version 0.22.\n\n",
                 "value_default": "None",
                 "data_type": "int or float"
             }
@@ -3038,7 +3026,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "Solver to use in the computational routines:\n\n\u2018auto\u2019 chooses the solver automatically based on the type of data.\n\u2018svd\u2019 uses a Singular Value Decomposition of X to compute the Ridge\ncoefficients. It is the most stable solver, in particular more stable\nfor singular matrices than \u2018cholesky\u2019 at the cost of being slower.\n\u2018cholesky\u2019 uses the standard scipy.linalg.solve function to\nobtain a closed-form solution.\n\u2018sparse_cg\u2019 uses the conjugate gradient solver as found in\nscipy.sparse.linalg.cg. As an iterative algorithm, this solver is\nmore appropriate than \u2018cholesky\u2019 for large-scale data\n(possibility to set tol and max_iter).\n\u2018lsqr\u2019 uses the dedicated regularized least-squares routine\nscipy.sparse.linalg.lsqr. It is the fastest and uses an iterative\nprocedure.\n\u2018sag\u2019 uses a Stochastic Average Gradient descent, and \u2018saga\u2019 uses\nits improved, unbiased version named SAGA. Both methods also use an\niterative procedure, and are often faster than other solvers when\nboth n_samples and n_features are large. Note that \u2018sag\u2019 and\n\u2018saga\u2019 fast convergence is only guaranteed on features with\napproximately the same scale. You can preprocess the data with a\nscaler from sklearn.preprocessing.\n\u2018lbfgs\u2019 uses L-BFGS-B algorithm implemented in\nscipy.optimize.minimize. It can be used only when positive\nis True.\n\nAll solvers except \u2018svd\u2019 support both dense and sparse data. However, only\n\u2018lsqr\u2019, \u2018sag\u2019, \u2018sparse_cg\u2019, and \u2018lbfgs\u2019 support sparse input when\nfit_intercept is True.\n\nNew in version 0.17: Stochastic Average Gradient descent solver.\n\n\nNew in version 0.19: SAGA solver.\n\n",
+                "description": "Solver to use in the computational routines:\n\n\u2018auto\u2019 chooses the solver automatically based on the type of data.\n\u2018svd\u2019 uses a Singular Value Decomposition of X to compute the Ridge\ncoefficients. It is the most stable solver, in particular more stable\nfor singular matrices than \u2018cholesky\u2019 at the cost of being slower.\n\u2018cholesky\u2019 uses the standard scipy.linalg.solve function to\nobtain a closed-form solution.\n\u2018sparse_cg\u2019 uses the conjugate gradient solver as found in\nscipy.sparse.linalg.cg. As an iterative algorithm, this solver is\nmore appropriate than \u2018cholesky\u2019 for large-scale data\n(possibility to set tol and max_iter).\n\u2018lsqr\u2019 uses the dedicated regularized least-squares routine\nscipy.sparse.linalg.lsqr. It is the fastest and uses an iterative\nprocedure.\n\u2018sag\u2019 uses a Stochastic Average Gradient descent, and \u2018saga\u2019 uses\nits improved, unbiased version named SAGA. Both methods also use an\niterative procedure, and are often faster than other solvers when\nboth n_samples and n_features are large. Note that \u2018sag\u2019 and\n\u2018saga\u2019 fast convergence is only guaranteed on features with\napproximately the same scale. You can preprocess the data with a\nscaler from sklearn.preprocessing.\n\u2018lbfgs\u2019 uses L-BFGS-B algorithm implemented in\nscipy.optimize.minimize. It can be used only when positive\nis True.\n\nAll solvers except \u2018svd\u2019 support both dense and sparse data. However, only\n\u2018lsqr\u2019, \u2018sag\u2019, \u2018sparse_cg\u2019, and \u2018lbfgs\u2019 support sparse input when\nfit_intercept is True.\n\nAdded in version 0.17: Stochastic Average Gradient descent solver.\n\n\nAdded in version 0.19: SAGA solver.\n\n",
                 "value_default": "auto",
                 "data_type": "{auto, svd, cholesky, lsqr, sparse_cg, sag, saga, lbfgs}"
             },
@@ -3050,7 +3038,7 @@
             },
             {
                 "parameter": "random_state",
-                "description": "Used when solver == \u2018sag\u2019 or \u2018saga\u2019 to shuffle the data.\nSee Glossary for details.\n\nNew in version 0.17: random_state to support Stochastic Average Gradient.\n\n",
+                "description": "Used when solver == \u2018sag\u2019 or \u2018saga\u2019 to shuffle the data.\nSee Glossary for details.\n\nAdded in version 0.17: random_state to support Stochastic Average Gradient.\n\n",
                 "value_default": "None",
                 "data_type": "int, RandomState instance"
             }
@@ -3063,7 +3051,7 @@
         "parameters_info": [
             {
                 "parameter": "alphas",
-                "description": "Array of alpha values to try.\nRegularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to 1 / (2C) in other linear models such as\nLogisticRegression or\nLinearSVC.\nIf using Leave-One-Out cross-validation, alphas must be positive.\n",
+                "description": "Array of alpha values to try.\nRegularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to 1 / (2C) in other linear models such as\nLogisticRegression or\nLinearSVC.\nIf using Leave-One-Out cross-validation, alphas must be strictly positive.\n",
                 "value_default": "(0.1,1.0,10.0)",
                 "data_type": "array-like of shape (n_alphas,)"
             },
@@ -3075,7 +3063,7 @@
             },
             {
                 "parameter": "scoring",
-                "description": "A string (see model evaluation documentation) or\na scorer callable object / function with signature\nscorer(estimator, X, y).\nIf None, the negative mean squared error if cv is \u2018auto\u2019 or None\n(i.e. when using leave-one-out cross-validation), and r2 score\notherwise.\n",
+                "description": "A string (see The scoring parameter: defining model evaluation rules) or a scorer callable object /\nfunction with signature scorer(estimator, X, y). If None, the\nnegative mean squared error if cv is \u2018auto\u2019 or None (i.e. when using\nleave-one-out cross-validation), and r2 score otherwise.\n",
                 "value_default": "None",
                 "data_type": "str, callable"
             },
@@ -3092,15 +3080,15 @@
                 "data_type": "{auto, svd, eigen}"
             },
             {
-                "parameter": "store_cv_values",
-                "description": "Flag indicating if the cross-validation values corresponding to\neach alpha should be stored in the cv_values_ attribute (see\nbelow). This flag is only compatible with cv=None (i.e. using\nLeave-One-Out Cross-Validation).\n",
+                "parameter": "alpha_per_target",
+                "description": "Flag indicating whether to optimize the alpha value (picked from the\nalphas parameter list) for each target separately (for multi-output\nsettings: multiple prediction targets). When set to True, after\nfitting, the alpha_ attribute will contain a value for each target.\nWhen set to False, a single alpha is used for all targets.\n\nAdded in version 0.24.\n\n",
                 "value_default": "False",
                 "data_type": "bool"
             },
             {
-                "parameter": "alpha_per_target",
-                "description": "Flag indicating whether to optimize the alpha value (picked from the\nalphas parameter list) for each target separately (for multi-output\nsettings: multiple prediction targets). When set to True, after\nfitting, the alpha_ attribute will contain a value for each target.\nWhen set to False, a single alpha is used for all targets.\n\nNew in version 0.24.\n\n",
-                "value_default": "False",
+                "parameter": "store_cv_values",
+                "description": "Flag indicating if the cross-validation values corresponding to\neach alpha should be stored in the cv_values_ attribute (see\nbelow). This flag is only compatible with cv=None (i.e. using\nLeave-One-Out Cross-Validation).\n\nDeprecated since version 1.5: store_cv_values is deprecated in version 1.5 in favor of\nstore_cv_results and will be removed in version 1.7.\n\n",
+                "value_default": null,
                 "data_type": "bool"
             }
         ],
@@ -3118,7 +3106,7 @@
             },
             {
                 "parameter": "penalty",
-                "description": "The penalty (aka regularization term) to be used. Defaults to \u2018l2\u2019\nwhich is the standard regularizer for linear SVM models. \u2018l1\u2019 and\n\u2018elasticnet\u2019 might bring sparsity to the model (feature selection)\nnot achievable with \u2018l2\u2019. No penalty is added when set to None.\n",
+                "description": "The penalty (aka regularization term) to be used. Defaults to \u2018l2\u2019\nwhich is the standard regularizer for linear SVM models. \u2018l1\u2019 and\n\u2018elasticnet\u2019 might bring sparsity to the model (feature selection)\nnot achievable with \u2018l2\u2019. No penalty is added when set to None.\nYou can see a visualisation of the penalties in\nSGD: Penalties.\n",
                 "value_default": "l2",
                 "data_type": "{l2, l1, elasticnet, None}"
             },
@@ -3142,13 +3130,13 @@
             },
             {
                 "parameter": "max_iter",
-                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\nValues must be in the range [1, inf).\n\nNew in version 0.19.\n\n",
+                "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the fit method, and not the\npartial_fit method.\nValues must be in the range [1, inf).\n\nAdded in version 0.19.\n\n",
                 "value_default": "1000",
                 "data_type": "int"
             },
             {
                 "parameter": "tol",
-                "description": "The stopping criterion. If it is not None, training will stop\nwhen (loss > best_loss - tol) for n_iter_no_change consecutive\nepochs.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nValues must be in the range [0.0, inf).\n\nNew in version 0.19.\n\n",
+                "description": "The stopping criterion. If it is not None, training will stop\nwhen (loss > best_loss - tol) for n_iter_no_change consecutive\nepochs.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nValues must be in the range [0.0, inf).\n\nAdded in version 0.19.\n\n",
                 "value_default": "1e-3",
                 "data_type": "float or None"
             },
@@ -3178,7 +3166,7 @@
             },
             {
                 "parameter": "learning_rate",
-                "description": "The learning rate schedule:\n\n\u2018constant\u2019: eta = eta0\n\u2018optimal\u2019: eta = 1.0 / (alpha * (t + t0))\nwhere t0 is chosen by a heuristic proposed by Leon Bottou.\n\u2018invscaling\u2019: eta = eta0 / pow(t, power_t)\n\u2018adaptive\u2019: eta = eta0, as long as the training keeps decreasing.\nEach time n_iter_no_change consecutive epochs fail to decrease the\ntraining loss by tol or fail to increase validation score by tol if\nearly_stopping is True, the current learning rate is divided by 5.\n\n\nNew in version 0.20: Added \u2018adaptive\u2019 option\n\n\n\n\n",
+                "description": "The learning rate schedule:\n\n\u2018constant\u2019: eta = eta0\n\u2018optimal\u2019: eta = 1.0 / (alpha * (t + t0))\nwhere t0 is chosen by a heuristic proposed by Leon Bottou.\n\u2018invscaling\u2019: eta = eta0 / pow(t, power_t)\n\u2018adaptive\u2019: eta = eta0, as long as the training keeps decreasing.\nEach time n_iter_no_change consecutive epochs fail to decrease the\ntraining loss by tol or fail to increase validation score by tol if\nearly_stopping is True, the current learning rate is divided by 5.\n\n\nAdded in version 0.20: Added \u2018adaptive\u2019 option.\n\n",
                 "value_default": "invscaling",
                 "data_type": "str"
             },
@@ -3196,19 +3184,19 @@
             },
             {
                 "parameter": "early_stopping",
-                "description": "Whether to use early stopping to terminate training when validation\nscore is not improving. If set to True, it will automatically set aside\na fraction of training data as validation and terminate\ntraining when validation score returned by the score method is not\nimproving by at least tol for n_iter_no_change consecutive\nepochs.\n\nNew in version 0.20: Added \u2018early_stopping\u2019 option\n\n",
+                "description": "Whether to use early stopping to terminate training when validation\nscore is not improving. If set to True, it will automatically set aside\na fraction of training data as validation and terminate\ntraining when validation score returned by the score method is not\nimproving by at least tol for n_iter_no_change consecutive\nepochs.\nSee Early stopping of Stochastic Gradient Descent for an\nexample of the effects of early stopping.\n\nAdded in version 0.20: Added \u2018early_stopping\u2019 option\n\n",
                 "value_default": "False",
                 "data_type": "bool"
             },
             {
                 "parameter": "validation_fraction",
-                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\nValues must be in the range (0.0, 1.0).\n\nNew in version 0.20: Added \u2018validation_fraction\u2019 option\n\n",
+                "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\nValues must be in the range (0.0, 1.0).\n\nAdded in version 0.20: Added \u2018validation_fraction\u2019 option\n\n",
                 "value_default": "0.1",
                 "data_type": "float"
             },
             {
                 "parameter": "n_iter_no_change",
-                "description": "Number of iterations with no improvement to wait before stopping\nfitting.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nInteger values must be in the range [1, max_iter).\n\nNew in version 0.20: Added \u2018n_iter_no_change\u2019 option\n\n",
+                "description": "Number of iterations with no improvement to wait before stopping\nfitting.\nConvergence is checked against the training loss or the\nvalidation loss depending on the early_stopping parameter.\nInteger values must be in the range [1, max_iter).\n\nAdded in version 0.20: Added \u2018n_iter_no_change\u2019 option\n\n",
                 "value_default": "5",
                 "data_type": "int"
             },
@@ -3233,7 +3221,7 @@
         "parameters_info": [
             {
                 "parameter": "kernel",
-                "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\n",
+                "description": "Specifies the kernel type to be used in the algorithm.\nIf none is given, \u2018rbf\u2019 will be used. If a callable is given it is\nused to precompute the kernel matrix.\nFor an intuitive visualization of different kernel types\nsee Support Vector Regression (SVR) using linear and non-linear kernels\n",
                 "value_default": "rbf",
                 "data_type": "{linear, poly, rbf, sigmoid, precomputed} or callable, default=rbf"
             },
@@ -3263,7 +3251,7 @@
             },
             {
                 "parameter": "C",
-                "description": "Regularization parameter. The strength of the regularization is\ninversely proportional to C. Must be strictly positive.\nThe penalty is a squared l2 penalty.\n",
+                "description": "Regularization parameter. The strength of the regularization is\ninversely proportional to C. Must be strictly positive.\nThe penalty is a squared l2. For an intuitive visualization of the\neffects of scaling the regularization parameter C, see\nScaling the regularization parameter for SVCs.\n",
                 "value_default": "1.0",
                 "data_type": "float"
             },
@@ -3315,7 +3303,7 @@
             },
             {
                 "parameter": "copy_X",
-                "description": "If True, X will be copied; else, it may be overwritten.\n",
+                "description": "If True, X will be copied; else, it may be overwritten.\n\nDeprecated since version 1.6: copy_X was deprecated in 1.6 and will be removed in 1.8.\nIt has no effect as a copy is always made.\n\n",
                 "value_default": "True",
                 "data_type": "bool"
             },
@@ -3382,13 +3370,13 @@
             },
             {
                 "parameter": "func",
-                "description": "Function to apply to y before passing to fit. Cannot be set\nat the same time as transformer. The function needs to return a\n2-dimensional array. If func is None, the function used will be the\nidentity function.\n",
+                "description": "Function to apply to y before passing to fit. Cannot be set\nat the same time as transformer. If func is None, the function used will be\nthe identity function. If func is set, inverse_func also needs to be\nprovided. The function needs to return a 2-dimensional array.\n",
                 "value_default": "None",
                 "data_type": "function"
             },
             {
                 "parameter": "inverse_func",
-                "description": "Function to apply to the prediction of the regressor. Cannot be set at\nthe same time as transformer. The function needs to return a\n2-dimensional array. The inverse function is used to return\npredictions to the same space of the original training labels.\n",
+                "description": "Function to apply to the prediction of the regressor. Cannot be set at\nthe same time as transformer. The inverse function is used to return\npredictions to the same space of the original training labels. If\ninverse_func is set, func also needs to be provided. The inverse\nfunction needs to return a 2-dimensional array.\n",
                 "value_default": "None",
                 "data_type": "function"
             },
@@ -3407,7 +3395,7 @@
         "parameters_info": [
             {
                 "parameter": "power",
-                "description": "The power determines the underlying target distribution according\nto the following table:\n\n\nPower\nDistribution\n\n\n\n0\nNormal\n\n1\nPoisson\n\n(1,2)\nCompound Poisson Gamma\n\n2\nGamma\n\n3\nInverse Gaussian\n\n\n\nFor 0 < power < 1, no distribution exists.\n",
+                "description": "The power determines the underlying target distribution according\nto the following table:\n\n\nPower\nDistribution\n\n\n\n0\nNormal\n\n1\nPoisson\n\n(1,2)\nCompound Poisson Gamma\n\n2\nGamma\n\n3\nInverse Gaussian\n\n\n\n\nFor 0 < power < 1, no distribution exists.\n",
                 "value_default": "0",
                 "data_type": "float"
             },
@@ -3431,7 +3419,7 @@
             },
             {
                 "parameter": "solver",
-                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nNew in version 1.2.\n\n\n\n",
+                "description": "Algorithm to use in the optimization problem:\n\n\u2018lbfgs\u2019Calls scipy\u2019s L-BFGS-B optimizer.\n\n\u2018newton-cholesky\u2019Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\niterated reweighted least squares) with an inner Cholesky based solver.\nThis solver is a good choice for n_samples >> n_features, especially\nwith one-hot encoded categorical features with rare categories. Be aware\nthat the memory usage of this solver has a quadratic dependency on\nn_features because it explicitly computes the Hessian matrix.\n\nAdded in version 1.2.\n\n\n\n",
                 "value_default": "lbfgs",
                 "data_type": "{lbfgs, newton-cholesky}"
             },

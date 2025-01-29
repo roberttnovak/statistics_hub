@@ -1816,14 +1816,15 @@ def load_evaluation_data_for_models(user):
 
     return {"df_evaluations":df_evaluations, "df_parameters":df_parameters}
 
+#TODO: Dejar la parte de la distribution mejor con np.random y más cosas que tengan sentido para controlar
 def generate_cv_grid_regressor_sklearn(
     hyperparameter_dict,
     distribution="uniform",
     distribution_per_param=None,
     max_length_numerical=10,
     max_length_categorical=5,
-    param_lengths=None,
-    custom_limits=None,
+    param_lengths={},
+    custom_limits={},
     seed=42,
     selected_params=None,
     forced_types=None
@@ -1868,45 +1869,77 @@ def generate_cv_grid_regressor_sklearn(
     np.random.seed(seed)
 
     cv_grid = {}
+    values = []
 
     for param, details in hyperparameter_dict.items():
-        if selected_params and param not in selected_params:
-            continue
+
+        values = []
 
         domain = details["domain"]
-        param_type = details["type"]
-        length = param_lengths.get(param, max_length_numerical if param_type == "interval" else max_length_categorical)
+        domain_type = details["domain_type"]
+
+        if selected_params and param not in selected_params:
+            continue
+        
+        if param in custom_limits and len(custom_limits[param]) == 0 : 
+            continue
+
+        length = param_lengths.get(param, max_length_numerical if domain_type == "interval" else max_length_categorical)
         param_distribution = distribution_per_param.get(param, distribution) if distribution_per_param else distribution
 
-        if param_type == "interval":
+        if domain_type == "interval":
             start, end = domain
-            if param in custom_limits:
+            if param in custom_limits and len(custom_limits[param])!=0:
                 start, end = custom_limits[param]
             if start == "-inf":
                 start = 1e-6
             if end == "inf":
                 end = 1e6
             values = np.linspace(float(start), float(end), length).tolist() if param_distribution == "uniform" else np.logspace(np.log10(float(start) + 1e-6), np.log10(float(end)), length).tolist()
-        elif param_type == "categorical":
+        elif domain_type == "categorical":
             values = domain[:length]
-        elif param_type == "categorical_or_interval":
+        elif domain_type == "categorical_or_interval":
             if all(isinstance(x, (int, float)) for x in domain):
                 start, end = domain
                 if param in custom_limits:
                     start, end = custom_limits[param]
                 values = np.linspace(float(start), float(end), length).tolist() if param_distribution == "uniform" else np.logspace(np.log10(float(start) + 1e-6), np.log10(float(end)), length).tolist()
             else:
-                values = domain[:length]
+                if None not in domain :
+                    values = domain[:length]
+                else:
+                    # Expected custom_limits like [None, [min,max]]
+                    start, end = custom_limits[param][1]
+                    values = np.linspace(float(start), float(end), length).tolist() if param_distribution == "uniform" else np.logspace(np.log10(float(start) + 1e-6), np.log10(float(end)), length).tolist()
+        #TODO: Improve best practices with this
+        elif domain_type == "categorical_or_array":
+            pass
+        elif domain_type == "array":
+            pass
+        elif domain_type == "categorical_or_instance":
+            pass
+        elif domain_type == "ignore_for_grid_cv":
+            pass
         else:
-            raise ValueError(f"Unsupported parameter type: {param_type}")
+            raise ValueError(f"Unsupported parameter type: {domain_type}")
 
         # Apply forced type if specified
         if forced_types and param in forced_types:
-            target_type = forced_types[param]
-            try:
-                values = [target_type(value) for value in values]
-            except (ValueError, TypeError) as e:
-                raise ValueError(f"Could not convert values for {param} to {target_type}: {e}")
+            target_type_invalid = ["object"]
+            if forced_types[param] not in target_type_invalid:
+                target_type = eval(forced_types[param])
+                try:
+                    values = [target_type(value) if value is not None else None for value in values]
+                except (ValueError, TypeError) as e:
+                    # Some datatypes are int or other datatypes like auto. This is to fix this temporally
+                    # Pending robust implementation 
+                    if "auto" in values:
+                        pass 
+                    else: 
+                        raise ValueError(f"Could not convert values for {param} to {target_type}: {e}")
+            else:
+                cv_grid[param] = values
+                return cv_grid
 
         cv_grid[param] = values
 
@@ -2013,29 +2046,7 @@ def recommend_distribution_and_range(regressor_name, param_name, domain, domain_
 
     # Convert param name to lowercase for matching
     p_lower = param_name.lower()
-
-    # -------------------------------------------------------------------------
-    #                 CATEGORICAL OR BOOLEAN PARAMETERS
-    # -------------------------------------------------------------------------
-    # If the domain type is "categorical" or "categorical_or_X" and the domain is a list of discrete values:
-    #  -> We do not create a numeric range. We'll keep them as "categorical" if we truly want to tune them.
-    # If the domain is boolean, we also keep it as "categorical" with [True, False].
-    # -------------------------------------------------------------------------
-    if domain_type.startswith("categorical"):
-        # Some parameters that are purely boolean or small sets of discrete choices:
-        # Example: "fit_intercept", "positive", "warm_start", "bootstrap", "oob_score", etc.
-        # We keep them as "categorical" if they are booleans or small enumerations.
-
-        # If you do NOT want to tune these at all, you could set:
-        # recommended_distribution = "none"
-        # recommended_range = []
-        # But here we'll keep them in "categorical" for demonstration.
-        result["recommended_distribution"] = "categorical"
-        result["recommended_range"] = domain
-        # We do not do any special numeric logic here. 
-        # Return now if we consider all "categorical*" done:
-        return result
-
+    
     # -------------------------------------------------------------------------
     #                 EXCLUDING SOME PARAMETERS
     # -------------------------------------------------------------------------
@@ -2056,6 +2067,84 @@ def recommend_distribution_and_range(regressor_name, param_name, domain, domain_
         result["recommended_distribution"] = "none"
         result["recommended_range"] = []
         return result
+
+
+    # -------------------------------------------------------------------------
+    #                 CATEGORICAL OR BOOLEAN PARAMETERS
+    # -------------------------------------------------------------------------
+    # If the domain type is "categorical" or "categorical_or_X" and the domain is a list of discrete values:
+    #  -> We do not create a numeric range. We'll keep them as "categorical" if we truly want to tune them.
+    # If the domain is boolean, we also keep it as "categorical" with [True, False].
+    # -------------------------------------------------------------------------
+    if domain_type.startswith("categorical") and domain_type not in ["categorical_or_interval"]:
+        # Some parameters that are purely boolean or small sets of discrete choices:
+        # Example: "fit_intercept", "positive", "warm_start", "bootstrap", "oob_score", etc.
+        # We keep them as "categorical" if they are booleans or small enumerations.
+
+        # If you do NOT want to tune these at all, you could set:
+        # recommended_distribution = "none"
+        # recommended_range = []
+        # But here we'll keep them in "categorical" for demonstration.
+        result["recommended_distribution"] = "categorical"
+        result["recommended_range"] = domain
+        # We do not do any special numeric logic here. 
+        # Return now if we consider all "categorical*" done:
+        return result
+
+    elif domain_type == "categorical_or_interval":
+            # Example: domain = [None, 1, "inf"] for "max_leaf_nodes"
+            # We want to keep None as a discrete choice, plus a numeric range for the rest.
+            if None in domain:
+                # Separate None from the numeric part
+                domain_no_none = [d for d in domain if d is not None]
+                # domain_no_none might look like [1, "inf"], for instance
+
+                # Make sure it has two elements (start and end)
+                if len(domain_no_none) == 2:
+                    start_val, end_val = domain_no_none
+
+                    # Helper to detect infinite boundaries
+                    def is_inf_local(x):
+                        return (isinstance(x, str) and (x.lower() == "inf" or x.lower() == "-inf"))
+
+                    # Handle the upper boundary
+                    if is_inf_local(end_val):
+                        end_val = 50  # example upper bound
+                    else:
+                        # if it's not "inf" but a number, keep it as is
+                        end_val = end_val if isinstance(end_val, (int, float)) else 50
+
+                    # Define a minimum for start
+                    if isinstance(start_val, (int, float)):
+                        start_val = max(start_val, 1)
+                    else:
+                        start_val = 1
+
+                    # We represent everything as "categorical" because we have a discrete option (None)
+                    # plus a numeric interval. The recommended_range will include both:
+                    recommended_distribution = "categorical"
+                    recommended_range = [
+                        None,            # discrete choice
+                        [start_val, end_val]  # continuous range
+                    ]
+
+                    result["recommended_distribution"] = recommended_distribution
+                    result["recommended_range"] = recommended_range
+                    return result
+                else:
+                    # If it doesn't match the pattern [None, min, max], you can decide to skip tuning
+                    result["recommended_distribution"] = "none"
+                    result["recommended_range"] = []
+                    return result
+            else:
+                # If there's no None but domain_type is still "categorical_or_interval",
+                # you could treat it as a regular "interval" if all remaining values are numeric,
+                # or do something else as a fallback:
+                recommended_distribution = "uniform"
+                recommended_range = [0.0, 1.0]
+                result["recommended_distribution"] = recommended_distribution
+                result["recommended_range"] = recommended_range
+                return result
 
     # -------------------------------------------------------------------------
     #                 LOG-SCALE FOR CERTAIN REGULARIZATION / LR
@@ -2336,7 +2425,17 @@ def recommend_distribution_and_range(regressor_name, param_name, domain, domain_
         result["recommended_distribution"] = recommended_distribution
         result["recommended_range"] = recommended_range
         return result
-
+    
+    # -------------------------------------------------------------------------
+    #                 CV
+    # -------------------------------------------------------------------------
+    if "cv" in p_lower and domain_type == "interval":
+        # For PLS, CCA, etc. Usually from 1 up to some moderate value
+        recommended_distribution = "uniform"
+        recommended_range = [2, 5]
+        result["recommended_distribution"] = recommended_distribution
+        result["recommended_range"] = recommended_range
+        return result
     # -------------------------------------------------------------------------
     #                 FALLBACK FOR ANY INTERVAL WE DID NOT COVER
     # -------------------------------------------------------------------------

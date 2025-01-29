@@ -31,7 +31,9 @@ Each hyperparameter is represented as a dictionary containing the following keys
   - **"categorical"**: The domain is a discrete set of possible values.
     - For example: `"domain": [True, False]` means the hyperparameter can take 
       only the values `True` or `False`.
-  - **"categorical_or_numeric"**: ...
+      #TODO: Pensar como hacer las del tipo categorical_or_...
+  - **"categorical_or_interval"**: ...
+  - **categorical_or_...**: #TODO: Documentar todas las variantes 
 
 ### Special Considerations
 
@@ -48,13 +50,28 @@ Each hyperparameter is represented as a dictionary containing the following keys
 - **Null Values**: When a hyperparameter can accept a `None` value, it is 
   represented as `null` in the JSON, following the JSON standard.
 
-Generated on: 2024-02-15
+### Maintenance Instructions
+
+- **Sklearn Updates**: Every time a new version of scikit-learn is released, ensure 
+  that the hyperparameter domains are updated to reflect any changes or additions 
+  in the library. This involves:
+  - Scraping the scikit-learn documentation or using its API to extract updated 
+    hyperparameters and their domains. 
+  - Comparing the scraped data with the existing JSON to identify modifications 
+    or new hyperparameters.
+  - Adjusting the script and JSON structure accordingly.
+
+- **Verification**: Validate that all domains are correctly specified and comply 
+  with the latest scikit-learn version. Any deprecated regressors or hyperparameters 
+  should be removed.
+  
+Generated on: 2025-01-24
 Version: Scikit-learn 1.3.2
 """
 
 # Hyperparameter domains for regressors in scikit-learn
 from ConfigManager import ConfigManager
-from predictions import recommend_distribution_and_range
+from predictions import generate_cv_grid_regressor_sklearn, recommend_distribution_and_range
 
 
 all_regressors_with_its_parameters_and_domains = {
@@ -88,10 +105,6 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "max_iter": {
-            "domain": [1, "inf"],
-            "domain_type": "interval"
-        },
-        "n_iter": {
             "domain": [1, "inf"],
             "domain_type": "interval"
         },
@@ -164,7 +177,7 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1],
+            "domain": [None],
             "domain_type": "categorical"
         },
         "oob_score": {
@@ -225,10 +238,6 @@ all_regressors_with_its_parameters_and_domains = {
             "domain": [1, "inf"],
             "domain_type": "interval"
         },
-        "n_iter": {
-            "domain": [1, "inf"],
-            "domain_type": "interval"
-        },
         "tol": {
             "domain": [0, "inf"],
             "domain_type": "interval"
@@ -274,8 +283,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "max_features": {
-            "domain": ["auto", "sqrt", "log2", None],
-            "domain_type": "categorical"
+            "domain": [0.0, 1.0],
+            "domain_type": "interval"
         },
         "max_leaf_nodes": {
             "domain": [2, "inf"],
@@ -308,8 +317,8 @@ all_regressors_with_its_parameters_and_domains = {
     },
     "DummyRegressor": {
         "constant": {
-            "domain": [None, "any_numeric_value"],
-            "domain_type": "categorical_or_numeric"
+            "domain": [None, 0, 100],
+            "domain_type": "categorical_or_interval"
         },
         "quantile": {
             "domain": [0.0, 1.0],
@@ -375,9 +384,10 @@ all_regressors_with_its_parameters_and_domains = {
             "domain": [True, False],
             "domain_type": "categorical"
         },
+#TODO: Rethink way to treat cv hyperparameter
         "cv": {
-            "domain": [None, "int", "cross_validation_generator"],
-            "domain_type": "categorical"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, 1.0],
@@ -400,8 +410,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, "int"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [True, False],
@@ -442,8 +452,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "max_features": {
-            "domain": ["auto", "sqrt", "log2", None],
-            "domain_type": "categorical"
+            "domain": [0.0, 1.0],
+            "domain_type": "interval"
         },
         "max_leaf_nodes": {
             "domain": [2, "inf"],
@@ -492,8 +502,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "max_features": {
-            "domain": ["auto", "sqrt", "log2", None],
-            "domain_type": "categorical"
+            "domain": [0.0, 1.0],
+            "domain_type": "interval"
         },
         "max_leaf_nodes": {
             "domain": [2, "inf"],
@@ -524,8 +534,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, "int"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "oob_score": {
             "domain": [True, False],
@@ -584,8 +594,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "kernel": {
-            "domain": [None, "callable", "RBF", "Matern", "DotProduct"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, "RBF", "Matern", "DotProduct"],
+            "domain_type": "categorical"
         },
         "n_restarts_optimizer": {
             "domain": [0, "inf"],
@@ -600,8 +610,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "optimizer": {
-            "domain": ["fmin_l_bfgs_b", "callable", None],
-            "domain_type": "categorical_or_callable"
+            "domain": ["fmin_l_bfgs_b", None],
+            "domain_type": "categorical"
         },
         "random_state": {
             "domain": [0, "inf"],
@@ -622,8 +632,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "init": {
-            "domain": [None, "callable", "zero"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, "zero"],
+            "domain_type": "categorical"
         },
         "learning_rate": {
             "domain": [0.0, "inf"],
@@ -638,8 +648,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "max_features": {
-            "domain": ["auto", "sqrt", "log2", None],
-            "domain_type": "categorical"
+            "domain": [0.0, 1.0],
+            "domain_type": "interval"
         },
         "max_leaf_nodes": {
             "domain": [None, 1, "inf"],
@@ -756,8 +766,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "scoring": {
-            "domain": [None, "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "tol": {
             "domain": [0.0, "inf"],
@@ -834,12 +844,12 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "metric_params": {
-            "domain": [None, "dict"],
-            "domain_type": "categorical_or_dict"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "n_neighbors": {
             "domain": [1, "inf"],
@@ -850,8 +860,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "weights": {
-            "domain": ["uniform", "distance", "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": ["uniform", "distance"],
+            "domain_type": "categorical"
         }
     },
     "KernelRidge": {
@@ -872,12 +882,12 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical_or_interval"
         },
         "kernel": {
-            "domain": ["linear", "poly", "rbf", "sigmoid", "precomputed", "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": ["linear", "poly", "rbf", "sigmoid", "precomputed"],
+            "domain_type": "categorical"
         },
         "kernel_params": {
-            "domain": [None, "dict"],
-            "domain_type": "categorical_or_dict"
+            "domain": [None],
+            "domain_type": "categorical"
         }
     },
     "Lars": {
@@ -910,7 +920,7 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "precompute": {
-            "domain": [True, False, "auto"],
+            "domain": ["auto"],
             "domain_type": "categorical"
         },
         "random_state": {
@@ -928,8 +938,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, "inf"],
@@ -948,8 +958,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "normalize": {
             "domain": [True, False, "deprecated"],
@@ -1016,8 +1026,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, "inf"],
@@ -1036,8 +1046,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [True, False],
@@ -1120,8 +1130,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, "inf"],
@@ -1140,8 +1150,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "normalize": {
             "domain": [True, False, "deprecated"],
@@ -1212,8 +1222,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "positive": {
             "domain": [True, False],
@@ -1226,7 +1236,7 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "dual": {
-            "domain": [True, False],
+            "domain": ["auto", True, False],
             "domain_type": "categorical"
         },
         "epsilon": {
@@ -1271,8 +1281,9 @@ all_regressors_with_its_parameters_and_domains = {
             "domain": [0.0, "inf"],
             "domain_type": "interval"
         },
+#TODO: Rethink way to treat batch_size hyperparameter
         "batch_size": {
-            "domain": ["auto", 1, "inf"],
+            "domain": ["auto"],
             "domain_type": "categorical_or_interval"
         },
         "beta_1": {
@@ -1404,8 +1415,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, "inf"],
@@ -1428,8 +1439,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "random_state": {
             "domain": [None, 0, "inf"],
@@ -1492,8 +1503,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "eps": {
             "domain": [0.0, "inf"],
@@ -1512,8 +1523,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "random_state": {
             "domain": [None, 0, "inf"],
@@ -1606,8 +1617,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "fit_intercept": {
             "domain": [True, False],
@@ -1618,8 +1629,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "normalize": {
             "domain": [True, False],
@@ -1784,8 +1795,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "solver_options": {
-            "domain": [None, "dict"],
-            "domain_type": "categorical_or_dict"
+            "domain": [None],
+            "domain_type": "categorical"
         }
     },
     "RANSACRegressor": {
@@ -1794,12 +1805,12 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical_or_instance"
         },
         "is_data_valid": {
-            "domain": [None, "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "is_model_valid": {
-            "domain": [None, "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "loss": {
             "domain": ["absolute_error", "squared_error"],
@@ -1814,7 +1825,7 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "min_samples": {
-            "domain": [None, "int", "float"],
+            "domain": [None, 0, 1],
             "domain_type": "categorical_or_interval"
         },
         "random_state": {
@@ -1826,7 +1837,7 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical_or_interval"
         },
         "stop_n_inliers": {
-            "domain": [None, "int"],
+            "domain": [None, 1,"inf"],
             "domain_type": "categorical_or_interval"
         },
         "stop_probability": {
@@ -1835,7 +1846,7 @@ all_regressors_with_its_parameters_and_domains = {
         },
         "stop_score": {
             "domain": [None, "float"],
-            "domain_type": "categorical_or_interval"
+            "domain_type": "ignore_for_grid_cv"
         }
     },
     "RadiusNeighborsRegressor": {
@@ -1853,11 +1864,11 @@ all_regressors_with_its_parameters_and_domains = {
         },
         "metric_params": {
             "domain": [None, "dict"],
-            "domain_type": "categorical_or_dict"
+            "domain_type": "ignore_for_grid_cv"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "p": {
             "domain": [1, "inf"],
@@ -1890,8 +1901,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical_or_interval"
         },
         "max_features": {
-            "domain": ["auto", "sqrt", "log2", None],
-            "domain_type": "categorical"
+            "domain": [0.0, 1.0],
+            "domain_type": "interval"
         },
         "max_leaf_nodes": {
             "domain": [None, 1, "inf"],
@@ -1922,8 +1933,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "oob_score": {
             "domain": [True, False],
@@ -1986,8 +1997,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical_or_array"
         },
         "cv": {
-            "domain": [None, "int", "cross-validation generator", "iterable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, 2,3],
+            "domain_type": "categorical_or_interval"
         },
         "fit_intercept": {
             "domain": [True, False],
@@ -1998,8 +2009,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "scoring": {
-            "domain": [None, "str", "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None, "str"],
+            "domain_type": "categorical"
         },
         "store_cv_values": {
             "domain": [True, False],
@@ -2148,8 +2159,8 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "interval"
         },
         "n_jobs": {
-            "domain": [None, -1, 1, "inf"],
-            "domain_type": "categorical_or_interval"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "n_subsamples": {
             "domain": [1, "inf"],
@@ -2174,12 +2185,12 @@ all_regressors_with_its_parameters_and_domains = {
             "domain_type": "categorical"
         },
         "func": {
-            "domain": [None, "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None],
+            "domain_type": "categorical"
         },
         "inverse_func": {
-            "domain": [None, "callable"],
-            "domain_type": "categorical_or_callable"
+            "domain": [None],
+            "domain_type": "ignore_for_grid_cv"
         },
         "regressor": {
             "domain": ["estimator instance"],
@@ -2237,22 +2248,52 @@ all_sklearn_regressors_with_all_info = config_manager.load_config(
     "models_parameters/metadata/all_sklearn_regressors_with_all_info"
 )
 
+mapping_wrong_data_type_sklearn = config_manager.load_config(
+    "mapping_wrong_data_type_sklearn", 
+    subfolder="models_parameters/metadata"
+)
+
 # Add data type to all_regressors_with_its_parameters_and_domains
 for regressor in all_sklearn_regressors_with_all_info.keys():
     if regressor in all_regressors_with_its_parameters_and_domains:
         for dic in all_sklearn_regressors_with_all_info[regressor]["parameters_info"]:
             parameter = dic["parameter"]
             data_type = dic["data_type"]
-            recommended_distribution_and_range = recommend_distribution_and_range(
-                regressor_name=regressor,
-                param_name=parameter,
-                domain=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain"],
-                domain_type=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain_type"]
-            )
-            if parameter in all_regressors_with_its_parameters_and_domains[regressor]:
-                all_regressors_with_its_parameters_and_domains[regressor][parameter]["data_type"] = data_type
-                all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_distribution"] = recommended_distribution_and_range["recommended_distribution"]
-                all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_range"] = recommended_distribution_and_range["recommended_range"]
+            if parameter in all_regressors_with_its_parameters_and_domains[regressor].keys():
+                recommended_distribution_and_range = recommend_distribution_and_range(
+                    regressor_name=regressor,
+                    param_name=parameter,
+                    domain=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain"],
+                    domain_type=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain_type"]
+                )
+                if parameter in all_regressors_with_its_parameters_and_domains[regressor]:
+                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["data_type"] = data_type
+                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_distribution"] = recommended_distribution_and_range["recommended_distribution"]
+                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_range"] = recommended_distribution_and_range["recommended_range"]
+            else:
+                print(f"Parameter {parameter} for regressor {regressor} not found in all_regressors_with_its_parameters_and_domains, skipping...")
+        # Ensure consistency by removing parameters that exist in the system's knowledge (llm_parameters)
+        # but are not present in the scrapped data. This avoids issues with outdated or inconsistent parameters.        
+        scrapped_parameters = {dic["parameter"] for dic in all_sklearn_regressors_with_all_info[regressor]["parameters_info"]}
+        llm_parameters = set(all_regressors_with_its_parameters_and_domains[regressor].keys())
+        non_coincident_parameters = llm_parameters - scrapped_parameters 
+        if non_coincident_parameters:
+            for bad_parameter in non_coincident_parameters:
+                all_regressors_with_its_parameters_and_domains[regressor].pop(bad_parameter, None)
+
+#TODO: Potential optimization because loop redundant? Think
+for regressor, hyperparameters in all_regressors_with_its_parameters_and_domains.items():
+
+    recommended_cv_grid = generate_cv_grid_regressor_sklearn(
+        hyperparameter_dict=all_regressors_with_its_parameters_and_domains[regressor],
+        max_length_numerical=5,
+        max_length_categorical=3,
+        custom_limits={hyperparameter:hyperparameter_info["recommended_range"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()},
+        distribution_per_param={hyperparameter:hyperparameter_info["recommended_distribution"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()},
+        seed=42,
+        forced_types={hyperparameter:mapping_wrong_data_type_sklearn.get(hyperparameter_info["data_type"], hyperparameter_info["data_type"]) for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()}
+    )
+    all_regressors_with_its_parameters_and_domains[regressor]["recommended_cv_grid"] = recommended_cv_grid
 
 # Save sklearn details (version and date of doc scrapping)
 config_manager.save_config(

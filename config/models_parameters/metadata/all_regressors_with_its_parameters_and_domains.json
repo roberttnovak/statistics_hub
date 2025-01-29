@@ -46,11 +46,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -104,19 +101,6 @@
                 1000
             ]
         },
-        "n_iter": {
-            "domain": [
-                1,
-                "inf"
-            ],
-            "domain_type": "interval",
-            "data_type": "int",
-            "recommended_distribution": "uniform",
-            "recommended_range": [
-                50,
-                1000
-            ]
-        },
         "threshold_lambda": {
             "domain": [
                 0.0,
@@ -152,15 +136,68 @@
             "data_type": "bool",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alpha_1": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "alpha_2": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "compute_score": [
+                true,
+                false
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "lambda_1": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "lambda_2": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "threshold_lambda": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "AdaBoostRegressor": {
-        "base_estimator": {
-            "domain": [
-                null
-            ],
-            "domain_type": "categorical"
-        },
         "estimator": {
             "domain": [
                 null
@@ -222,15 +259,33 @@
             "data_type": "int, RandomState instance or None",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "estimator": [
+                null
+            ],
+            "learning_rate": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "loss": [
+                "linear",
+                "square",
+                "exponential"
+            ],
+            "n_estimators": [
+                50,
+                112,
+                175,
+                237,
+                300
+            ]
         }
     },
     "BaggingRegressor": {
-        "base_estimator": {
-            "domain": [
-                null
-            ],
-            "domain_type": "categorical"
-        },
         "bootstrap": {
             "domain": [
                 true,
@@ -309,18 +364,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1
+                null
             ],
             "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "oob_score": {
             "domain": [
@@ -364,6 +413,48 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "bootstrap": [
+                true,
+                false
+            ],
+            "bootstrap_features": [
+                true,
+                false
+            ],
+            "estimator": [
+                null
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_samples": [
+                0.5,
+                0.625,
+                0.75,
+                0.875,
+                1.0
+            ],
+            "n_estimators": [
+                50,
+                112,
+                175,
+                237,
+                300
+            ],
+            "oob_score": [
+                true,
+                false
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -429,11 +520,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -500,19 +588,6 @@
                 1000
             ]
         },
-        "n_iter": {
-            "domain": [
-                1,
-                "inf"
-            ],
-            "domain_type": "interval",
-            "data_type": "int",
-            "recommended_distribution": "uniform",
-            "recommended_range": [
-                50,
-                1000
-            ]
-        },
         "tol": {
             "domain": [
                 0,
@@ -535,6 +610,72 @@
             "data_type": "bool",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alpha_1": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "alpha_2": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "alpha_init": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "compute_score": [
+                true,
+                false
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "lambda_1": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "lambda_2": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "lambda_init": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "CCA": {
@@ -602,6 +743,37 @@
                 1e-06,
                 0.01
             ]
+        },
+        "recommended_cv_grid": {
+            "copy": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_components": [
+                1,
+                5,
+                10,
+                15,
+                20
+            ],
+            "scale": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "DecisionTreeRegressor": {
@@ -650,19 +822,15 @@
         },
         "max_features": {
             "domain": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ],
-            "domain_type": "categorical",
+            "domain_type": "interval",
             "data_type": "int, float or {sqrt, log2}",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ]
         },
         "max_leaf_nodes": {
@@ -752,20 +920,91 @@
                 "best",
                 "random"
             ]
+        },
+        "recommended_cv_grid": {
+            "ccp_alpha": [
+                1.100000000000001e-06,
+                3.396600849359795e-05,
+                0.001048808848170152,
+                0.03238531840464367,
+                1.0
+            ],
+            "criterion": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error"
+            ],
+            "max_depth": [
+                1,
+                8,
+                15,
+                22,
+                30
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_leaf_nodes": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "min_impurity_decrease": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "min_samples_leaf": [
+                1.0,
+                5.75,
+                10.5,
+                15.25,
+                20.0
+            ],
+            "min_samples_split": [
+                2.0,
+                14.0,
+                26.0,
+                38.0,
+                50.0
+            ],
+            "min_weight_fraction_leaf": [
+                0.0,
+                0.125,
+                0.25,
+                0.375,
+                0.5
+            ],
+            "splitter": [
+                "best",
+                "random"
+            ]
         }
     },
     "DummyRegressor": {
         "constant": {
             "domain": [
                 null,
-                "any_numeric_value"
+                0,
+                100
             ],
-            "domain_type": "categorical_or_numeric",
+            "domain_type": "categorical_or_interval",
             "data_type": "int or float or array-like of shape (n_outputs,)",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "any_numeric_value"
+                [
+                    1,
+                    100
+                ]
             ]
         },
         "quantile": {
@@ -795,6 +1034,25 @@
                 "median",
                 "constant"
             ]
+        },
+        "recommended_cv_grid": {
+            "constant": [
+                1,
+                10,
+                100
+            ],
+            "quantile": [
+                0.05,
+                0.27499999999999997,
+                0.49999999999999994,
+                0.725,
+                0.95
+            ],
+            "strategy": [
+                "mean",
+                "median",
+                "constant"
+            ]
         }
     },
     "ElasticNet": {
@@ -818,11 +1076,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -939,6 +1194,57 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "l1_ratio": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "ElasticNetCV": {
@@ -962,25 +1268,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross_validation_generator"
+                2,
+                3
             ],
-            "domain_type": "categorical",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross_validation_generator"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -1050,18 +1355,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                "int"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                "int"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "positive": {
             "domain": [
@@ -1136,6 +1435,66 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alphas": [],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "l1_ratio": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "ExtraTreeRegressor": {
@@ -1184,19 +1543,15 @@
         },
         "max_features": {
             "domain": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ],
-            "domain_type": "categorical",
+            "domain_type": "interval",
             "data_type": "int, float, {sqrt, log2} or None",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ]
         },
         "max_leaf_nodes": {
@@ -1286,6 +1641,73 @@
                 "best",
                 "random"
             ]
+        },
+        "recommended_cv_grid": {
+            "ccp_alpha": [
+                1.100000000000001e-06,
+                3.396600849359795e-05,
+                0.001048808848170152,
+                0.03238531840464367,
+                1.0
+            ],
+            "criterion": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error"
+            ],
+            "max_depth": [
+                1,
+                8,
+                15,
+                22,
+                30
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_leaf_nodes": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "min_impurity_decrease": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "min_samples_leaf": [
+                1.0,
+                5.75,
+                10.5,
+                15.25,
+                20.0
+            ],
+            "min_samples_split": [
+                2.0,
+                14.0,
+                26.0,
+                38.0,
+                50.0
+            ],
+            "min_weight_fraction_leaf": [
+                0.0,
+                0.125,
+                0.25,
+                0.375,
+                0.5
+            ],
+            "splitter": [
+                "best",
+                "random"
+            ]
         }
     },
     "ExtraTreesRegressor": {
@@ -1347,19 +1769,15 @@
         },
         "max_features": {
             "domain": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ],
-            "domain_type": "categorical",
+            "domain_type": "interval",
             "data_type": "{sqrt, log2, None}, int or float",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ]
         },
         "max_leaf_nodes": {
@@ -1455,18 +1873,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                "int"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                "int"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "oob_score": {
             "domain": [
@@ -1510,6 +1922,95 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "bootstrap": [
+                true,
+                false
+            ],
+            "ccp_alpha": [
+                1.100000000000001e-06,
+                3.396600849359795e-05,
+                0.001048808848170152,
+                0.03238531840464367,
+                1.0
+            ],
+            "criterion": [
+                "squared_error",
+                "friedman_mse",
+                "absolute_error"
+            ],
+            "max_depth": [
+                1,
+                8,
+                15,
+                22,
+                30
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_leaf_nodes": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "max_samples": [
+                0.5,
+                0.625,
+                0.75,
+                0.875,
+                1.0
+            ],
+            "min_impurity_decrease": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "min_samples_leaf": [
+                1.0,
+                5.75,
+                10.5,
+                15.25,
+                20.0
+            ],
+            "min_samples_split": [
+                2.0,
+                14.0,
+                26.0,
+                38.0,
+                50.0
+            ],
+            "min_weight_fraction_leaf": [
+                0.0,
+                0.125,
+                0.25,
+                0.375,
+                0.5
+            ],
+            "n_estimators": [
+                50,
+                112,
+                175,
+                237,
+                300
+            ],
+            "oob_score": [
+                true,
+                false
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -1603,6 +2104,41 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "solver": [
+                "lbfgs",
+                "newton-cholesky"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "GaussianProcessRegressor": {
@@ -1626,26 +2162,21 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "kernel": {
             "domain": [
                 null,
-                "callable",
                 "RBF",
                 "Matern",
                 "DotProduct"
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "kernel instance",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "callable",
                 "RBF",
                 "Matern",
                 "DotProduct"
@@ -1693,15 +2224,13 @@
         "optimizer": {
             "domain": [
                 "fmin_l_bfgs_b",
-                "callable",
                 null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "fmin_l_bfgs_b, callable or None",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 "fmin_l_bfgs_b",
-                "callable",
                 null
             ]
         },
@@ -1714,6 +2243,42 @@
             "data_type": "int, RandomState instance or None",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "kernel": [
+                null,
+                "RBF",
+                "Matern"
+            ],
+            "n_restarts_optimizer": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "n_targets": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "normalize_y": [
+                true,
+                false
+            ],
+            "optimizer": [
+                "fmin_l_bfgs_b",
+                null
+            ]
         }
     },
     "GradientBoostingRegressor": {
@@ -1759,15 +2324,13 @@
         "init": {
             "domain": [
                 null,
-                "callable",
                 "zero"
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "estimator or zero",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "callable",
                 "zero"
             ]
         },
@@ -1816,19 +2379,15 @@
         },
         "max_features": {
             "domain": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ],
-            "domain_type": "categorical",
+            "domain_type": "interval",
             "data_type": "{sqrt, log2}, int or float",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ]
         },
         "max_leaf_nodes": {
@@ -1842,8 +2401,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "min_impurity_decrease": {
@@ -1922,8 +2483,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "random_state": {
@@ -1994,6 +2557,126 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "ccp_alpha": [
+                1.100000000000001e-06,
+                3.396600849359795e-05,
+                0.001048808848170152,
+                0.03238531840464367,
+                1.0
+            ],
+            "criterion": [
+                "friedman_mse",
+                "squared_error"
+            ],
+            "init": [
+                null,
+                "zero"
+            ],
+            "learning_rate": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "loss": [
+                "squared_error",
+                "absolute_error",
+                "huber"
+            ],
+            "max_depth": [
+                1,
+                8,
+                15,
+                22,
+                30
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_leaf_nodes": [
+                1,
+                7,
+                49
+            ],
+            "min_impurity_decrease": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "min_samples_leaf": [
+                1.0,
+                5.75,
+                10.5,
+                15.25,
+                20.0
+            ],
+            "min_samples_split": [
+                2.0,
+                14.0,
+                26.0,
+                38.0,
+                50.0
+            ],
+            "min_weight_fraction_leaf": [
+                0.0,
+                0.125,
+                0.25,
+                0.375,
+                0.5
+            ],
+            "n_estimators": [
+                50,
+                112,
+                175,
+                237,
+                300
+            ],
+            "n_iter_no_change": [
+                1,
+                7,
+                49
+            ],
+            "subsample": [
+                0.5,
+                0.625,
+                0.75,
+                0.875,
+                1.0
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "validation_fraction": [
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -2104,8 +2787,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "max_iter": {
@@ -2132,8 +2817,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "min_samples_leaf": {
@@ -2173,8 +2860,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "quantile": {
@@ -2202,15 +2891,13 @@
         },
         "scoring": {
             "domain": [
-                null,
-                "callable"
+                null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "str or callable or None",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "callable"
+                null
             ]
         },
         "tol": {
@@ -2258,6 +2945,98 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "categorical_features": [],
+            "early_stopping": [
+                "True",
+                "False"
+            ],
+            "interaction_cst": [],
+            "l2_regularization": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "learning_rate": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "loss": [
+                "squared_error",
+                "absolute_error",
+                "poisson"
+            ],
+            "max_bins": [
+                32,
+                87,
+                143,
+                199,
+                255
+            ],
+            "max_depth": [
+                1,
+                7,
+                49
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "max_leaf_nodes": [
+                1,
+                7,
+                49
+            ],
+            "min_samples_leaf": [
+                1,
+                5,
+                10,
+                15,
+                20
+            ],
+            "monotonic_cst": [],
+            "n_iter_no_change": [
+                1,
+                7,
+                49
+            ],
+            "quantile": [
+                0.05,
+                0.27499999999999997,
+                0.49999999999999994,
+                0.725,
+                0.95
+            ],
+            "scoring": [
+                null
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "validation_fraction": [
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -2341,6 +3120,44 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "IsotonicRegression": {
@@ -2385,8 +3202,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "-inf",
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "y_min": {
@@ -2400,8 +3219,32 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "-inf",
-                "inf"
+                [
+                    1,
+                    50
+                ]
+            ]
+        },
+        "recommended_cv_grid": {
+            "increasing": [
+                true,
+                false,
+                true
+            ],
+            "out_of_bounds": [
+                "nan",
+                "clip",
+                "raise"
+            ],
+            "y_max": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
+            ],
+            "y_min": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
             ]
         }
     },
@@ -2455,33 +3298,23 @@
         },
         "metric_params": {
             "domain": [
-                null,
-                "dict"
+                null
             ],
-            "domain_type": "categorical_or_dict",
+            "domain_type": "categorical",
             "data_type": "dict",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "dict"
+                null
             ]
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "n_neighbors": {
             "domain": [
@@ -2512,16 +3345,54 @@
         "weights": {
             "domain": [
                 "uniform",
-                "distance",
-                "callable"
+                "distance"
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "{uniform, distance}, callable or None",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 "uniform",
-                "distance",
-                "callable"
+                "distance"
+            ]
+        },
+        "recommended_cv_grid": {
+            "algorithm": [
+                "auto",
+                "ball_tree",
+                "kd_tree"
+            ],
+            "leaf_size": [
+                20,
+                27,
+                35,
+                42,
+                50
+            ],
+            "metric": [
+                "minkowski",
+                "euclidean",
+                "manhattan"
+            ],
+            "metric_params": [
+                null
+            ],
+            "n_neighbors": [
+                1,
+                13,
+                25,
+                37,
+                50
+            ],
+            "p": [
+                1.0,
+                1.25,
+                1.5,
+                1.75,
+                2.0
+            ],
+            "weights": [
+                "uniform",
+                "distance"
             ]
         }
     },
@@ -2576,8 +3447,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0.0,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "kernel": {
@@ -2586,10 +3459,9 @@
                 "poly",
                 "rbf",
                 "sigmoid",
-                "precomputed",
-                "callable"
+                "precomputed"
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "str or callable",
             "recommended_distribution": "categorical",
             "recommended_range": [
@@ -2597,21 +3469,54 @@
                 "poly",
                 "rbf",
                 "sigmoid",
-                "precomputed",
-                "callable"
+                "precomputed"
             ]
         },
         "kernel_params": {
             "domain": [
-                null,
-                "dict"
+                null
             ],
-            "domain_type": "categorical_or_dict",
+            "domain_type": "categorical",
             "data_type": "dict",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "dict"
+                null
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "coef0": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "degree": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "gamma": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
+            ],
+            "kernel": [
+                "linear",
+                "poly",
+                "rbf"
+            ],
+            "kernel_params": [
+                null
             ]
         }
     },
@@ -2623,11 +3528,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "eps": {
             "domain": [
@@ -2679,8 +3581,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0.0,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "n_nonzero_coefs": {
@@ -2696,26 +3600,14 @@
                 1.0
             ]
         },
-        "normalize": {
-            "domain": [
-                true,
-                false,
-                "deprecated"
-            ],
-            "domain_type": "categorical"
-        },
         "precompute": {
             "domain": [
-                true,
-                false,
                 "auto"
             ],
             "domain_type": "categorical",
             "data_type": "bool, auto or array-like ",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                true,
-                false,
                 "auto"
             ]
         },
@@ -2727,12 +3619,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "verbose": {
             "domain": [
@@ -2743,6 +3631,38 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "fit_path": [
+                true,
+                false
+            ],
+            "jitter": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
+            ],
+            "n_nonzero_coefs": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "precompute": [
+                true
+            ]
         }
     },
     "LarsCV": {
@@ -2753,27 +3673,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or an iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -2830,28 +3747,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
-        },
-        "normalize": {
-            "domain": [
-                true,
-                false,
-                "deprecated"
-            ],
-            "domain_type": "categorical"
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "precompute": {
             "domain": [
@@ -2877,6 +3778,43 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "max_n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ]
         }
     },
     "Lasso": {
@@ -2900,11 +3838,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -2968,12 +3903,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -3013,6 +3944,50 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "LassoCV": {
@@ -3036,27 +4011,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -3113,20 +4085,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "positive": {
             "domain": [
@@ -3164,12 +4128,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -3206,6 +4166,59 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alphas": [],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "LassoLars": {
@@ -3229,11 +4242,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "eps": {
             "domain": [
@@ -3285,8 +4295,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0.0,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "max_iter": {
@@ -3301,14 +4313,6 @@
                 50,
                 1000
             ]
-        },
-        "normalize": {
-            "domain": [
-                true,
-                false,
-                "deprecated"
-            ],
-            "domain_type": "categorical"
         },
         "positive": {
             "domain": [
@@ -3346,12 +4350,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "verbose": {
             "domain": [
@@ -3362,6 +4362,51 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "fit_path": [
+                true,
+                false
+            ],
+            "jitter": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ]
         }
     },
     "LassoLarsCV": {
@@ -3372,27 +4417,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or an iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -3449,28 +4491,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
-        },
-        "normalize": {
-            "domain": [
-                true,
-                false,
-                "deprecated"
-            ],
-            "domain_type": "categorical"
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "positive": {
             "domain": [
@@ -3509,6 +4535,47 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "max_n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ]
         }
     },
     "LassoLarsIC": {
@@ -3519,11 +4586,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "criterion": {
             "domain": [
@@ -3590,14 +4654,6 @@
                 1.0
             ]
         },
-        "normalize": {
-            "domain": [
-                true,
-                false,
-                "deprecated"
-            ],
-            "domain_type": "categorical"
-        },
         "positive": {
             "domain": [
                 true,
@@ -3635,6 +4691,46 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "criterion": [
+                "aic",
+                "bic"
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "noise_variance": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "precompute": [
+                true,
+                false,
+                true
+            ]
         }
     },
     "LinearRegression": {
@@ -3645,11 +4741,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -3666,20 +4759,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "positive": {
             "domain": [
@@ -3690,6 +4775,16 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "positive": [
                 true,
                 false
             ]
@@ -3711,6 +4806,7 @@
         },
         "dual": {
             "domain": [
+                "auto",
                 true,
                 false
             ],
@@ -3718,6 +4814,7 @@
             "data_type": "auto or bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                "auto",
                 true,
                 false
             ]
@@ -3795,12 +4892,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "tol": {
             "domain": [
@@ -3824,6 +4917,56 @@
             "data_type": "int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "C": [
+                0.0010010000000000004,
+                0.03164649072073432,
+                1.0004998750624605,
+                31.63067933292707,
+                1000.0
+            ],
+            "dual": [
+                "auto",
+                "True",
+                "False"
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "intercept_scaling": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "loss": [
+                "epsilon_insensitive",
+                "squared_epsilon_insensitive"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "MLPRegressor": {
@@ -3859,17 +5002,14 @@
         },
         "batch_size": {
             "domain": [
-                "auto",
-                1,
-                "inf"
+                "auto"
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                1,
-                "inf"
+                0.0,
+                1.0
             ]
         },
         "beta_1": {
@@ -4047,12 +5187,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "shuffle": {
             "domain": [
@@ -4130,6 +5266,126 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "activation": [
+                "identity",
+                "logistic",
+                "tanh"
+            ],
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "batch_size": [
+                "auto"
+            ],
+            "beta_1": [
+                0.8,
+                0.84975,
+                0.8995,
+                0.94925,
+                0.999
+            ],
+            "beta_2": [
+                0.8,
+                0.84975,
+                0.8995,
+                0.94925,
+                0.999
+            ],
+            "early_stopping": [
+                true,
+                false
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "learning_rate": [
+                "constant",
+                "invscaling",
+                "adaptive"
+            ],
+            "learning_rate_init": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "max_fun": [
+                1000,
+                13250,
+                25500,
+                37750,
+                50000
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "momentum": [
+                0.0,
+                0.2475,
+                0.495,
+                0.7424999999999999,
+                0.99
+            ],
+            "n_iter_no_change": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "nesterovs_momentum": [
+                true,
+                false
+            ],
+            "power_t": [
+                0.0010010000000000004,
+                0.0056276302848669675,
+                0.03163858403911275,
+                0.17787238132749214,
+                1.0
+            ],
+            "shuffle": [
+                true,
+                false
+            ],
+            "solver": [
+                "lbfgs",
+                "sgd",
+                "adam"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "validation_fraction": [
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "MultiTaskElasticNet": {
@@ -4153,11 +5409,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -4206,12 +5459,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -4251,6 +5500,48 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "l1_ratio": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "MultiTaskElasticNetCV": {
@@ -4274,27 +5565,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -4364,20 +5652,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "random_state": {
             "domain": [
@@ -4387,12 +5667,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -4429,6 +5705,57 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alphas": [],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "l1_ratio": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "MultiTaskLasso": {
@@ -4452,11 +5779,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -4492,12 +5816,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -4537,6 +5857,41 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "MultiTaskLassoCV": {
@@ -4560,27 +5915,24 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "eps": {
@@ -4637,20 +5989,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "random_state": {
             "domain": [
@@ -4660,12 +6004,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "selection": {
             "domain": [
@@ -4702,6 +6042,50 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "alphas": [],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "eps": [
+                2.0000000000000003e-06,
+                2.9906975624424413e-05,
+                0.00044721359549995795,
+                0.00668740304976422,
+                0.1
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_alphas": [
+                0,
+                0,
+                0,
+                5,
+                1000
+            ],
+            "selection": [
+                "cyclic",
+                "random"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "NuSVR": {
@@ -4850,6 +6234,73 @@
             "data_type": "bool",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "C": [
+                0.0010010000000000004,
+                0.03164649072073432,
+                1.0004998750624605,
+                31.63067933292707,
+                1000.0
+            ],
+            "cache_size": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "coef0": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "degree": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "gamma": [
+                "0.00010100000000000002",
+                "0.0017915999033205714",
+                "0.03178049716414139",
+                "0.5637419370965882",
+                "10.0"
+            ],
+            "kernel": [
+                "linear",
+                "poly",
+                "rbf"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "nu": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "shrinking": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "OrthogonalMatchingPursuit": {
@@ -4879,13 +6330,6 @@
                 1.0
             ]
         },
-        "normalize": {
-            "domain": [
-                true,
-                false
-            ],
-            "domain_type": "categorical"
-        },
         "precompute": {
             "domain": [
                 true,
@@ -4913,6 +6357,31 @@
                 1e-06,
                 0.01
             ]
+        },
+        "recommended_cv_grid": {
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "n_nonzero_coefs": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "precompute": [
+                "True",
+                "False",
+                "auto"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "OrthogonalMatchingPursuitCV": {
@@ -4932,18 +6401,18 @@
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "fit_intercept": {
@@ -4974,27 +6443,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
-        },
-        "normalize": {
-            "domain": [
-                true,
-                false
-            ],
-            "domain_type": "categorical"
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "verbose": {
             "domain": [
@@ -5005,6 +6459,28 @@
             "data_type": "bool or int",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "copy": [
+                true,
+                false
+            ],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ]
         }
     },
     "PLSCanonical": {
@@ -5085,6 +6561,41 @@
                 1e-06,
                 0.01
             ]
+        },
+        "recommended_cv_grid": {
+            "algorithm": [
+                "nipals",
+                "svd"
+            ],
+            "copy": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_components": [
+                1,
+                5,
+                10,
+                15,
+                20
+            ],
+            "scale": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "PLSRegression": {
@@ -5152,6 +6663,37 @@
                 1e-06,
                 0.01
             ]
+        },
+        "recommended_cv_grid": {
+            "copy": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_components": [
+                1,
+                5,
+                10,
+                15,
+                20
+            ],
+            "scale": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "PassiveAggressiveRegressor": {
@@ -5176,11 +6718,10 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "bool or int",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                true,
-                false,
-                "int"
+                0.0,
+                1.0
             ]
         },
         "early_stopping": {
@@ -5269,12 +6810,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "shuffle": {
             "domain": [
@@ -5334,6 +6871,75 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "C": [
+                0.0010010000000000004,
+                0.03164649072073432,
+                1.0004998750624605,
+                31.63067933292707,
+                1000.0
+            ],
+            "average": [
+                true,
+                false,
+                true
+            ],
+            "early_stopping": [
+                true,
+                false
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "loss": [
+                "hinge",
+                "squared_hinge"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_iter_no_change": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "shuffle": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "validation_fraction": [
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -5427,6 +7033,41 @@
                 true,
                 false
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "solver": [
+                "auto",
+                "lbfgs"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
+                true,
+                false
+            ]
         }
     },
     "QuantileRegressor": {
@@ -5486,15 +7127,41 @@
         },
         "solver_options": {
             "domain": [
-                null,
-                "dict"
+                null
             ],
-            "domain_type": "categorical_or_dict",
+            "domain_type": "categorical",
             "data_type": "dict",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "dict"
+                null
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "quantile": [
+                0.05,
+                0.27499999999999997,
+                0.49999999999999994,
+                0.725,
+                0.95
+            ],
+            "solver": [
+                "highs-ds",
+                "highs-ipm",
+                "highs"
+            ],
+            "solver_options": [
+                null
             ]
         }
     },
@@ -5514,28 +7181,24 @@
         },
         "is_data_valid": {
             "domain": [
-                null,
-                "callable"
+                null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "callable",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "callable"
+                null
             ]
         },
         "is_model_valid": {
             "domain": [
-                null,
-                "callable"
+                null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "callable",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "callable"
+                null
             ]
         },
         "loss": {
@@ -5562,8 +7225,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "max_trials": {
@@ -5582,16 +7247,18 @@
         "min_samples": {
             "domain": [
                 null,
-                "int",
-                "float"
+                0,
+                1
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int (>= 1) or float ([0, 1])",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "float"
+                [
+                    1,
+                    1
+                ]
             ]
         },
         "random_state": {
@@ -5602,12 +7269,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "residual_threshold": {
             "domain": [
@@ -5620,21 +7283,27 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0.0,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "stop_n_inliers": {
             "domain": [
                 null,
-                "int"
+                1,
+                "inf"
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "stop_probability": {
@@ -5655,12 +7324,56 @@
                 null,
                 "float"
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "ignore_for_grid_cv",
             "data_type": "float",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                "float"
+            "recommended_distribution": "none",
+            "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "estimator": [],
+            "is_data_valid": [
+                null
+            ],
+            "is_model_valid": [
+                null
+            ],
+            "loss": [
+                "absolute_error",
+                "squared_error"
+            ],
+            "max_skips": [
+                1,
+                7,
+                49
+            ],
+            "max_trials": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "min_samples": [
+                1.000001,
+                1.000000499999875,
+                1.0
+            ],
+            "residual_threshold": [
+                1.000001,
+                7.0710713473984965,
+                49.99999999999999
+            ],
+            "stop_n_inliers": [
+                1,
+                7,
+                49
+            ],
+            "stop_probability": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
             ]
         }
     },
@@ -5719,30 +7432,19 @@
                 null,
                 "dict"
             ],
-            "domain_type": "categorical_or_dict",
+            "domain_type": "ignore_for_grid_cv",
             "data_type": "dict",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                "dict"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "p": {
             "domain": [
@@ -5779,6 +7481,43 @@
             "data_type": "{uniform, distance}, callable or None",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                "uniform",
+                "distance"
+            ]
+        },
+        "recommended_cv_grid": {
+            "algorithm": [
+                "auto",
+                "ball_tree",
+                "kd_tree"
+            ],
+            "leaf_size": [
+                20,
+                27,
+                35,
+                42,
+                50
+            ],
+            "metric": [
+                "minkowski",
+                "euclidean",
+                "manhattan"
+            ],
+            "p": [
+                1.0,
+                1.25,
+                1.5,
+                1.75,
+                2.0
+            ],
+            "radius": [
+                0.0010010000000000004,
+                0.010007499062890406,
+                0.10004998750624611,
+                1.0002499063046502,
+                10.0
+            ],
+            "weights": [
                 "uniform",
                 "distance"
             ]
@@ -5837,25 +7576,23 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "max_features": {
             "domain": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ],
-            "domain_type": "categorical",
+            "domain_type": "interval",
             "data_type": "{sqrt, log2, None}, int or float",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "auto",
-                "sqrt",
-                "log2",
-                null
+                0.0,
+                1.0
             ]
         },
         "max_leaf_nodes": {
@@ -5869,8 +7606,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "max_samples": {
@@ -5884,8 +7623,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                0.0,
-                1.0
+                [
+                    1,
+                    1.0
+                ]
             ]
         },
         "min_impurity_decrease": {
@@ -5955,20 +7696,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "oob_score": {
             "domain": [
@@ -5991,12 +7724,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "verbose": {
             "domain": [
@@ -6017,6 +7746,89 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "bootstrap": [
+                true,
+                false
+            ],
+            "ccp_alpha": [
+                1.100000000000001e-06,
+                3.396600849359795e-05,
+                0.001048808848170152,
+                0.03238531840464367,
+                1.0
+            ],
+            "criterion": [
+                "squared_error",
+                "absolute_error",
+                "poisson"
+            ],
+            "max_depth": [
+                1,
+                7,
+                49
+            ],
+            "max_features": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "max_leaf_nodes": [
+                1,
+                7,
+                49
+            ],
+            "max_samples": [
+                1.000001,
+                1.000000499999875,
+                1.0
+            ],
+            "min_impurity_decrease": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "min_samples_leaf": [
+                1.0,
+                5.75,
+                10.5,
+                15.25,
+                20.0
+            ],
+            "min_samples_split": [
+                2.0,
+                14.0,
+                26.0,
+                38.0,
+                50.0
+            ],
+            "min_weight_fraction_leaf": [
+                0.0,
+                0.125,
+                0.25,
+                0.375,
+                0.5
+            ],
+            "n_estimators": [
+                50,
+                112,
+                175,
+                237,
+                300
+            ],
+            "oob_score": [
+                true,
+                false
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -6043,11 +7855,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -6073,8 +7882,10 @@
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                1,
-                "inf"
+                [
+                    1,
+                    50
+                ]
             ]
         },
         "positive": {
@@ -6098,12 +7909,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "solver": {
             "domain": [
@@ -6142,6 +7949,40 @@
                 1e-06,
                 0.01
             ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                1,
+                7,
+                49
+            ],
+            "positive": [
+                true,
+                false
+            ],
+            "solver": [
+                "auto",
+                "svd",
+                "cholesky"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "RidgeCV": {
@@ -6174,18 +8015,18 @@
         "cv": {
             "domain": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                2,
+                3
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical_or_interval",
             "data_type": "int, cross-validation generator or an iterable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "int",
-                "cross-validation generator",
-                "iterable"
+                [
+                    2,
+                    3
+                ]
             ]
         },
         "fit_intercept": {
@@ -6219,16 +8060,14 @@
         "scoring": {
             "domain": [
                 null,
-                "str",
-                "callable"
+                "str"
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "str, callable",
             "recommended_distribution": "categorical",
             "recommended_range": [
                 null,
-                "str",
-                "callable"
+                "str"
             ]
         },
         "store_cv_values": {
@@ -6240,6 +8079,35 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha_per_target": [
+                true,
+                false
+            ],
+            "alphas": [],
+            "cv": [
+                2,
+                2,
+                3
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "gcv_mode": [
+                "auto",
+                "svd",
+                "eigen"
+            ],
+            "scoring": [
+                null,
+                "str"
+            ],
+            "store_cv_values": [
                 true,
                 false
             ]
@@ -6267,11 +8135,10 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "bool or int",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                true,
-                false,
-                "int"
+                0.0,
+                1.0
             ]
         },
         "early_stopping": {
@@ -6435,12 +8302,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "shuffle": {
             "domain": [
@@ -6500,6 +8363,107 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "average": [
+                true,
+                false,
+                true
+            ],
+            "early_stopping": [
+                true,
+                false
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "eta0": [
+                1.1000000000000008e-05,
+                0.00019100490227716522,
+                0.003316624790355401,
+                0.057590144906532414,
+                1.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "l1_ratio": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "learning_rate": [
+                "constant",
+                "optimal",
+                "invscaling"
+            ],
+            "loss": [
+                "squared_error",
+                "huber",
+                "epsilon_insensitive"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "n_iter_no_change": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "penalty": [
+                "l2",
+                "l1",
+                "elasticnet"
+            ],
+            "power_t": [
+                0.0010010000000000004,
+                0.0056276302848669675,
+                0.03163858403911275,
+                0.17787238132749214,
+                1.0
+            ],
+            "shuffle": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "validation_fraction": [
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3
+            ],
+            "warm_start": [
                 true,
                 false
             ]
@@ -6579,11 +8543,10 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "{scale, auto} or float",
-            "recommended_distribution": "categorical",
+            "recommended_distribution": "uniform",
             "recommended_range": [
-                "scale",
-                "auto",
-                "float"
+                0.0,
+                1.0
             ]
         },
         "kernel": {
@@ -6653,6 +8616,71 @@
             "data_type": "bool",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "C": [
+                0.0010010000000000004,
+                0.03164649072073432,
+                1.0004998750624605,
+                31.63067933292707,
+                1000.0
+            ],
+            "cache_size": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "coef0": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                1.0
+            ],
+            "degree": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "epsilon": [
+                0.00010100000000000002,
+                0.0010074906638441914,
+                0.01004987562112089,
+                0.10024906793143214,
+                1.0
+            ],
+            "gamma": [
+                "scale",
+                "auto",
+                "float"
+            ],
+            "kernel": [
+                "linear",
+                "poly",
+                "rbf"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "shrinking": [
+                true,
+                false
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "TheilSenRegressor": {
@@ -6663,11 +8691,8 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "fit_intercept": {
             "domain": [
@@ -6710,20 +8735,12 @@
         },
         "n_jobs": {
             "domain": [
-                null,
-                -1,
-                1,
-                "inf"
+                null
             ],
-            "domain_type": "categorical_or_interval",
+            "domain_type": "categorical",
             "data_type": "int",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                -1,
-                1,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "n_subsamples": {
             "domain": [
@@ -6746,12 +8763,8 @@
             ],
             "domain_type": "categorical_or_interval",
             "data_type": "int, RandomState instance or None",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                0,
-                "inf"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "tol": {
             "domain": [
@@ -6775,6 +8788,40 @@
             "data_type": "bool",
             "recommended_distribution": "none",
             "recommended_range": []
+        },
+        "recommended_cv_grid": {
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "max_subpopulation": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "n_subsamples": [
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ]
         }
     },
     "TransformedTargetRegressor": {
@@ -6785,37 +8832,28 @@
             ],
             "domain_type": "categorical",
             "data_type": "bool",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                true,
-                false
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "func": {
             "domain": [
-                null,
-                "callable"
+                null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "categorical",
             "data_type": "function",
             "recommended_distribution": "categorical",
             "recommended_range": [
-                null,
-                "callable"
+                null
             ]
         },
         "inverse_func": {
             "domain": [
-                null,
-                "callable"
+                null
             ],
-            "domain_type": "categorical_or_callable",
+            "domain_type": "ignore_for_grid_cv",
             "data_type": "function",
-            "recommended_distribution": "categorical",
-            "recommended_range": [
-                null,
-                "callable"
-            ]
+            "recommended_distribution": "none",
+            "recommended_range": []
         },
         "regressor": {
             "domain": [
@@ -6837,6 +8875,18 @@
             "data_type": "object",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                null,
+                "estimator instance"
+            ]
+        },
+        "recommended_cv_grid": {
+            "func": [
+                null
+            ],
+            "regressor": [
+                "estimator instance"
+            ],
+            "transformer": [
                 null,
                 "estimator instance"
             ]
@@ -6955,6 +9005,53 @@
             "data_type": "bool",
             "recommended_distribution": "categorical",
             "recommended_range": [
+                true,
+                false
+            ]
+        },
+        "recommended_cv_grid": {
+            "alpha": [
+                1.100000000000001e-06,
+                0.00019100490227716522,
+                0.03316624790355401,
+                5.759014490653241,
+                1000.0
+            ],
+            "fit_intercept": [
+                true,
+                false
+            ],
+            "link": [
+                "auto",
+                "identity",
+                "log"
+            ],
+            "max_iter": [
+                50,
+                287,
+                525,
+                762,
+                1000
+            ],
+            "power": [
+                0.0,
+                0.5,
+                1.0,
+                1.5,
+                2.0
+            ],
+            "solver": [
+                "lbfgs",
+                "newton-cholesky"
+            ],
+            "tol": [
+                2.0000000000000003e-06,
+                1.681792830507429e-05,
+                0.0001414213562373095,
+                0.0011892071150027212,
+                0.01
+            ],
+            "warm_start": [
                 true,
                 false
             ]

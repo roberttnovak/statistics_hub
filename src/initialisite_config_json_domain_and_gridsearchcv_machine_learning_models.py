@@ -2297,7 +2297,7 @@ for regressor, hyperparameters in all_regressors_with_its_parameters_and_domains
 
 # Save sklearn details (version and date of doc scrapping)
 config_manager.save_config(
-    config_filename = "all_regressors_with_its_parameters_and_domains", 
+    config_filename = "all_regressors_with_its_parameters_domains_and_gridsearchcv", 
     config = all_regressors_with_its_parameters_and_domains, 
     subfolder = "models_parameters/metadata",
     create = True

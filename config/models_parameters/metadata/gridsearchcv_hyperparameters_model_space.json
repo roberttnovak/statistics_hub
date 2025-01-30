@@ -1,0 +1,79 @@
+{
+    "ini_train": [
+        "2023-04-18 00:00:00+00:00",
+        "2023-04-19 00:00:00+00:00"
+    ],
+    "fin_train": [
+        "2023-04-25 00:00:00+00:00",
+        "2023-04-26 00:00:00+00:00"
+    ],
+    "fin_test": [
+        "2023-04-26 00:00:00+00:00"
+    ],
+    "model_sklearn_name": [],
+    "n_lags": [
+        5,
+        10
+    ],
+    "n_leads": [
+        5,
+        10
+    ],
+    "X_name_features": [
+        [
+            "04-diaq",
+            "01-hum",
+            "01-tvoc",
+            "03-siaq",
+            "00-temp",
+            "02-pres"
+        ]
+    ],
+    "Y_name_features": [
+        "y"
+    ],
+    "lag_columns": [
+        [
+            "04-diaq",
+            "01-hum",
+            "01-tvoc",
+            "03-siaq",
+            "00-temp",
+            "02-pres",
+            "y"
+        ]
+    ],
+    "lead_columns": [
+        "y"
+    ],
+    "scale_in_preprocessing": [
+        true
+    ],
+    "name_time_column": [
+        "timestamp"
+    ],
+    "save_preprocessing": [
+        true
+    ],
+    "path_to_save_model": [
+        "paper"
+    ],
+    "folder_name_model": [],
+    "folder_name_time_execution": [
+        "execution-time-no-defined"
+    ],
+    "folder_name_preprocessed_data": [
+        "preprocessed-data-to-use-in-model"
+    ],
+    "measure_time": [
+        true
+    ],
+    "logger": [
+        null
+    ],
+    "kwargs_save_object": [
+        {
+            "rename_if_exists": true
+        }
+    ]
+}

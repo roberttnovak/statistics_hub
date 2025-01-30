@@ -2046,7 +2046,7 @@ def recommend_distribution_and_range(regressor_name, param_name, domain, domain_
 
     # Convert param name to lowercase for matching
     p_lower = param_name.lower()
-    
+
     # -------------------------------------------------------------------------
     #                 EXCLUDING SOME PARAMETERS
     # -------------------------------------------------------------------------
@@ -2689,3 +2689,61 @@ def create_cv_hyperparameters_model(
         executor_type='process',
         max_workers=os.cpu_count()  # Use all available CPUs
         )
+
+def create_cv_hyperparameters_all_sklearn_models(
+    df, 
+    all_regressors_with_its_parameters_domains_and_gridsearchcv, 
+    hyperparameters_preprocessing, 
+    hyperparameters_model_space
+):
+    """
+    Execute `create_cv_hyperparameters_model` concurrently for multiple models and hyperparameter sets.
+
+    This function dynamically generates all possible hyperparameter combinations for each regressor
+    and executes `create_cv_hyperparameters_model` concurrently for efficient cross-validation.
+
+    Parameters:
+    ----------
+    df : pd.DataFrame
+        The input dataframe for training and testing.
+
+    all_regressors_with_its_parameters_and_domains : dict
+        A dictionary containing the hyperparameters and domains for each scikit-learn regressor.
+
+    hyperparameters_preprocessing : dict
+        A dictionary containing preprocessing hyperparameters such as resampling frequency, aggregation, and interpolation.
+
+    hyperparameters_model_space : dict
+        A dictionary containing model-related hyperparameters including training/testing periods, model selection, and features.
+
+    Returns:
+    -------
+    list
+        A list of results from executing `create_cv_hyperparameters_model` in parallel.
+    """
+    tasks = []
+
+    for regressor, params in all_regressors_with_its_parameters_domains_and_gridsearchcv.items():
+        recommended_grid = params.get("recommended_cv_grid", {})
+
+        if recommended_grid:
+            param_names, param_values = zip(*recommended_grid.items())
+            param_combinations = [dict(zip(param_names, values)) for values in product(*param_values)]
+
+            # Generate a task for each combination
+            tasks.extend(
+                {
+                    "df": df,
+                    "hyperparameters_preprocessing": hyperparameters_preprocessing,
+                    "hyperparameters_model_space": {**hyperparameters_model_space, "model_sklearn_name": [regressor]},
+                    "hyperparameters_specific_regressor_args": {regressor: param_comb},
+                }
+                for param_comb in param_combinations
+            )
+
+    return execute_concurrently(
+        func=create_cv_hyperparameters_model,
+        args_list=tasks,
+        executor_type='process',
+        max_workers=os.cpu_count()  # Use all available CPU cores
+    )

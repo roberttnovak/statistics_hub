@@ -1,0 +1,47 @@
+{
+    "resample_freq": [
+        "60S",
+        "30S"
+    ],
+    "aggregation_func": [
+        "mean",
+        "median"
+    ],
+    "interpolation_method": [
+        "linear",
+        "quadratic"
+    ],
+    "target_variable": [
+        "00-eco2"
+    ],
+    "pivot": [
+        true
+    ],
+    "pivot_index": [
+        [
+            "timestamp",
+            "id_device"
+        ]
+    ],
+    "pivot_columns": [
+        [
+            "id_variable"
+        ]
+    ],
+    "pivot_values": [
+        [
+            "value"
+        ]
+    ],
+    "subset_cols": [
+        [
+            "timestamp",
+            "id_device",
+            "id_variable",
+            "value"
+        ]
+    ],
+    "target_column_name": [
+        "y"
+    ]
+}

@@ -74,7 +74,7 @@ from ConfigManager import ConfigManager
 from predictions import generate_cv_grid_regressor_sklearn, recommend_distribution_and_range
 
 
-all_regressors_with_its_parameters_and_domains = {
+all_regressors_with_its_parameters_domains_and_gridsearchcv = {
     "ARDRegression": {
         "alpha_1": {
             "domain": [0.0, "inf"],
@@ -2255,50 +2255,101 @@ mapping_wrong_data_type_sklearn = config_manager.load_config(
 
 # Add data type to all_regressors_with_its_parameters_and_domains
 for regressor in all_sklearn_regressors_with_all_info.keys():
-    if regressor in all_regressors_with_its_parameters_and_domains:
+    if regressor in all_regressors_with_its_parameters_domains_and_gridsearchcv:
         for dic in all_sklearn_regressors_with_all_info[regressor]["parameters_info"]:
             parameter = dic["parameter"]
             data_type = dic["data_type"]
-            if parameter in all_regressors_with_its_parameters_and_domains[regressor].keys():
+            if parameter in all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].keys():
                 recommended_distribution_and_range = recommend_distribution_and_range(
                     regressor_name=regressor,
                     param_name=parameter,
-                    domain=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain"],
-                    domain_type=all_regressors_with_its_parameters_and_domains[regressor][parameter]["domain_type"]
+                    domain=all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor][parameter]["domain"],
+                    domain_type=all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor][parameter]["domain_type"]
                 )
-                if parameter in all_regressors_with_its_parameters_and_domains[regressor]:
-                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["data_type"] = data_type
-                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_distribution"] = recommended_distribution_and_range["recommended_distribution"]
-                    all_regressors_with_its_parameters_and_domains[regressor][parameter]["recommended_range"] = recommended_distribution_and_range["recommended_range"]
+                if parameter in all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor]:
+                    all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor][parameter]["data_type"] = data_type
+                    all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor][parameter]["recommended_distribution"] = recommended_distribution_and_range["recommended_distribution"]
+                    all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor][parameter]["recommended_range"] = recommended_distribution_and_range["recommended_range"]
             else:
                 print(f"Parameter {parameter} for regressor {regressor} not found in all_regressors_with_its_parameters_and_domains, skipping...")
         # Ensure consistency by removing parameters that exist in the system's knowledge (llm_parameters)
         # but are not present in the scrapped data. This avoids issues with outdated or inconsistent parameters.        
         scrapped_parameters = {dic["parameter"] for dic in all_sklearn_regressors_with_all_info[regressor]["parameters_info"]}
-        llm_parameters = set(all_regressors_with_its_parameters_and_domains[regressor].keys())
+        llm_parameters = set(all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].keys())
         non_coincident_parameters = llm_parameters - scrapped_parameters 
         if non_coincident_parameters:
             for bad_parameter in non_coincident_parameters:
-                all_regressors_with_its_parameters_and_domains[regressor].pop(bad_parameter, None)
+                all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].pop(bad_parameter, None)
 
 #TODO: Potential optimization because loop redundant? Think
-for regressor, hyperparameters in all_regressors_with_its_parameters_and_domains.items():
+for regressor, hyperparameters in all_regressors_with_its_parameters_domains_and_gridsearchcv.items():
 
     recommended_cv_grid = generate_cv_grid_regressor_sklearn(
-        hyperparameter_dict=all_regressors_with_its_parameters_and_domains[regressor],
+        hyperparameter_dict=all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor],
         max_length_numerical=5,
         max_length_categorical=3,
-        custom_limits={hyperparameter:hyperparameter_info["recommended_range"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()},
-        distribution_per_param={hyperparameter:hyperparameter_info["recommended_distribution"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()},
+        custom_limits={hyperparameter:hyperparameter_info["recommended_range"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].items()},
+        distribution_per_param={hyperparameter:hyperparameter_info["recommended_distribution"] for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].items()},
         seed=42,
-        forced_types={hyperparameter:mapping_wrong_data_type_sklearn.get(hyperparameter_info["data_type"], hyperparameter_info["data_type"]) for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_and_domains[regressor].items()}
+        forced_types={hyperparameter:mapping_wrong_data_type_sklearn.get(hyperparameter_info["data_type"], hyperparameter_info["data_type"]) for hyperparameter, hyperparameter_info in all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor].items()}
     )
-    all_regressors_with_its_parameters_and_domains[regressor]["recommended_cv_grid"] = recommended_cv_grid
+    all_regressors_with_its_parameters_domains_and_gridsearchcv[regressor]["recommended_cv_grid"] = recommended_cv_grid
+
+# GridSearchCV hyperparameters for preprocessing
+gridsearchcv_hyperparameters_preprocessing = {
+    "resample_freq": ["60S", "30S"],
+    "aggregation_func": ["mean", "median"],
+    "interpolation_method": ["linear", "quadratic"],
+    "target_variable": ["00-eco2"],
+    "pivot": [True],
+    "pivot_index": [["timestamp", "id_device"]],
+    "pivot_columns": [["id_variable"]],
+    "pivot_values": [["value"]],
+    "subset_cols": [["timestamp", "id_device", "id_variable", "value"]],
+    "target_column_name": ["y"]
+}
+
+gridsearchcv_hyperparameters_model_space = {
+    "ini_train": ["2023-04-18 00:00:00+00:00", "2023-04-19 00:00:00+00:00"],
+    "fin_train": ["2023-04-25 00:00:00+00:00", "2023-04-26 00:00:00+00:00"],
+    "fin_test": ["2023-04-26 00:00:00+00:00"],
+    "model_sklearn_name": [], #Need to specify in the script where used
+    "n_lags": [5, 10],
+    "n_leads": [5, 10],
+    "X_name_features": [['04-diaq', '01-hum', '01-tvoc', '03-siaq', '00-temp', '02-pres']],
+    "Y_name_features": ["y"],
+    "lag_columns": [['04-diaq', '01-hum', '01-tvoc', '03-siaq', '00-temp', '02-pres', 'y']],
+    "lead_columns": ["y"],
+    "scale_in_preprocessing": [True],
+    "name_time_column": ["timestamp"],
+    "save_preprocessing": [True],
+    "path_to_save_model": ["paper"],
+    "folder_name_model": [], #Need to specify in the script where used
+    "folder_name_time_execution": ["execution-time-no-defined"],
+    "folder_name_preprocessed_data": ["preprocessed-data-to-use-in-model"],
+    "measure_time": [True],
+    "logger": [None],
+    "kwargs_save_object": [{"rename_if_exists": True}],
+}
 
 # Save sklearn details (version and date of doc scrapping)
 config_manager.save_config(
     config_filename = "all_regressors_with_its_parameters_domains_and_gridsearchcv", 
-    config = all_regressors_with_its_parameters_and_domains, 
+    config = all_regressors_with_its_parameters_domains_and_gridsearchcv, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
+
+config_manager.save_config(
+    config_filename = "gridsearchcv_hyperparameters_preprocessing", 
+    config = gridsearchcv_hyperparameters_preprocessing, 
+    subfolder = "models_parameters/metadata",
+    create = True
+)
+
+config_manager.save_config(
+    config_filename = "gridsearchcv_hyperparameters_model_space", 
+    config = gridsearchcv_hyperparameters_model_space, 
     subfolder = "models_parameters/metadata",
     create = True
 )
